@@ -11,6 +11,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AuthProvider } from "@/context/AuthContext";
+import { AppFooter, AppHeader } from "@/components/layout/AppShell";
+import { AssistantPanel } from "@/components/assistant/AssistantPanel";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
