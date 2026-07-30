@@ -16,6 +16,25 @@ dist-ssr
 .nitro
 *.local
 
+# Environment variables & secrets
+.env
+.env*.local
+*.env
+
+# Java / Maven build output & IDEs
+target/
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/
+.idea
+*.iml
+.classpath
+.project
+.settings/
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
@@ -23,7 +42,6 @@ dist-ssr
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
-.idea
 .DS_Store
 *.suo
 *.ntvs*
