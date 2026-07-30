@@ -130,8 +130,24 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AuthProvider>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+        >
+          Skip to main content
+        </a>
+        <div className="flex min-h-screen flex-col">
+          <AppHeader />
+          <main id="main-content" className="flex-1">
+            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+            <Outlet />
+          </main>
+          <AppFooter />
+        </div>
+        <AssistantPanel />
+        <Toaster position="top-right" richColors closeButton />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
