@@ -1,0 +1,81 @@
+import { apiClient, setStoredToken } from "@/lib/api/client";
+import { mockAdminUser, mockDoctorUser, mockPatient } from "@/lib/api/mock-data";
+import type { AuthResponse, LoginRequest, RegisterRequest, UserDto } from "@/lib/api/types";
+import { USE_MOCK_API, createMockRateLimiter, delay, mockError } from "./config";
+
+/**
+ * Auth service interface — the UI only ever depends on these functions.
+ *
+ * Backend endpoints:
+ *   POST /api/v1/auth/register
+ *   POST /api/v1/auth/login
+ */
+export interface AuthService {
+  register(payload: RegisterRequest): Promise<AuthResponse>;
+  login(payload: LoginRequest): Promise<AuthResponse>;
+}
+
+const loginLimiter = createMockRateLimiter(5, 30_000);
+
+function fakeToken(user: UserDto) {
+  return `mock.jwt.${user.role.toLowerCase()}.${user.id}`;
+}
+
+/** Mock demo accounts — the real backend validates credentials with Spring Security. */
+const demoAccounts: Record<string, UserDto> = {
+  "patient@medislot.test": mockPatient,
+  "doctor@medislot.test": mockDoctorUser,
+  "admin@medislot.test": mockAdminUser,
+};
+
+const mockAuthService: AuthService = {
+  async register(payload) {
+    if (payload.email in demoAccounts) {
+      return mockError({
+        status: 409,
+        code: "CONFLICT",
+        message: "An account with this email already exists.",
+      });
+    }
+    const user: UserDto = {
+      id: `usr-${Date.now()}`,
+      fullName: payload.fullName,
+      email: payload.email,
+      phone: payload.phone,
+      role: "PATIENT",
+    };
+    return delay({ token: fakeToken(user), user });
+  },
+
+  async login(payload) {
+    const limited = loginLimiter();
+    if (limited) return mockError(limited);
+
+    const user = demoAccounts[payload.email.trim().toLowerCase()];
+    if (!user || payload.password.length < 8) {
+      return mockError({
+        status: 401,
+        code: "UNAUTHORIZED",
+        message: "Invalid email or password.",
+      });
+    }
+    return delay({ token: fakeToken(user), user });
+  },
+};
+
+const httpAuthService: AuthService = {
+  async register(payload) {
+    const { data } = await apiClient.post<AuthResponse>("/auth/register", payload);
+    return data;
+  },
+  async login(payload) {
+    const { data } = await apiClient.post<AuthResponse>("/auth/login", payload);
+    return data;
+  },
+};
+
+export const authService: AuthService = USE_MOCK_API ? mockAuthService : httpAuthService;
+
+export function clearSession() {
+  setStoredToken(null);
+}
