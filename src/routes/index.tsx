@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "MediSlot — Book Clinic Appointments Online" },
       {
         property: "og:description",
-        content: "Search doctors and manage your clinic appointments online.",
+        content: "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks.",
       },
     ],
   }),

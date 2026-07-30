@@ -81,19 +81,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MediSlot — Clinic Appointment Scheduling" },
+      { title: "MediSlot — Book Clinic Appointments Online" },
       {
         name: "description",
         content:
-          "Book, reschedule and manage clinic appointments with verified doctors across specializations.",
+          "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks.",
       },
-      { property: "og:title", content: "MediSlot — Clinic Appointment Scheduling" },
+      { property: "og:title", content: "MediSlot — Book Clinic Appointments Online" },
       {
         property: "og:description",
-        content: "Book, reschedule and manage clinic appointments with verified doctors.",
+        content: "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "MediSlot — Book Clinic Appointments Online" },
+      { name: "twitter:description", content: "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1776b220-ef74-41da-83fc-5e4d06b45cde/id-preview-1e28322c--2086c847-52c5-4db2-be91-7e17c06b103c.lovable.app-1785398615692.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1776b220-ef74-41da-83fc-5e4d06b45cde/id-preview-1e28322c--2086c847-52c5-4db2-be91-7e17c06b103c.lovable.app-1785398615692.png" },
     ],
     links: [
       {
@@ -106,7 +110,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
   shellComponent: RootShell,
