@@ -40,7 +40,10 @@ function DoctorProfilePage() {
   if (doctorQuery.error)
     return (
       <PageShell title="Doctor profile">
-        <ErrorState error={doctorQuery.error as ApiError} onRetry={() => doctorQuery.refetch()} />
+        <ErrorState
+          error={doctorQuery.error as unknown as ApiError}
+          onRetry={() => doctorQuery.refetch()}
+        />
       </PageShell>
     );
 
