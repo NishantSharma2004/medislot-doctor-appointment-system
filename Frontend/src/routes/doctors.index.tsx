@@ -19,11 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ApiError } from "@/lib/api/types";
+import { mockSpecializations } from "@/lib/api/mock-data";
 import { doctorService } from "@/services/doctor.service";
 
 const PAGE_SIZE = 6;
 const ANY = "ANY";
 const MAX_FEE = 1500;
+const DEFAULT_CITIES = ["Delhi", "Mumbai", "Bangalore", "Pune", "Hyderabad", "Chennai"];
 
 interface DoctorSearch {
   query?: string;
@@ -67,14 +69,18 @@ function DoctorSearchPage() {
 
   const page = search.page ?? 0;
 
-  const { data: specializations = [] } = useQuery({
+  const { data: fetchedSpecializations = [] } = useQuery({
     queryKey: ["specializations"],
     queryFn: () => doctorService.getSpecializations(),
   });
-  const { data: cities = [] } = useQuery({
+  const { data: fetchedCities = [] } = useQuery({
     queryKey: ["cities"],
     queryFn: () => doctorService.getCities(),
   });
+
+  const specializations =
+    fetchedSpecializations.length > 0 ? fetchedSpecializations : mockSpecializations;
+  const cities = fetchedCities.length > 0 ? fetchedCities : DEFAULT_CITIES;
 
   const doctorsQuery = useQuery({
     queryKey: ["doctors", search],

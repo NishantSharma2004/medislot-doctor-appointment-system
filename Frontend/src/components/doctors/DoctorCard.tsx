@@ -63,7 +63,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
 
       <div className="mt-auto flex flex-wrap gap-2">
         <Button asChild size="sm" className="flex-1">
-          <Link to="/doctors/$doctorId/slots" params={{ doctorId: doctor.id }}>
+          <Link to="/doctors/$doctorId" params={{ doctorId: doctor.id }}>
             View slots
           </Link>
         </Button>

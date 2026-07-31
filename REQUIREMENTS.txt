@@ -1,0 +1,71 @@
+======================================================================
+MEDISLOT SYSTEM REQUIREMENTS & VSCODE INSTALLATION GUIDE
+======================================================================
+
+1. SYSTEM SOFTWARE & RUNTIMES (System Requirements)
+----------------------------------------------------------------------
+Make sure the following are installed on your computer:
+
+[1] Java JDK 21 (LTS)
+    - Download: https://adoptium.net/ (Eclipse Temurin 21) or Amazon Corretto 21
+    - Verify: open terminal and run `java -version`
+
+[2] Node.js (v20 LTS or higher) & npm
+    - Download: https://nodejs.org/
+    - Verify: open terminal and run `node -v` and `npm -v`
+
+[3] Apache Maven (v3.9+)
+    - Download: https://maven.apache.org/download.cgi
+    - Verify: open terminal and run `mvn -v`
+
+[4] PostgreSQL Database (v18 or v16+)
+    - Download: https://www.postgresql.org/download/
+    - Setup local database: medislot_db (User: postgres, Password: postgres)
+
+
+2. RECOMMENDED VSCODE EXTENSIONS
+----------------------------------------------------------------------
+Open VSCode -> Extensions (Ctrl+Shift+X) and install these extensions:
+
+[1] Extension Pack for Java (vscjava.vscode-java-pack)
+[2] Spring Boot Extension Pack (vmware.vscode-boot-dev-pack)
+[3] ESLint (dbaeumer.vscode-eslint)
+[4] Prettier - Code formatter (esbenp.prettier-vscode)
+[5] Tailwind CSS IntelliSense (bradlc.vscode-tailwindcss)
+[6] PostgreSQL (ckvr.postgresql)
+
+
+3. COMMANDS TO DOWNLOAD ALL PROJECT DEPENDENCIES
+----------------------------------------------------------------------
+
+[A] FRONTEND DEPENDENCIES (React + Vite):
+    Open VSCode Terminal and run:
+    
+    cd Frontend
+    npm install
+
+[B] BACKEND DEPENDENCIES (Spring Boot Java):
+    Open VSCode Terminal and run:
+    
+    cd Backend
+    mvn dependency:go-offline
+
+
+4. HOW TO RUN THE PROJECT IN VSCODE
+----------------------------------------------------------------------
+
+STEP 1: Start PostgreSQL database locally on port 5432 with database `medislot_db`.
+
+STEP 2: Run Backend (Spring Boot):
+    In VSCode terminal:
+    cd Backend
+    mvn spring-boot:run
+
+STEP 3: Run Frontend (React + Vite):
+    In a second VSCode terminal:
+    cd Frontend
+    npm run dev
+
+STEP 4: Open your browser and go to:
+    http://localhost:5173
+======================================================================

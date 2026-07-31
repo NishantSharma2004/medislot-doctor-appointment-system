@@ -1,8 +1,10 @@
-import { Bot, FileText, Loader2, Send, ShieldAlert, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { useAuth } from "@/context/AuthContext";
 import { toDisplayMessage } from "@/lib/api/client";
 import type { ApiError, AssistantReply, EvidenceStrength } from "@/lib/api/types";
 import { ASSISTANT_DISCLAIMER, assistantService } from "@/services/assistant.service";
@@ -31,12 +33,24 @@ const SUGGESTIONS = [
 ];
 
 export function AssistantPanel() {
+  const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
+  const [isClient, setIsClient] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Drag State for Floating Widget & Panel
+  const [btnPos, setBtnPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const isDraggingBtn = useRef(false);
+  const dragStartBtn = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const hasDragged = useRef(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   useEffect(() => {
     if (open) textareaRef.current?.focus();
@@ -50,13 +64,66 @@ export function AssistantPanel() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setOpen(false);
     }
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    if (typeof window !== "undefined") {
+      window.addEventListener("keydown", onKeyDown);
+      return () => window.removeEventListener("keydown", onKeyDown);
+    }
   }, []);
+
+  const isDesktop = isClient && typeof window !== "undefined" && window.innerWidth >= 640;
+
+  // Pointer Event Handlers for Launcher Button & Panel Header
+  const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
+    isDraggingBtn.current = true;
+    hasDragged.current = false;
+    dragStartBtn.current = { x: e.clientX - btnPos.x, y: e.clientY - btnPos.y };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDraggingBtn.current) return;
+    const deltaX = e.clientX - dragStartBtn.current.x;
+    const deltaY = e.clientY - dragStartBtn.current.y;
+    if (Math.abs(deltaX - btnPos.x) > 3 || Math.abs(deltaY - btnPos.y) > 3) {
+      hasDragged.current = true;
+    }
+    setBtnPos({ x: deltaX, y: deltaY });
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDraggingBtn.current) return;
+    isDraggingBtn.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  const handleBtnClick = () => {
+    if (hasDragged.current) {
+      hasDragged.current = false;
+      return; // Ignore click if user was dragging
+    }
+    setOpen((v) => !v);
+  };
 
   async function send(text: string) {
     const question = text.trim();
     if (!question || pending) return;
+    if (!isAuthenticated) {
+      setMessages((prev) => [
+        ...prev,
+        { id: `u-${Date.now()}`, role: "user", text: question },
+        {
+          id: `a-${Date.now()}`,
+          role: "assistant",
+          text: "Authentication required: Please sign in to chat with Medi AI Assistant.",
+          error: { status: 401, code: "UNAUTHORIZED", message: "Sign in required" },
+        },
+      ]);
+      return;
+    }
+
     setInput("");
     setMessages((prev) => [...prev, { id: `u-${Date.now()}`, role: "user", text: question }]);
     setPending(true);
@@ -73,10 +140,9 @@ export function AssistantPanel() {
         {
           id: `e-${Date.now()}`,
           role: "assistant",
-          text:
-            error.code === "RATE_LIMITED"
-              ? toDisplayMessage(error)
-              : "The assistant service is unavailable right now. Please try again in a moment — you can still browse doctors and manage appointments as usual.",
+          text: error.status === 401
+            ? "Authentication required: Please sign in to chat with Medi AI Assistant."
+            : error.message || toDisplayMessage(error),
           error,
         },
       ]);
@@ -88,46 +154,98 @@ export function AssistantPanel() {
 
   return (
     <>
-      <Button
-        onClick={() => setOpen((v) => !v)}
-        size="lg"
-        className="fixed bottom-5 right-5 z-50 h-14 gap-2 rounded-full shadow-float"
+      {/* Draggable Circular Robot Launcher Button */}
+      <button
+        onClick={handleBtnClick}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        type="button"
+        style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full bg-primary p-2.5 text-primary-foreground shadow-2xl transition-transform duration-75 select-none touch-none sm:cursor-grab active:sm:cursor-grabbing hover:scale-105 hover:shadow-primary/30 group"
         aria-expanded={open}
         aria-controls="assistant-panel"
+        title="Medi AI Assistant (Drag to reposition)"
       >
-        {open ? <X className="size-5" aria-hidden="true" /> : <Bot className="size-5" aria-hidden="true" />}
-        <span className="hidden sm:inline">{open ? "Close assistant" : "Ask the assistant"}</span>
-      </Button>
+        <div className="relative flex size-12 items-center justify-center rounded-full bg-white/10 border border-white/20 shadow-inner">
+          {open ? (
+            <X className="size-6 transition-transform duration-200 group-hover:rotate-90" aria-hidden="true" />
+          ) : (
+            <div className="relative flex items-center justify-center">
+              <Bot className="size-7 text-white animate-pulse" aria-hidden="true" />
+              <Sparkles className="absolute -top-1 -right-1 size-3.5 text-amber-300 animate-spin" style={{ animationDuration: "4s" }} />
+            </div>
+          )}
+        </div>
+        <span className="hidden sm:inline pr-3 font-semibold text-sm tracking-wide">
+          {open ? "Close" : "Medi AI Assistant"}
+        </span>
+      </button>
 
       {open ? (
         <section
           id="assistant-panel"
-          aria-label="Clinic assistant"
-          className="surface-panel fixed bottom-24 right-4 z-50 flex h-[32rem] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden p-0"
+          aria-label="Medi AI Assistant"
+          style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
+          className="surface-panel fixed bottom-24 right-6 z-50 flex h-[34rem] w-[min(25rem,calc(100vw-2rem))] flex-col overflow-hidden p-0 shadow-2xl transition-transform duration-75 rounded-2xl border border-primary/20 bg-background/95 backdrop-blur-md"
         >
-          <header className="flex items-center gap-2 border-b border-border bg-primary-soft px-4 py-3">
-            <Bot className="size-5 text-primary" aria-hidden="true" />
-            <div className="min-w-0">
-              <h2 className="truncate text-sm font-semibold">Clinic assistant</h2>
-              <p className="truncate text-xs text-muted-foreground">Navigation & policy help</p>
+          {/* Draggable Header */}
+          <header
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            className="flex items-center gap-3 border-b border-border/80 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent px-4 py-3.5 select-none touch-none sm:cursor-grab active:sm:cursor-grabbing"
+          >
+            {/* Round Circular Robot Badge */}
+            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 border border-primary/30 text-primary shadow-sm">
+              <Bot className="size-5" aria-hidden="true" />
+              <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
             </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <h2 className="truncate text-sm font-bold tracking-tight text-foreground">Medi AI Assistant</h2>
+                <Badge variant="secondary" className="px-1.5 py-0 text-[10px] uppercase tracking-wider font-semibold">
+                  AI
+                </Badge>
+              </div>
+              <p className="truncate text-xs text-muted-foreground">Smart clinic navigation & policies (Drag me)</p>
+            </div>
+
+            <Move className="hidden sm:block size-4 text-muted-foreground opacity-60 hover:opacity-100 transition-opacity" aria-hidden="true" />
           </header>
 
-          <div className="flex items-start gap-2 border-b border-border bg-warning/10 px-4 py-2 text-xs text-warning-foreground">
-            <ShieldAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-            <p>{ASSISTANT_DISCLAIMER}</p>
+          <div className="flex items-start gap-2 border-b border-border/60 bg-amber-500/10 px-4 py-2 text-xs text-amber-900 dark:text-amber-300">
+            <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden="true" />
+            <p className="leading-tight">{ASSISTANT_DISCLAIMER}</p>
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4" aria-live="polite">
-            {messages.length === 0 ? (
-              <div className="space-y-2">
-                <p className="text-sm text-muted-foreground">Try one of these:</p>
+            {!isAuthenticated ? (
+              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-center space-y-2">
+                <p className="text-xs font-semibold text-amber-900 dark:text-amber-300">
+                  Authentication Required
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Please sign in to ask questions to Medi AI Assistant.
+                </p>
+                <Button asChild size="sm" className="w-full gap-1.5 mt-1 font-medium">
+                  <Link to="/login" search={{ redirect: "/doctors" }}>
+                    <LogIn className="size-3.5" /> Sign in to start
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
+
+            {messages.length === 0 && isAuthenticated ? (
+              <div className="space-y-2.5">
+                <p className="text-xs font-medium text-muted-foreground">Suggested questions:</p>
                 {SUGGESTIONS.map((suggestion) => (
                   <button
                     key={suggestion}
                     type="button"
                     onClick={() => send(suggestion)}
-                    className="block w-full rounded-lg border border-border px-3 py-2 text-left text-sm transition-colors hover:bg-accent"
+                    className="block w-full rounded-xl border border-border/80 bg-card px-3.5 py-2.5 text-left text-xs font-medium transition-all hover:bg-accent hover:border-primary/30 active:scale-[0.99]"
                   >
                     {suggestion}
                   </button>
@@ -139,35 +257,45 @@ export function AssistantPanel() {
               <div
                 key={message.id}
                 className={cn(
-                  "max-w-[92%] rounded-xl px-3 py-2 text-sm",
+                  "max-w-[90%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-sm",
                   message.role === "user"
-                    ? "ml-auto bg-primary text-primary-foreground"
-                    : "bg-muted text-foreground",
-                  message.error && "border border-destructive/40 bg-destructive/5",
+                    ? "ml-auto bg-primary text-primary-foreground rounded-br-xs"
+                    : "bg-muted/80 text-foreground rounded-bl-xs border border-border/40",
+                  message.error && "border border-destructive/40 bg-destructive/5 text-destructive",
                 )}
               >
                 <p className="whitespace-pre-wrap">{message.text}</p>
 
+                {message.error?.status === 401 ? (
+                  <div className="mt-2 pt-2 border-t border-destructive/20">
+                    <Button asChild size="sm" variant="outline" className="w-full h-7 text-xs gap-1">
+                      <Link to="/login">
+                        <LogIn className="size-3" /> Sign in now
+                      </Link>
+                    </Button>
+                  </div>
+                ) : null}
+
                 {message.reply && !message.reply.sufficientEvidence ? (
-                  <p className="mt-2 text-xs text-muted-foreground">
-                    Insufficient evidence in the clinic's verified documents for a confident answer.
+                  <p className="mt-2 text-[11px] italic text-muted-foreground">
+                    Insufficient evidence in clinic documents for a definitive answer.
                   </p>
                 ) : null}
 
                 {message.reply?.sources.length ? (
-                  <div className="mt-3 space-y-2 border-t border-border pt-2">
-                    <p className="text-xs font-semibold text-muted-foreground">Sources</p>
+                  <div className="mt-2.5 space-y-1.5 border-t border-border/60 pt-2">
+                    <p className="text-[11px] font-bold text-muted-foreground">Verified Sources:</p>
                     {message.reply.sources.map((source) => (
-                      <div key={`${source.title}-${source.section}`} className="flex items-start gap-2">
-                        <FileText className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                      <div key={`${source.title}-${source.section}`} className="flex items-start gap-1.5">
+                        <FileText className="mt-0.5 size-3 shrink-0 text-muted-foreground" aria-hidden="true" />
                         <div className="min-w-0">
-                          <p className="truncate text-xs font-medium">{source.title}</p>
+                          <p className="truncate text-[11px] font-medium">{source.title}</p>
                           {source.section ? (
-                            <p className="truncate text-xs text-muted-foreground">{source.section}</p>
+                            <p className="truncate text-[10px] text-muted-foreground">{source.section}</p>
                           ) : null}
                           <Badge
                             variant="outline"
-                            className={cn("mt-1 rounded-full text-[10px]", EVIDENCE_STYLES[source.evidenceStrength])}
+                            className={cn("mt-0.5 rounded-full text-[9px] px-1.5 py-0", EVIDENCE_STYLES[source.evidenceStrength])}
                           >
                             Evidence: {source.evidenceStrength.toLowerCase()}
                           </Badge>
@@ -180,24 +308,24 @@ export function AssistantPanel() {
             ))}
 
             {pending ? (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                Checking clinic documents…
+              <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
+                <Loader2 className="size-3.5 animate-spin text-primary" aria-hidden="true" />
+                Medi AI Assistant is searching clinic guidelines…
               </div>
             ) : null}
           </div>
 
           <form
-            className="border-t border-border p-3"
+            className="border-t border-border/80 bg-card/50 p-3"
             onSubmit={(event) => {
               event.preventDefault();
               void send(input);
             }}
           >
             <label htmlFor="assistant-input" className="sr-only">
-              Ask the clinic assistant
+              Ask Medi AI Assistant
             </label>
-            <div className="flex items-end gap-2">
+            <div className="flex items-center gap-2">
               <Textarea
                 id="assistant-input"
                 ref={textareaRef}
@@ -210,10 +338,17 @@ export function AssistantPanel() {
                     void send(input);
                   }
                 }}
-                placeholder="Ask about booking, policies or specializations"
-                className="max-h-28 min-h-10 resize-none"
+                placeholder={isAuthenticated ? "Ask about booking, policies or specializations..." : "Sign in to chat"}
+                disabled={!isAuthenticated || pending}
+                className="max-h-24 min-h-10 resize-none py-2.5 text-xs rounded-xl border-border/80 focus-visible:ring-primary/40"
               />
-              <Button type="submit" size="icon" disabled={pending || !input.trim()} aria-label="Send message">
+              <Button
+                type="submit"
+                size="icon"
+                disabled={pending || !input.trim() || !isAuthenticated}
+                aria-label="Send message"
+                className="size-10 shrink-0 rounded-xl shadow-sm"
+              >
                 <Send className="size-4" aria-hidden="true" />
               </Button>
             </div>

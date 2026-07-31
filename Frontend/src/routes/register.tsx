@@ -14,14 +14,13 @@ import type { ApiError } from "@/lib/api/types";
 
 const registerSchema = z
   .object({
-    fullName: z.string().min(3, "Enter your full name").max(80, "Name is too long"),
+    fullName: z.string().min(2, "Enter your full name").max(100, "Name is too long"),
     email: z.string().min(1, "Email is required").email("Enter a valid email address"),
-    phone: z.string().regex(/^\d{10}$/, "Enter a 10-digit phone number"),
+    phone: z.string().regex(/^\+?[0-9\s-]{10,15}$/, "Enter a valid 10 to 15 digit phone number"),
     password: z
       .string()
       .min(8, "Use at least 8 characters")
-      .regex(/[A-Za-z]/, "Include at least one letter")
-      .regex(/\d/, "Include at least one number"),
+      .max(72, "Password is too long"),
     confirmPassword: z.string(),
   })
   .refine((values) => values.password === values.confirmPassword, {
@@ -55,13 +54,13 @@ const FIELDS: Array<{
 }> = [
   { name: "fullName", label: "Full name", type: "text", autoComplete: "name" },
   { name: "email", label: "Email address", type: "email", autoComplete: "email" },
-  { name: "phone", label: "Phone number", type: "tel", autoComplete: "tel", hint: "10 digits, no spaces" },
+  { name: "phone", label: "Phone number", type: "tel", autoComplete: "tel", hint: "10 to 15 digits (e.g. +919876543210)" },
   {
     name: "password",
     label: "Password",
     type: "password",
     autoComplete: "new-password",
-    hint: "At least 8 characters, with a letter and a number",
+    hint: "At least 8 characters",
   },
   { name: "confirmPassword", label: "Confirm password", type: "password", autoComplete: "new-password" },
 ];
@@ -90,7 +89,7 @@ function RegisterPage() {
     } catch (caught) {
       const apiError = caught as ApiError;
       setError(apiError);
-      toast.error("Registration failed");
+      toast.error(apiError.message || "Registration failed");
     }
   }
 

@@ -3,13 +3,6 @@ import { mockAdminUser, mockDoctorUser, mockPatient } from "@/lib/api/mock-data"
 import type { AuthResponse, LoginRequest, RegisterRequest, UserDto } from "@/lib/api/types";
 import { USE_MOCK_API, createMockRateLimiter, delay, mockError } from "./config";
 
-/**
- * Auth service interface — the UI only ever depends on these functions.
- *
- * Backend endpoints:
- *   POST /api/v1/auth/register
- *   POST /api/v1/auth/login
- */
 export interface AuthService {
   register(payload: RegisterRequest): Promise<AuthResponse>;
   login(payload: LoginRequest): Promise<AuthResponse>;
@@ -21,7 +14,6 @@ function fakeToken(user: UserDto) {
   return `mock.jwt.${user.role.toLowerCase()}.${user.id}`;
 }
 
-/** Mock demo accounts — the real backend validates credentials with Spring Security. */
 const demoAccounts: Record<string, UserDto> = {
   "patient@medislot.test": mockPatient,
   "doctor@medislot.test": mockDoctorUser,
@@ -63,19 +55,30 @@ const mockAuthService: AuthService = {
   },
 };
 
+interface BackendAuthResponseDto {
+  accessToken?: string;
+  token?: string;
+  refreshToken?: string;
+  user: UserDto;
+}
+
 const httpAuthService: AuthService = {
   async register(payload) {
-    const { data } = await apiClient.post<AuthResponse>("/auth/register", payload);
-    return data;
+    const { data } = await apiClient.post<BackendAuthResponseDto>("/auth/register", payload);
+    const token = data.accessToken ?? data.token ?? "";
+    setStoredToken(token, data.refreshToken);
+    return { token, refreshToken: data.refreshToken, user: data.user };
   },
   async login(payload) {
-    const { data } = await apiClient.post<AuthResponse>("/auth/login", payload);
-    return data;
+    const { data } = await apiClient.post<BackendAuthResponseDto>("/auth/login", payload);
+    const token = data.accessToken ?? data.token ?? "";
+    setStoredToken(token, data.refreshToken);
+    return { token, refreshToken: data.refreshToken, user: data.user };
   },
 };
 
 export const authService: AuthService = USE_MOCK_API ? mockAuthService : httpAuthService;
 
 export function clearSession() {
-  setStoredToken(null);
+  setStoredToken(null, null);
 }

@@ -37,7 +37,7 @@ public class RefreshToken {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    protected RefreshToken() {
+    public RefreshToken() {
     }
 
     public UUID getId() {

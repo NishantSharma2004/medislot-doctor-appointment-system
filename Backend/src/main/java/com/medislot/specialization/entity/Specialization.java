@@ -27,7 +27,7 @@ public class Specialization extends AuditableEntity {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    protected Specialization() {
+    public Specialization() {
     }
 
     public Specialization(UUID id, String name, String description) {

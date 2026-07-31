@@ -10,8 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AppointmentsRouteImport } from './routes/appointments'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DoctorRouteImport } from './routes/doctor'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as DoctorAvailabilityRouteImport } from './routes/doctor_.availability'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
 import { Route as DoctorsDoctorIdIndexRouteImport } from './routes/doctors.$doctorId.index'
 
@@ -20,14 +29,59 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppointmentsRoute = AppointmentsRouteImport.update({
+  id: '/appointments',
+  path: '/appointments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorRoute = DoctorRouteImport.update({
+  id: '/doctor',
+  path: '/doctor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UnauthorizedRoute = UnauthorizedRouteImport.update({
+  id: '/unauthorized',
+  path: '/unauthorized',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorAvailabilityRoute = DoctorAvailabilityRouteImport.update({
+  id: '/doctor_/availability',
+  path: '/doctor/availability',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
@@ -43,44 +97,117 @@ const DoctorsDoctorIdIndexRoute = DoctorsDoctorIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/appointments': typeof AppointmentsRoute
+  '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/doctor/availability': typeof DoctorAvailabilityRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/appointments': typeof AppointmentsRoute
+  '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/doctor/availability': typeof DoctorAvailabilityRoute
   '/doctors': typeof DoctorsIndexRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/appointments': typeof AppointmentsRoute
+  '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/unauthorized': typeof UnauthorizedRoute
+  '/doctor_/availability': typeof DoctorAvailabilityRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/doctors/' | '/doctors/$doctorId/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/appointments'
+    | '/dashboard'
+    | '/doctor'
+    | '/forgot-password'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/reset-password'
+    | '/unauthorized'
+    | '/doctor/availability'
+    | '/doctors/'
+    | '/doctors/$doctorId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/doctors' | '/doctors/$doctorId'
+  to:
+    | '/'
+    | '/admin'
+    | '/appointments'
+    | '/dashboard'
+    | '/doctor'
+    | '/forgot-password'
+    | '/login'
+    | '/profile'
+    | '/register'
+    | '/reset-password'
+    | '/unauthorized'
+    | '/doctor/availability'
+    | '/doctors'
+    | '/doctors/$doctorId'
   id:
     | '__root__'
     | '/'
+    | '/admin'
+    | '/appointments'
+    | '/dashboard'
+    | '/doctor'
+    | '/forgot-password'
     | '/login'
+    | '/profile'
     | '/register'
+    | '/reset-password'
+    | '/unauthorized'
+    | '/doctor_/availability'
     | '/doctors/'
     | '/doctors/$doctorId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AppointmentsRoute: typeof AppointmentsRoute
+  DashboardRoute: typeof DashboardRoute
+  DoctorRoute: typeof DoctorRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  UnauthorizedRoute: typeof UnauthorizedRoute
+  DoctorAvailabilityRoute: typeof DoctorAvailabilityRoute
   DoctorsIndexRoute: typeof DoctorsIndexRoute
   DoctorsDoctorIdIndexRoute: typeof DoctorsDoctorIdIndexRoute
 }
@@ -94,6 +221,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/appointments': {
+      id: '/appointments'
+      path: '/appointments'
+      fullPath: '/appointments'
+      preLoaderRoute: typeof AppointmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -101,11 +263,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/register': {
       id: '/register'
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/unauthorized': {
+      id: '/unauthorized'
+      path: '/unauthorized'
+      fullPath: '/unauthorized'
+      preLoaderRoute: typeof UnauthorizedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor_/availability': {
+      id: '/doctor_/availability'
+      path: '/doctor/availability'
+      fullPath: '/doctor/availability'
+      preLoaderRoute: typeof DoctorAvailabilityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doctors/': {
@@ -127,8 +317,17 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AppointmentsRoute: AppointmentsRoute,
+  DashboardRoute: DashboardRoute,
+  DoctorRoute: DoctorRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  UnauthorizedRoute: UnauthorizedRoute,
+  DoctorAvailabilityRoute: DoctorAvailabilityRoute,
   DoctorsIndexRoute: DoctorsIndexRoute,
   DoctorsDoctorIdIndexRoute: DoctorsDoctorIdIndexRoute,
 }

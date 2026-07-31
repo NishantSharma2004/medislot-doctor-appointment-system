@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
-    setStoredToken(null);
+    setStoredToken(null, null);
     window.localStorage.removeItem(USER_STORAGE_KEY);
     setUser(null);
     setToken(null);
@@ -52,7 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [logout]);
 
   const persist = useCallback((response: AuthResponse) => {
-    setStoredToken(response.token);
+    setStoredToken(response.token, response.refreshToken);
     window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(response.user));
     setUser(response.user);
     setToken(response.token);

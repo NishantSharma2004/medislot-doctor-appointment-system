@@ -20,6 +20,7 @@ dist-ssr
 .env
 .env*.local
 *.env
+application-prod-local.yml
 
 # Java / Maven build output & IDEs
 target/
@@ -34,6 +35,11 @@ target/
 .classpath
 .project
 .settings/
+
+# Backups & Uploads
+backups/
+uploads/
+*.sql.gz
 
 # Wrangler / Cloudflare
 .wrangler/

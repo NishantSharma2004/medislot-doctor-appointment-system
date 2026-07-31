@@ -65,7 +65,7 @@ public class DoctorProfile extends AuditableEntity {
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    protected DoctorProfile() {
+    public DoctorProfile() {
     }
 
     public UUID getUserId() {

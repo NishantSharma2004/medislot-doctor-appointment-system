@@ -14,35 +14,56 @@ import java.util.UUID;
 
 public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, UUID> {
 
-    @Query("""
+    @Query(value = """
             SELECT d FROM DoctorProfile d
             JOIN FETCH d.user u
             JOIN FETCH d.specialization s
             WHERE d.active = TRUE
-              AND (:city IS NULL OR d.city = :city)
-              AND (:specializationName IS NULL OR LOWER(s.name) = LOWER(:specializationName))
+              AND (CAST(:city AS string) IS NULL OR LOWER(d.city) = LOWER(CAST(:city AS string)))
+              AND (:specializationId IS NULL OR s.id = :specializationId)
+              AND (CAST(:specializationName AS string) IS NULL OR LOWER(s.name) = LOWER(CAST(:specializationName AS string)))
               AND (:maxFee IS NULL OR d.consultationFee <= :maxFee)
+              AND (:minExperience IS NULL OR d.yearsOfExperience >= :minExperience)
               AND (
-                    :query IS NULL
-                    OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', CAST(:query AS string), '%'))
-                    OR LOWER(s.name) LIKE LOWER(CONCAT('%', CAST(:query AS string), '%'))
-                    OR LOWER(d.clinicName) LIKE LOWER(CONCAT('%', CAST(:query AS string), '%'))
+                    CAST(:search AS string) IS NULL OR CAST(:search AS string) = ''
+                    OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                    OR LOWER(s.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                    OR LOWER(d.clinicName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                  )
+            """,
+            countQuery = """
+            SELECT COUNT(d) FROM DoctorProfile d
+            JOIN d.user u
+            JOIN d.specialization s
+            WHERE d.active = TRUE
+              AND (CAST(:city AS string) IS NULL OR LOWER(d.city) = LOWER(CAST(:city AS string)))
+              AND (:specializationId IS NULL OR s.id = :specializationId)
+              AND (CAST(:specializationName AS string) IS NULL OR LOWER(s.name) = LOWER(CAST(:specializationName AS string)))
+              AND (:maxFee IS NULL OR d.consultationFee <= :maxFee)
+              AND (:minExperience IS NULL OR d.yearsOfExperience >= :minExperience)
+              AND (
+                    CAST(:search AS string) IS NULL OR CAST(:search AS string) = ''
+                    OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                    OR LOWER(s.name) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
+                    OR LOWER(d.clinicName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
                   )
             """)
-    Page<DoctorProfile> searchDoctors(
-            @Param("query") String query,
-            @Param("specializationName") String specializationName,
+    Page<DoctorProfile> searchActiveDoctors(
+            @Param("search") String search,
             @Param("city") String city,
+            @Param("specializationId") UUID specializationId,
+            @Param("specializationName") String specializationName,
             @Param("maxFee") BigDecimal maxFee,
+            @Param("minExperience") Integer minExperience,
             Pageable pageable);
 
     @Query("""
             SELECT d FROM DoctorProfile d
             JOIN FETCH d.user u
             JOIN FETCH d.specialization s
-            WHERE d.userId = :doctorId
+            WHERE d.userId = :doctorId AND d.active = TRUE
             """)
-    Optional<DoctorProfile> findByIdWithDetails(@Param("doctorId") UUID doctorId);
+    Optional<DoctorProfile> findActiveDoctorByIdWithDetails(@Param("doctorId") UUID doctorId);
 
     @Query("""
             SELECT DISTINCT d.city FROM DoctorProfile d
@@ -51,11 +72,7 @@ public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, UU
             """)
     List<String> findDistinctActiveCities();
 
-    Page<DoctorProfile> findByActiveTrue(Pageable pageable);
-
-    List<DoctorProfile> findBySpecializationIdAndActiveTrue(UUID specializationId);
-
-    List<DoctorProfile> findByCityIgnoreCaseAndActiveTrue(String city);
-
     boolean existsByRegistrationNumberIgnoreCase(String registrationNumber);
+
+    long countByActiveTrue();
 }

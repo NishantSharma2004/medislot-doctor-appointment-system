@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarCheck, CalendarSearch, ClipboardList, MessageSquareText, ShieldCheck, Stethoscope } from "lucide-react";
+import { CalendarCheck, CalendarSearch, ClipboardList, MessageSquareText, ShieldCheck, Stethoscope, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { mockSpecializations } from "@/lib/api/mock-data";
 
 export const Route = createFileRoute("/")({
@@ -41,6 +42,8 @@ const STEPS = [
 ];
 
 function LandingPage() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <div>
       <section className="hero-gradient">
@@ -62,9 +65,17 @@ function LandingPage() {
               <Button asChild size="lg">
                 <Link to="/doctors">Find a doctor</Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/register">Create a patient account</Link>
-              </Button>
+              {isAuthenticated ? (
+                <Button asChild size="lg" variant="outline" className="gap-2">
+                  <Link to="/dashboard">
+                    <LayoutDashboard className="size-4" /> Go to Dashboard ({user?.fullName || "Account"})
+                  </Link>
+                </Button>
+              ) : (
+                <Button asChild size="lg" variant="outline">
+                  <Link to="/register">Create a patient account</Link>
+                </Button>
+              )}
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
               MediSlot handles scheduling only. It does not provide medical advice.

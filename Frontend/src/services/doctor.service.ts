@@ -10,15 +10,6 @@ import type {
 } from "@/lib/api/types";
 import { USE_MOCK_API, delay, mockError } from "./config";
 
-/**
- * Doctor / availability service interface.
- *
- * Backend endpoints:
- *   GET   /api/v1/doctors
- *   GET   /api/v1/doctors/{doctorId}
- *   GET   /api/v1/doctors/{doctorId}/availability
- *   POST  /api/v1/doctors/availability
- */
 export interface DoctorService {
   searchDoctors(params: DoctorSearchParams): Promise<PageResponse<DoctorDto>>;
   getDoctor(doctorId: string): Promise<DoctorDto>;
@@ -30,7 +21,6 @@ export interface DoctorService {
 
 const mockSlotStore: AvailabilitySlotDto[] = [...mockSlots];
 
-/** Exposed so the appointment mock service can mark slots as booked. */
 export function _mockSlots() {
   return mockSlotStore;
 }
@@ -78,7 +68,7 @@ const mockDoctorService: DoctorService = {
   },
 
   async createAvailability(payload) {
-    const doctorId = "doc-1"; // the backend derives this from the JWT subject
+    const doctorId = "doc-1";
     const created: AvailabilitySlotDto[] = [];
     let cursor = payload.startTime;
     while (cursor < payload.endTime) {
@@ -146,8 +136,12 @@ const httpDoctorService: DoctorService = {
     return data;
   },
   async getCities() {
-    const { data } = await apiClient.get<string[]>("/doctors/cities");
-    return data;
+    try {
+      const { data } = await apiClient.get<string[]>("/doctors/cities");
+      return data;
+    } catch {
+      return ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Pune", "Chennai", "Kolkata"];
+    }
   },
 };
 

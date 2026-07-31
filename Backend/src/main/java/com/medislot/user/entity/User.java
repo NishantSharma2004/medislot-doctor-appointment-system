@@ -30,8 +30,14 @@ public class User extends AuditableEntity {
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
+    @Column(name = "country_code", length = 10)
+    private String countryCode = "+1";
+
     @Column(name = "phone", length = 20)
     private String phone;
+
+    @Column(name = "profile_image_url", length = 500)
+    private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false, length = 20)
@@ -40,7 +46,7 @@ public class User extends AuditableEntity {
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
-    protected User() {
+    public User() {
     }
 
     public User(UUID id, String email, String passwordHash, String fullName, String phone, Role role) {
@@ -55,6 +61,10 @@ public class User extends AuditableEntity {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -81,12 +91,28 @@ public class User extends AuditableEntity {
         this.fullName = fullName;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public Role getRole() {

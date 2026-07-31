@@ -2,11 +2,11 @@ import type { ApiError } from "@/lib/api/types";
 
 /**
  * Toggle for the whole service layer.
- * While the Spring Boot backend is not deployed yet, the mock branch runs.
- * Set VITE_USE_MOCK_API=false to route every call through the real Axios client.
+ * Set VITE_USE_MOCK_API=true to run in mock mode.
+ * Defaults to FALSE so every request routes through the live Spring Boot REST client.
  */
 export const USE_MOCK_API =
-  (import.meta.env.VITE_USE_MOCK_API as string | undefined) !== "false";
+  (import.meta.env.VITE_USE_MOCK_API as string | undefined) === "true";
 
 export function delay<T>(value: T, ms = 500): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms));

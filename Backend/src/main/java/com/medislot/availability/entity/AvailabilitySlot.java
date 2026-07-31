@@ -56,7 +56,7 @@ public class AvailabilitySlot extends AuditableEntity {
     @Column(name = "version", nullable = false)
     private Long version;
 
-    protected AvailabilitySlot() {
+    public AvailabilitySlot() {
     }
 
     public UUID getId() {

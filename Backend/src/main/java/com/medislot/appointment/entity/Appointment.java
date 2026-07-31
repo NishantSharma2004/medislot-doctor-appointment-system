@@ -62,7 +62,7 @@ public class Appointment extends AuditableEntity {
     @Column(name = "version", nullable = false)
     private Long version;
 
-    protected Appointment() {
+    public Appointment() {
     }
 
     public UUID getId() {

@@ -34,18 +34,33 @@ public class ClinicDocument extends AuditableEntity {
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(name = "category", length = 100)
+    private String category = "GENERAL";
+
+    @Column(name = "version", length = 20)
+    private String version = "1.0";
+
+    @Column(name = "source_filename", length = 255)
+    private String sourceFilename;
+
+    @Column(name = "mime_type", length = 100)
+    private String mimeType;
+
+    @Column(name = "uploaded_by")
+    private UUID uploadedBy;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "keywords", nullable = false, columnDefinition = "jsonb")
     private List<String> keywords = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "evidence_strength", nullable = false, length = 20)
-    private EvidenceStrength evidenceStrength;
+    private EvidenceStrength evidenceStrength = EvidenceStrength.STRONG;
 
     @Column(name = "active", nullable = false)
     private boolean active = true;
 
-    protected ClinicDocument() {
+    public ClinicDocument() {
     }
 
     public UUID getId() {
@@ -78,6 +93,46 @@ public class ClinicDocument extends AuditableEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getSourceFilename() {
+        return sourceFilename;
+    }
+
+    public void setSourceFilename(String sourceFilename) {
+        this.sourceFilename = sourceFilename;
+    }
+
+    public String getMimeType() {
+        return mimeType;
+    }
+
+    public void setMimeType(String mimeType) {
+        this.mimeType = mimeType;
+    }
+
+    public UUID getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(UUID uploadedBy) {
+        this.uploadedBy = uploadedBy;
     }
 
     public List<String> getKeywords() {
