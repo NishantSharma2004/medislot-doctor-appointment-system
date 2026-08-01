@@ -40,7 +40,7 @@ export function registerUnauthorizedHandler(handler: (() => void) | null) {
 export const apiClient: AxiosInstance = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
   headers: { "Content-Type": "application/json" },
-  timeout: 20000,
+  timeout: 60000,
 });
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
@@ -49,18 +49,19 @@ apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-function parseRetryAfter(value?: string | number | null): number | undefined {
-  if (value === undefined || value === null) return undefined;
-  const seconds = Number(value);
-  if (!Number.isNaN(seconds)) return Math.max(1, Math.round(seconds));
-  const date = Date.parse(String(value));
-  if (Number.isNaN(date)) return undefined;
-  return Math.max(1, Math.round((date - Date.now()) / 1000));
+function parseRetryAfter(value: string | undefined): number | undefined {
+  if (!value) return undefined;
+  const parsed = Number.parseInt(value, 10);
+  return Number.isNaN(parsed) ? undefined : parsed;
 }
 
 export function normalizeError(error: unknown): ApiError {
   if (!axios.isAxiosError(error)) {
-    return { status: 0, code: "SERVER", message: "Something went wrong. Please try again." };
+    return {
+      status: 0,
+      code: "UNKNOWN",
+      message: "An unexpected error occurred. Please try again.",
+    };
   }
 
   const axiosError = error as AxiosError<{
@@ -73,7 +74,7 @@ export function normalizeError(error: unknown): ApiError {
     return {
       status: 0,
       code: "NETWORK",
-      message: "We could not reach the server. Check your connection and verify the backend is running at http://localhost:8080.",
+      message: `We could not reach the server at ${API_BASE_URL}. If the free server was sleeping, please wait a moment and click Try again.`,
     };
   }
 
