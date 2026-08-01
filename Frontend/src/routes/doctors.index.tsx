@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { isUpcomingSlot } from "@/components/common/format";
 import type { ApiError } from "@/lib/api/types";
 import { mockSpecializations } from "@/lib/api/mock-data";
 import { doctorService } from "@/services/doctor.service";
@@ -112,7 +113,7 @@ function DoctorSearchPage() {
   const availableDoctorIdSet = new Set<string>();
   doctorIds.forEach((id, index) => {
     const slots = slotsQueries[index]?.data ?? [];
-    if (slots.some((s) => !s.booked)) {
+    if (slots.some((s) => !s.booked && isUpcomingSlot(s.date, s.startTime))) {
       availableDoctorIdSet.add(id);
     }
   });

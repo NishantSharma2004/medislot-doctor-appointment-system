@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Banknote, BriefcaseMedical, CalendarX, Languages, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { formatFee } from "@/components/common/format";
+import { formatFee, isUpcomingSlot } from "@/components/common/format";
 import type { DoctorDto } from "@/lib/api/types";
 import { doctorService } from "@/services/doctor.service";
 
@@ -24,7 +24,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
     staleTime: 60000,
   });
 
-  const openSlots = slots.filter((s) => !s.booked);
+  const openSlots = slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime));
   const hasSlots = openSlots.length > 0;
 
   return (

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
+import { Loader2, Stethoscope, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { homeRouteForRole, useAuth } from "@/context/AuthContext";
-import type { ApiError } from "@/lib/api/types";
+import type { ApiError, Role } from "@/lib/api/types";
 
 const loginSchema = z.object({
   email: z.string().min(1, "Email is required").email("Enter a valid email address"),
@@ -39,6 +39,7 @@ function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const search = Route.useSearch();
+  const [roleTab, setRoleTab] = useState<Role>("PATIENT");
   const [error, setError] = useState<ApiError | null>(null);
 
   const form = useForm<LoginValues>({
@@ -59,19 +60,57 @@ function LoginPage() {
     }
   }
 
+  const fillDemoCredentials = (role: "PATIENT" | "DOCTOR") => {
+    if (role === "PATIENT") {
+      form.setValue("email", "patient@medislot.test");
+      form.setValue("password", "password123");
+    } else {
+      form.setValue("email", "doctor@medislot.test");
+      form.setValue("password", "password123");
+    }
+  };
+
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col px-4 py-12">
+    <div className="mx-auto flex w-full max-w-md flex-col px-4 py-10">
       <BackButton className="mb-4 self-start" />
-      <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
+      <h1 className="text-2xl font-bold tracking-tight">
+        {roleTab === "DOCTOR" ? "Doctor Sign In" : "Patient Sign In"}
+      </h1>
       <p className="mt-1 text-sm text-muted-foreground">
-        Access your appointments, availability and clinic tools.
+        {roleTab === "DOCTOR"
+          ? "Access your doctor dashboard, publish availability and review patients."
+          : "Access your booked appointments, prescriptions and health records."}
       </p>
 
-      <div className="surface-panel mt-6 p-6">
+      <div className="surface-panel mt-6 p-6 space-y-5">
+        {/* Role Switcher Tabs */}
+        <div className="flex rounded-lg bg-muted p-1 text-xs font-semibold">
+          <button
+            type="button"
+            onClick={() => setRoleTab("PATIENT")}
+            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
+              roleTab === "PATIENT"
+                ? "bg-background text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <User className="size-4 text-primary" /> Patient Sign In
+          </button>
+          <button
+            type="button"
+            onClick={() => setRoleTab("DOCTOR")}
+            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
+              roleTab === "DOCTOR"
+                ? "bg-background text-foreground shadow-xs"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Stethoscope className="size-4 text-primary" /> Doctor Sign In
+          </button>
+        </div>
+
         {error ? (
-          <div className="mb-4">
-            <ErrorState error={error} title="Could not sign in" onRetry={() => onSubmit(form.getValues())} />
-          </div>
+          <ErrorState error={error} title="Could not sign in" onRetry={() => onSubmit(form.getValues())} />
         ) : null}
 
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
@@ -80,15 +119,13 @@ function LoginPage() {
             <Input
               id="email"
               type="email"
+              placeholder={roleTab === "DOCTOR" ? "doctor@medislot.test" : "patient@medislot.test"}
               autoComplete="email"
               aria-invalid={Boolean(form.formState.errors.email)}
-              aria-describedby={form.formState.errors.email ? "email-error" : undefined}
               {...form.register("email")}
             />
             {form.formState.errors.email ? (
-              <p id="email-error" role="alert" className="text-sm text-destructive">
-                {form.formState.errors.email.message}
-              </p>
+              <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
             ) : null}
           </div>
 
@@ -104,39 +141,36 @@ function LoginPage() {
               type="password"
               autoComplete="current-password"
               aria-invalid={Boolean(form.formState.errors.password)}
-              aria-describedby={form.formState.errors.password ? "password-error" : undefined}
               {...form.register("password")}
             />
             {form.formState.errors.password ? (
-              <p id="password-error" role="alert" className="text-sm text-destructive">
-                {form.formState.errors.password.message}
-              </p>
+              <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
             ) : null}
           </div>
 
           <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? (
-              <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-            ) : null}
-            Sign in
+            {form.formState.isSubmitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+            Sign in as {roleTab === "DOCTOR" ? "Doctor" : "Patient"}
           </Button>
         </form>
 
-        <p className="mt-4 text-sm text-muted-foreground">
-          New patient?{" "}
-          <Link to="/register" className="font-medium text-primary underline-offset-4 hover:underline">
-            Create an account
-          </Link>
-        </p>
-      </div>
+        <div className="border-t pt-4 text-center space-y-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full text-xs text-muted-foreground"
+            onClick={() => fillDemoCredentials(roleTab === "DOCTOR" ? "DOCTOR" : "PATIENT")}
+          >
+            Fill Demo {roleTab === "DOCTOR" ? "Doctor" : "Patient"} Credentials
+          </Button>
 
-      <div className="surface-panel mt-4 p-4 text-sm">
-        <p className="font-medium">Demo accounts (mock service, password: password123)</p>
-        <ul className="mt-2 space-y-1 text-muted-foreground">
-          <li>patient@medislot.test — patient</li>
-          <li>doctor@medislot.test — doctor</li>
-          <li>admin@medislot.test — administrator</li>
-        </ul>
+          <p className="text-xs text-muted-foreground">
+            Don't have an account?{" "}
+            <Link to="/register" className="font-medium text-primary underline-offset-4 hover:underline">
+              Create an account
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

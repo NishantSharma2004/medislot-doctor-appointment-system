@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
@@ -89,7 +90,7 @@ function DashboardPage() {
     setSelectedSlotId("");
     try {
       const slots = await doctorService.getAvailability(appt.doctorId);
-      setAvailableSlots(slots.filter((s) => !s.booked));
+      setAvailableSlots(slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime)));
     } catch {
       setAvailableSlots([]);
     }
@@ -197,7 +198,7 @@ function DashboardPage() {
                     <p className="text-sm text-muted-foreground">
                       Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
                       <span className="font-medium text-foreground">
-                        {appt.startTime} - {appt.endTime}
+                        {formatTimeRange(appt.startTime, appt.endTime)}
                       </span>
                     </p>
                     {appt.reason ? (
@@ -220,18 +221,15 @@ function DashboardPage() {
                       {appt.status}
                     </span>
 
-                    {appt.status !== "CANCELLED" && appt.status !== "COMPLETED" ? (
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => openRescheduleModal(appt)}
-                        >
+                    {appt.status === "PENDING" || appt.status === "CONFIRMED" ? (
+                      <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" onClick={() => openRescheduleModal(appt)}>
                           Reschedule
                         </Button>
                         <Button
-                          variant="destructive"
+                          variant="ghost"
                           size="sm"
+                          className="text-destructive hover:bg-destructive/10"
                           onClick={() => handleCancel(appt.id)}
                         >
                           Cancel
@@ -255,16 +253,16 @@ function DashboardPage() {
       {/* Reschedule Modal */}
       {reschedulingAppt ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="surface-panel w-full max-w-md p-6 space-y-4 rounded-xl">
-            <h3 className="text-lg font-bold">Reschedule Appointment</h3>
+          <div className="surface-panel w-full max-w-lg p-6 space-y-4">
+            <h2 className="text-lg font-bold">Reschedule Appointment</h2>
             <p className="text-sm text-muted-foreground">
-              Select a new available time slot for <span className="font-semibold text-foreground">{reschedulingAppt.doctorName}</span>.
+              Select a new available slot with <span className="font-medium">{reschedulingAppt.doctorName}</span>.
             </p>
 
             {availableSlots.length === 0 ? (
-              <p className="text-xs text-destructive">No open slots currently available for this doctor.</p>
+              <p className="text-sm text-muted-foreground py-4 text-center">No other available slots for this doctor.</p>
             ) : (
-              <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+              <div className="max-h-60 overflow-y-auto space-y-2">
                 {availableSlots.map((slot) => (
                   <button
                     key={slot.id}
@@ -276,7 +274,7 @@ function DashboardPage() {
                         : "border-input hover:bg-accent"
                     }`}
                   >
-                    {slot.date} | {slot.startTime} - {slot.endTime}
+                    {slot.date} | {formatTimeRange(slot.startTime, slot.endTime)}
                   </button>
                 ))}
               </div>

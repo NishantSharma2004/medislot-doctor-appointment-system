@@ -15,19 +15,28 @@ import com.medislot.user.entity.PatientProfile;
 import com.medislot.user.entity.User;
 import com.medislot.user.repository.PatientProfileRepository;
 import com.medislot.user.repository.UserRepository;
+import com.medislot.doctor.entity.DoctorProfile;
+import com.medislot.doctor.repository.DoctorProfileRepository;
+import com.medislot.specialization.entity.Specialization;
+import com.medislot.specialization.repository.SpecializationRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AuthService {
 
     private final UserRepository userRepository;
     private final PatientProfileRepository patientProfileRepository;
+    private final DoctorProfileRepository doctorProfileRepository;
+    private final SpecializationRepository specializationRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -36,12 +45,16 @@ public class AuthService {
     public AuthService(
             UserRepository userRepository,
             PatientProfileRepository patientProfileRepository,
+            DoctorProfileRepository doctorProfileRepository,
+            SpecializationRepository specializationRepository,
             RefreshTokenRepository refreshTokenRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.patientProfileRepository = patientProfileRepository;
+        this.doctorProfileRepository = doctorProfileRepository;
+        this.specializationRepository = specializationRepository;
         this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
@@ -56,6 +69,11 @@ public class AuthService {
             throw new ConflictException("An account with this email address already exists.");
         }
 
+        Role role = request.role() != null ? request.role() : Role.PATIENT;
+        if (role == Role.ADMIN) {
+            role = Role.PATIENT;
+        }
+
         String passwordHash = passwordEncoder.encode(request.password());
         User user = new User(
                 null,
@@ -63,12 +81,45 @@ public class AuthService {
                 passwordHash,
                 request.fullName().trim(),
                 request.phone() != null ? request.phone().trim() : null,
-                Role.PATIENT
+                role
         );
 
         User savedUser = userRepository.save(user);
-        PatientProfile patientProfile = new PatientProfile(savedUser);
-        patientProfileRepository.save(patientProfile);
+
+        if (role == Role.DOCTOR) {
+            DoctorProfile doctorProfile = new DoctorProfile();
+            doctorProfile.setUser(savedUser);
+
+            String specName = request.specializationName() != null && !request.specializationName().isBlank()
+                    ? request.specializationName().trim()
+                    : "General Medicine";
+
+            Specialization spec = specializationRepository.findByNameIgnoreCase(specName)
+                    .orElseGet(() -> {
+                        Specialization newSpec = new Specialization(null, specName, "Medical Specialization");
+                        return specializationRepository.save(newSpec);
+                    });
+
+            doctorProfile.setSpecialization(spec);
+            doctorProfile.setQualifications(request.qualifications() != null && !request.qualifications().isBlank() ? request.qualifications().trim() : "MBBS");
+            doctorProfile.setYearsOfExperience(request.yearsOfExperience() != null ? request.yearsOfExperience() : 5);
+            doctorProfile.setConsultationFee(request.consultationFee() != null ? request.consultationFee() : new BigDecimal("500"));
+            doctorProfile.setClinicName(request.clinicName() != null && !request.clinicName().isBlank() ? request.clinicName().trim() : "MediSlot Clinic");
+            doctorProfile.setCity(request.city() != null && !request.city().isBlank() ? request.city().trim() : "Delhi");
+            doctorProfile.setLanguages(request.languages() != null && !request.languages().isEmpty() ? request.languages() : List.of("English", "Hindi"));
+            doctorProfile.setAbout(request.about() != null && !request.about().isBlank() ? request.about().trim() : "Specialist Doctor registered on MediSlot.");
+
+            String regNum = request.registrationNumber() != null && !request.registrationNumber().isBlank()
+                    ? request.registrationNumber().trim()
+                    : "REG-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+            doctorProfile.setRegistrationNumber(regNum);
+            doctorProfile.setActive(true);
+
+            doctorProfileRepository.save(doctorProfile);
+        } else {
+            PatientProfile patientProfile = new PatientProfile(savedUser);
+            patientProfileRepository.save(patientProfile);
+        }
 
         return createAuthResponse(savedUser);
     }

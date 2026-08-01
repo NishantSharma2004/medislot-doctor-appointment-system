@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { formatFee } from "@/components/common/format";
+import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PageShell } from "@/components/layout/AppShell";
@@ -61,7 +61,7 @@ function DoctorProfilePage() {
     );
 
   const doctor = doctorQuery.data!;
-  const availableSlots = (availabilityQuery.data ?? []).filter((slot) => !slot.booked);
+  const availableSlots = (availabilityQuery.data ?? []).filter((slot) => !slot.booked && isUpcomingSlot(slot.date, slot.startTime));
 
   const handleBooking = async () => {
     if (!isAuthenticated) {
@@ -166,7 +166,7 @@ function DoctorProfilePage() {
                     >
                       <span className="text-xs font-semibold text-primary">{slot.date}</span>
                       <span className="text-sm font-medium">
-                        {slot.startTime} - {slot.endTime}
+                        {formatTimeRange(slot.startTime, slot.endTime)}
                       </span>
                     </button>
                   );
@@ -178,7 +178,7 @@ function DoctorProfilePage() {
               <div className="mt-4 border-t pt-4 space-y-4 bg-primary/5 p-4 rounded-lg">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-semibold">
-                    Selected Slot: {selectedSlot.date} ({selectedSlot.startTime} - {selectedSlot.endTime})
+                    Selected Slot: {selectedSlot.date} ({formatTimeRange(selectedSlot.startTime, selectedSlot.endTime)})
                   </span>
                   <Button variant="ghost" size="sm" onClick={() => setSelectedSlot(null)}>
                     Change

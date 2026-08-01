@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PaginationControls } from "@/components/common/PaginationControls";
@@ -89,7 +90,7 @@ function MyAppointmentsPage() {
     setSelectedSlotId("");
     try {
       const slots = await doctorService.getAvailability(appt.doctorId);
-      setAvailableSlots(slots.filter((s) => !s.booked));
+      setAvailableSlots(slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime)));
     } catch {
       setAvailableSlots([]);
     }
@@ -163,7 +164,7 @@ function MyAppointmentsPage() {
                     <p className="text-sm text-muted-foreground">
                       Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
                       <span className="font-medium text-foreground">
-                        {appt.startTime} - {appt.endTime}
+                        {formatTimeRange(appt.startTime, appt.endTime)}
                       </span>
                     </p>
                     {appt.reason ? <p className="text-xs text-muted-foreground">Reason: {appt.reason}</p> : null}
@@ -231,7 +232,7 @@ function MyAppointmentsPage() {
                         : "border-input hover:bg-accent"
                     }`}
                   >
-                    {slot.date} | {slot.startTime} - {slot.endTime}
+                    {slot.date} | {formatTimeRange(slot.startTime, slot.endTime)}
                   </button>
                 ))}
               </div>

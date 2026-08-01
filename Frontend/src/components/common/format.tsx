@@ -44,3 +44,31 @@ export function formatShortDate(date: string): string {
 export function formatFee(amount: number): string {
   return `₹${amount.toLocaleString("en-IN")}`;
 }
+
+export function formatTime(timeStr: string): string {
+  if (!timeStr) return "";
+  const [hStr, mStr] = timeStr.split(":");
+  let h = parseInt(hStr, 10);
+  const m = mStr ? parseInt(mStr, 10) : 0;
+  if (isNaN(h)) return timeStr;
+  const ampm = h >= 12 ? "PM" : "AM";
+  h = h % 12;
+  h = h ? h : 12;
+  const formattedMinutes = m < 10 ? `0${m}` : `${m}`;
+  return `${h}:${formattedMinutes} ${ampm}`;
+}
+
+export function formatTimeRange(startTime: string, endTime: string): string {
+  return `${formatTime(startTime)} – ${formatTime(endTime)}`;
+}
+
+export function isUpcomingSlot(dateStr: string, startTimeStr: string): boolean {
+  if (!dateStr || !startTimeStr) return true;
+  try {
+    const formattedStartTime = startTimeStr.length === 5 ? `${startTimeStr}:00` : startTimeStr;
+    const slotDateTime = new Date(`${dateStr}T${formattedStartTime}`);
+    return slotDateTime.getTime() > Date.now();
+  } catch {
+    return true;
+  }
+}
