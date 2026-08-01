@@ -201,10 +201,10 @@ public class UserService {
     }
 
     @Transactional
-    public void forgotPassword(ForgotPasswordRequest request) {
+    public String forgotPassword(ForgotPasswordRequest request) {
         Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.email().trim());
         if (userOpt.isEmpty()) {
-            return;
+            return null;
         }
 
         User user = userOpt.get();
@@ -231,6 +231,7 @@ public class UserService {
             "Your MediSlot Password Reset OTP: " + rawToken,
             "Your MediSlot password reset OTP code is: " + rawToken + "\n\nThis OTP is valid for 10 minutes. Do not share this code with anyone."
         );
+        return rawToken;
     }
 
     @Transactional

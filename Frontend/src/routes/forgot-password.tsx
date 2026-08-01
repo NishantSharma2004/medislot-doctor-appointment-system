@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, KeyRound, Loader2, RotateCw } from "lucide-react";
+import { CheckCircle2, Copy, KeyRound, Loader2, RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { BackButton } from "@/components/common/BackButton";
@@ -21,6 +21,7 @@ export const Route = createFileRoute("/forgot-password")({
 
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
+  const [tokenCode, setTokenCode] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,10 +40,15 @@ function ForgotPasswordPage() {
     if (!email.trim()) return;
     setIsSubmitting(true);
     try {
-      await apiClient.post("/auth/forgot-password", { email: email.trim() });
+      const res = await apiClient.post<{ message: string; resetToken?: string }>("/auth/forgot-password", {
+        email: email.trim(),
+      });
       setSubmitted(true);
       setResendCooldown(30);
-      toast.success("Password reset token generated");
+      if (res.data?.resetToken) {
+        setTokenCode(res.data.resetToken);
+      }
+      toast.success("Password reset OTP generated");
     } catch (err) {
       const apiErr = err as ApiError;
       toast.error(apiErr.message || "Failed to process request");
@@ -55,12 +61,17 @@ function ForgotPasswordPage() {
     if (resendCooldown > 0 || isResending || !email.trim()) return;
     setIsResending(true);
     try {
-      await apiClient.post("/auth/forgot-password", { email: email.trim() });
-      toast.success(`Reset token resent to ${email}`);
+      const res = await apiClient.post<{ message: string; resetToken?: string }>("/auth/forgot-password", {
+        email: email.trim(),
+      });
       setResendCooldown(30);
+      if (res.data?.resetToken) {
+        setTokenCode(res.data.resetToken);
+      }
+      toast.success(`Reset OTP resent for ${email}`);
     } catch (err) {
       const apiErr = err as ApiError;
-      toast.error(apiErr.message || "Failed to resend reset token");
+      toast.error(apiErr.message || "Failed to resend reset OTP");
     } finally {
       setIsResending(false);
     }
@@ -87,9 +98,35 @@ function ForgotPasswordPage() {
               </p>
             </div>
 
+            {/* Render Prominent OTP Box for Instant Demo/Testing */}
+            {tokenCode ? (
+              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-2 text-left">
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider block">
+                  Your 6-Digit Password Reset OTP
+                </span>
+                <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-xl font-bold tracking-widest text-primary">
+                  <span>{tokenCode}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(tokenCode);
+                      toast.success("OTP copied to clipboard!");
+                    }}
+                  >
+                    <Copy className="size-4 mr-1" /> Copy OTP
+                  </Button>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  Use this 6-digit OTP code to reset your password. (Valid for 10 minutes).
+                </p>
+              </div>
+            ) : null}
+
             <div className="space-y-2 pt-2">
               <Button asChild className="w-full gap-2">
-                <Link to="/reset-password">
+                <Link to="/reset-password" search={{ token: tokenCode ?? undefined }}>
                   <KeyRound className="size-4" /> Enter Reset Token & Set New Password
                 </Link>
               </Button>

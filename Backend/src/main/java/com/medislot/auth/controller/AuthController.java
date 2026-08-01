@@ -75,9 +75,15 @@ public class AuthController {
 
     @PostMapping("/forgot-password")
     @RateLimited(policy = "forgot-password")
-    @Operation(summary = "Request password reset token (returns generic response to prevent email enumeration)")
+    @Operation(summary = "Request password reset token")
     public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
-        userService.forgotPassword(request);
+        String resetToken = userService.forgotPassword(request);
+        if (resetToken != null) {
+            return ResponseEntity.ok(Map.of(
+                    "message", "If an account with that email exists, password reset instructions have been sent.",
+                    "resetToken", resetToken
+            ));
+        }
         return ResponseEntity.ok(Map.of("message", "If an account with that email exists, password reset instructions have been sent."));
     }
 
