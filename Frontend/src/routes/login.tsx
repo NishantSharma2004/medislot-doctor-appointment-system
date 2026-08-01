@@ -63,10 +63,10 @@ function LoginPage() {
   const fillDemoCredentials = (role: "PATIENT" | "DOCTOR") => {
     if (role === "PATIENT") {
       form.setValue("email", "patient@medislot.test");
-      form.setValue("password", "password123");
+      form.setValue("password", "Password123!");
     } else {
       form.setValue("email", "doctor@medislot.test");
-      form.setValue("password", "password123");
+      form.setValue("password", "Password123!");
     }
   };
 
