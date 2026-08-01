@@ -2,11 +2,11 @@
 
 -- 1. Create Patient Demo Account (password: Password123!)
 INSERT INTO users (id, email, password_hash, full_name, phone, role, enabled, country_code, created_at, updated_at) VALUES
-('p1000001-0000-4000-8000-000000000001', 'patient@medislot.test', '$2a$10$eD4t0Zg7t1hQ1S5g3c2uEu/uN9Xq9J5v/5W/z6pW.4z3K1v5u7Y6W', 'Demo Patient', '+919876500001', 'PATIENT', TRUE, '+91', NOW(), NOW())
+('e1000001-0000-4000-8000-000000000001', 'patient@medislot.test', '$2a$10$eD4t0Zg7t1hQ1S5g3c2uEu/uN9Xq9J5v/5W/z6pW.4z3K1v5u7Y6W', 'Demo Patient', '+919876500001', 'PATIENT', TRUE, '+91', NOW(), NOW())
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO patient_profiles (user_id, date_of_birth, gender, city, created_at, updated_at) VALUES
-('p1000001-0000-4000-8000-000000000001', '1995-05-15', 'MALE', 'Delhi', NOW(), NOW())
+('e1000001-0000-4000-8000-000000000001', '1995-05-15', 'MALE', 'Delhi', NOW(), NOW())
 ON CONFLICT (user_id) DO NOTHING;
 
 -- 2. Create Doctor Demo Account (password: Password123!)
