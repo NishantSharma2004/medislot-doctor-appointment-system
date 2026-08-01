@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueries } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { SearchX, SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
@@ -32,6 +32,7 @@ interface DoctorSearch {
   specialization?: string;
   city?: string;
   maxFee?: number;
+  availability?: string;
   page?: number;
 }
 
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/doctors/")({
         : undefined,
     city: typeof search.city === "string" && search.city ? search.city : undefined,
     maxFee: typeof search.maxFee === "number" ? search.maxFee : undefined,
+    availability: typeof search.availability === "string" && search.availability ? search.availability : undefined,
     page: typeof search.page === "number" ? search.page : undefined,
   }),
   head: () => ({
@@ -95,6 +97,33 @@ function DoctorSearchPage() {
       }),
   });
 
+  const result = doctorsQuery.data;
+  const error = doctorsQuery.error as ApiError | null;
+
+  const doctorIds = (result?.content ?? []).map((d) => d.id);
+  const slotsQueries = useQueries({
+    queries: doctorIds.map((id) => ({
+      queryKey: ["availability", id],
+      queryFn: () => doctorService.getAvailability(id),
+      staleTime: 60000,
+    })),
+  });
+
+  const availableDoctorIdSet = new Set<string>();
+  doctorIds.forEach((id, index) => {
+    const slots = slotsQueries[index]?.data ?? [];
+    if (slots.some((s) => !s.booked)) {
+      availableDoctorIdSet.add(id);
+    }
+  });
+
+  const displayDoctors = (result?.content ?? []).filter((doctor) => {
+    if (search.availability === "AVAILABLE") {
+      return availableDoctorIdSet.has(doctor.id);
+    }
+    return true;
+  });
+
   function updateSearch(next: Partial<DoctorSearch>, resetPage = true) {
     navigate({
       search: (prev: DoctorSearch) => ({ ...prev, ...next, page: resetPage ? 0 : next.page ?? prev.page }),
@@ -107,9 +136,6 @@ function DoctorSearchPage() {
     setFeeDraft(MAX_FEE);
     navigate({ search: {}, replace: true });
   }
-
-  const result = doctorsQuery.data;
-  const error = doctorsQuery.error as ApiError | null;
 
   return (
     <PageShell
@@ -186,6 +212,24 @@ function DoctorSearchPage() {
             </Select>
           </div>
 
+          <div className="space-y-1.5">
+            <Label htmlFor="filter-availability">Slot Availability</Label>
+            <Select
+              value={search.availability ?? ANY}
+              onValueChange={(value) =>
+                updateSearch({ availability: value === ANY ? undefined : value })
+              }
+            >
+              <SelectTrigger id="filter-availability">
+                <SelectValue placeholder="Any availability" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ANY}>Any availability</SelectItem>
+                <SelectItem value="AVAILABLE">🟢 Open Slots Available Only</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="filter-fee">Maximum consultation fee: ₹{feeDraft}</Label>
             <Slider
@@ -212,11 +256,11 @@ function DoctorSearchPage() {
 
           {error ? <ErrorState error={error} onRetry={() => doctorsQuery.refetch()} /> : null}
 
-          {result && result.content.length === 0 ? (
+          {result && displayDoctors.length === 0 ? (
             <EmptyState
               icon={<SearchX className="size-6" aria-hidden="true" />}
               title="No doctors match these filters"
-              description="Try widening the consultation fee range, choosing another location, or clearing the search text."
+              description="Try widening the consultation fee range, setting availability to Any, or clearing filters."
               action={
                 <Button variant="outline" onClick={clearFilters}>
                   Clear filters
@@ -225,17 +269,17 @@ function DoctorSearchPage() {
             />
           ) : null}
 
-          {result && result.content.length > 0 ? (
+          {result && displayDoctors.length > 0 ? (
             <>
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {result.content.map((doctor) => (
+                {displayDoctors.map((doctor) => (
                   <DoctorCard key={doctor.id} doctor={doctor} />
                 ))}
               </div>
               <PaginationControls
                 page={result.page}
                 totalPages={result.totalPages}
-                totalElements={result.totalElements}
+                totalElements={displayDoctors.length}
                 label="doctors"
                 onPageChange={(next) => updateSearch({ page: next }, false)}
               />

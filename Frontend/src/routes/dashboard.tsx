@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PaginationControls } from "@/components/common/PaginationControls";
@@ -115,7 +116,8 @@ function DashboardPage() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 space-y-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
+      <BackButton />
       {/* User Profile Overview Header */}
       <div className="surface-panel p-6">
         <h1 className="text-2xl font-bold tracking-tight">Account Dashboard</h1>

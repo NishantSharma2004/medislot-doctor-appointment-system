@@ -12,7 +12,15 @@ export function BackButton({ className = "", fallbackTo = "/", label = "Back" }:
   const router = useRouter();
 
   const handleBack = () => {
-    if (window.history.length > 1) {
+    const search = (router.state.location.search as Record<string, unknown>) ?? {};
+    const hasRedirect = typeof search.redirect === "string" && search.redirect.length > 0;
+
+    if (hasRedirect) {
+      router.navigate({ to: fallbackTo });
+      return;
+    }
+
+    if (typeof window !== "undefined" && window.history.length > 1 && document.referrer.includes(window.location.host)) {
       router.history.back();
     } else {
       router.navigate({ to: fallbackTo });

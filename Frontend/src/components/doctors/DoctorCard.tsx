@@ -1,9 +1,11 @@
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Banknote, BriefcaseMedical, Languages, MapPin } from "lucide-react";
+import { Banknote, BriefcaseMedical, CalendarX, Languages, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatFee } from "@/components/common/format";
 import type { DoctorDto } from "@/lib/api/types";
+import { doctorService } from "@/services/doctor.service";
 
 function initials(name: string) {
   return name
@@ -16,6 +18,15 @@ function initials(name: string) {
 }
 
 export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
+  const { data: slots = [] } = useQuery({
+    queryKey: ["availability", doctor.id],
+    queryFn: () => doctorService.getAvailability(doctor.id),
+    staleTime: 60000,
+  });
+
+  const openSlots = slots.filter((s) => !s.booked);
+  const hasSlots = openSlots.length > 0;
+
   return (
     <article className="surface-panel flex h-full flex-col gap-4 p-5 transition-shadow hover:shadow-float">
       <div className="flex min-w-0 items-start gap-3">
@@ -28,9 +39,22 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
         <div className="min-w-0">
           <h3 className="truncate font-semibold">{doctor.fullName}</h3>
           <p className="truncate text-sm text-muted-foreground">{doctor.qualifications}</p>
-          <Badge variant="secondary" className="mt-2 rounded-full">
-            {doctor.specialization}
-          </Badge>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <Badge variant="secondary" className="rounded-full">
+              {doctor.specialization}
+            </Badge>
+            {hasSlots ? (
+              <Badge variant="outline" className="rounded-full border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-medium">
+                <span className="mr-1 inline-block size-2 rounded-full bg-emerald-500 animate-pulse" />
+                {openSlots.length} Open Slot{openSlots.length === 1 ? "" : "s"}
+              </Badge>
+            ) : (
+              <Badge variant="outline" className="rounded-full border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 font-medium">
+                <CalendarX className="mr-1 size-3 text-amber-500 inline" />
+                No Open Slots
+              </Badge>
+            )}
+          </div>
         </div>
       </div>
 
