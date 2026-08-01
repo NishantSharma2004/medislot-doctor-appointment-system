@@ -73,6 +73,8 @@ export function RegisterPage() {
   const [role, setRole] = useState<Role>("PATIENT");
   const [error, setError] = useState<ApiError | null>(null);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -93,6 +95,8 @@ export function RegisterPage() {
   });
 
   async function onSubmit(values: RegisterValues) {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     setError(null);
     try {
       await registerAccount({
@@ -116,6 +120,8 @@ export function RegisterPage() {
       const apiError = caught as ApiError;
       setError(apiError);
       toast.error(apiError.message || "Registration failed");
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -264,8 +270,8 @@ export function RegisterPage() {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+          <Button type="submit" className="w-full" disabled={isSubmitting || form.formState.isSubmitting}>
+            {isSubmitting || form.formState.isSubmitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
             Create {role === "DOCTOR" ? "Doctor" : "Patient"} Account
           </Button>
         </form>

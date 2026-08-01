@@ -112,6 +112,11 @@ public class AuthService {
             String regNum = request.registrationNumber() != null && !request.registrationNumber().isBlank()
                     ? request.registrationNumber().trim()
                     : "REG-" + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+
+            if (doctorProfileRepository.existsByRegistrationNumberIgnoreCase(regNum)) {
+                throw new BusinessException(HttpStatus.CONFLICT, "DUPLICATE_REGISTRATION", "Medical Registration Number '" + regNum + "' is already registered with another doctor account.");
+            }
+
             doctorProfile.setRegistrationNumber(regNum);
             doctorProfile.setActive(true);
 

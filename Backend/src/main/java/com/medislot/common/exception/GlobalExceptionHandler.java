@@ -109,12 +109,23 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ApiErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex, HttpServletRequest request) {
         log.warn("Data integrity violation on path [{}]: {}", request.getRequestURI(), ex.getMostSpecificCause().getMessage());
+        String path = request.getRequestURI();
+        if (path != null && path.contains("/auth/register")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiErrorResponse(
+                    Instant.now(),
+                    HttpStatus.CONFLICT.value(),
+                    "USER_ALREADY_EXISTS",
+                    "An account with this email address or medical registration number already exists. Please sign in or use unique details.",
+                    path,
+                    null
+            ));
+        }
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "SLOT_ALREADY_BOOKED",
                 "The requested appointment slot or time range is no longer available.",
-                request.getRequestURI(),
+                path,
                 null
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
@@ -123,12 +134,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
     public ResponseEntity<ApiErrorResponse> handleOptimisticLockingFailure(ObjectOptimisticLockingFailureException ex, HttpServletRequest request) {
         log.warn("Optimistic locking conflict on path [{}]: {}", request.getRequestURI(), ex.getMessage());
+        String path = request.getRequestURI();
+        String message = path != null && path.contains("/auth/register")
+                ? "Account registration is processing or already exists. Please try signing in."
+                : "The requested resource was updated by another concurrent request. Please try again.";
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),
                 "CONCURRENCY_CONFLICT",
-                "The requested resource was updated by another concurrent request. Please try again.",
-                request.getRequestURI(),
+                message,
+                path,
                 null
         );
         return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
