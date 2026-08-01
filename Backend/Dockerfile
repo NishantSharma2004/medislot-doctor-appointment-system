@@ -23,7 +23,7 @@ COPY --from=builder /app/target/doctor-appointment-backend-*.jar app.jar
 
 # Environment variables
 ENV PORT=8080 \
-    JAVA_OPTS="-XX:+UseG1GC -XX:MaxRAMPercentage=75.0"
+    JAVA_OPTS="-Xms128m -Xmx320m -XX:TieredStopAtLevel=1 -XX:+UseG1GC -Dspring.backgroundpreinitializer.ignore=true"
 
 EXPOSE 8080
 
