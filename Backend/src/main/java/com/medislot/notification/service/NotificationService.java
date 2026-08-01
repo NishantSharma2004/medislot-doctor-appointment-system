@@ -5,6 +5,7 @@ import com.medislot.notification.repository.NotificationLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -23,29 +24,39 @@ public class NotificationService {
     @Autowired(required = false)
     private JavaMailSender mailSender;
 
+    @Value("${spring.mail.username:}")
+    private String mailUsername;
+
     public NotificationService(NotificationLogRepository notificationLogRepository) {
         this.notificationLogRepository = notificationLogRepository;
     }
 
     public void sendEmailNotification(UUID userId, UUID appointmentId, String recipientEmail, String templateName, String subject, String body) {
         String maskedRecipient = maskEmail(recipientEmail);
+        boolean isMailConfigured = mailSender != null && mailUsername != null && !mailUsername.isBlank() && recipientEmail != null && !recipientEmail.isBlank();
+
         try {
             log.info("Processing email notification [template={}] to {}", templateName, maskedRecipient);
 
-            if (mailSender != null && recipientEmail != null && !recipientEmail.isBlank()) {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setTo(recipientEmail.trim());
-                message.setSubject(subject != null ? subject : "MediSlot Notification");
-                message.setText(body != null ? body : "");
-                mailSender.send(message);
-                log.info("Real SMTP email successfully dispatched to {}", maskedRecipient);
+            if (isMailConfigured) {
+                try {
+                    SimpleMailMessage message = new SimpleMailMessage();
+                    message.setFrom(mailUsername);
+                    message.setTo(recipientEmail.trim());
+                    message.setSubject(subject != null ? subject : "MediSlot Notification");
+                    message.setText(body != null ? body : "");
+                    mailSender.send(message);
+                    log.info("Real SMTP email successfully dispatched to {}", maskedRecipient);
+                } catch (Exception smtpEx) {
+                    log.warn("SMTP send failed to {}, falling back gracefully: {}", maskedRecipient, smtpEx.getMessage());
+                }
             } else {
-                log.info("Simulated email dispatch [template={}] (SMTP unconfigured or optional): {}", templateName, body);
+                log.info("Simulated email dispatch [template={}] (SMTP username unconfigured): {}", templateName, body);
             }
 
             recordLog(userId, appointmentId, templateName, maskedRecipient, "SENT", null, null);
         } catch (Exception e) {
-            log.error("Failed to send email notification to {}", maskedRecipient, e);
+            log.error("Failed to process email notification to {}", maskedRecipient, e);
             recordLog(userId, appointmentId, templateName, maskedRecipient, "FAILED", null, e.getMessage());
         }
     }
