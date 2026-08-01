@@ -30,4 +30,7 @@ public record RegisterRequest(
         String registrationNumber,
         String about
 ) {
+    public RegisterRequest(String fullName, String email, String phone, String password) {
+        this(fullName, email, phone, password, Role.PATIENT, null, null, null, null, null, null, null, null, null);
+    }
 }
