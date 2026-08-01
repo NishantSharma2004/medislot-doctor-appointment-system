@@ -91,10 +91,10 @@ function ForgotPasswordPage() {
             <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-xs text-emerald-800 dark:text-emerald-300 text-left space-y-2">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <p className="font-semibold text-sm">Reset token generated!</p>
+                <p className="font-semibold text-sm">Reset OTP Generated!</p>
               </div>
               <p className="leading-relaxed">
-                If an account with <span className="font-bold text-foreground">{email}</span> exists, password reset instructions with your reset token have been dispatched.
+                Reset OTP generated for <span className="font-bold text-foreground">{email}</span>. Use your 6-digit OTP code below to reset your password.
               </p>
             </div>
 
