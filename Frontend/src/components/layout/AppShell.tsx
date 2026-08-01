@@ -25,11 +25,11 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home" },
   { to: "/doctors", label: "Find a doctor" },
-  { to: "/dashboard", label: "Dashboard", roles: ["PATIENT"], requiresAuth: true },
+  { to: "/dashboard", label: "Dashboard" },
+  { to: "/appointments", label: "Appointments" },
   { to: "/doctor", label: "Doctor desk", roles: ["DOCTOR"], requiresAuth: true },
   { to: "/doctor/availability", label: "Availability", roles: ["DOCTOR"], requiresAuth: true },
   { to: "/admin", label: "Admin", roles: ["ADMIN"], requiresAuth: true },
-  { to: "/appointments", label: "My appointments", roles: ["PATIENT", "DOCTOR"], requiresAuth: true },
 ];
 
 function useVisibleNav() {
