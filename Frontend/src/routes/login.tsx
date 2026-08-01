@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ErrorState } from "@/components/common/ErrorState";
+import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,6 +61,7 @@ function LoginPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col px-4 py-12">
+      <BackButton className="mb-4 self-start" />
       <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Access your appointments, availability and clinic tools.

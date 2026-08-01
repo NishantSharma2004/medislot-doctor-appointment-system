@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BackButton } from "@/components/common/BackButton";
 import { PageShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +41,7 @@ function ForgotPasswordPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col px-4 py-12">
+      <BackButton className="mb-4 self-start" />
       <h1 className="text-2xl font-bold tracking-tight">Forgot password</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Enter your registered email address to receive password reset instructions.

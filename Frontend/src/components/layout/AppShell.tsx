@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { CalendarDays, LogOut, Menu, Stethoscope, User } from "lucide-react";
 import { useState, type ReactNode } from "react";
+import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -173,15 +174,22 @@ export function PageShell({
   title,
   description,
   actions,
+  showBackButton = true,
   children,
 }: {
   title: string;
   description?: string;
   actions?: ReactNode;
+  showBackButton?: boolean;
   children: ReactNode;
 }) {
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-8">
+      {showBackButton ? (
+        <div className="mb-4">
+          <BackButton />
+        </div>
+      ) : null}
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h1 className="truncate text-2xl font-bold tracking-tight sm:text-3xl">{title}</h1>

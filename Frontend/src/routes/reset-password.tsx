@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ErrorState } from "@/components/common/ErrorState";
+import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,6 +80,7 @@ function ResetPasswordPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-md flex-col px-4 py-12">
+      <BackButton className="mb-4 self-start" />
       <h1 className="text-2xl font-bold tracking-tight">Reset your password</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Enter your OTP / reset token and new password.
