@@ -210,9 +210,9 @@ public class UserService {
         User user = userOpt.get();
         passwordResetTokenRepository.deleteByUser(user);
 
-        byte[] randomBytes = new byte[32];
-        new SecureRandom().nextBytes(randomBytes);
-        String rawToken = Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
+        SecureRandom random = new SecureRandom();
+        int otpInt = 100000 + random.nextInt(900000);
+        String rawToken = String.valueOf(otpInt);
         String tokenHash = hashToken(rawToken);
 
         PasswordResetToken resetToken = new PasswordResetToken();
@@ -223,7 +223,14 @@ public class UserService {
         passwordResetTokenRepository.save(resetToken);
 
         auditLogService.record(user.getId(), user.getRole().name(), "PASSWORD_RESET_REQUEST", "USER", user.getId(), "SUCCESS", "{}");
-        notificationService.sendEmailNotification(user.getId(), null, user.getEmail(), "PASSWORD_RESET", "Reset Your MediSlot Password", "Use this reset token to update your password: " + rawToken);
+        notificationService.sendEmailNotification(
+            user.getId(),
+            null,
+            user.getEmail(),
+            "PASSWORD_RESET",
+            "Your MediSlot Password Reset OTP: " + rawToken,
+            "Your MediSlot password reset OTP code is: " + rawToken + "\n\nThis OTP is valid for 10 minutes. Do not share this code with anyone."
+        );
     }
 
     @Transactional
