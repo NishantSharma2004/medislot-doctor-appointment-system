@@ -57,7 +57,7 @@ class Phase8PostgresRuntimeVerificationTest {
         authService.registerPatient(registerRequest);
         testPatient = userRepository.findByEmailIgnoreCase(email).map(user -> {
             user.setEnabled(true);
-            return userRepository.save(user);
+            return userRepository.saveAndFlush(user);
         }).orElseThrow();
     }
 
