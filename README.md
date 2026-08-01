@@ -1,63 +1,73 @@
-# MediSlot — Doctor Appointment Management System
+# 🏥 MediSlot — Doctor Appointment & Clinic Management System
 
-MediSlot is a production-grade full-stack Doctor Appointment Management System built with a **Java 21 / Spring Boot 3** Modular Monolith backend and a **React 18 / Vite / TanStack Router** frontend (originally generated via Lovable).
+MediSlot is a production-grade, full-stack Healthcare & Clinic Workspace built with a **Java 21 / Spring Boot 3** backend and a **React 18 / Vite 8 / TanStack Router** frontend.
 
 ---
 
-## Architecture Overview
+## 🌐 Live Production Links
+
+* **Live Frontend (Vercel)**: [https://medislot-doctor-appointment-system.vercel.app](https://medislot-doctor-appointment-system.vercel.app)
+* **Live Backend API (Render)**: [https://medislot-doctor-appointment-system.onrender.com](https://medislot-doctor-appointment-system.onrender.com)
+* **Swagger API Documentation**: [https://medislot-doctor-appointment-system.onrender.com/swagger-ui.html](https://medislot-doctor-appointment-system.onrender.com/swagger-ui.html)
+* **OpenAPI 3.0 Spec**: [https://medislot-doctor-appointment-system.onrender.com/v3/api-docs](https://medislot-doctor-appointment-system.onrender.com/v3/api-docs)
+
+---
+
+## 🏗️ System Architecture
 
 ```
-User Browser
+User Browser / Mobile
     │
     ▼
-Vercel Frontend (React 18 + Vite + TanStack Router)
+Vercel Edge Network (React 18 + Vite 8 + TanStack Router + TailwindCSS)
     │
-    │ HTTPS REST API Requests (JWT Bearer Auth)
+    │ HTTPS REST API Requests (JWT Bearer Auth & CORS Allowed Origins)
     ▼
-Railway Backend (Spring Boot 3.4.1 / Java 21)
+Render Web Service (Docker Container: Spring Boot 3.4.1 / Java 21 LTS)
     │
-    ├── Spring Security (Stateless JWT Filter & Token Rotation)
-    ├── Bucket4j Rate Limiting Interceptor (In-Memory Token Bucket)
-    ├── AI Provider Router (Groq Primary ➔ Gemini Fallback)
-    ├── Audit Logger (Isolated REQUIRES_NEW Transactions)
-    └── Notification Logger (Masked Emails)
+    ├── Spring Security (Stateless JWT Filters & CORS Origin Patterns)
+    ├── Bucket4j Rate Limiter (In-Memory Token Bucket Defense)
+    ├── Dual-LLM Router (Groq Primary Llama-3.3-70b ➔ Gemini 1.5 Flash Fallback)
+    ├── Audit & Notification Logger (Isolated REQUIRES_NEW Transactions)
+    └── Cold-Start Warmup Health Handler (/actuator/health)
     │
-    │ Railway Private Connection
+    │ Internal SSL Connection
     ▼
-Railway PostgreSQL 18 (Flyway Migrations V1-V6, Full-Text Search tsvector)
+Render PostgreSQL 17 Database (Flyway Schema Migrations V1-V7, CIText, Full-Text Search)
 ```
 
 ---
 
-## Key Features
+## ✨ Key Features & Capabilities
 
-- **Authentication & Security**: JWT access token issuance (24h), refresh token rotation (7d), BCrypt password hashing, SHA-256 hashed password reset tokens.
-- **Doctor Directory & Filtering**: Multi-criteria search (specialization, city, consultation fee range, minimum experience).
-- **Doctor Availability Scheduling**: Single and bulk recurring slot creation with PostgreSQL `btree_gist` exclusion constraints preventing slot overlaps.
-- **High-Concurrency Appointment Engine**: Slot booking with JPA `PESSIMISTIC_WRITE` locks and `@Version` optimistic locking preventing double-booking race conditions.
-- **Clinic AI Assistant (RAG)**: Full-Text Search grounded knowledge retrieval from clinic documents with LLM provider failover (Groq Llama-3.3-70b ➔ Gemini 1.5 Flash), emergency medical pre-checks, prompt injection protection, and medical disclaimer enforcement.
-- **User Profile Management**: Profile update, MIME-validated avatar image uploads (`image/jpeg`, `image/png`, `image/webp`, max 2MB), password change, and password reset flow.
-- **Admin Analytics & Operations**: Overview of total patients, doctors, appointment status metrics, AI provider usage breakdown, audit logs, and document administration.
-- **Doctor Dashboard**: Today's appointments, pending/completed metrics, and slot occupancy statistics.
-
----
-
-## Technology Stack
-
-- **Backend**: Java 21, Spring Boot 3.4.1, Spring Security 6, Spring Data JPA, Hibernate, Bucket4j, Flyway, JJWT, Maven.
-- **Frontend**: React 18, Vite 5, TanStack Router, TanStack Query, TailwindCSS, Axios.
-- **Database**: PostgreSQL 18 (with `citext`, `btree_gist`, and `tsvector` extensions).
-- **Deployment**: Vercel (Frontend SPA), Railway (Spring Boot Backend Docker Container + PostgreSQL 18).
+- **Multi-Role Workspaces**: Distinct dashboards tailored for `PATIENT`, `DOCTOR`, and `ADMIN`.
+- **6-Digit OTP Password Reset**: Secure password recovery via 6-digit numeric OTP email with automated SMTP timeout safety fallback.
+- **Medi AI Assistant (Grounded RAG)**: 24/7 AI chatbot accessible to both **signed-in users and guest visitors**. Uses PostgreSQL Full-Text Search for clinic context retrieval with dual-LLM failover (Groq ➔ Gemini) and emergency medical pre-checks.
+- **Doctor Availability Scheduling**: Flexible single and recurring time slot creation with PostgreSQL exclusion constraints preventing slot overlaps.
+- **Zero-Conflict Appointment Booking**: Pessimistic/optimistic JPA locking preventing double-booking race conditions during high concurrency.
+- **Global Navigation & Back Button Support**: Smooth back-navigation throughout auth routes (`/login`, `/register`, `/forgot-password`, `/reset-password`) and application shells.
+- **Automated Background Warmup**: Background ping automatically pre-warms Render free containers on frontend load.
+- **Rate-Limiting Protection**: Bucket4j token bucket defense protecting sensitive endpoints (Booking, OTP, Reset Password).
 
 ---
 
-## Local Development & Setup
+## 🛠️ Technology Stack
+
+* **Frontend**: React 18, Vite 8, TanStack Router, TanStack Query, TailwindCSS, Lucide Icons, Axios, Sonner Toasts.
+* **Backend**: Java 21 (Temurin LTS), Spring Boot 3.4.1, Spring Security 6, Spring Data JPA, Hibernate, Bucket4j, Flyway, JJWT.
+* **Database**: PostgreSQL 17 (with `citext`, `btree_gist`, and `tsvector` full-text search extensions).
+* **AI Layer**: Groq Cloud (`llama-3.3-70b-versatile`) with automatic fallback to Google Gemini (`gemini-1.5-flash`).
+* **Deployment & CI/CD**: Vercel (Frontend SPA), Render (Dockerized Backend + Managed PostgreSQL 17), GitHub Actions CI.
+
+---
+
+## 💻 Local Development Setup
 
 ### Prerequisites
 - Java JDK 21
 - Maven 3.9+
 - Node.js 20+ & npm
-- PostgreSQL 18
+- PostgreSQL 17
 
 ### 1. Database Setup
 Create local database:
@@ -66,11 +76,7 @@ CREATE DATABASE medislot_db;
 ```
 
 ### 2. Backend Setup
-Copy environment file:
-```bash
-cp .env.example Backend/.env
-```
-Run backend tests and start server:
+Copy environment file and run tests:
 ```bash
 cd Backend
 mvn clean test
@@ -78,52 +84,31 @@ mvn spring-boot:run
 ```
 
 ### 3. Frontend Setup
-Install dependencies and run development server:
+Install dependencies and run dev server:
 ```bash
 cd Frontend
-npm ci
+npm install
 npm run dev
 ```
 
 ---
 
-## Local Docker Setup
-Run the entire application stack locally using Docker Compose:
-```bash
-docker compose config
-docker compose up --build -d
-```
-Access backend health check at: `http://localhost:8080/actuator/health`
+## 🔑 Demo Test Accounts
+
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Patient** | `patient@medislot.test` | `password123` |
+| **Doctor** | `doctor@medislot.test` | `password123` |
+| **Admin** | `admin@medislot.test` | `password123` |
 
 ---
 
-## Vercel & Railway Free Demo Deployment
+## ⚠️ Medical Disclaimer
 
-- **Vercel Frontend Configuration**:
-  - Root Directory: `Frontend`
-  - Output Directory: `.output/public`
-  - Build Command: `npm run build`
-  - Environment Variable: `VITE_API_BASE_URL=https://<your-railway-backend-domain>`
-- **Railway Backend Configuration**:
-  - Deploy using `Backend/Dockerfile`.
-  - Set `SPRING_PROFILES_ACTIVE=prod`.
-  - Configure `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `GROQ_API_KEY`, `GEMINI_API_KEY`, `CORS_ALLOWED_ORIGINS`.
+The MediSlot Clinic AI Assistant provides administrative information regarding clinic hours, appointment booking policies, and visit preparation based on official clinic documents. It **does not diagnose medical conditions, recommend treatments, or prescribe medications**. Emergency medical queries trigger immediate instructions to call emergency services.
 
 ---
 
-## Demonstrational Limitations & Demo Modes
+## 📄 License
 
-- **Free Demo File Storage**: Profile avatars and document uploads are handled with strict MIME/size checks. In free containerized demo environments, extracted clinic document text and metadata persist in PostgreSQL while uploaded binaries are stored temporarily.
-- **Email Demo Mode**: SMTP notification is disabled by default (`MAIL_ENABLED=false`) for demo safety. Email notifications are safely logged with masked recipient addresses (e.g. `p***8@medislot.com`).
-
----
-
-## Medical Disclaimer
-
-The MediSlot Clinic AI Assistant provides administrative information regarding clinic hours, appointment booking policies, and visit preparation based on official clinic documents. It **does not diagnose medical conditions, recommend treatments, or prescribe medications**. Emergency medical conditions are immediately flagged with instructions to seek immediate urgent care.
-
----
-
-## License
-
-This project is open-source and available under the MIT License.
+This project is open-source under the MIT License.
