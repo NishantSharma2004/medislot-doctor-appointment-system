@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CheckCircle2, Copy, KeyRound, Loader2, RotateCw } from "lucide-react";
+import { CheckCircle2, Copy, Eye, KeyRound, Loader2, RotateCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { BackButton } from "@/components/common/BackButton";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/forgot-password")({
 function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [tokenCode, setTokenCode] = useState<string | null>(null);
+  const [showOtpOnScreen, setShowOtpOnScreen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -39,6 +40,7 @@ function ForgotPasswordPage() {
     e.preventDefault();
     if (!email.trim()) return;
     setIsSubmitting(true);
+    setShowOtpOnScreen(false);
     try {
       const res = await apiClient.post<{ message: string; resetToken?: string }>("/auth/forgot-password", {
         email: email.trim(),
@@ -48,7 +50,7 @@ function ForgotPasswordPage() {
       if (res.data?.resetToken) {
         setTokenCode(res.data.resetToken);
       }
-      toast.success("Password reset OTP generated");
+      toast.success(`Password reset email sent to ${email}`);
     } catch (err) {
       const apiErr = err as ApiError;
       toast.error(apiErr.message || "Failed to process request");
@@ -68,10 +70,10 @@ function ForgotPasswordPage() {
       if (res.data?.resetToken) {
         setTokenCode(res.data.resetToken);
       }
-      toast.success(`Reset OTP resent for ${email}`);
+      toast.success(`Password reset email resent to ${email}`);
     } catch (err) {
       const apiErr = err as ApiError;
-      toast.error(apiErr.message || "Failed to resend reset OTP");
+      toast.error(apiErr.message || "Failed to resend reset email");
     } finally {
       setIsResending(false);
     }
@@ -91,18 +93,18 @@ function ForgotPasswordPage() {
             <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-4 text-xs text-emerald-800 dark:text-emerald-300 text-left space-y-2">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-                <p className="font-semibold text-sm">Reset OTP Generated!</p>
+                <p className="font-semibold text-sm">Reset instructions sent!</p>
               </div>
               <p className="leading-relaxed">
-                Reset OTP generated for <span className="font-bold text-foreground">{email}</span>. Use your 6-digit OTP code below to reset your password.
+                If an account with <span className="font-bold text-foreground">{email}</span> exists, we have sent a password reset OTP to your email address. Please check your inbox or spam folder.
               </p>
             </div>
 
-            {/* Render Prominent OTP Box for Instant Demo/Testing */}
-            {tokenCode ? (
-              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-2 text-left">
+            {/* Render On-Screen OTP Box if User clicks 'Didn't get email?' */}
+            {showOtpOnScreen && tokenCode ? (
+              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-2 text-left animate-in fade-in zoom-in-95 duration-200">
                 <span className="text-xs font-semibold text-primary uppercase tracking-wider block">
-                  Your 6-Digit Password Reset OTP
+                  Your 6-Digit Reset OTP Code
                 </span>
                 <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-xl font-bold tracking-widest text-primary">
                   <span>{tokenCode}</span>
@@ -131,6 +133,17 @@ function ForgotPasswordPage() {
                 </Link>
               </Button>
 
+              {!showOtpOnScreen && tokenCode ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full gap-2 text-foreground"
+                  onClick={() => setShowOtpOnScreen(true)}
+                >
+                  <Eye className="size-4 text-primary" /> Didn't get email? Show OTP on screen
+                </Button>
+              ) : null}
+
               <Button
                 type="button"
                 variant="outline"
@@ -140,15 +153,15 @@ function ForgotPasswordPage() {
               >
                 {isResending ? (
                   <>
-                    <Loader2 className="size-4 animate-spin" /> Resending...
+                    <Loader2 className="size-4 animate-spin" /> Resending Email...
                   </>
                 ) : resendCooldown > 0 ? (
                   <>
-                    <RotateCw className="size-4" /> Resend Link / Token ({resendCooldown}s)
+                    <RotateCw className="size-4" /> Resend Email / OTP ({resendCooldown}s)
                   </>
                 ) : (
                   <>
-                    <RotateCw className="size-4" /> Resend Link / Token
+                    <RotateCw className="size-4" /> Resend Email / OTP
                   </>
                 )}
               </Button>
