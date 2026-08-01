@@ -83,7 +83,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/appointments/*").authenticated()
 
                         // Phase 6 Assistant Security Rules
-                        .requestMatchers(HttpMethod.POST, "/api/v1/assistant/chat").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/assistant/chat").permitAll()
                         
                         // Public Swagger & Actuator
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()

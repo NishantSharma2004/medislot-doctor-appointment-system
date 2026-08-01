@@ -67,15 +67,33 @@ class AssistantControllerTest {
     }
 
     @Test
-    void chat_shouldRejectAnonymousUserWith401() throws Exception {
+    void chat_shouldAllowGuestUserAndReturn200Response() throws Exception {
         SecurityContextHolder.clearContext();
-        AssistantChatRequest request = new AssistantChatRequest("What are clinic hours?", null);
+        UUID conversationId = UUID.randomUUID();
+        UUID requestId = UUID.randomUUID();
+
+        AssistantChatResponse response = new AssistantChatResponse(
+                "Clinic is open 8am to 8pm.",
+                conversationId,
+                AiProvider.GROQ,
+                false,
+                true,
+                true,
+                List.of(),
+                "Disclaimer text",
+                requestId,
+                Instant.now()
+        );
+
+        when(assistantService.processChat(any(), any())).thenReturn(response);
+
+        AssistantChatRequest request = new AssistantChatRequest("What are clinic hours?", conversationId);
 
         mockMvc.perform(post("/api/v1/assistant/chat")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer").value("Clinic is open 8am to 8pm."));
     }
 
     @Test

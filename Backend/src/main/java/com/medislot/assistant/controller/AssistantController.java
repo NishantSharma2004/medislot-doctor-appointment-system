@@ -51,10 +51,6 @@ public class AssistantController {
             @Valid @RequestBody AssistantChatRequest request,
             @AuthenticationPrincipal User currentUser
     ) {
-        if (currentUser == null) {
-            throw new UnauthorizedException("Authentication required to access clinic assistant");
-        }
-
         AssistantChatResponse response = assistantService.processChat(request, currentUser);
         return ResponseEntity.ok(response);
     }
