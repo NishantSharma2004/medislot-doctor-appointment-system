@@ -53,7 +53,7 @@ class Phase8PostgresRuntimeVerificationTest {
     @BeforeEach
     void setUp() {
         String email = "phase8_patient_" + UUID.randomUUID() + "@medislot.local";
-        RegisterRequest registerRequest = new RegisterRequest(email, "Password123!", "Phase8 Patient", "+15550009999");
+        RegisterRequest registerRequest = new RegisterRequest("Phase8 Patient", email, "+15550009999", "Password123!");
         authService.registerPatient(registerRequest);
         testPatient = userRepository.findByEmailIgnoreCase(email).map(user -> {
             user.setEnabled(true);
