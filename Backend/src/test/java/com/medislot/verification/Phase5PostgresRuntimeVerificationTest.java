@@ -94,9 +94,9 @@ class Phase5PostgresRuntimeVerificationTest {
         new org.springframework.transaction.support.TransactionTemplate(transactionManager).executeWithoutResult(status -> {
             jdbcTemplate.execute("TRUNCATE TABLE appointments, availability_slots, doctor_profiles, specializations, users CASCADE");
 
-            patientUser1 = userRepository.save(new User(null, "patient1@verification.com", "hash", "Patient One", "+111111", Role.PATIENT));
-            patientUser2 = userRepository.save(new User(null, "patient2@verification.com", "hash", "Patient Two", "+222222", Role.PATIENT));
-            doctorUser = userRepository.save(new User(null, "doctor@verification.com", "hash", "Dr. Verification", "+333333", Role.DOCTOR));
+            patientUser1 = userRepository.saveAndFlush(new User(null, "patient1@verification.com", "hash", "Patient One", "+111111", Role.PATIENT));
+            patientUser2 = userRepository.saveAndFlush(new User(null, "patient2@verification.com", "hash", "Patient Two", "+222222", Role.PATIENT));
+            doctorUser = userRepository.saveAndFlush(new User(null, "doctor@verification.com", "hash", "Dr. Verification", "+333333", Role.DOCTOR));
 
             Specialization spec = new Specialization();
             spec.setName("Cardiology Verification");

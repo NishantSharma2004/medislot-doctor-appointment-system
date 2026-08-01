@@ -58,7 +58,7 @@ public class Phase6AssistantPostgresTest {
             user.setPhone("+15550006666");
             user.setRole(Role.PATIENT);
             user.setEnabled(true);
-            return userRepository.save(user);
+            return userRepository.saveAndFlush(user);
         });
 
         if (clinicDocumentRepository.count() == 0) {
