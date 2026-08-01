@@ -40,8 +40,17 @@ export function registerUnauthorizedHandler(handler: (() => void) | null) {
 export const apiClient: AxiosInstance = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,
   headers: { "Content-Type": "application/json" },
-  timeout: 60000,
+  timeout: 90000,
 });
+
+export async function pingServer(): Promise<boolean> {
+  try {
+    await axios.get(`${API_BASE_URL}/actuator/health`, { timeout: 15000 });
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = getStoredToken();

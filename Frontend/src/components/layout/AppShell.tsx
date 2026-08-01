@@ -1,8 +1,9 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { CalendarDays, LogOut, Menu, Stethoscope, User } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
+import { pingServer } from "@/lib/api/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,6 +49,10 @@ export function AppHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
   const items = useVisibleNav();
+
+  useEffect(() => {
+    pingServer();
+  }, []);
 
   function handleLogout() {
     logout();

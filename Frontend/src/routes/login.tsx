@@ -70,7 +70,7 @@ function LoginPage() {
       <div className="surface-panel mt-6 p-6">
         {error ? (
           <div className="mb-4">
-            <ErrorState error={error} title="Could not sign in" />
+            <ErrorState error={error} title="Could not sign in" onRetry={() => onSubmit(form.getValues())} />
           </div>
         ) : null}
 

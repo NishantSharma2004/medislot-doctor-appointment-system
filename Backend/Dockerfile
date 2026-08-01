@@ -1,6 +1,6 @@
-# Stage 1: Build application
 FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /app
+ENV MAVEN_OPTS="-Xmx256m"
 
 # Copy pom.xml and download dependencies
 COPY pom.xml .
