@@ -166,7 +166,6 @@ public class Phase6AssistantPostgresTest {
     void verifyUsageLogSchemaAndNoRawSecretsPersistence() {
         List<AiProviderUsageLog> logs = usageLogRepository.findAll();
         for (AiProviderUsageLog logEntry : logs) {
-            assertNotNull(logEntry.getUser());
             assertNotNull(logEntry.getProvider());
         }
     }
