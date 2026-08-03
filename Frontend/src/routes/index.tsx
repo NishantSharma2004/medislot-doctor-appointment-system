@@ -43,6 +43,8 @@ const STEPS = [
 
 function LandingPage() {
   const { isAuthenticated, user } = useAuth();
+  const isDoctor = user?.role === "DOCTOR";
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <div>
@@ -51,30 +53,63 @@ function LandingPage() {
           <div className="min-w-0">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-muted-foreground">
               <ShieldCheck className="size-3.5 text-primary" aria-hidden="true" />
-              Appointment scheduling for the clinic network
+              {isDoctor
+                ? `Doctor Portal Active • ${user?.fullName}`
+                : isAdmin
+                ? "Clinic Network Administration"
+                : "Appointment scheduling for the clinic network"}
             </span>
             <h1 className="mt-5 text-4xl font-extrabold tracking-tight sm:text-5xl">
-              Clinic appointments, organised end to end
+              {isDoctor
+                ? `Welcome to your Doctor Desk, ${user?.fullName}`
+                : isAdmin
+                ? "MediSlot Clinic Administration"
+                : "Clinic appointments, organised end to end"}
             </h1>
             <p className="mt-4 max-w-xl text-base text-muted-foreground sm:text-lg">
-              MediSlot connects patients, doctors and clinic administrators in one scheduling
-              workspace — search availability, confirm bookings and keep every appointment status in
-              sync.
+              {isDoctor
+                ? "Review assigned patient appointments, inspect full medical profile details, record prescription notes, and publish your consultation availability."
+                : isAdmin
+                ? "Monitor network analytics, manage doctor profiles, inspect security audit logs, and administer clinic documents."
+                : "MediSlot connects patients, doctors and clinic administrators in one scheduling workspace — search availability, confirm bookings and keep every appointment status in sync."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link to="/doctors">Find a doctor</Link>
-              </Button>
-              {isAuthenticated ? (
-                <Button asChild size="lg" variant="outline" className="gap-2">
-                  <Link to="/dashboard">
-                    <LayoutDashboard className="size-4" /> Go to Dashboard ({user?.fullName || "Account"})
+              {isDoctor ? (
+                <>
+                  <Button asChild size="lg" className="gap-2">
+                    <Link to="/doctor">
+                      <Stethoscope className="size-4" /> Open Doctor Desk
+                    </Link>
+                  </Button>
+                  <Button asChild size="lg" variant="outline" className="gap-2">
+                    <Link to="/doctor/availability">
+                      <CalendarCheck className="size-4" /> Manage Availability
+                    </Link>
+                  </Button>
+                </>
+              ) : isAdmin ? (
+                <Button asChild size="lg" className="gap-2">
+                  <Link to="/admin">
+                    <LayoutDashboard className="size-4" /> Open Admin Panel
                   </Link>
                 </Button>
               ) : (
-                <Button asChild size="lg" variant="outline">
-                  <Link to="/register">Create a patient account</Link>
-                </Button>
+                <>
+                  <Button asChild size="lg">
+                    <Link to="/doctors">Find a doctor</Link>
+                  </Button>
+                  {isAuthenticated ? (
+                    <Button asChild size="lg" variant="outline" className="gap-2">
+                      <Link to="/dashboard">
+                        <LayoutDashboard className="size-4" /> Go to Dashboard
+                      </Link>
+                    </Button>
+                  ) : (
+                    <Button asChild size="lg" variant="outline">
+                      <Link to="/register">Create a patient account</Link>
+                    </Button>
+                  )}
+                </>
               )}
             </div>
             <p className="mt-4 text-xs text-muted-foreground">
@@ -84,22 +119,63 @@ function LandingPage() {
 
           <div className="surface-panel p-6">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Departments available
+              {isDoctor ? "Doctor Quick Workspace" : "Departments Available"}
             </h2>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {mockSpecializations.map((specialization) => (
-                <li key={specialization.id}>
-                  <Link
-                    to="/doctors"
-                    search={{ specialization: specialization.name }}
-                    className="flex items-center gap-3 rounded-lg border border-border px-3 py-3 text-sm font-medium transition-colors hover:bg-accent"
-                  >
-                    <Stethoscope className="size-4 shrink-0 text-primary" aria-hidden="true" />
-                    <span className="truncate">{specialization.name}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {isDoctor ? (
+              <div className="mt-4 space-y-3">
+                <Link
+                  to="/doctor"
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-accent"
+                >
+                  <span className="grid size-9 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <ClipboardList className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-foreground">Patient Appointments & Medical Profiles</p>
+                    <p className="text-xs text-muted-foreground">View patient age, DOB, contact, address & chief complaint.</p>
+                  </div>
+                </Link>
+                <Link
+                  to="/doctor/availability"
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-accent"
+                >
+                  <span className="grid size-9 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <CalendarCheck className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-foreground">Quick Availability Publisher</p>
+                    <p className="text-xs text-muted-foreground">1-Click seed 8 slots for Today or Tomorrow (9 AM - 5 PM).</p>
+                  </div>
+                </Link>
+                <Link
+                  to="/doctor"
+                  className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-accent"
+                >
+                  <span className="grid size-9 place-items-center rounded-lg bg-primary-soft text-primary">
+                    <Stethoscope className="size-5" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-foreground">Prescription & Consultation Notes</p>
+                    <p className="text-xs text-muted-foreground">Record medication advice and doctor notes directly on appointments.</p>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {mockSpecializations.map((specialization) => (
+                  <li key={specialization.id}>
+                    <Link
+                      to="/doctors"
+                      search={{ specialization: specialization.name }}
+                      className="flex items-center gap-3 rounded-lg border border-border px-3 py-3 text-sm font-medium transition-colors hover:bg-accent"
+                    >
+                      <Stethoscope className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="truncate">{specialization.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </section>
