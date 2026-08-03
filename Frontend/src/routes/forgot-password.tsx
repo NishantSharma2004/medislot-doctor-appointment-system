@@ -108,83 +108,97 @@ function ForgotPasswordPage() {
               </p>
             </div>
 
-            {/* Render On-Screen OTP Box ONLY if User clicks 'Didn't get email?' button */}
-            {showOtpOnScreen && tokenCode ? (
-              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-3 text-left animate-in fade-in zoom-in-95 duration-200">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                    ⚡ 6-Digit Password Reset OTP Code
-                  </span>
-                  <span className="text-[11px] text-muted-foreground bg-background px-2 py-0.5 rounded border">
-                    Valid for 10 mins
-                  </span>
-                </div>
-                <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-2xl font-bold tracking-widest text-primary shadow-xs">
-                  <span>{tokenCode}</span>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    className="font-sans text-xs gap-1.5"
-                    onClick={() => {
-                      navigator.clipboard.writeText(tokenCode);
-                      toast.success("OTP copied to clipboard!");
-                    }}
-                  >
-                    <Copy className="size-3.5 text-primary" /> Copy OTP
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground leading-snug">
-                  Use this 6-digit OTP code to set your new password directly below.
-                </p>
-              </div>
-            ) : null}
-
-            <div className="space-y-2.5 pt-2">
-              <Button asChild className="w-full gap-2 h-11 text-sm font-semibold">
-                <Link to="/reset-password" search={{ token: tokenCode ?? undefined }}>
-                  <KeyRound className="size-4" /> Enter Reset OTP & Set New Password
-                </Link>
-              </Button>
-
-              {/* Show Fallback Button if OTP is not yet revealed */}
-              {!showOtpOnScreen && tokenCode ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full gap-2 text-foreground font-medium border-dashed border-primary/40 hover:bg-primary/5"
-                  onClick={() => setShowOtpOnScreen(true)}
-                >
-                  <Eye className="size-4 text-primary" /> Didn't get email? Show OTP on screen
-                </Button>
-              ) : null}
-
+            {/* Option 1: Real Email Path */}
+            <div className="space-y-2 pt-1">
               <Button
                 type="button"
                 variant="outline"
-                className="w-full gap-2 text-primary border-primary/30 hover:bg-primary/5"
+                className="w-full gap-2 text-primary border-primary/30 hover:bg-primary/5 h-10"
                 disabled={resendCooldown > 0 || isResending}
                 onClick={handleResend}
               >
                 {isResending ? (
                   <>
-                    <Loader2 className="size-4 animate-spin" /> Resending Email / OTP...
+                    <Loader2 className="size-4 animate-spin" /> Resending Reset Email...
                   </>
                 ) : resendCooldown > 0 ? (
                   <>
-                    <RotateCw className="size-4" /> Resend Email / OTP ({resendCooldown}s)
+                    <RotateCw className="size-4" /> Resend Email ({resendCooldown}s)
                   </>
                 ) : (
                   <>
-                    <RotateCw className="size-4" /> Resend Email / OTP
+                    <RotateCw className="size-4" /> Resend Email
                   </>
                 )}
               </Button>
-
-              <Button asChild variant="ghost" className="w-full">
-                <Link to="/login">Back to Sign In</Link>
-              </Button>
             </div>
+
+            {/* Divider */}
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-muted" />
+              </div>
+              <div className="relative flex justify-center text-[10px] uppercase font-bold tracking-wider">
+                <span className="bg-background px-2 text-muted-foreground">
+                  OR USE INSTANT OTP FALLBACK
+                </span>
+              </div>
+            </div>
+
+            {/* Option 2: Instant On-Screen OTP Fallback Path */}
+            {tokenCode ? (
+              <div className="space-y-3">
+                {!showOtpOnScreen ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full gap-2 text-foreground font-medium border-dashed border-primary/50 hover:bg-primary/5 h-11"
+                    onClick={() => setShowOtpOnScreen(true)}
+                  >
+                    <Eye className="size-4 text-primary" /> Didn't get email? Show OTP on screen
+                  </Button>
+                ) : (
+                  <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-3 text-left animate-in fade-in zoom-in-95 duration-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                        ⚡ 6-Digit Password Reset OTP Code
+                      </span>
+                      <span className="text-[11px] text-muted-foreground bg-background px-2 py-0.5 rounded border">
+                        Valid for 10 mins
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-2xl font-bold tracking-widest text-primary shadow-xs">
+                      <span>{tokenCode}</span>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="sm"
+                        className="font-sans text-xs gap-1.5"
+                        onClick={() => {
+                          navigator.clipboard.writeText(tokenCode);
+                          toast.success("OTP copied to clipboard!");
+                        }}
+                      >
+                        <Copy className="size-3.5 text-primary" /> Copy OTP
+                      </Button>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-snug">
+                      Use this 6-digit OTP code to set your new password directly below.
+                    </p>
+                  </div>
+                )}
+
+                <Button asChild className="w-full gap-2 h-11 text-sm font-semibold">
+                  <Link to="/reset-password" search={{ token: tokenCode ?? undefined }}>
+                    <KeyRound className="size-4" /> Enter Reset OTP & Set New Password
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
+
+            <Button asChild variant="ghost" className="w-full mt-2">
+              <Link to="/login">Back to Sign In</Link>
+            </Button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
