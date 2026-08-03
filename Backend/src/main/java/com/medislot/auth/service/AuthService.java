@@ -68,7 +68,11 @@ public class AuthService {
         String normalizedEmail = request.email().trim().toLowerCase();
 
         if (userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
-            throw new ConflictException("An account with this email address already exists.");
+            throw new ConflictException("An account with email '" + normalizedEmail + "' already exists. Please try signing in.");
+        }
+
+        if (request.phone() != null && !request.phone().isBlank() && userRepository.existsByPhone(request.phone().trim())) {
+            throw new ConflictException("An account with phone number '" + request.phone().trim() + "' already exists. Please try signing in or use a different phone number.");
         }
 
         Role role = request.role() != null ? request.role() : Role.PATIENT;

@@ -115,7 +115,7 @@ public class GlobalExceptionHandler {
                     Instant.now(),
                     HttpStatus.CONFLICT.value(),
                     "USER_ALREADY_EXISTS",
-                    "An account with this email address or medical registration number already exists. Please sign in or use unique details.",
+                    "An account with this email address, phone number, or medical registration number already exists. Please try signing in or use unique details.",
                     path,
                     null
             ));
