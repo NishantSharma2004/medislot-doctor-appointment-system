@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -164,6 +165,18 @@ public class AppointmentController {
             @Parameter(description = "Appointment UUID") @PathVariable UUID appointmentId,
             @AuthenticationPrincipal User currentUser) {
         AppointmentDto dto = appointmentService.cancelAppointment(appointmentId, currentUser);
+        return ResponseEntity.ok(dto);
+    }
+
+    @PatchMapping("/api/v1/appointments/{appointmentId}/notes")
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+    @Operation(summary = "Update doctor prescription / consultation notes", description = "Allows assigned doctor to attach or edit prescription notes.")
+    public ResponseEntity<AppointmentDto> updateNotes(
+            @PathVariable UUID appointmentId,
+            @RequestBody Map<String, String> body,
+            @AuthenticationPrincipal User currentUser) {
+        String notes = body != null ? body.get("notes") : "";
+        AppointmentDto dto = appointmentService.updateDoctorNotes(appointmentId, notes, currentUser);
         return ResponseEntity.ok(dto);
     }
 }

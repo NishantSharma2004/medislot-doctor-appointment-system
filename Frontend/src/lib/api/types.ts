@@ -81,12 +81,20 @@ export interface AppointmentDto {
   specialization: string;
   patientId: string;
   patientName: string;
+  patientEmail?: string;
+  patientPhone?: string;
+  patientGender?: string;
+  patientDateOfBirth?: string;
+  patientAge?: number;
+  patientCity?: string;
+  patientAddress?: string;
   slotId: string;
   date: string;
   startTime: string;
   endTime: string;
   status: AppointmentStatus;
   reason?: string;
+  notes?: string;
   consultationFee: number;
 }
 

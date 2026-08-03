@@ -55,6 +55,9 @@ public class Appointment extends AuditableEntity {
     @Column(name = "reason", columnDefinition = "TEXT")
     private String reason;
 
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
+
     @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
@@ -139,6 +142,14 @@ public class Appointment extends AuditableEntity {
 
     public void setReason(String reason) {
         this.reason = reason;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public BigDecimal getConsultationFee() {

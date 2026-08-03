@@ -38,6 +38,7 @@ function DoctorProfilePage() {
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlotDto | null>(null);
   const [reason, setReason] = useState("");
   const [isBooking, setIsBooking] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
   const doctorQuery = useQuery({
     queryKey: ["doctor", doctorId],
@@ -71,6 +72,7 @@ function DoctorProfilePage() {
     if (!selectedSlot) return;
 
     setIsBooking(true);
+    setBookingError(null);
     try {
       await appointmentService.book({
         doctorId: doctor.id,
@@ -84,7 +86,14 @@ function DoctorProfilePage() {
       navigate({ to: "/dashboard" });
     } catch (err) {
       const apiErr = err as ApiError;
-      toast.error(apiErr.message || "Could not book appointment");
+      const isSlotConflict = apiErr.code === "SLOT_NOT_AVAILABLE" || apiErr.status === 409 || apiErr.message?.toLowerCase().includes("slot");
+      if (isSlotConflict) {
+        setBookingError("This slot was just booked by another patient! Please select another available slot.");
+        setSelectedSlot(null);
+        availabilityQuery.refetch();
+      } else {
+        toast.error(apiErr.message || "Could not book appointment");
+      }
     } finally {
       setIsBooking(false);
     }
@@ -129,6 +138,15 @@ function DoctorProfilePage() {
 
           {/* Bookable Time Slots Section */}
           <section className="surface-panel p-6 space-y-4" id="slots-section">
+            {bookingError ? (
+              <div className="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 rounded-lg flex items-center justify-between gap-2 text-sm font-medium">
+                <span>⚠️ {bookingError}</span>
+                <Button size="sm" variant="ghost" onClick={() => setBookingError(null)}>
+                  Dismiss
+                </Button>
+              </div>
+            ) : null}
+
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold">Select an Available Time Slot</h2>

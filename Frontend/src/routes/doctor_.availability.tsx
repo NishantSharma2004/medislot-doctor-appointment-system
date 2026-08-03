@@ -105,11 +105,48 @@ function DoctorAvailabilityPage() {
     return <FullPageLoader label="Checking credentials" />;
   }
 
+  const todayStr = new Date().toISOString().split("T")[0];
+  const tomorrowStr = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+
+  const handleSeedQuickSlots = async (targetDateStr: string) => {
+    setIsCreating(true);
+    try {
+      await apiClient.post("/doctors/availability", {
+        date: targetDateStr,
+        startTime: "09:00",
+        endTime: "17:00",
+        slotMinutes: 30,
+      });
+      toast.success(`Slots created for ${targetDateStr}`);
+      loadSlots();
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.message || "Failed to seed slots");
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
   return (
     <PageShell title="Manage Availability" description="Publish open consultation slots for patient booking.">
       <div className="grid gap-6 md:grid-cols-3">
         <div className="surface-panel p-6 space-y-4 md:col-span-1">
-          <h2 className="text-lg font-bold">Add Availability Window</h2>
+          <div className="space-y-2">
+            <h2 className="text-lg font-bold">Quick Slot Publisher</h2>
+            <p className="text-xs text-muted-foreground">Instantly seed 8 slots (9:00 AM - 5:00 PM) for patients.</p>
+            <div className="grid grid-cols-2 gap-2 pt-1">
+              <Button size="sm" variant="outline" disabled={isCreating} onClick={() => handleSeedQuickSlots(todayStr)}>
+                + Today Slots
+              </Button>
+              <Button size="sm" variant="outline" disabled={isCreating} onClick={() => handleSeedQuickSlots(tomorrowStr)}>
+                + Tomorrow
+              </Button>
+            </div>
+          </div>
+
+          <hr className="my-3 border-border" />
+
+          <h2 className="text-lg font-bold">Add Custom Slot Window</h2>
           <form onSubmit={handleCreateSlot} className="space-y-3">
             <div className="space-y-1">
               <Label htmlFor="slot-date">Date</Label>

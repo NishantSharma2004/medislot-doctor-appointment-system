@@ -24,7 +24,9 @@ import com.medislot.common.exception.ForbiddenException;
 import com.medislot.common.exception.NotFoundException;
 import com.medislot.doctor.entity.DoctorProfile;
 import com.medislot.doctor.repository.DoctorProfileRepository;
+import com.medislot.user.entity.PatientProfile;
 import com.medislot.user.entity.User;
+import com.medislot.user.repository.PatientProfileRepository;
 import com.medislot.user.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +52,7 @@ public class AppointmentService {
     private final AvailabilitySlotRepository availabilitySlotRepository;
     private final DoctorProfileRepository doctorProfileRepository;
     private final UserRepository userRepository;
+    private final PatientProfileRepository patientProfileRepository;
     private final AppointmentStatusTransitionValidator statusTransitionValidator;
     private final ApplicationEventPublisher eventPublisher;
 
@@ -58,12 +61,14 @@ public class AppointmentService {
             AvailabilitySlotRepository availabilitySlotRepository,
             DoctorProfileRepository doctorProfileRepository,
             UserRepository userRepository,
+            PatientProfileRepository patientProfileRepository,
             AppointmentStatusTransitionValidator statusTransitionValidator,
             ApplicationEventPublisher eventPublisher) {
         this.appointmentRepository = appointmentRepository;
         this.availabilitySlotRepository = availabilitySlotRepository;
         this.doctorProfileRepository = doctorProfileRepository;
         this.userRepository = userRepository;
+        this.patientProfileRepository = patientProfileRepository;
         this.statusTransitionValidator = statusTransitionValidator;
         this.eventPublisher = eventPublisher;
     }
@@ -342,8 +347,60 @@ public class AppointmentService {
         }
     }
 
+    @Transactional
+    public AppointmentDto updateDoctorNotes(UUID appointmentId, String notes, User currentUser) {
+        Appointment appointment = appointmentRepository.findById(appointmentId)
+                .orElseThrow(() -> new NotFoundException("Appointment not found with ID: " + appointmentId));
+
+        if (currentUser.getRole() == Role.DOCTOR && !appointment.getDoctorId().equals(currentUser.getId())) {
+            throw new ForbiddenException("You can only add notes to your own appointments.");
+        }
+
+        appointment.setNotes(notes != null ? notes.trim() : "");
+        appointment = appointmentRepository.save(appointment);
+        return mapToDto(appointment);
+    }
+
     public AppointmentDto mapToDto(Appointment appointment) {
         String patientName = appointment.getPatient() != null ? appointment.getPatient().getFullName() : null;
+        String patientEmail = appointment.getPatient() != null ? appointment.getPatient().getEmail() : null;
+        String patientPhone = appointment.getPatient() != null ? appointment.getPatient().getPhone() : null;
+
+        String patientGender = null;
+        String patientDateOfBirth = null;
+        Integer patientAge = null;
+        String patientCity = null;
+        String patientAddress = null;
+
+        if (appointment.getPatientId() != null && patientProfileRepository != null) {
+            PatientProfile profile = patientProfileRepository.findById(appointment.getPatientId()).orElse(null);
+            if (profile != null) {
+                patientGender = profile.getGender();
+                if (profile.getDateOfBirth() != null) {
+                    patientDateOfBirth = profile.getDateOfBirth().toString();
+                    patientAge = java.time.Period.between(profile.getDateOfBirth(), java.time.LocalDate.now()).getYears();
+                }
+                patientCity = profile.getCity();
+                StringBuilder addrSb = new StringBuilder();
+                if (profile.getAddressLine1() != null && !profile.getAddressLine1().isBlank()) {
+                    addrSb.append(profile.getAddressLine1().trim());
+                }
+                if (profile.getAddressLine2() != null && !profile.getAddressLine2().isBlank()) {
+                    if (addrSb.length() > 0) addrSb.append(", ");
+                    addrSb.append(profile.getAddressLine2().trim());
+                }
+                if (profile.getCity() != null && !profile.getCity().isBlank()) {
+                    if (addrSb.length() > 0) addrSb.append(", ");
+                    addrSb.append(profile.getCity().trim());
+                }
+                if (profile.getState() != null && !profile.getState().isBlank()) {
+                    if (addrSb.length() > 0) addrSb.append(", ");
+                    addrSb.append(profile.getState().trim());
+                }
+                patientAddress = addrSb.length() > 0 ? addrSb.toString() : profile.getAddress();
+            }
+        }
+
         String doctorName = appointment.getDoctor() != null && appointment.getDoctor().getUser() != null
                 ? appointment.getDoctor().getUser().getFullName()
                 : null;
@@ -368,12 +425,20 @@ public class AppointmentService {
                 specialization,
                 appointment.getPatientId() != null ? appointment.getPatientId().toString() : null,
                 patientName,
+                patientEmail,
+                patientPhone,
+                patientGender,
+                patientDateOfBirth,
+                patientAge,
+                patientCity,
+                patientAddress,
                 appointment.getSlotId() != null ? appointment.getSlotId().toString() : null,
                 dateStr,
                 startTimeStr,
                 endTimeStr,
                 appointment.getStatus(),
                 appointment.getReason(),
+                appointment.getNotes(),
                 appointment.getConsultationFee()
         );
     }
