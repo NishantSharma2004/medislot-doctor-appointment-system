@@ -406,21 +406,16 @@ Then generate the application page by page.
 
 Do not generate backend or database code.
 
-This project was built with [Lovable](https://lovable.dev).
-
-**Live app**: https://appt-aid-pro.lovable.app
-
-## Build with Lovable
-
-Continue developing this project in the [Lovable editor](https://lovable.dev/projects/2086c847-52c5-4db2-be91-7e17c06b103c).
-
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: every change made in Lovable is committed straight to this repository.
-- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
-
 ## Development
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+To run the frontend locally, ensure you have Node.js (v18+) installed.
+
+```sh
+git clone https://github.com/NishantSharma2004/medislot-doctor-appointment-system.git
+cd Frontend
+npm install
+npm run dev
+```
 
 ```sh
 git clone <this-repository-url>
