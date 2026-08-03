@@ -26,19 +26,26 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home" },
-  { to: "/doctors", label: "Find a doctor" },
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/appointments", label: "Appointments" },
+  { to: "/doctors", label: "Find a doctor", roles: ["PATIENT"] },
+  { to: "/dashboard", label: "Dashboard", roles: ["PATIENT"], requiresAuth: true },
+  { to: "/appointments", label: "Appointments", roles: ["PATIENT"], requiresAuth: true },
   { to: "/doctor", label: "Doctor desk", roles: ["DOCTOR"], requiresAuth: true },
   { to: "/doctor/availability", label: "Availability", roles: ["DOCTOR"], requiresAuth: true },
-  { to: "/admin", label: "Admin", roles: ["ADMIN"], requiresAuth: true },
+  { to: "/admin", label: "Admin Panel", roles: ["ADMIN"], requiresAuth: true },
 ];
 
 function useVisibleNav() {
   const { isAuthenticated, user } = useAuth();
   return NAV_ITEMS.filter((item) => {
     if (item.requiresAuth && !isAuthenticated) return false;
-    if (item.roles && (!user || !item.roles.includes(user.role))) return false;
+    if (item.roles) {
+      if (!user) {
+        // Public guests see patient-focused navigation links
+        if (!item.roles.includes("PATIENT")) return false;
+      } else if (!item.roles.includes(user.role)) {
+        return false;
+      }
+    }
     return true;
   });
 }
