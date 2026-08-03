@@ -194,7 +194,21 @@ function ForgotPasswordPage() {
                   </Link>
                 </Button>
               </div>
-            ) : null}
+            ) : (
+              <div className="space-y-3 text-left">
+                <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-4 space-y-2">
+                  <p className="text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
+                    <span>⚠️</span> No Account Found for "{email}"
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    This email address is not registered in MediSlot (or had a typo during sign up). Please create an account to get started.
+                  </p>
+                  <Button asChild size="sm" className="w-full mt-1">
+                    <Link to="/register">Create Account Now</Link>
+                  </Button>
+                </div>
+              </div>
+            )}
 
             <Button asChild variant="ghost" className="w-full mt-2">
               <Link to="/login">Back to Sign In</Link>
