@@ -9,7 +9,14 @@ import { Label } from "@/components/ui/label";
 import { apiClient } from "@/lib/api/client";
 import type { ApiError } from "@/lib/api/types";
 
+interface ForgotSearch {
+  email?: string;
+}
+
 export const Route = createFileRoute("/forgot-password")({
+  validateSearch: (search: Record<string, unknown>): ForgotSearch => ({
+    email: typeof search.email === "string" ? search.email : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Forgot Password — MediSlot" },
@@ -20,7 +27,8 @@ export const Route = createFileRoute("/forgot-password")({
 });
 
 function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+  const search = Route.useSearch();
+  const [email, setEmail] = useState(search.email ?? "");
   const [tokenCode, setTokenCode] = useState<string | null>(null);
   const [showOtpOnScreen, setShowOtpOnScreen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -100,8 +108,8 @@ function ForgotPasswordPage() {
               </p>
             </div>
 
-            {/* Always show OTP Box prominently if tokenCode is present */}
-            {tokenCode ? (
+            {/* Render On-Screen OTP Box ONLY if User clicks 'Didn't get email?' button */}
+            {showOtpOnScreen && tokenCode ? (
               <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-3 text-left animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-primary uppercase tracking-wider">
@@ -127,7 +135,7 @@ function ForgotPasswordPage() {
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground leading-snug">
-                  If the email is delayed in spam/inbox, use this OTP code to set your new password directly below.
+                  Use this 6-digit OTP code to set your new password directly below.
                 </p>
               </div>
             ) : null}
@@ -138,6 +146,18 @@ function ForgotPasswordPage() {
                   <KeyRound className="size-4" /> Enter Reset OTP & Set New Password
                 </Link>
               </Button>
+
+              {/* Show Fallback Button if OTP is not yet revealed */}
+              {!showOtpOnScreen && tokenCode ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full gap-2 text-foreground font-medium border-dashed border-primary/40 hover:bg-primary/5"
+                  onClick={() => setShowOtpOnScreen(true)}
+                >
+                  <Eye className="size-4 text-primary" /> Didn't get email? Show OTP on screen
+                </Button>
+              ) : null}
 
               <Button
                 type="button"
@@ -178,6 +198,11 @@ function ForgotPasswordPage() {
                 placeholder="you@example.com"
                 required
               />
+              {search.email ? (
+                <p className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
+                  ✓ Pre-filled from your login attempt
+                </p>
+              ) : null}
             </div>
             <Button type="submit" disabled={isSubmitting} className="w-full">
               {isSubmitting ? "Sending instructions..." : "Send Reset Link"}

@@ -33,12 +33,9 @@ spring:
       mail:
         smtp:
           auth: true
-          starttls:
-            enable: true
-            required: false
           ssl:
             enable: true
-            trust: smtp.gmail.com
+            trust: "*"
           socketFactory:
             port: 465
             class: javax.net.ssl.SSLSocketFactory
