@@ -56,6 +56,9 @@ const registerSchema = z
 type RegisterValues = z.infer<typeof registerSchema>;
 
 export const Route = createFileRoute("/register")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    role: (search.role as string)?.toUpperCase() === "DOCTOR" ? ("DOCTOR" as Role) : ("PATIENT" as Role),
+  }),
   head: () => ({
     meta: [
       { title: "Create an account — MediSlot" },
@@ -73,7 +76,8 @@ export const Route = createFileRoute("/register")({
 export function RegisterPage() {
   const { register: registerAccount } = useAuth();
   const navigate = useNavigate();
-  const [role, setRole] = useState<Role>("PATIENT");
+  const search = Route.useSearch();
+  const [role, setRole] = useState<Role>(search.role === "DOCTOR" ? "DOCTOR" : "PATIENT");
   const [error, setError] = useState<ApiError | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);

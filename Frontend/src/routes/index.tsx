@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarCheck, CalendarSearch, ClipboardList, MessageSquareText, ShieldCheck, Stethoscope, LayoutDashboard } from "lucide-react";
+import { CalendarCheck, CalendarSearch, ClipboardList, MessageSquareText, ShieldCheck, Stethoscope, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { mockSpecializations } from "@/lib/api/mock-data";
@@ -95,7 +95,7 @@ function LandingPage() {
                 </Button>
               ) : (
                 <>
-                  <Button asChild size="lg">
+                  <Button asChild size="lg" className="gap-2">
                     <Link to="/doctors">Find a doctor</Link>
                   </Button>
                   {isAuthenticated ? (
@@ -105,9 +105,18 @@ function LandingPage() {
                       </Link>
                     </Button>
                   ) : (
-                    <Button asChild size="lg" variant="outline">
-                      <Link to="/register">Create a patient account</Link>
-                    </Button>
+                    <>
+                      <Button asChild size="lg" variant="outline" className="gap-2">
+                        <Link to="/register" search={{ role: "PATIENT" }}>
+                          <User className="size-4" /> Join as Patient
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline" className="gap-2">
+                        <Link to="/register" search={{ role: "DOCTOR" }}>
+                          <Stethoscope className="size-4 text-primary" /> Join as Doctor
+                        </Link>
+                      </Button>
+                    </>
                   )}
                 </>
               )}

@@ -120,11 +120,11 @@ export function AppHeader() {
             </DropdownMenu>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
-              <Button variant="ghost" size="sm" onClick={() => navigate({ to: "/login" })}>
-                Sign in
+              <Button asChild variant="ghost" size="sm">
+                <Link to="/login">Sign in</Link>
               </Button>
-              <Button size="sm" onClick={() => navigate({ to: "/register" })}>
-                Create account
+              <Button asChild size="sm">
+                <Link to="/register">Create account</Link>
               </Button>
             </div>
           )}
@@ -153,11 +153,11 @@ export function AppHeader() {
                 ))}
                 {!isAuthenticated ? (
                   <div className="mt-3 flex flex-col gap-2 px-1">
-                    <Button variant="outline" onClick={() => { setMobileOpen(false); navigate({ to: "/login" }); }}>
-                      Sign in
+                    <Button asChild variant="outline" onClick={() => setMobileOpen(false)}>
+                      <Link to="/login">Sign in</Link>
                     </Button>
-                    <Button onClick={() => { setMobileOpen(false); navigate({ to: "/register" }); }}>
-                      Create account
+                    <Button asChild onClick={() => setMobileOpen(false)}>
+                      <Link to="/register">Create account</Link>
                     </Button>
                   </div>
                 ) : null}
