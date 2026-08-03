@@ -32,7 +32,10 @@ const registerSchema = z
   .object({
     role: z.enum(["PATIENT", "DOCTOR"]),
     fullName: z.string().min(2, "Enter your full name").max(100, "Name is too long"),
-    email: z.string().min(1, "Email is required").email("Enter a valid email address"),
+    email: z
+      .string()
+      .min(1, "Email is required")
+      .regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Enter a valid email address ending with a domain (e.g. name@gmail.com)"),
     phone: z.string().regex(/^\+?[0-9\s-]{10,15}$/, "Enter a valid 10 to 15 digit phone number"),
     password: z.string().min(8, "Use at least 8 characters").max(72, "Password is too long"),
     confirmPassword: z.string(),

@@ -115,7 +115,7 @@ export function normalizeError(error: unknown): ApiError {
       return {
         status,
         code: "CONFLICT",
-        message: backendMessage ?? "That slot or resource is in a conflicting state. Please try another.",
+        message: backendMessage ?? "An account with these details already exists. Please sign in or use unique details.",
       };
     case 422:
     case 400:
