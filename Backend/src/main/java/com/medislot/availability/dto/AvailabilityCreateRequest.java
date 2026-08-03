@@ -1,5 +1,6 @@
 package com.medislot.availability.dto;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import java.time.Instant;
 
 /**
@@ -10,8 +11,8 @@ public record AvailabilityCreateRequest(
         Instant startTime,
         Instant endTime,
         String date,
-        String startLocalTime,
-        String endLocalTime,
+        @JsonAlias({"startLocalTime", "startTime"}) String startLocalTime,
+        @JsonAlias({"endLocalTime", "endTime"}) String endLocalTime,
         Integer slotMinutes
 ) {
 }

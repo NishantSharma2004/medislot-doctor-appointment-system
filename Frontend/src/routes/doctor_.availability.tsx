@@ -76,8 +76,8 @@ function DoctorAvailabilityPage() {
     try {
       await apiClient.post("/doctors/availability", {
         date,
-        startTime,
-        endTime,
+        startLocalTime: startTime,
+        endLocalTime: endTime,
         slotMinutes,
       });
       toast.success("Availability slot created");
@@ -113,8 +113,8 @@ function DoctorAvailabilityPage() {
     try {
       await apiClient.post("/doctors/availability", {
         date: targetDateStr,
-        startTime: "09:00",
-        endTime: "17:00",
+        startLocalTime: "09:00",
+        endLocalTime: "17:00",
         slotMinutes: 30,
       });
       toast.success(`Slots created for ${targetDateStr}`);
