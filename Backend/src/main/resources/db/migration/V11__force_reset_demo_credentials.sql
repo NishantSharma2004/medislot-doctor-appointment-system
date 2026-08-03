@@ -10,9 +10,10 @@ INSERT INTO users (id, email, password_hash, full_name, phone, role, enabled, co
 ('d1000001-0000-4000-8000-000000000099', 'doctor@medislot.test', '$2a$10$X76oPu8pgkbvngIdnKJ9TuBExXHFYm9M54AuQPmQLe8IGbtWydo4u', 'Dr. Rajesh Sharma', '+919876500099', 'DOCTOR', TRUE, '+91', NOW(), NOW())
 ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, enabled = TRUE;
 
-INSERT INTO doctor_profiles (user_id, qualifications, years_of_experience, consultation_fee, clinic_name, city, languages, about, registration_number, active, created_at, updated_at) VALUES
+INSERT INTO doctor_profiles (user_id, specialization_id, qualifications, years_of_experience, consultation_fee, clinic_name, city, languages, about, registration_number, active, created_at, updated_at) VALUES
 (
   'd1000001-0000-4000-8000-000000000099',
+  (SELECT id FROM specializations LIMIT 1),
   'MBBS, MD (General Medicine)', 15, 500.00, 'MediSlot Care Clinic', 'Delhi', '["English", "Hindi"]'::jsonb,
   'Senior Physician available for online consultations and clinic appointments on MediSlot.',
   'REG-DEMO-999', TRUE, NOW(), NOW()
