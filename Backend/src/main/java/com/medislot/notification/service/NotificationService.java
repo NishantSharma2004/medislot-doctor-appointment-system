@@ -48,7 +48,7 @@ public class NotificationService {
                     mailSender.send(message);
                     log.info("Real SMTP email successfully dispatched to {}", maskedRecipient);
                 } catch (Exception smtpEx) {
-                    log.warn("SMTP send failed to {}, falling back gracefully: {}", maskedRecipient, smtpEx.getMessage());
+                    log.warn("SMTP send failed to {}, falling back gracefully: {}", maskedRecipient, smtpEx.getMessage(), smtpEx);
                 }
             } else {
                 log.info("Simulated email dispatch [template={}] (SMTP username unconfigured): {}", templateName, body);
