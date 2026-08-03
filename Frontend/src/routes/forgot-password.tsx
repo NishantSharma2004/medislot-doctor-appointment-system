@@ -100,49 +100,44 @@ function ForgotPasswordPage() {
               </p>
             </div>
 
-            {/* Render On-Screen OTP Box if User clicks 'Didn't get email?' */}
-            {showOtpOnScreen && tokenCode ? (
-              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-2 text-left animate-in fade-in zoom-in-95 duration-200">
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider block">
-                  Your 6-Digit Reset OTP Code
-                </span>
-                <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-xl font-bold tracking-widest text-primary">
+            {/* Always show OTP Box prominently if tokenCode is present */}
+            {tokenCode ? (
+              <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 space-y-3 text-left animate-in fade-in zoom-in-95 duration-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-primary uppercase tracking-wider">
+                    ⚡ 6-Digit Password Reset OTP Code
+                  </span>
+                  <span className="text-[11px] text-muted-foreground bg-background px-2 py-0.5 rounded border">
+                    Valid for 10 mins
+                  </span>
+                </div>
+                <div className="flex items-center justify-between bg-background p-3 rounded-lg border font-mono text-2xl font-bold tracking-widest text-primary shadow-xs">
                   <span>{tokenCode}</span>
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
                     size="sm"
+                    className="font-sans text-xs gap-1.5"
                     onClick={() => {
                       navigator.clipboard.writeText(tokenCode);
                       toast.success("OTP copied to clipboard!");
                     }}
                   >
-                    <Copy className="size-4 mr-1" /> Copy OTP
+                    <Copy className="size-3.5 text-primary" /> Copy OTP
                   </Button>
                 </div>
-                <p className="text-[11px] text-muted-foreground">
-                  Use this 6-digit OTP code to reset your password. (Valid for 10 minutes).
+                <p className="text-xs text-muted-foreground leading-snug">
+                  If the email is delayed in spam/inbox, use this OTP code to set your new password directly below.
                 </p>
               </div>
             ) : null}
 
-            <div className="space-y-2 pt-2">
-              <Button asChild className="w-full gap-2">
+            <div className="space-y-2.5 pt-2">
+              <Button asChild className="w-full gap-2 h-11 text-sm font-semibold">
                 <Link to="/reset-password" search={{ token: tokenCode ?? undefined }}>
-                  <KeyRound className="size-4" /> Enter Reset Token & Set New Password
+                  <KeyRound className="size-4" /> Enter Reset OTP & Set New Password
                 </Link>
               </Button>
-
-              {!showOtpOnScreen && tokenCode ? (
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full gap-2 text-foreground"
-                  onClick={() => setShowOtpOnScreen(true)}
-                >
-                  <Eye className="size-4 text-primary" /> Didn't get email? Show OTP on screen
-                </Button>
-              ) : null}
 
               <Button
                 type="button"
@@ -153,7 +148,7 @@ function ForgotPasswordPage() {
               >
                 {isResending ? (
                   <>
-                    <Loader2 className="size-4 animate-spin" /> Resending Email...
+                    <Loader2 className="size-4 animate-spin" /> Resending Email / OTP...
                   </>
                 ) : resendCooldown > 0 ? (
                   <>
