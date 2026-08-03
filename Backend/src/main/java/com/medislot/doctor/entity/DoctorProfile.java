@@ -11,9 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PostLoad;
+import jakarta.persistence.PostPersist;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.data.domain.Persistable;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -22,7 +26,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "doctor_profiles")
-public class DoctorProfile extends AuditableEntity {
+public class DoctorProfile extends AuditableEntity implements Persistable<UUID> {
 
     @Id
     @Column(name = "user_id", nullable = false, updatable = false)
@@ -32,6 +36,9 @@ public class DoctorProfile extends AuditableEntity {
     @MapsId
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Transient
+    private boolean isNew = true;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "specialization_id", nullable = false)
@@ -66,6 +73,22 @@ public class DoctorProfile extends AuditableEntity {
     private boolean active = true;
 
     public DoctorProfile() {
+    }
+
+    @Override
+    public UUID getId() {
+        return userId;
+    }
+
+    @Override
+    public boolean isNew() {
+        return isNew || getCreatedAt() == null;
+    }
+
+    @PostLoad
+    @PostPersist
+    void markNotNew() {
+        this.isNew = false;
     }
 
     public UUID getUserId() {
