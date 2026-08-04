@@ -52,7 +52,18 @@ function LoginPage() {
     try {
       const response = await login(values);
       toast.success(`Welcome back, ${response.user.fullName}`);
-      navigate({ to: search.redirect ?? homeRouteForRole(response.user.role), replace: true });
+
+      let targetRedirect = search.redirect;
+      const role = response.user.role;
+
+      // Prevent redirecting to unauthorized role pages when switching roles
+      if (role === "PATIENT" && targetRedirect && (targetRedirect.startsWith("/doctor") || targetRedirect.startsWith("/admin"))) {
+        targetRedirect = undefined;
+      } else if (role === "DOCTOR" && targetRedirect && (targetRedirect.startsWith("/admin") || targetRedirect.startsWith("/dashboard"))) {
+        targetRedirect = undefined;
+      }
+
+      navigate({ to: targetRedirect ?? homeRouteForRole(role), replace: true });
     } catch (caught) {
       const apiError = caught as ApiError;
       setError(apiError);

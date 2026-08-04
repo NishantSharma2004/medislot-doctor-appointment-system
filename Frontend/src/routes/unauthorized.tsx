@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { homeRouteForRole, useAuth } from "@/context/AuthContext";
 
 export const Route = createFileRoute("/unauthorized")({
   head: () => ({
@@ -13,6 +14,9 @@ export const Route = createFileRoute("/unauthorized")({
 });
 
 function UnauthorizedPage() {
+  const { user } = useAuth();
+  const dashboardLink = homeRouteForRole(user?.role);
+
   return (
     <div className="mx-auto flex w-full max-w-md flex-col items-center px-4 py-20 text-center">
       <span className="grid size-14 place-items-center rounded-full bg-destructive/10 text-destructive mb-4">
@@ -27,7 +31,7 @@ function UnauthorizedPage() {
           <Link to="/">Go Home</Link>
         </Button>
         <Button asChild>
-          <Link to="/dashboard">Go to Dashboard</Link>
+          <Link to={dashboardLink}>Go to Dashboard</Link>
         </Button>
       </div>
     </div>

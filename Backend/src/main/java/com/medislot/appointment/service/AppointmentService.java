@@ -108,6 +108,13 @@ public class AppointmentService {
             throw new ConflictException("An active appointment already exists for this slot.");
         }
 
+        // Check if patient already has an active appointment with this specific doctor
+        if (appointmentRepository.existsByPatientIdAndDoctorUserIdAndStatusIn(currentUser.getId(), doctorId, ACTIVE_STATUSES)) {
+            throw new ConflictException("PATIENT_EXISTING_APPOINTMENT_WITH_DOCTOR",
+                    "You already have an active appointment (PENDING or CONFIRMED) with Dr. " + doctor.getUser().getFullName() +
+                    ". Please wait for your existing appointment to be completed by the doctor or cancel it before booking another slot.");
+        }
+
         // Overlap checks for patient and doctor
         if (appointmentRepository.hasOverlappingActiveAppointment(currentUser.getId(), ACTIVE_STATUSES, slot.getSlotStartAt(), slot.getSlotEndAt(), null)) {
             throw new ConflictException("PATIENT_APPOINTMENT_CONFLICT", "Patient already has an active appointment during this time window.");
@@ -206,7 +213,7 @@ public class AppointmentService {
         AvailabilitySlot slot = availabilitySlotRepository.findByIdForUpdate(appointment.getSlotId())
                 .orElseThrow(() -> new NotFoundException("Associated slot not found."));
 
-        if (newStatus == AppointmentStatus.REJECTED) {
+        if (newStatus == AppointmentStatus.REJECTED || newStatus == AppointmentStatus.CANCELLED) {
             slot.setStatus(SlotStatus.AVAILABLE);
             availabilitySlotRepository.save(slot);
         }
