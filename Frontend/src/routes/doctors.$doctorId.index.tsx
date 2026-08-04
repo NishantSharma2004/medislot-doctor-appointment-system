@@ -163,32 +163,62 @@ function DoctorProfilePage() {
               <InlineLoader label="Loading available slots" />
             ) : availabilityQuery.error ? (
               <ErrorState error={availabilityQuery.error as unknown as ApiError} onRetry={() => availabilityQuery.refetch()} />
-            ) : availableSlots.length === 0 ? (
+            ) : (availabilityQuery.data ?? []).filter((slot) => isUpcomingSlot(slot.date, slot.startTime)).length === 0 ? (
               <div className="text-center py-8 border border-dashed rounded-lg">
-                <p className="text-sm text-muted-foreground">No available slots published for this doctor yet.</p>
+                <p className="text-sm text-muted-foreground">No slots published for this doctor yet.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                {availableSlots.map((slot) => {
-                  const isSelected = selectedSlot?.id === slot.id;
-                  return (
-                    <button
-                      key={slot.id}
-                      type="button"
-                      onClick={() => setSelectedSlot(slot)}
-                      className={`p-3 rounded-lg border text-left transition-colors flex flex-col gap-1 ${
-                        isSelected
-                          ? "border-primary bg-primary/10 font-semibold shadow-xs"
-                          : "border-input hover:bg-accent"
-                      }`}
-                    >
-                      <span className="text-xs font-semibold text-primary">{slot.date}</span>
-                      <span className="text-sm font-medium">
-                        {formatTimeRange(slot.startTime, slot.endTime)}
-                      </span>
-                    </button>
-                  );
-                })}
+                {(availabilityQuery.data ?? [])
+                  .filter((slot) => isUpcomingSlot(slot.date, slot.startTime))
+                  .map((slot) => {
+                    const isBooked = slot.booked || slot.status === "BOOKED";
+                    const isSelected = selectedSlot?.id === slot.id;
+
+                    if (isBooked) {
+                      return (
+                        <div
+                          key={slot.id}
+                          onClick={() => toast.warning("This slot is already booked by another patient. Please choose an available slot.")}
+                          className="p-3 rounded-lg border border-border/40 bg-muted/50 cursor-not-allowed opacity-75 flex flex-col gap-1 select-none"
+                          title="Already Booked"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-semibold text-muted-foreground">{slot.date}</span>
+                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10">
+                              Already Booked
+                            </Badge>
+                          </div>
+                          <span className="text-sm font-medium line-through text-muted-foreground">
+                            {formatTimeRange(slot.startTime, slot.endTime)}
+                          </span>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        onClick={() => setSelectedSlot(slot)}
+                        className={`p-3 rounded-lg border text-left transition-all flex flex-col gap-1 ${
+                          isSelected
+                            ? "border-primary bg-primary/10 font-semibold shadow-xs ring-2 ring-primary/30"
+                            : "border-input hover:bg-accent hover:border-primary/50"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-semibold text-primary">{slot.date}</span>
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                            Available
+                          </Badge>
+                        </div>
+                        <span className="text-sm font-medium">
+                          {formatTimeRange(slot.startTime, slot.endTime)}
+                        </span>
+                      </button>
+                    );
+                  })}
               </div>
             )}
 

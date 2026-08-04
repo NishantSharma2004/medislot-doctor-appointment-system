@@ -75,6 +75,14 @@ public class AvailabilityService {
 
         // If time window is larger than slotMinutes, auto-chunk into discrete slots
         if (totalMinutes > durationMinutes) {
+            // Delete any unbooked (AVAILABLE) existing slots in this time window so they can be re-chunked cleanly
+            List<AvailabilitySlot> existingAvailableSlots = slotRepository.findSlotsFiltered(
+                    doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt
+            );
+            if (!existingAvailableSlots.isEmpty()) {
+                slotRepository.deleteAll(existingAvailableSlots);
+            }
+
             List<AvailabilitySlot> createdSlots = new ArrayList<>();
             Instant chunkStart = startAt;
 
@@ -92,7 +100,7 @@ public class AvailabilityService {
             }
 
             if (createdSlots.isEmpty()) {
-                throw new ConflictException("All generated slot intervals overlap with existing availability slots.");
+                throw new ConflictException("All requested slot intervals are already booked by patients.");
             }
 
             return mapToDto(createdSlots.get(0));
