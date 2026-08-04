@@ -49,6 +49,15 @@ public class NotificationService {
             if (effectivePassword == null || effectivePassword.isBlank()) {
                 effectivePassword = mailImpl.getPassword();
             }
+            if (mailImpl.getPort() == 465 || "smtp.gmail.com".equalsIgnoreCase(mailImpl.getHost())) {
+                mailImpl.setProtocol("smtps");
+                java.util.Properties props = mailImpl.getJavaMailProperties();
+                props.put("mail.smtps.auth", "true");
+                props.put("mail.smtps.ssl.enable", "true");
+                props.put("mail.smtps.ssl.trust", "*");
+                props.put("mail.smtps.socketFactory.port", "465");
+                props.put("mail.smtps.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+            }
         }
 
         boolean hasMailCredentials = (effectiveUsername != null && !effectiveUsername.isBlank())

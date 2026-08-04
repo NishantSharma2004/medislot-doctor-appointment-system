@@ -26,29 +26,36 @@ spring:
 
   mail:
     host: ${SPRING_MAIL_HOST:${MAIL_HOST:smtp.gmail.com}}
-    port: ${SPRING_MAIL_PORT:${MAIL_PORT:587}}
+    port: ${SPRING_MAIL_PORT:${MAIL_PORT:465}}
     username: ${SPRING_MAIL_USERNAME:${MAIL_USERNAME:}}
     password: ${SPRING_MAIL_PASSWORD:${MAIL_PASSWORD:}}
+    protocol: smtps
     properties:
       mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
-          ssl:
-            trust: "*"
-          connectiontimeout: 10000
-          timeout: 10000
-          writetimeout: 10000
         smtps:
           auth: true
           ssl:
             enable: true
             trust: "*"
-          connectiontimeout: 10000
-          timeout: 10000
-          writetimeout: 10000
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          connectiontimeout: 15000
+          timeout: 15000
+          writetimeout: 15000
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            trust: "*"
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+          connectiontimeout: 15000
+          timeout: 15000
+          writetimeout: 15000
 
 jwt:
   secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
