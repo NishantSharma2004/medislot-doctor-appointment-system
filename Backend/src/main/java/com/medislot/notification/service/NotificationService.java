@@ -41,12 +41,18 @@ public class NotificationService {
         String maskedRecipient = maskEmail(recipientEmail);
 
         String effectiveUsername = mailUsername;
-        if ((effectiveUsername == null || effectiveUsername.isBlank()) && mailSender instanceof JavaMailSenderImpl mailImpl) {
-            effectiveUsername = mailImpl.getUsername();
+        String effectivePassword = mailPassword;
+        if (mailSender instanceof JavaMailSenderImpl mailImpl) {
+            if (effectiveUsername == null || effectiveUsername.isBlank()) {
+                effectiveUsername = mailImpl.getUsername();
+            }
+            if (effectivePassword == null || effectivePassword.isBlank()) {
+                effectivePassword = mailImpl.getPassword();
+            }
         }
 
         boolean hasMailCredentials = (effectiveUsername != null && !effectiveUsername.isBlank())
-                && (mailPassword != null && !mailPassword.isBlank());
+                && (effectivePassword != null && !effectivePassword.isBlank());
         boolean isMailConfigured = mailSender != null && recipientEmail != null && !recipientEmail.isBlank() && hasMailCredentials;
 
         try {
@@ -54,7 +60,7 @@ public class NotificationService {
 
             if (isMailConfigured) {
                 try {
-                    String senderEmail = (effectiveUsername != null && !effectiveUsername.isBlank()) ? effectiveUsername.trim() : "nishantbansiya@gmail.com";
+                    String senderEmail = effectiveUsername.trim();
                     MimeMessage mimeMessage = mailSender.createMimeMessage();
                     MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
                     helper.setFrom(senderEmail, "MediSlot Healthcare");
