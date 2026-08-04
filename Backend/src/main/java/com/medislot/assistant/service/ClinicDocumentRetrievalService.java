@@ -15,8 +15,8 @@ public class ClinicDocumentRetrievalService {
 
     private final ClinicDocumentRepository clinicDocumentRepository;
 
-    @Value("${ai.retrieval.limit:5}")
-    private int maxRetrievalLimit = 5;
+    @Value("${ai.grounding.retrieval-limit:8}")
+    private int maxRetrievalLimit = 8;
 
     public ClinicDocumentRetrievalService(ClinicDocumentRepository clinicDocumentRepository) {
         this.clinicDocumentRepository = clinicDocumentRepository;
@@ -27,19 +27,40 @@ public class ClinicDocumentRetrievalService {
             return List.of();
         }
 
-        // Escape SQL LIKE wildcards for keyword fallback
+        java.util.LinkedHashMap<java.util.UUID, ClinicDocument> docMap = new java.util.LinkedHashMap<>();
+
+        // Escape SQL LIKE wildcards
         String escapedQuery = query.replace("%", "\\%").replace("_", "\\_");
 
-        List<ClinicDocument> results = clinicDocumentRepository.searchActiveDocuments(query, escapedQuery, maxRetrievalLimit);
+        // 1. Full-text search
+        List<ClinicDocument> ftsResults = clinicDocumentRepository.searchActiveDocuments(query, escapedQuery, maxRetrievalLimit);
+        for (ClinicDocument doc : ftsResults) {
+            docMap.put(doc.getId(), doc);
+        }
 
-        // Fallback to active documents list if query search returns empty
-        if (results.isEmpty()) {
-            List<ClinicDocument> activeDocs = clinicDocumentRepository.findByActiveTrueOrderByTitleAsc();
-            if (!activeDocs.isEmpty()) {
-                return activeDocs.stream().limit(maxRetrievalLimit).toList();
+        // 2. Tokenize words for keyword matching (English, Hindi transliteration)
+        String[] tokens = query.toLowerCase().replaceAll("[^a-z0-9\\s]", " ").split("\\s+");
+        List<String> keywords = java.util.Arrays.stream(tokens)
+                .filter(t -> t.length() >= 3)
+                .toList();
+
+        if (!keywords.isEmpty()) {
+            List<ClinicDocument> keywordMatches = clinicDocumentRepository.findByKeywords(keywords.toArray(new String[0]));
+            for (ClinicDocument doc : keywordMatches) {
+                if (docMap.size() >= maxRetrievalLimit) break;
+                docMap.putIfAbsent(doc.getId(), doc);
             }
         }
 
-        return results;
+        // 3. Fallback: If no specific search matches found, retrieve top active specialization & policy documents
+        if (docMap.isEmpty()) {
+            List<ClinicDocument> activeDocs = clinicDocumentRepository.findByActiveTrueOrderByTitleAsc();
+            for (ClinicDocument doc : activeDocs) {
+                if (docMap.size() >= maxRetrievalLimit) break;
+                docMap.put(doc.getId(), doc);
+            }
+        }
+
+        return new java.util.ArrayList<>(docMap.values());
     }
 }

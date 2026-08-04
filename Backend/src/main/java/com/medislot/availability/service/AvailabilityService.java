@@ -67,6 +67,37 @@ public class AvailabilityService {
 
         validateTimeRange(startAt, endAt);
 
+        int durationMinutes = (request.slotMinutes() != null && request.slotMinutes() > 0)
+                ? request.slotMinutes()
+                : 30;
+
+        long totalMinutes = java.time.Duration.between(startAt, endAt).toMinutes();
+
+        // If time window is larger than slotMinutes, auto-chunk into discrete slots
+        if (totalMinutes > durationMinutes) {
+            List<AvailabilitySlot> createdSlots = new ArrayList<>();
+            Instant chunkStart = startAt;
+
+            while (chunkStart.plus(java.time.Duration.ofMinutes(durationMinutes)).isBefore(endAt)
+                    || chunkStart.plus(java.time.Duration.ofMinutes(durationMinutes)).equals(endAt)) {
+
+                Instant chunkEnd = chunkStart.plus(java.time.Duration.ofMinutes(durationMinutes));
+
+                if (!slotRepository.existsOverlappingSlot(doctor.getUserId(), chunkStart, chunkEnd, null)) {
+                    AvailabilitySlot slot = buildSlot(doctor, chunkStart, chunkEnd, SlotStatus.AVAILABLE);
+                    createdSlots.add(slotRepository.save(slot));
+                }
+
+                chunkStart = chunkEnd;
+            }
+
+            if (createdSlots.isEmpty()) {
+                throw new ConflictException("All generated slot intervals overlap with existing availability slots.");
+            }
+
+            return mapToDto(createdSlots.get(0));
+        }
+
         if (slotRepository.existsOverlappingSlot(doctor.getUserId(), startAt, endAt, null)) {
             throw new ConflictException("The specified time range overlaps with an existing availability slot.");
         }
