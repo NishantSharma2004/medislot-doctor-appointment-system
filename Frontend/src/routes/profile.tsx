@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { User as UserIcon, Calendar, MapPin, Phone, Mail, Shield, Save, Loader2, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { User as UserIcon, Calendar, MapPin, Phone, Mail, Shield, Save, Loader2, Sparkles, Camera, Trash2, Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { FullPageLoader } from "@/components/common/Loading";
 import { PageShell } from "@/components/layout/AppShell";
@@ -57,6 +57,8 @@ export function ProfilePage() {
   const { user, isAuthenticated, isLoading: authLoading, refreshUser } = useAuth();
   const navigate = useNavigate();
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [loadingProfile, setLoadingProfile] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -108,6 +110,34 @@ export function ProfilePage() {
 
   const computedAge = calculateAge(dateOfBirth);
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") {
+        setProfileImageUrl(reader.result);
+        toast.success("Photo selected! Click 'Save Profile Details' below to update.");
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setProfileImageUrl("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    toast.info("Profile photo removed.");
+  };
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -142,22 +172,50 @@ export function ProfilePage() {
   return (
     <PageShell title="Account Profile" description="Manage your personal information, contact details, and address.">
       <form onSubmit={handleSaveProfile} className="space-y-6">
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*"
+          className="hidden"
+          onChange={handleImageUpload}
+        />
+
         {/* Header Avatar Card */}
         <div className="surface-panel p-6 flex flex-col sm:flex-row items-center gap-6 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent border border-primary/20">
-          <div className="relative group">
+          <div
+            className="relative group cursor-pointer select-none"
+            onClick={() => fileInputRef.current?.click()}
+            title="Click to upload profile photo"
+          >
             {profileImageUrl ? (
-              <img
-                src={profileImageUrl}
-                alt={fullName || "User Avatar"}
-                className="size-24 rounded-full object-cover border-4 border-background shadow-lg"
-              />
+              <div className="relative">
+                <img
+                  src={profileImageUrl}
+                  alt={fullName || "User Avatar"}
+                  className="size-24 rounded-full object-cover border-4 border-background shadow-lg transition-transform group-hover:scale-105"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveImage}
+                  title="Remove photo"
+                  className="absolute -top-1 -right-1 size-7 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                >
+                  <Trash2 className="size-3.5" aria-hidden="true" />
+                </button>
+              </div>
             ) : (
-              <div className="size-24 rounded-full bg-primary/20 text-primary border-4 border-background shadow-lg flex items-center justify-center font-bold text-3xl">
+              <div className="size-24 rounded-full bg-primary/20 text-primary border-4 border-background shadow-lg flex items-center justify-center font-bold text-3xl transition-transform group-hover:scale-105">
                 {fullName ? fullName.slice(0, 2).toUpperCase() : "US"}
               </div>
             )}
-            <div className="absolute -bottom-1 -right-1 size-7 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow">
-              <Sparkles className="size-4" aria-hidden="true" />
+
+            {/* Camera / Plus badge on avatar bottom-right */}
+            <div
+              className="absolute -bottom-1 -right-1 size-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg border-2 border-background hover:scale-110 transition-transform"
+              title="Upload profile photo"
+            >
+              <Camera className="size-4" aria-hidden="true" />
             </div>
           </div>
 
@@ -175,6 +233,9 @@ export function ProfilePage() {
             </div>
             <p className="text-xs text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5">
               <Mail className="size-3.5" /> {user?.email}
+            </p>
+            <p className="text-xs text-primary/80 font-medium cursor-pointer hover:underline" onClick={() => fileInputRef.current?.click()}>
+              Click avatar to change profile photo
             </p>
           </div>
         </div>
@@ -254,16 +315,6 @@ export function ProfilePage() {
                     <option value="Other">Other</option>
                   </select>
                 </div>
-              </div>
-
-              <div className="space-y-1.5 pt-1">
-                <Label htmlFor="avatar-url">Profile Picture URL</Label>
-                <Input
-                  id="avatar-url"
-                  value={profileImageUrl}
-                  onChange={(e) => setProfileImageUrl(e.target.value)}
-                  placeholder="https://example.com/avatar.jpg"
-                />
               </div>
             </div>
           </div>
