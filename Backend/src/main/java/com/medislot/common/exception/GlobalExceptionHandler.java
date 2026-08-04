@@ -24,14 +24,26 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.medislot.common.observability.TelemetryService;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+    private final TelemetryService telemetryService;
+
+    public GlobalExceptionHandler() {
+        this.telemetryService = new TelemetryService();
+    }
+
+    public GlobalExceptionHandler(TelemetryService telemetryService) {
+        this.telemetryService = telemetryService != null ? telemetryService : new TelemetryService();
+    }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
         log.warn("Business exception [{}]: {}", ex.getCode(), ex.getMessage());
+        telemetryService.recordError(request.getRequestURI(), ex.getStatus().value(), ex.getCode(), ex.getMessage(), ex);
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 ex.getStatus().value(),

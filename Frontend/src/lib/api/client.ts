@@ -3,6 +3,7 @@ import axios, {
   type AxiosInstance,
   type InternalAxiosRequestConfig,
 } from "axios";
+import { telemetry } from "../observability/telemetry";
 import type { ApiError } from "./types";
 
 export const API_BASE_URL =
@@ -21,6 +22,12 @@ export function getStoredRefreshToken(): string | null {
   return window.localStorage.getItem(REFRESH_TOKEN_STORAGE_KEY);
 }
 
+export function setStoredTokens(accessToken: string, refreshToken: string): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(TOKEN_STORAGE_KEY, accessToken);
+  window.localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
+}
+
 export function setStoredToken(token: string | null, refreshToken?: string | null) {
   if (typeof window === "undefined") return;
   if (token) window.localStorage.setItem(TOKEN_STORAGE_KEY, token);
@@ -30,6 +37,12 @@ export function setStoredToken(token: string | null, refreshToken?: string | nul
     if (refreshToken) window.localStorage.setItem(REFRESH_TOKEN_STORAGE_KEY, refreshToken);
     else window.localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
   }
+}
+
+export function clearStoredTokens(): void {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(TOKEN_STORAGE_KEY);
+  window.localStorage.removeItem(REFRESH_TOKEN_STORAGE_KEY);
 }
 
 let onUnauthorized: (() => void) | null = null;
@@ -66,10 +79,15 @@ function parseRetryAfter(value: string | undefined): number | undefined {
 
 export function normalizeError(error: unknown): ApiError {
   if (!axios.isAxiosError(error)) {
+    const message = error instanceof Error ? error.message : "An unexpected error occurred.";
+    telemetry.recordEvent({
+      type: "ERROR",
+      message: `Non-Axios Exception: ${message}`,
+    });
     return {
-      status: 0,
+      status: 500,
       code: "UNKNOWN",
-      message: "An unexpected error occurred. Please try again.",
+      message,
     };
   }
 
@@ -80,10 +98,17 @@ export function normalizeError(error: unknown): ApiError {
   }>;
 
   if (!axiosError.response) {
+    const networkMsg = `We could not reach the server at ${API_BASE_URL}. If the free server was sleeping, please wait a moment and click Try again.`;
+    telemetry.recordEvent({
+      type: "ERROR",
+      message: `Network Unreachable (Status 0): ${axiosError.config?.method?.toUpperCase()} ${axiosError.config?.url}`,
+      status: 0,
+      url: `${API_BASE_URL}${axiosError.config?.url || ""}`,
+    });
     return {
       status: 0,
       code: "NETWORK",
-      message: `We could not reach the server at ${API_BASE_URL}. If the free server was sleeping, please wait a moment and click Try again.`,
+      message: networkMsg,
     };
   }
 
@@ -95,6 +120,13 @@ export function normalizeError(error: unknown): ApiError {
       .map(([field, msg]) => `${field}: ${msg}`)
       .join("; ");
   }
+
+  telemetry.recordEvent({
+    type: status >= 500 ? "ERROR" : "API_FAILURE",
+    message: `API ${axiosError.config?.method?.toUpperCase()} ${axiosError.config?.url} returned ${status}: ${backendMessage || "Error"}`,
+    status,
+    url: `${API_BASE_URL}${axiosError.config?.url || ""}`,
+  });
 
   switch (status) {
     case 401:

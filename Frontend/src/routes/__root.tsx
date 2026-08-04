@@ -132,6 +132,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { TelemetryErrorBoundary } from "@/lib/observability/telemetry";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -147,8 +149,10 @@ function RootComponent() {
         <div className="flex min-h-screen flex-col">
           <AppHeader />
           <main id="main-content" className="flex-1">
-            {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-            <Outlet />
+            <TelemetryErrorBoundary>
+              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+              <Outlet />
+            </TelemetryErrorBoundary>
           </main>
           <AppFooter />
         </div>
