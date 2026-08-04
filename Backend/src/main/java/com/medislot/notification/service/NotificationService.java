@@ -30,6 +30,9 @@ public class NotificationService {
     @Value("${spring.mail.username:}")
     private String mailUsername;
 
+    @Value("${spring.mail.password:}")
+    private String mailPassword;
+
     public NotificationService(NotificationLogRepository notificationLogRepository) {
         this.notificationLogRepository = notificationLogRepository;
     }
@@ -42,7 +45,9 @@ public class NotificationService {
             effectiveUsername = mailImpl.getUsername();
         }
 
-        boolean isMailConfigured = mailSender != null && recipientEmail != null && !recipientEmail.isBlank();
+        boolean hasMailCredentials = (effectiveUsername != null && !effectiveUsername.isBlank())
+                && (mailPassword != null && !mailPassword.isBlank());
+        boolean isMailConfigured = mailSender != null && recipientEmail != null && !recipientEmail.isBlank() && hasMailCredentials;
 
         try {
             log.info("Processing email notification [template={}] to {}", templateName, maskedRecipient);
