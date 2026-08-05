@@ -425,6 +425,15 @@ public class AppointmentService {
                 ? appointment.getSlot().getEndTime().toString()
                 : null;
 
+        AppointmentStatus effectiveStatus = appointment.getStatus();
+        if (appointment.getSlotEndAt() != null && appointment.getSlotEndAt().isBefore(Instant.now())) {
+            if (effectiveStatus == AppointmentStatus.PENDING) {
+                effectiveStatus = AppointmentStatus.EXPIRED;
+            } else if (effectiveStatus == AppointmentStatus.CONFIRMED) {
+                effectiveStatus = AppointmentStatus.MISSED;
+            }
+        }
+
         return new AppointmentDto(
                 appointment.getId().toString(),
                 appointment.getDoctorId() != null ? appointment.getDoctorId().toString() : null,
@@ -443,7 +452,7 @@ public class AppointmentService {
                 dateStr,
                 startTimeStr,
                 endTimeStr,
-                appointment.getStatus(),
+                effectiveStatus,
                 appointment.getReason(),
                 appointment.getNotes(),
                 appointment.getConsultationFee()

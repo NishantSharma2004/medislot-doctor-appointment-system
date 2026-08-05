@@ -299,26 +299,38 @@ function DoctorDeskPage() {
                         <Button
                           size="sm"
                           variant="default"
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
                           onClick={() => handleUpdateStatus(appt.id, "CONFIRMED")}
                         >
-                          Confirm
+                          Confirm Slot
                         </Button>
                         <Button
                           size="sm"
                           variant="destructive"
-                          onClick={() => handleUpdateStatus(appt.id, "CANCELLED")}
+                          onClick={() => handleUpdateStatus(appt.id, "REJECTED")}
                         >
                           Reject
                         </Button>
                       </>
                     ) : appt.status === "CONFIRMED" ? (
-                      <Button
-                        size="sm"
-                        variant="default"
-                        onClick={() => handleUpdateStatus(appt.id, "COMPLETED")}
-                      >
-                        Mark Completed
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="default"
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                          onClick={() => handleUpdateStatus(appt.id, "COMPLETED")}
+                        >
+                          Attended & Complete
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="text-amber-700 dark:text-amber-400 border-amber-500/40 hover:bg-amber-500/10"
+                          onClick={() => handleUpdateStatus(appt.id, "MISSED")}
+                        >
+                          No-Show (Missed)
+                        </Button>
+                      </>
                     ) : null}
                   </div>
                 </div>

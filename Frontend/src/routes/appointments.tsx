@@ -175,17 +175,21 @@ function MyAppointmentsPage() {
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                         appt.status === "CONFIRMED"
                           ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                          : appt.status === "PENDING"
-                            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
-                            : appt.status === "CANCELLED"
-                              ? "bg-destructive/10 text-destructive"
-                              : "bg-muted text-muted-foreground"
+                          : appt.status === "COMPLETED"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                            : appt.status === "PENDING"
+                              ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                              : appt.status === "MISSED"
+                                ? "bg-orange-500/10 text-orange-700 dark:text-orange-400"
+                                : appt.status === "EXPIRED" || appt.status === "CANCELLED" || appt.status === "REJECTED"
+                                  ? "bg-destructive/10 text-destructive"
+                                  : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {appt.status}
                     </span>
 
-                    {appt.status !== "CANCELLED" && appt.status !== "COMPLETED" ? (
+                    {(appt.status === "PENDING" || appt.status === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" onClick={() => openRescheduleModal(appt)}>
                           Reschedule

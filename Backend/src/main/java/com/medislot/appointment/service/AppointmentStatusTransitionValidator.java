@@ -14,11 +14,13 @@ import java.util.Set;
 public class AppointmentStatusTransitionValidator {
 
     private static final Map<AppointmentStatus, Set<AppointmentStatus>> ALLOWED_TRANSITIONS = Map.of(
-            AppointmentStatus.PENDING, Set.of(AppointmentStatus.CONFIRMED, AppointmentStatus.REJECTED, AppointmentStatus.CANCELLED),
-            AppointmentStatus.CONFIRMED, Set.of(AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED),
+            AppointmentStatus.PENDING, Set.of(AppointmentStatus.CONFIRMED, AppointmentStatus.REJECTED, AppointmentStatus.CANCELLED, AppointmentStatus.EXPIRED),
+            AppointmentStatus.CONFIRMED, Set.of(AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED, AppointmentStatus.MISSED),
             AppointmentStatus.REJECTED, Set.of(),
             AppointmentStatus.COMPLETED, Set.of(),
-            AppointmentStatus.CANCELLED, Set.of()
+            AppointmentStatus.CANCELLED, Set.of(),
+            AppointmentStatus.EXPIRED, Set.of(),
+            AppointmentStatus.MISSED, Set.of()
     );
 
     public void validateTransition(AppointmentStatus currentStatus, AppointmentStatus newStatus) {
