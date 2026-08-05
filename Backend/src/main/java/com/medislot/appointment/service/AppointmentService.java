@@ -108,8 +108,8 @@ public class AppointmentService {
             throw new ConflictException("SLOT_ALREADY_BOOKED", "An active appointment already exists for this slot.");
         }
 
-        // Check if patient already has an active appointment with this specific doctor
-        if (appointmentRepository.existsByPatientIdAndDoctorUserIdAndStatusIn(currentUser.getId(), doctorId, ACTIVE_STATUSES)) {
+        // Check if patient already has an active upcoming appointment with this specific doctor
+        if (appointmentRepository.existsByPatientIdAndDoctorUserIdAndStatusIn(currentUser.getId(), doctorId, ACTIVE_STATUSES, Instant.now())) {
             throw new ConflictException("PATIENT_EXISTING_APPOINTMENT_WITH_DOCTOR",
                     "You already have an active appointment (PENDING or CONFIRMED) with Dr. " + doctor.getUser().getFullName() +
                     ". Please wait for your existing appointment to be completed by the doctor or cancel it before booking another slot.");
