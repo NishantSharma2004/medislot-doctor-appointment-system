@@ -86,12 +86,13 @@ function DoctorProfilePage() {
       navigate({ to: "/dashboard" });
     } catch (err) {
       const apiErr = err as ApiError;
-      const isSlotConflict = apiErr.code === "SLOT_NOT_AVAILABLE" || apiErr.status === 409 || apiErr.message?.toLowerCase().includes("slot");
+      const isSlotConflict = apiErr.code === "SLOT_NOT_AVAILABLE" || (apiErr.status === 409 && apiErr.code !== "PATIENT_EXISTING_APPOINTMENT_WITH_DOCTOR" && apiErr.code !== "PATIENT_APPOINTMENT_CONFLICT" && apiErr.code !== "DOCTOR_APPOINTMENT_CONFLICT");
       if (isSlotConflict) {
         setBookingError("This slot was just booked by another patient! Please select another available slot.");
         setSelectedSlot(null);
         availabilityQuery.refetch();
       } else {
+        setBookingError(null);
         toast.error(apiErr.message || "Could not book appointment");
       }
     } finally {
