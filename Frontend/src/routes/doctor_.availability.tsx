@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { isUpcomingSlot } from "@/components/common/format";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PageShell } from "@/components/layout/AppShell";
@@ -197,49 +198,61 @@ function DoctorAvailabilityPage() {
         </div>
 
         <div className="surface-panel p-6 space-y-4 md:col-span-2">
-          <h2 className="text-lg font-bold">Published Availability Slots</h2>
+          <div className="flex items-center justify-between border-b pb-3">
+            <div>
+              <h2 className="text-lg font-bold">Published Availability Slots</h2>
+              <p className="text-xs text-muted-foreground">Active upcoming consultation slots open for patient booking.</p>
+            </div>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-500/10 text-teal-700 dark:text-teal-400">
+              {slots.filter((s) => isUpcomingSlot(s.date, s.startTime)).length} Active Upcoming
+            </span>
+          </div>
+
           {isLoading ? (
             <InlineLoader label="Loading published slots" />
           ) : error ? (
             <ErrorState error={error} onRetry={loadSlots} />
-          ) : slots.length === 0 ? (
+          ) : slots.filter((s) => isUpcomingSlot(s.date, s.startTime)).length === 0 ? (
             <div className="text-center py-12 border border-dashed rounded-lg">
-              <p className="text-muted-foreground text-sm">No availability slots published yet.</p>
+              <p className="text-muted-foreground text-sm">No active upcoming availability slots found.</p>
+              <p className="text-xs text-muted-foreground mt-1">Past unbooked slots are automatically expired and hidden.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-96 overflow-y-auto">
-              {slots.map((slot) => (
-                <div
-                  key={slot.id}
-                  className="p-3 border rounded-md flex items-center justify-between gap-2 bg-card"
-                >
-                  <div className="text-sm">
-                    <span className="font-semibold block">{slot.date}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {slot.startTime} - {slot.endTime}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`text-xs px-2 py-0.5 rounded-full ${
-                        slot.booked ? "bg-amber-500/10 text-amber-600" : "bg-green-500/10 text-green-600"
-                      }`}
-                    >
-                      {slot.booked ? "Booked" : "Available"}
-                    </span>
-                    {!slot.booked ? (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="text-destructive hover:bg-destructive/10"
-                        onClick={() => handleDeleteSlot(slot.id)}
+              {slots
+                .filter((slot) => isUpcomingSlot(slot.date, slot.startTime))
+                .map((slot) => (
+                  <div
+                    key={slot.id}
+                    className="p-3 border rounded-md flex items-center justify-between gap-2 bg-card hover:border-teal-500/40 transition-colors"
+                  >
+                    <div className="text-sm">
+                      <span className="font-semibold block">{slot.date}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {slot.startTime} - {slot.endTime}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-xs px-2 py-0.5 rounded-full ${
+                          slot.booked ? "bg-amber-500/10 text-amber-600" : "bg-green-500/10 text-green-600"
+                        }`}
                       >
-                        Delete
-                      </Button>
-                    ) : null}
+                        {slot.booked ? "Booked" : "Available"}
+                      </span>
+                      {!slot.booked ? (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:bg-destructive/10"
+                          onClick={() => handleDeleteSlot(slot.id)}
+                        >
+                          Delete
+                        </Button>
+                      ) : null}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           )}
         </div>

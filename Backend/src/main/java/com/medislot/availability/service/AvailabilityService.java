@@ -49,6 +49,9 @@ public class AvailabilityService {
     public AvailabilitySlotDto createAvailability(User currentUser, AvailabilityCreateRequest request) {
         DoctorProfile doctor = validateDoctorRoleAndGetProfile(currentUser);
 
+        // Auto-clean up unbooked past slots to prevent clutter and mixing with new slots
+        slotRepository.deleteUnbookedPastSlots(doctor.getUserId(), Instant.now());
+
         Instant startAt;
         Instant endAt;
 
@@ -126,7 +129,7 @@ public class AvailabilityService {
             throw new NotFoundException("Doctor not found with ID: " + doctorId);
         }
 
-        Instant fromInstant = from != null ? from : Instant.now().minus(java.time.Duration.ofHours(24));
+        Instant fromInstant = from != null ? from : Instant.now();
         SlotStatus targetStatus = status != null ? status : SlotStatus.AVAILABLE;
 
         List<AvailabilitySlot> slots = slotRepository.findSlotsFiltered(doctorId, targetStatus, fromInstant, to);
