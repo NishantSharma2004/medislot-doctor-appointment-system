@@ -97,15 +97,15 @@ public class AppointmentService {
         }
 
         if (slot.getStatus() != SlotStatus.AVAILABLE) {
-            throw new ConflictException("The selected availability slot is no longer available.");
+            throw new ConflictException("SLOT_NOT_AVAILABLE", "The selected availability slot is no longer available.");
         }
 
         if (slot.getSlotStartAt().isBefore(Instant.now())) {
-            throw new BadRequestException("Cannot book an appointment for a past slot.");
+            throw new BadRequestException("SLOT_EXPIRED", "Cannot book an appointment for a past slot.");
         }
 
         if (appointmentRepository.existsBySlotIdAndStatusIn(slotId, List.of(AppointmentStatus.PENDING, AppointmentStatus.CONFIRMED, AppointmentStatus.COMPLETED))) {
-            throw new ConflictException("An active appointment already exists for this slot.");
+            throw new ConflictException("SLOT_ALREADY_BOOKED", "An active appointment already exists for this slot.");
         }
 
         // Check if patient already has an active appointment with this specific doctor
