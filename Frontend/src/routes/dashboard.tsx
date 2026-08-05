@@ -1,22 +1,40 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import {
+  Calendar,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Clock3,
+  XCircle,
+  ArrowRight,
+  Search,
+  FileText,
+  PhoneCall,
+  Activity,
+  Sparkles,
+  User,
+  ShieldCheck,
+  Building2,
+  CalendarCheck2,
+} from "lucide-react";
 import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
-import { PaginationControls } from "@/components/common/PaginationControls";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
-import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
+import type { ApiError, AppointmentDto, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — MediSlot" },
-      { name: "description", content: "Manage your MediSlot appointments and profile." },
+      { title: "Patient Dashboard — MediSlot" },
+      { name: "description", content: "Interactive health command center, upcoming appointments, and clinic shortcuts." },
     ],
   }),
   component: DashboardPage,
@@ -29,13 +47,11 @@ function DashboardPage() {
   const [appointmentsPage, setAppointmentsPage] = useState<PageResponse<AppointmentDto>>({
     content: [],
     page: 0,
-    size: 5,
+    size: 50,
     totalElements: 0,
     totalPages: 1,
   });
 
-  const [statusFilter, setStatusFilter] = useState<AppointmentStatus | "ALL">("ALL");
-  const [page, setPage] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
@@ -55,9 +71,8 @@ function DashboardPage() {
     setError(null);
     try {
       const data = await appointmentService.myAppointments({
-        page,
-        size: 5,
-        status: statusFilter === "ALL" ? undefined : statusFilter,
+        page: 0,
+        size: 50,
       });
       setAppointmentsPage(data);
     } catch (err) {
@@ -71,7 +86,7 @@ function DashboardPage() {
     if (isAuthenticated) {
       loadAppointments();
     }
-  }, [isAuthenticated, page, statusFilter]);
+  }, [isAuthenticated]);
 
   const handleCancel = async (appointmentId: string) => {
     if (!confirm("Are you sure you want to cancel this appointment?")) return;
@@ -116,142 +131,327 @@ function DashboardPage() {
     return <FullPageLoader label="Loading account session" />;
   }
 
-  return (
-    <div className="mx-auto max-w-5xl px-4 py-8 space-y-6">
-      <BackButton />
-      {/* User Profile Overview Header */}
-      <div className="surface-panel p-6">
-        <h1 className="text-2xl font-bold tracking-tight">Account Dashboard</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Welcome back, <span className="font-semibold text-foreground">{user?.fullName}</span>
-        </p>
+  const allAppointments = appointmentsPage.content;
+  const upcomingAppts = allAppointments.filter(
+    (a) => (a.status === "PENDING" || a.status === "CONFIRMED") && isUpcomingSlot(a.date, a.startTime)
+  );
+  const completedAppts = allAppointments.filter((a) => a.status === "COMPLETED");
+  const pendingAppts = allAppointments.filter((a) => a.status === "PENDING");
+  const missedOrExpiredAppts = allAppointments.filter((a) => a.status === "MISSED" || a.status === "EXPIRED" || a.status === "CANCELLED");
 
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t pt-4 text-sm">
-          <div>
-            <span className="text-muted-foreground block text-xs">Email Address</span>
-            <span className="font-medium">{user?.email}</span>
+  const nextAppointment = upcomingAppts.length > 0 ? upcomingAppts[0] : null;
+  const totalCount = allAppointments.length;
+
+  const completedPct = totalCount > 0 ? Math.round((completedAppts.length / totalCount) * 100) : 0;
+  const upcomingPct = totalCount > 0 ? Math.round((upcomingAppts.length / totalCount) * 100) : 0;
+  const pendingPct = totalCount > 0 ? Math.round((pendingAppts.length / totalCount) * 100) : 0;
+  const missedPct = totalCount > 0 ? Math.round((missedOrExpiredAppts.length / totalCount) * 100) : 0;
+
+  return (
+    <div className="mx-auto max-w-6xl px-4 py-8 space-y-8">
+      <BackButton />
+
+      {/* Hero Welcome Banner */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-900 via-emerald-800 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-teal-700/30">
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-teal-500/20 text-teal-200 border-teal-400/30 backdrop-blur-md px-3 py-1 text-xs">
+                <ShieldCheck className="size-3.5 mr-1" /> Patient Command Center
+              </Badge>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+              Welcome back, {user?.fullName}! 👋
+            </h1>
+            <p className="text-teal-100/80 text-sm max-w-xl">
+              Track your upcoming clinic visits, manage appointment schedules, and explore verified medical specialists.
+            </p>
           </div>
-          <div>
-            <span className="text-muted-foreground block text-xs">Phone Number</span>
-            <span className="font-medium">{user?.phone || "Not provided"}</span>
-          </div>
-          <div>
-            <span className="text-muted-foreground block text-xs">Account Role</span>
-            <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
-              {user?.role}
-            </span>
+
+          {/* Quick Profile Pill */}
+          <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-xs space-y-2 shrink-0">
+            <div className="flex items-center gap-2">
+              <User className="size-4 text-teal-300" />
+              <span className="font-semibold">{user?.email}</span>
+            </div>
+            <div className="flex items-center justify-between text-teal-100/70 pt-1 border-t border-white/10 gap-4">
+              <span>Role: <strong className="text-white">{user?.role}</strong></span>
+              <span>Phone: <strong className="text-white">{user?.phone || "N/A"}</strong></span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Appointments Management Section */}
-      <div className="surface-panel p-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight">My Appointments</h2>
-            <p className="text-sm text-muted-foreground">View and manage your upcoming or past clinic appointments.</p>
+      {/* 4 Interactive Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Stat 1: Upcoming */}
+        <div className="surface-panel p-5 space-y-2 relative overflow-hidden group hover:border-teal-500/50 transition-all duration-300 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Upcoming</span>
+            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 group-hover:scale-110 transition-transform">
+              <Calendar className="size-5" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-foreground">{upcomingAppts.length}</span>
+            {upcomingAppts.length > 0 ? (
+              <span className="inline-flex items-center text-xs font-bold text-emerald-600 dark:text-emerald-400 animate-pulse">
+                <Sparkles className="size-3 mr-1" /> Active
+              </span>
+            ) : (
+              <span className="text-xs text-muted-foreground">No visits due</span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground pt-1 border-t border-border/40">Confirmed & upcoming slots</p>
+        </div>
+
+        {/* Stat 2: Completed */}
+        <div className="surface-panel p-5 space-y-2 relative overflow-hidden group hover:border-emerald-500/50 transition-all duration-300 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Completed</span>
+            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform">
+              <CheckCircle2 className="size-5" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-foreground">{completedAppts.length}</span>
+            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400">Visits attended</span>
+          </div>
+          <p className="text-xs text-muted-foreground pt-1 border-t border-border/40">Successful consultations</p>
+        </div>
+
+        {/* Stat 3: Pending */}
+        <div className="surface-panel p-5 space-y-2 relative overflow-hidden group hover:border-amber-500/50 transition-all duration-300 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Pending Doctor</span>
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-transform">
+              <Clock3 className="size-5" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-foreground">{pendingAppts.length}</span>
+            <span className="text-xs text-amber-600 dark:text-amber-400 font-medium">Awaiting review</span>
+          </div>
+          <p className="text-xs text-muted-foreground pt-1 border-t border-border/40">Doctor confirmation pending</p>
+        </div>
+
+        {/* Stat 4: Missed / Cancelled */}
+        <div className="surface-panel p-5 space-y-2 relative overflow-hidden group hover:border-orange-500/50 transition-all duration-300 shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Missed / Expired</span>
+            <div className="p-2 rounded-xl bg-orange-500/10 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform">
+              <AlertCircle className="size-5" />
+            </div>
+          </div>
+          <div className="flex items-baseline gap-2">
+            <span className="text-3xl font-black text-foreground">{missedOrExpiredAppts.length}</span>
+            <span className="text-xs text-muted-foreground">Past & cancelled</span>
+          </div>
+          <p className="text-xs text-muted-foreground pt-1 border-t border-border/40">No-shows or cancelled</p>
+        </div>
+      </div>
+
+      {/* Visual Analytics Distribution Bar */}
+      {totalCount > 0 ? (
+        <div className="surface-panel p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-bold tracking-wide uppercase text-muted-foreground flex items-center gap-2">
+              <Activity className="size-4 text-teal-500" /> Appointment Health Analytics
+            </h2>
+            <span className="text-xs text-muted-foreground">Total Bookings: <strong>{totalCount}</strong></span>
           </div>
 
-          {/* Status Filter Tabs */}
-          <div className="flex flex-wrap gap-1.5 bg-muted p-1 rounded-lg">
-            {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((status) => (
-              <button
-                key={status}
-                onClick={() => {
-                  setStatusFilter(status);
-                  setPage(0);
-                }}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                  statusFilter === status
-                    ? "bg-background text-foreground shadow-xs font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+          {/* Stacked Progress Bar */}
+          <div className="h-3 w-full bg-muted rounded-full overflow-hidden flex">
+            {completedPct > 0 ? (
+              <div style={{ width: `${completedPct}%` }} className="bg-emerald-500 transition-all duration-500" title={`Completed: ${completedPct}%`} />
+            ) : null}
+            {upcomingPct > 0 ? (
+              <div style={{ width: `${upcomingPct}%` }} className="bg-teal-500 transition-all duration-500" title={`Upcoming: ${upcomingPct}%`} />
+            ) : null}
+            {pendingPct > 0 ? (
+              <div style={{ width: `${pendingPct}%` }} className="bg-amber-500 transition-all duration-500" title={`Pending: ${pendingPct}%`} />
+            ) : null}
+            {missedPct > 0 ? (
+              <div style={{ width: `${missedPct}%` }} className="bg-orange-500 transition-all duration-500" title={`Missed/Cancelled: ${missedPct}%`} />
+            ) : null}
+          </div>
+
+          {/* Legend */}
+          <div className="flex flex-wrap items-center justify-between text-xs gap-4 pt-1">
+            <div className="flex items-center gap-1.5">
+              <span className="size-2.5 rounded-full bg-emerald-500" />
+              <span className="text-muted-foreground">Completed ({completedAppts.length})</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="size-2.5 rounded-full bg-teal-500" />
+              <span className="text-muted-foreground">Upcoming ({upcomingAppts.length})</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="size-2.5 rounded-full bg-amber-500" />
+              <span className="text-muted-foreground">Pending ({pendingAppts.length})</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="size-2.5 rounded-full bg-orange-500" />
+              <span className="text-muted-foreground">Missed/Cancelled ({missedOrExpiredAppts.length})</span>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Next Appointment Spotlight Hero Card */}
+      {nextAppointment ? (
+        <div className="surface-panel p-6 border-l-4 border-l-teal-500 space-y-4 shadow-md bg-gradient-to-r from-teal-500/5 via-card to-card">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Badge className="bg-teal-500 text-white hover:bg-teal-600 px-3 py-0.5 text-xs font-bold">
+                <CalendarCheck2 className="size-3.5 mr-1" /> Next Consultation Spotlight
+              </Badge>
+              <Badge variant="outline" className="text-xs font-semibold">
+                {nextAppointment.status}
+              </Badge>
+            </div>
+            <span className="text-xs text-muted-foreground">Scheduled Consultation</span>
+          </div>
+
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-2">
+            <div className="space-y-2">
+              <h3 className="text-xl font-bold text-foreground">{nextAppointment.doctorName}</h3>
+              <p className="text-sm font-medium text-teal-700 dark:text-teal-400">{nextAppointment.specialization}</p>
+              
+              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground pt-1">
+                <span className="flex items-center gap-1 font-semibold text-foreground bg-muted/60 px-3 py-1 rounded-lg">
+                  <Calendar className="size-3.5 text-teal-600" /> {nextAppointment.date}
+                </span>
+                <span className="flex items-center gap-1 font-semibold text-foreground bg-muted/60 px-3 py-1 rounded-lg">
+                  <Clock className="size-3.5 text-teal-600" /> {formatTimeRange(nextAppointment.startTime, nextAppointment.endTime)}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <Button variant="outline" size="sm" onClick={() => openRescheduleModal(nextAppointment)}>
+                Reschedule
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:bg-destructive/10"
+                onClick={() => handleCancel(nextAppointment.id)}
               >
-                {status}
-              </button>
+                Cancel Visit
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Quick Actions & Shortcuts Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Shortcut 1 */}
+        <Link
+          to="/doctors"
+          className="surface-panel p-5 flex items-center justify-between group hover:border-primary/50 transition-all shadow-xs"
+        >
+          <div className="space-y-1">
+            <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <Search className="size-4 text-teal-600" /> Find & Book Doctor
+            </h3>
+            <p className="text-xs text-muted-foreground">Search cardiology, dermatology, & more</p>
+          </div>
+          <ArrowRight className="size-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-primary transition-all" />
+        </Link>
+
+        {/* Shortcut 2 */}
+        <Link
+          to="/appointments"
+          className="surface-panel p-5 flex items-center justify-between group hover:border-primary/50 transition-all shadow-xs"
+        >
+          <div className="space-y-1">
+            <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <FileText className="size-4 text-emerald-600" /> All Appointments History
+            </h3>
+            <p className="text-xs text-muted-foreground">View full paginated log & filters</p>
+          </div>
+          <ArrowRight className="size-5 text-muted-foreground group-hover:translate-x-1 group-hover:text-emerald-600 transition-all" />
+        </Link>
+
+        {/* Shortcut 3 */}
+        <div className="surface-panel p-5 flex items-center justify-between group shadow-xs">
+          <div className="space-y-1">
+            <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
+              <PhoneCall className="size-4 text-amber-600" /> Clinic Emergency Help
+            </h3>
+            <p className="text-xs text-muted-foreground">Contact MediSlot Helpline (24x7)</p>
+          </div>
+          <Badge variant="outline" className="text-xs">24/7 Active</Badge>
+        </div>
+      </div>
+
+      {/* Recent Appointments Snippet & View All Link */}
+      <div className="surface-panel p-6 space-y-4">
+        <div className="flex items-center justify-between border-b pb-4">
+          <div>
+            <h2 className="text-lg font-bold text-foreground">Recent Appointments Overview</h2>
+            <p className="text-xs text-muted-foreground">Snapshot of your latest consultation requests.</p>
+          </div>
+          <Button asChild variant="ghost" size="sm" className="gap-1 text-xs text-primary font-semibold">
+            <Link to="/appointments">
+              View All Appointments <ArrowRight className="size-3.5" />
+            </Link>
+          </Button>
+        </div>
+
+        {isLoading ? (
+          <InlineLoader label="Fetching recent activity" />
+        ) : error ? (
+          <ErrorState error={error} onRetry={loadAppointments} />
+        ) : allAppointments.length === 0 ? (
+          <div className="text-center py-10 border border-dashed rounded-xl">
+            <p className="text-muted-foreground text-sm">No appointment history found.</p>
+            <Button asChild variant="outline" size="sm" className="mt-3">
+              <Link to="/doctors">Book Your First Consultation</Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {allAppointments.slice(0, 3).map((appt) => (
+              <div
+                key={appt.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl hover:border-primary/40 transition-colors gap-3 bg-card"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-sm text-foreground">{appt.doctorName}</span>
+                    <span className="text-xs text-muted-foreground">({appt.specialization})</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
+                    <span className="font-medium text-foreground">{formatTimeRange(appt.startTime, appt.endTime)}</span>
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                      appt.status === "CONFIRMED"
+                        ? "bg-green-500/10 text-green-700 dark:text-green-400"
+                        : appt.status === "COMPLETED"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                          : appt.status === "PENDING"
+                            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
+                            : appt.status === "MISSED"
+                              ? "bg-orange-500/10 text-orange-700 dark:text-orange-400"
+                              : "bg-destructive/10 text-destructive"
+                    }`}
+                  >
+                    {appt.status}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
-
-        {/* Content Area */}
-        <div className="mt-6">
-          {isLoading ? (
-            <InlineLoader label="Fetching appointments" />
-          ) : error ? (
-            <ErrorState error={error} onRetry={loadAppointments} />
-          ) : appointmentsPage.content.length === 0 ? (
-            <div className="text-center py-12 border border-dashed rounded-lg">
-              <p className="text-muted-foreground text-sm">No appointments found matching this status.</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {appointmentsPage.content.map((appt) => (
-                <div
-                  key={appt.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:border-primary/50 transition-colors gap-4"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold text-foreground">{appt.doctorName}</span>
-                      <span className="text-xs text-muted-foreground">({appt.specialization})</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
-                      <span className="font-medium text-foreground">
-                        {formatTimeRange(appt.startTime, appt.endTime)}
-                      </span>
-                    </p>
-                    {appt.reason ? (
-                      <p className="text-xs text-muted-foreground">Reason: {appt.reason}</p>
-                    ) : null}
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span
-                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        appt.status === "CONFIRMED"
-                          ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                          : appt.status === "COMPLETED"
-                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                            : appt.status === "PENDING"
-                              ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
-                              : appt.status === "MISSED"
-                                ? "bg-orange-500/10 text-orange-700 dark:text-orange-400"
-                                : appt.status === "EXPIRED" || appt.status === "CANCELLED" || appt.status === "REJECTED"
-                                  ? "bg-destructive/10 text-destructive"
-                                  : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {appt.status}
-                    </span>
-
-                    {(appt.status === "PENDING" || appt.status === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
-                      <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" onClick={() => openRescheduleModal(appt)}>
-                          Reschedule
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-destructive hover:bg-destructive/10"
-                          onClick={() => handleCancel(appt.id)}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              ))}
-
-              <PaginationControls
-                page={appointmentsPage.page}
-                totalPages={appointmentsPage.totalPages}
-                onPageChange={setPage}
-              />
-            </div>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Reschedule Modal */}
@@ -301,3 +501,4 @@ function DashboardPage() {
     </div>
   );
 }
+
