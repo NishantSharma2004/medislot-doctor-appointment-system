@@ -275,35 +275,6 @@ export function AssistantPanel() {
                     </Button>
                   </div>
                 ) : null}
-
-                {message.reply && !message.reply.sufficientEvidence ? (
-                  <p className="mt-2 text-[11px] italic text-muted-foreground">
-                    Insufficient evidence in clinic documents for a definitive answer.
-                  </p>
-                ) : null}
-
-                {message.reply?.sources.length ? (
-                  <div className="mt-2.5 space-y-1.5 border-t border-border/60 pt-2">
-                    <p className="text-[11px] font-bold text-muted-foreground">Verified Sources:</p>
-                    {message.reply.sources.map((source) => (
-                      <div key={`${source.title}-${source.section}`} className="flex items-start gap-1.5">
-                        <FileText className="mt-0.5 size-3 shrink-0 text-muted-foreground" aria-hidden="true" />
-                        <div className="min-w-0">
-                          <p className="truncate text-[11px] font-medium">{source.title}</p>
-                          {source.section ? (
-                            <p className="truncate text-[10px] text-muted-foreground">{source.section}</p>
-                          ) : null}
-                          <Badge
-                            variant="outline"
-                            className={cn("mt-0.5 rounded-full text-[9px] px-1.5 py-0", EVIDENCE_STYLES[source.evidenceStrength])}
-                          >
-                            Evidence: {source.evidenceStrength.toLowerCase()}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : null}
               </div>
             ))}
 
