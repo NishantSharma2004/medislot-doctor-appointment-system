@@ -20,7 +20,226 @@ export interface AssistantService {
 
 const assistantLimiter = createMockRateLimiter(8, 30_000);
 
-const DEMO_DOCTOR_ID = "doc-7"; // Dr. Rajesh Sharma (Senior General Physician & Primary Care)
+// Universal Medical Report & Multimodal Analyzer Engine
+function parseUniversalMedicalReport(messageText: string, fileName?: string): AssistantReply {
+  const text = messageText.toLowerCase();
+  const file = (fileName || "").toLowerCase();
+
+  // 1. Blood Pressure / BP / ECG / Cardiac Report
+  if (text.includes("bp") || text.includes("blood pressure") || text.includes("hypertension") || text.includes("ecg") || text.includes("cardiac") || file.includes("bp") || file.includes("ecg")) {
+    return {
+      answer:
+        `📄 **AI Medical Report Analysis (${fileName || "Blood Pressure / Cardiac Test"})**:\n\n` +
+        "Our AI engine analyzed your BP & Cardiac parameters and translated findings into simple English & Hindi:\n\n" +
+        "• **Key Finding**: Systolic BP is **145 mmHg** (Elevated above 120) & Diastolic BP is **92 mmHg** (Elevated above 80).\n" +
+        "• **Interpretation**: Stage 1 Hypertension (High Blood Pressure).\n" +
+        "• **Doctor Recommendation**: Consult **Dr. Vikram Shetty (Cardiology Specialist)** for BP regulation and ECG evaluation.",
+      sources: [{ title: "AHA & Cardiology BP Guidelines", section: "Hypertension Triage", evidenceStrength: "STRONG" }],
+      sufficientEvidence: true,
+      disclaimer: ASSISTANT_DISCLAIMER,
+      isReportSummary: true,
+      reportAnalysis: {
+        fileName: fileName || "Blood_Pressure_Report.pdf",
+        summaryEnglish: "Your blood pressure test shows elevated Systolic (145 mmHg) and Diastolic (92 mmHg) levels indicating Stage 1 Hypertension. Salt reduction and Cardiology consultation are advised.",
+        summaryHindi: "आपकी ब्लड प्रेशर रिपोर्ट में सिस्टोलिक BP (145 mmHg) और डायस्टोलिक BP (92 mmHg) सामान्य से अधिक हैं, जो High Blood Pressure (Hypertension) दर्शाते हैं। नमक कम खाएं और कार्डियोलॉजिस्ट से सलाह लें।",
+        parameters: [
+          { name: "Systolic Blood Pressure", value: "145 mmHg", normalRange: "90 - 120 mmHg", status: "HIGH" },
+          { name: "Diastolic Blood Pressure", value: "92 mmHg", normalRange: "60 - 80 mmHg", status: "HIGH" },
+          { name: "Resting Heart Rate (Pulse)", value: "84 bpm", normalRange: "60 - 100 bpm", status: "NORMAL" },
+        ],
+        dietAdvice: [
+          "Reduce dietary sodium intake (less than 2,000 mg of salt per day).",
+          "Follow DASH diet: Increase potassium-rich fruits, bananas, and green leafy vegetables.",
+          "Avoid smoking, caffeine, and alcohol consumption.",
+          "Monitor BP daily in the morning and evening.",
+        ],
+      },
+      doctorMatch: {
+        doctorId: "doc-2",
+        doctorName: "Dr. Vikram Shetty",
+        specialization: "Cardiology Specialist",
+        qualifications: "MBBS, MD, DM (Cardiology)",
+        consultationFee: 1200,
+        triageLevel: "URGENT",
+        reason: "Consultation recommended for Elevated Blood Pressure (145/92 mmHg) & Cardiac Evaluation.",
+      },
+    };
+  }
+
+  // 2. Thyroid Profile (T3, T4, TSH)
+  if (text.includes("thyroid") || text.includes("tsh") || text.includes("t3") || text.includes("t4") || file.includes("thyroid") || file.includes("tsh")) {
+    return {
+      answer:
+        `📄 **AI Medical Report Analysis (${fileName || "Thyroid Function Test"})**:\n\n` +
+        "Our AI engine analyzed your Thyroid parameters and translated findings into simple English & Hindi:\n\n" +
+        "• **Key Finding**: Serum TSH is **7.8 µIU/mL** (Elevated above 4.5 µIU/mL normal range).\n" +
+        "• **Interpretation**: Subclinical Hypothyroidism (Sluggish Thyroid Gland Function).\n" +
+        "• **Doctor Recommendation**: Consult **Dr. Rajesh Sharma (General Physician & Primary Care)** for Thyroid evaluation.",
+      sources: [{ title: "Endocrinology Thyroid Guidelines", section: "Thyroid Triage", evidenceStrength: "STRONG" }],
+      sufficientEvidence: true,
+      disclaimer: ASSISTANT_DISCLAIMER,
+      isReportSummary: true,
+      reportAnalysis: {
+        fileName: fileName || "Thyroid_Report.pdf",
+        summaryEnglish: "Your Thyroid report shows an elevated TSH level (7.8 µIU/mL) with normal Free T4, indicating Subclinical Hypothyroidism. Follow-up consultation is recommended.",
+        summaryHindi: "आपकी थायराइड रिपोर्ट में TSH का स्तर (7.8 µIU/mL) सामान्य सीमा (4.5) से अधिक है, जो Hypothyroidism (थायराइड ग्रंथि का धीमा होना) दर्शाता है। फिजिशियन से सलाह लें।",
+        parameters: [
+          { name: "Serum TSH (Thyroid Stimulating Hormone)", value: "7.80 µIU/mL", normalRange: "0.45 - 4.50 µIU/mL", status: "HIGH" },
+          { name: "Free T4 (Thyroxine)", value: "1.12 ng/dL", normalRange: "0.80 - 1.80 ng/dL", status: "NORMAL" },
+          { name: "Free T3 (Triiodothyronine)", value: "2.85 pg/mL", normalRange: "2.30 - 4.20 pg/mL", status: "NORMAL" },
+        ],
+        dietAdvice: [
+          "Ensure adequate dietary iodine from iodized salt and dairy.",
+          "Limit raw cruciferous vegetables (cabbage, broccoli, cauliflower).",
+          "Maintain regular morning exercise to boost metabolic rate.",
+        ],
+      },
+      doctorMatch: {
+        doctorId: "doc-7",
+        doctorName: "Dr. Rajesh Sharma",
+        specialization: "General Physician & Primary Care",
+        qualifications: "MBBS, MD (General Medicine)",
+        consultationFee: 500,
+        triageLevel: "ROUTINE",
+        reason: "Consultation recommended for Elevated TSH (7.8 µIU/mL) & Thyroid Evaluation.",
+      },
+    };
+  }
+
+  // 3. Complete Blood Count (CBC) / Hemoglobin (Hb) / Anemia
+  if (text.includes("cbc") || text.includes("hemoglobin") || text.includes("hb") || text.includes("anemia") || text.includes("platelet") || text.includes("wbc") || file.includes("cbc") || file.includes("hemoglobin")) {
+    return {
+      answer:
+        `📄 **AI Medical Report Analysis (${fileName || "Complete Blood Count (CBC)"})**:\n\n` +
+        "Our AI engine analyzed your CBC report parameters and translated clinical findings into simple English & Hindi:\n\n" +
+        "• **Key Finding**: Hemoglobin (Hb) is **10.2 g/dL** (Low compared to 12.0 g/dL normal minimum).\n" +
+        "• **Interpretation**: Mild Iron Deficiency Anemia.\n" +
+        "• **Doctor Recommendation**: Consult **Dr. Rajesh Sharma (General Physician)** for iron supplement guidance and dietary correlation.",
+      sources: [{ title: "Hematology & CBC Range Guidelines", section: "Anemia & CBC", evidenceStrength: "STRONG" }],
+      sufficientEvidence: true,
+      disclaimer: ASSISTANT_DISCLAIMER,
+      isReportSummary: true,
+      reportAnalysis: {
+        fileName: fileName || "CBC_Report.pdf",
+        summaryEnglish: "Your Complete Blood Count shows low Hemoglobin (10.2 g/dL) indicating mild Iron Deficiency Anemia. Iron-rich nutrition and physician consultation are recommended.",
+        summaryHindi: "आपकी CBC रिपोर्ट में हिमोग्लोबिन (Hb 10.2 g/dL) सामान्य सीमा से कम है, जो अनीमिया (रक्त की कमी) दर्शाता है। आयरन युक्त भोजन (पालक, अनार) लें और डॉक्टर से सलाह लें।",
+        parameters: [
+          { name: "Hemoglobin (Hb)", value: "10.2 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "HIGH" },
+          { name: "Total WBC Count", value: "7,800 /cumm", normalRange: "4,000 - 11,000 /cumm", status: "NORMAL" },
+          { name: "Platelet Count", value: "2.4 Lakhs/cumm", normalRange: "1.5 - 4.5 Lakhs/cumm", status: "NORMAL" },
+          { name: "RBC Count", value: "3.8 mill/cumm", normalRange: "4.2 - 5.4 mill/cumm", status: "HIGH" },
+        ],
+        dietAdvice: [
+          "Consume iron-rich foods: Spinach, beetroot, pomegranate, apples, and dates.",
+          "Pair iron foods with Vitamin C (lemons, oranges) for better iron absorption.",
+          "Avoid tea or coffee immediately after meals as it inhibits iron absorption.",
+        ],
+      },
+      doctorMatch: {
+        doctorId: "doc-7",
+        doctorName: "Dr. Rajesh Sharma",
+        specialization: "General Physician & Primary Care",
+        qualifications: "MBBS, MD (General Medicine)",
+        consultationFee: 500,
+        triageLevel: "ROUTINE",
+        reason: "Consultation recommended for Low Hemoglobin (10.2 g/dL) & Anemia Management.",
+      },
+    };
+  }
+
+  // 4. X-Ray / MRI / Bone / Spine Imaging Report
+  if (text.includes("xray") || text.includes("x-ray") || text.includes("mri") || text.includes("spine") || text.includes("bone") || text.includes("joint") || text.includes("fracture") || file.includes("xray") || file.includes("mri")) {
+    return {
+      answer:
+        `📄 **AI Medical Report Analysis (${fileName || "X-Ray / MRI Imaging Report"})**:\n\n` +
+        "Our AI engine analyzed your Radiology / X-Ray report findings and translated them into simple English & Hindi:\n\n" +
+        "• **Key Finding**: Mild Lumbar Spondylosis / L4-L5 Joint Degenerative changes noted.\n" +
+        "• **Interpretation**: Age-related lumbar spine strain / Joint stiffness.\n" +
+        "• **Doctor Recommendation**: Consult **Dr. Sneha Kulkarni (Orthopaedics Specialist)** for posture guidance, physiotherapy, and joint care.",
+      sources: [{ title: "Radiology & Orthopaedic Guidelines", section: "Spine & Joint Imaging", evidenceStrength: "STRONG" }],
+      sufficientEvidence: true,
+      disclaimer: ASSISTANT_DISCLAIMER,
+      isReportSummary: true,
+      reportAnalysis: {
+        fileName: fileName || "Radiology_XRay_Report.pdf",
+        summaryEnglish: "Your X-Ray / Imaging report reveals mild degenerative changes in the lumbar spine (L4-L5). Ergonomic posture and Orthopaedics evaluation are recommended.",
+        summaryHindi: "आपकी X-Ray/MRI रिपोर्ट में कमर की हड्डी (L4-L5 Spine) में हल्का खिंचाव और घिसाव (Spondylosis) दिखाई दे रहा है। ऑर्थोपेडिक डॉक्टर से मिलें और फिजियोथेरेपी करें।",
+        parameters: [
+          { name: "Lumbar Spine (L4-L5 Alignment)", value: "Mild Degenerative Space Narrowing", normalRange: "Normal Alignment", status: "HIGH" },
+          { name: "Bone Density & Structure", value: "Intact, No Acute Fracture", normalRange: "Normal Structure", status: "NORMAL" },
+          { name: "Soft Tissue & Joint Space", value: "Mild Stiffness Noted", normalRange: "Normal Clearance", status: "NORMAL" },
+        ],
+        dietAdvice: [
+          "Maintain ergonomic sitting posture with proper lumbar back support.",
+          "Ensure adequate Calcium & Vitamin D intake through milk, sunshine, and supplements.",
+          "Perform gentle spinal stretching exercises under physiotherapist supervision.",
+        ],
+      },
+      doctorMatch: {
+        doctorId: "doc-5",
+        doctorName: "Dr. Sneha Kulkarni",
+        specialization: "Orthopaedics Specialist",
+        qualifications: "MS (Orthopaedics), DNB",
+        consultationFee: 900,
+        triageLevel: "ROUTINE",
+        reason: "Consultation recommended for Lumbar Spine Spondylosis & Joint Care.",
+      },
+    };
+  }
+
+  // 5. Default Blood Glucose / Z131 / Lipid / Universal Lab Report
+  const isZ131 = fileName?.includes("z131") || fileName?.includes("Z131") || text.includes("z131") || text.includes("glucose") || text.includes("fasting");
+
+  return {
+    answer:
+      `📄 **AI Medical Report Analysis (${fileName || "Dr Lal PathLabs Report (Z131.pdf)"})**:\n\n` +
+      "Our AI engine analyzed your lab report parameters and translated clinical findings into simple English & Hindi:\n\n" +
+      (isZ131
+        ? "• **Key Finding**: Fasting Glucose is **120 mg/dL** (Elevated above 100 mg/dL) & Post Meal (PP) Glucose is **150 mg/dL** (Elevated above 140 mg/dL).\n• **Interpretation**: Early Type II Diabetes / Impaired Glucose Tolerance (Pre-Diabetes).\n• **Doctor Recommendation**: Consult **Dr. Rajesh Sharma (Senior General Physician)** for dietary guidance and clinical correlation."
+        : "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n• **Plain-English Meaning**: Your blood glucose levels indicate pre-diabetes / hyperglycemia. Dietary care and doctor consultation are recommended."),
+    sources: [{ title: "Lab Test Guidelines & Clinical Ranges", section: "Endocrinology & Metabolic Health", evidenceStrength: "STRONG" }],
+    sufficientEvidence: true,
+    disclaimer: ASSISTANT_DISCLAIMER,
+    isReportSummary: true,
+    reportAnalysis: {
+      fileName: fileName || "Z131.pdf (Dr Lal PathLabs)",
+      summaryEnglish: isZ131
+        ? "Your Dr Lal PathLabs report (Z131.pdf) shows Fasting Glucose at 120 mg/dL and Post Meal (PP) Glucose at 150 mg/dL, indicating Impaired Glucose Tolerance (Pre-Diabetes). Clinical consultation with a General Physician is recommended."
+        : "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
+      summaryHindi: isZ131
+        ? "आपकी Dr Lal PathLabs रिपोर्ट (Z131.pdf) के अनुसार Fasting Glucose (120 mg/dL) और PP Glucose (150 mg/dL) सामान्य सीमा से अधिक हैं, जो Pre-Diabetes / Impaired Glucose Tolerance दर्शाते हैं। मीठे कार्बोहाइड्रेट्स से परहेज करें और जनरल फिजिशियन से सलाह लें।"
+        : "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
+      parameters: isZ131
+        ? [
+            { name: "Glucose Fasting (F)", value: "120.00 mg/dL", normalRange: "70.0 - 100.0 mg/dL", status: "HIGH" },
+            { name: "Glucose Post Meal (PP)", value: "150.00 mg/dL", normalRange: "70.0 - 140.0 mg/dL", status: "HIGH" },
+            { name: "Probable Diagnosis / Cause", value: "Early Type II Diabetes / Glucose Intolerance", normalRange: "Normal Tolerance", status: "HIGH" },
+          ]
+        : [
+            { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
+            { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
+            { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
+            { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
+            { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
+          ],
+      dietAdvice: [
+        "Avoid high glycemic index foods, refined sugar, and soft drinks.",
+        "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
+        "Engage in 30 minutes of daily brisk walking or light exercise.",
+        "Schedule a follow-up consultation with Dr. Rajesh Sharma for clinical evaluation.",
+      ],
+    },
+    doctorMatch: {
+      doctorId: "doc-7",
+      doctorName: "Dr. Rajesh Sharma",
+      specialization: "General Physician & Primary Care",
+      qualifications: "MBBS, MD (General Medicine)",
+      consultationFee: 500,
+      triageLevel: "ROUTINE",
+      reason: "Consultation recommended for Fasting Glucose (120 mg/dL) & Pre-Diabetes management.",
+    },
+  };
+}
 
 const mockAssistantService: AssistantService = {
   async chat(message, attachedFile) {
@@ -30,10 +249,7 @@ const mockAssistantService: AssistantService = {
     const text = message.toLowerCase();
     const fileName = attachedFile?.name;
 
-    // Specific Parsing for Z131.pdf or Glucose/Diabetes Reports
-    const isZ131OrGlucose = fileName?.includes("z131") || fileName?.includes("Z131") || text.includes("z131") || text.includes("glucose") || text.includes("fasting");
-
-    // 1. File Upload / Lab Report Parsing Mode
+    // 1. File Upload / Lab Report Parsing Mode (Triggers for ANY PDF/Image file or Report keywords)
     if (
       fileName ||
       text.includes("report") ||
@@ -41,60 +257,18 @@ const mockAssistantService: AssistantService = {
       text.includes("hba1c") ||
       text.includes("prescription") ||
       text.includes("sugar") ||
+      text.includes("glucose") ||
+      text.includes("bp") ||
+      text.includes("blood pressure") ||
+      text.includes("thyroid") ||
+      text.includes("cbc") ||
+      text.includes("xray") ||
+      text.includes("x-ray") ||
+      text.includes("mri") ||
       text.includes("lab") ||
       text.includes("cholesterol")
     ) {
-      const isZ131 = isZ131OrGlucose;
-
-      return delay({
-        answer:
-          `📄 **AI Medical Report Analysis (${fileName || "Dr Lal PathLabs Report (Z131.pdf)"})**:\n\n` +
-          "Our AI engine analyzed your lab report parameters and translated clinical findings into simple English & Hindi:\n\n" +
-          (isZ131
-            ? "• **Key Finding**: Fasting Glucose is **120 mg/dL** (Elevated above 100 mg/dL) & Post Meal (PP) Glucose is **150 mg/dL** (Elevated above 140 mg/dL).\n• **Interpretation**: Early Type II Diabetes / Impaired Glucose Tolerance (Pre-Diabetes).\n• **Doctor Recommendation**: Consult **Dr. Rajesh Sharma (Senior General Physician)** for dietary guidance and clinical correlation."
-            : "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n• **Plain-English Meaning**: Your blood glucose levels indicate pre-diabetes / hyperglycemia. Dietary care and doctor consultation are recommended."),
-        sources: [{ title: "Lab Test Guidelines & Clinical Ranges", section: "Endocrinology & Metabolic Health", evidenceStrength: "STRONG" }],
-        sufficientEvidence: true,
-        disclaimer: ASSISTANT_DISCLAIMER,
-        isReportSummary: true,
-        reportAnalysis: {
-          fileName: fileName || "Z131.pdf (Dr Lal PathLabs)",
-          summaryEnglish: isZ131
-            ? "Your Dr Lal PathLabs report (Z131.pdf) shows Fasting Glucose at 120 mg/dL and Post Meal (PP) Glucose at 150 mg/dL, indicating Impaired Glucose Tolerance (Pre-Diabetes). Clinical consultation with a General Physician is recommended."
-            : "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
-          summaryHindi: isZ131
-            ? "आपकी Dr Lal PathLabs रिपोर्ट (Z131.pdf) के अनुसार Fasting Glucose (120 mg/dL) और PP Glucose (150 mg/dL) सामान्य सीमा से अधिक हैं, जो Pre-Diabetes / Impaired Glucose Tolerance दर्शाते हैं। मीठे कार्बोहाइड्रेट्स से परहेज करें और जनरल फिजिशियन से सलाह लें।"
-            : "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
-          parameters: isZ131
-            ? [
-                { name: "Glucose Fasting (F)", value: "120.00 mg/dL", normalRange: "70.0 - 100.0 mg/dL", status: "HIGH" },
-                { name: "Glucose Post Meal (PP)", value: "150.00 mg/dL", normalRange: "70.0 - 140.0 mg/dL", status: "HIGH" },
-                { name: "Probable Diagnosis / Cause", value: "Early Type II Diabetes / Glucose Intolerance", normalRange: "Normal Tolerance", status: "HIGH" },
-              ]
-            : [
-                { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
-                { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
-                { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
-                { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
-                { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
-              ],
-          dietAdvice: [
-            "Avoid high glycemic index foods, refined sugar, and soft drinks.",
-            "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
-            "Engage in 30 minutes of daily brisk walking or light exercise.",
-            "Schedule a follow-up consultation with Dr. Rajesh Sharma for clinical evaluation.",
-          ],
-        },
-        doctorMatch: {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician & Primary Care",
-          qualifications: "MBBS, MD (General Medicine)",
-          consultationFee: 500,
-          triageLevel: "ROUTINE",
-          reason: "Consultation recommended for Fasting Glucose (120 mg/dL) & Pre-Diabetes management.",
-        },
-      });
+      return delay(parseUniversalMedicalReport(message, fileName));
     }
 
     // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
