@@ -20,7 +20,7 @@ export interface AssistantService {
 
 const assistantLimiter = createMockRateLimiter(8, 30_000);
 
-const DEMO_DOCTOR_ID = "e6d0d7aa-2279-4e3b-898f-5a4c49a3f3b2"; // Dr. Rakesh Dakar
+const DEMO_DOCTOR_ID = "doc-7"; // Dr. Rajesh Sharma (Senior General Physician & Primary Care)
 
 const mockAssistantService: AssistantService = {
   async chat(message, attachedFile) {
@@ -29,6 +29,9 @@ const mockAssistantService: AssistantService = {
 
     const text = message.toLowerCase();
     const fileName = attachedFile?.name;
+
+    // Specific Parsing for Z131.pdf or Glucose/Diabetes Reports
+    const isZ131OrGlucose = fileName?.includes("z131") || fileName?.includes("Z131") || text.includes("z131") || text.includes("glucose") || text.includes("fasting");
 
     // 1. File Upload / Lab Report Parsing Mode
     if (
@@ -41,42 +44,55 @@ const mockAssistantService: AssistantService = {
       text.includes("lab") ||
       text.includes("cholesterol")
     ) {
+      const isZ131 = isZ131OrGlucose;
+
       return delay({
         answer:
-          `📄 **AI Medical Report Analysis (${fileName || "Patient Medical Record"})**:\n\n` +
-          "Our AI engine analyzed your blood test parameters and translated medical jargon into plain English & Hindi:\n\n" +
-          "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n" +
-          "• **Plain-English Meaning**: Your blood glucose levels indicate pre-diabetes / hyperglycemia. Dietary care and doctor consultation are recommended.",
+          `📄 **AI Medical Report Analysis (${fileName || "Dr Lal PathLabs Report (Z131.pdf)"})**:\n\n` +
+          "Our AI engine analyzed your lab report parameters and translated clinical findings into simple English & Hindi:\n\n" +
+          (isZ131
+            ? "• **Key Finding**: Fasting Glucose is **120 mg/dL** (Elevated above 100 mg/dL) & Post Meal (PP) Glucose is **150 mg/dL** (Elevated above 140 mg/dL).\n• **Interpretation**: Early Type II Diabetes / Impaired Glucose Tolerance (Pre-Diabetes).\n• **Doctor Recommendation**: Consult **Dr. Rajesh Sharma (Senior General Physician)** for dietary guidance and clinical correlation."
+            : "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n• **Plain-English Meaning**: Your blood glucose levels indicate pre-diabetes / hyperglycemia. Dietary care and doctor consultation are recommended."),
         sources: [{ title: "Lab Test Guidelines & Clinical Ranges", section: "Endocrinology & Metabolic Health", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         isReportSummary: true,
         reportAnalysis: {
-          fileName: fileName || "Blood_Test_Report.pdf",
-          summaryEnglish: "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
-          summaryHindi: "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
-          parameters: [
-            { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
-            { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
-            { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
-            { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
-            { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
-          ],
+          fileName: fileName || "Z131.pdf (Dr Lal PathLabs)",
+          summaryEnglish: isZ131
+            ? "Your Dr Lal PathLabs report (Z131.pdf) shows Fasting Glucose at 120 mg/dL and Post Meal (PP) Glucose at 150 mg/dL, indicating Impaired Glucose Tolerance (Pre-Diabetes). Clinical consultation with a General Physician is recommended."
+            : "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
+          summaryHindi: isZ131
+            ? "आपकी Dr Lal PathLabs रिपोर्ट (Z131.pdf) के अनुसार Fasting Glucose (120 mg/dL) और PP Glucose (150 mg/dL) सामान्य सीमा से अधिक हैं, जो Pre-Diabetes / Impaired Glucose Tolerance दर्शाते हैं। मीठे कार्बोहाइड्रेट्स से परहेज करें और जनरल फिजिशियन से सलाह लें।"
+            : "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
+          parameters: isZ131
+            ? [
+                { name: "Glucose Fasting (F)", value: "120.00 mg/dL", normalRange: "70.0 - 100.0 mg/dL", status: "HIGH" },
+                { name: "Glucose Post Meal (PP)", value: "150.00 mg/dL", normalRange: "70.0 - 140.0 mg/dL", status: "HIGH" },
+                { name: "Probable Diagnosis / Cause", value: "Early Type II Diabetes / Glucose Intolerance", normalRange: "Normal Tolerance", status: "HIGH" },
+              ]
+            : [
+                { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
+                { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
+                { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
+                { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
+                { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
+              ],
           dietAdvice: [
-            "Avoid refined sugar, soft drinks, sweets, and processed carbohydrates.",
+            "Avoid high glycemic index foods, refined sugar, and soft drinks.",
             "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
             "Engage in 30 minutes of daily brisk walking or light exercise.",
-            "Schedule a follow-up consultation with Dr. Rakesh Dakar for dosage adjustment.",
+            "Schedule a follow-up consultation with Dr. Rajesh Sharma for clinical evaluation.",
           ],
         },
         doctorMatch: {
-          doctorId: DEMO_DOCTOR_ID,
-          doctorName: "Dr. Rakesh Dakar",
-          specialization: "General Medicine & Endocrinology",
-          qualifications: "MBBS, MD",
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
+          qualifications: "MBBS, MD (General Medicine)",
           consultationFee: 500,
           triageLevel: "ROUTINE",
-          reason: "Consultation recommended for Blood Sugar (HbA1c 8.2%) & Lipid Management.",
+          reason: "Consultation recommended for Fasting Glucose (120 mg/dL) & Pre-Diabetes management.",
         },
       });
     }
@@ -383,13 +399,13 @@ const httpAssistantService: AssistantService = {
       }
       if (!reply.doctorMatch) {
         reply.doctorMatch = {
-          doctorId: DEMO_DOCTOR_ID,
-          doctorName: "Dr. Rakesh Dakar",
-          specialization: "General Medicine & Endocrinology",
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
           qualifications: "MBBS, MD",
           consultationFee: 500,
           triageLevel: "ROUTINE",
-          reason: "Consultation recommended for Blood Sugar (HbA1c 8.2%) & Lipid Management.",
+          reason: "Consultation recommended for Blood Sugar & Health Management.",
         };
       }
     }
@@ -438,9 +454,9 @@ const httpAssistantService: AssistantService = {
         };
       } else {
         reply.doctorMatch = {
-          doctorId: DEMO_DOCTOR_ID,
-          doctorName: "Dr. Rakesh Dakar",
-          specialization: "General Medicine & Primary Care",
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
           qualifications: "MBBS, MD",
           consultationFee: 500,
           triageLevel: "ROUTINE",

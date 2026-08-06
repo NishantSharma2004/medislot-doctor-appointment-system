@@ -58,10 +58,20 @@ function DoctorProfilePage() {
   if (doctorQuery.error)
     return (
       <PageShell title="Doctor profile">
-        <ErrorState
-          error={doctorQuery.error as unknown as ApiError}
-          onRetry={() => doctorQuery.refetch()}
-        />
+        <div className="surface-panel p-8 text-center space-y-4 max-w-lg mx-auto">
+          <div className="size-12 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto">
+            <CalendarClock className="size-6" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold">Doctor Profile Not Found</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              This doctor profile may be inactive or updated. Please browse our active clinic specialists below.
+            </p>
+          </div>
+          <Button onClick={() => navigate({ to: "/doctors" })} className="gap-2 font-semibold">
+            🔍 Browse Active Specialists
+          </Button>
+        </div>
       </PageShell>
     );
 
@@ -172,9 +182,18 @@ function DoctorProfilePage() {
               <InlineLoader label="Loading available slots" />
             ) : availabilityQuery.error ? (
               <ErrorState error={availabilityQuery.error as unknown as ApiError} onRetry={() => availabilityQuery.refetch()} />
-            ) : (availabilityQuery.data ?? []).filter((slot) => isUpcomingSlot(slot.date, slot.startTime)).length === 0 ? (
-              <div className="text-center py-8 border border-dashed rounded-lg">
-                <p className="text-sm text-muted-foreground">No slots published for this doctor yet.</p>
+            ) : availableSlots.length === 0 ? (
+              <div className="text-center py-8 px-4 border border-dashed border-amber-500/40 bg-amber-500/5 rounded-xl space-y-3">
+                <div className="flex items-center justify-center gap-2 text-amber-700 dark:text-amber-300 font-semibold text-sm">
+                  <CalendarClock className="size-4 text-amber-500" />
+                  <span>No open consultation slots available currently for {doctor.fullName}</span>
+                </div>
+                <p className="text-xs text-muted-foreground max-w-md mx-auto">
+                  This doctor has no open appointment slots right now. You can browse our other available specialists or check back later!
+                </p>
+                <Button size="sm" variant="outline" onClick={() => navigate({ to: "/doctors" })} className="text-xs font-semibold gap-1.5 mt-2">
+                  🔍 Browse Other Available Specialists
+                </Button>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
