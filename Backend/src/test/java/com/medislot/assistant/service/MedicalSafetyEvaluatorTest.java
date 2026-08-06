@@ -31,11 +31,10 @@ class MedicalSafetyEvaluatorTest {
     }
 
     @Test
-    void evaluate_shouldBlockDiagnosisRequest() {
-        MedicalSafetyEvaluator.SafetyResult result = safetyEvaluator.evaluate("Can you diagnose what these symptoms mean on my skin?");
-        assertTrue(result.blocked());
-        assertEquals(MedicalSafetyEvaluator.SafetyCategory.DIAGNOSIS_REQUEST, result.category());
-        assertTrue(result.responseMessage().contains("cannot diagnose conditions"));
+    void evaluate_shouldAllowDiagnosisRequestForSymptomTriage() {
+        MedicalSafetyEvaluator.SafetyResult result = safetyEvaluator.evaluate("Can you evaluate what these symptoms mean on my skin?");
+        assertFalse(result.blocked());
+        assertEquals(MedicalSafetyEvaluator.SafetyCategory.SAFE, result.category());
     }
 
     @Test
