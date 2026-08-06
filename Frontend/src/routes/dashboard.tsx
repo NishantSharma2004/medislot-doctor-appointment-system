@@ -23,6 +23,7 @@ import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
+import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
@@ -432,6 +433,17 @@ function DashboardPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {(appt.diagnosis || appt.prescriptionJson) ? (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="h-8 text-xs gap-1 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10 font-semibold"
+                      onClick={() => generatePrescriptionPdf(appt)}
+                    >
+                      📄 Download Prescription PDF
+                    </Button>
+                  ) : null}
+
                   <span
                     className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                       appt.status === "CONFIRMED"

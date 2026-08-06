@@ -25,7 +25,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import { appointmentService } from "@/services/appointment.service";
-import type { ApiError, AppointmentDto, AppointmentStatus } from "@/lib/api/types";
+import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
+import type { ApiError, AppointmentDto, AppointmentStatus, PrescriptionMedicine } from "@/lib/api/types";
 
 export const Route = createFileRoute("/doctor")({
   head: () => ({
@@ -49,10 +50,19 @@ function DoctorDeskPage() {
   // Patient Profile Modal State
   const [inspectedPatient, setInspectedPatient] = useState<AppointmentDto | null>(null);
 
-  // Prescription / Notes Editing State
-  const [editingNotesAppt, setEditingNotesAppt] = useState<AppointmentDto | null>(null);
-  const [notesText, setNotesText] = useState("");
-  const [isSavingNotes, setIsSavingNotes] = useState(false);
+  // Document Preview Modal State
+  const [previewDocAppt, setPreviewDocAppt] = useState<AppointmentDto | null>(null);
+
+  // Digital Prescription Writer State
+  const [rxModalAppt, setRxModalAppt] = useState<AppointmentDto | null>(null);
+  const [rxDiagnosis, setRxDiagnosis] = useState("");
+  const [rxMedicines, setRxMedicines] = useState<PrescriptionMedicine[]>([
+    { name: "", dosage: "", frequency: "", duration: "" },
+  ]);
+  const [rxLabTests, setRxLabTests] = useState("");
+  const [rxFollowUpDate, setRxFollowUpDate] = useState("");
+  const [rxNotes, setRxNotes] = useState("");
+  const [isSavingRx, setIsSavingRx] = useState(false);
 
   useEffect(() => {
     if (!authLoading) {
@@ -91,6 +101,46 @@ function DoctorDeskPage() {
     } catch (err) {
       const apiErr = err as ApiError;
       toast.error(apiErr.message || "Failed to update status");
+    }
+  };
+
+  const handleOpenRxModal = (appt: AppointmentDto) => {
+    setRxModalAppt(appt);
+    setRxDiagnosis(appt.diagnosis || "");
+    setRxLabTests(appt.labTests || "");
+    setRxFollowUpDate(appt.followUpDate || "");
+    setRxNotes(appt.notes || "");
+    if (appt.prescriptionJson) {
+      try {
+        setRxMedicines(JSON.parse(appt.prescriptionJson));
+      } catch {
+        setRxMedicines([{ name: "", dosage: "", frequency: "", duration: "" }]);
+      }
+    } else {
+      setRxMedicines([{ name: "", dosage: "", frequency: "", duration: "" }]);
+    }
+  };
+
+  const handleSaveDigitalPrescription = async () => {
+    if (!rxModalAppt) return;
+    setIsSavingRx(true);
+    try {
+      const validMeds = rxMedicines.filter((m) => m.name.trim().length > 0);
+      await appointmentService.savePrescription(rxModalAppt.id, {
+        diagnosis: rxDiagnosis,
+        prescriptionJson: validMeds.length > 0 ? JSON.stringify(validMeds) : undefined,
+        labTests: rxLabTests,
+        followUpDate: rxFollowUpDate,
+        notes: rxNotes,
+      });
+      toast.success("Digital medical prescription issued successfully!");
+      setRxModalAppt(null);
+      loadDoctorAppointments();
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.message || "Failed to issue prescription");
+    } finally {
+      setIsSavingRx(false);
     }
   };
 
@@ -264,9 +314,31 @@ function DoctorDeskPage() {
                       </p>
                     ) : null}
 
-                    {appt.notes ? (
+                    {appt.medicalDocumentUrl ? (
+                      <div className="flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 p-2.5 rounded-lg">
+                        <FileText className="size-4 text-teal-600 dark:text-teal-400" />
+                        <span className="text-xs font-semibold text-foreground">
+                          Attached Lab Report: {appt.medicalDocumentName || "Medical Record"}
+                        </span>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-6 text-[11px] ml-auto border-teal-500/40 text-teal-700 dark:text-teal-300"
+                          onClick={() => setPreviewDocAppt(appt)}
+                        >
+                          View Document
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {appt.diagnosis ? (
+                      <div className="text-xs text-emerald-900 dark:text-emerald-200 bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/30 space-y-1">
+                        <span className="font-bold block">Diagnosis: {appt.diagnosis}</span>
+                        {appt.notes ? <p>Advice: {appt.notes}</p> : null}
+                      </div>
+                    ) : appt.notes ? (
                       <p className="text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-500/10 p-2.5 rounded-lg border border-emerald-500/20">
-                        <span className="font-semibold">Doctor Notes / Prescription:</span> {appt.notes}
+                        <span className="font-semibold">Doctor Notes:</span> {appt.notes}
                       </p>
                     ) : null}
                   </div>
@@ -285,14 +357,22 @@ function DoctorDeskPage() {
                     <Button
                       size="sm"
                       variant="outline"
-                      className="gap-1.5"
-                      onClick={() => {
-                        setEditingNotesAppt(appt);
-                        setNotesText(appt.notes || "");
-                      }}
+                      className="gap-1.5 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10"
+                      onClick={() => handleOpenRxModal(appt)}
                     >
-                      <Edit3 className="size-4" /> Prescription
+                      <Edit3 className="size-4" /> Write Digital Rx
                     </Button>
+
+                    {(appt.diagnosis || appt.prescriptionJson) ? (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="gap-1.5 text-xs font-semibold"
+                        onClick={() => generatePrescriptionPdf(appt)}
+                      >
+                        🖨️ Download PDF
+                      </Button>
+                    ) : null}
 
                     {appt.status === "PENDING" ? (
                       <>
@@ -419,46 +499,222 @@ function DoctorDeskPage() {
         </div>
       ) : null}
 
-      {/* Doctor Prescription & Notes Dialog */}
-      {editingNotesAppt ? (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-background surface-panel border rounded-2xl max-w-lg w-full p-6 space-y-6 shadow-2xl animate-in fade-in zoom-in-95">
-            <div className="flex items-center justify-between border-b pb-4">
+      {/* Lab Report Preview Modal */}
+      {previewDocAppt ? (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-background surface-panel border rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h3 className="text-lg font-bold">Patient Lab Report Preview</h3>
+                <p className="text-xs text-muted-foreground">
+                  Patient: <span className="font-semibold">{previewDocAppt.patientName}</span> | File: {previewDocAppt.medicalDocumentName}
+                </p>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => setPreviewDocAppt(null)}>✕</Button>
+            </div>
+
+            <div className="max-h-96 overflow-auto border rounded-xl p-2 bg-muted/20 flex justify-center">
+              {previewDocAppt.medicalDocumentUrl?.startsWith("data:image") ? (
+                <img
+                  src={previewDocAppt.medicalDocumentUrl}
+                  alt="Medical Lab Report"
+                  className="max-w-full h-auto rounded-lg object-contain"
+                />
+              ) : previewDocAppt.medicalDocumentUrl?.startsWith("data:application/pdf") ? (
+                <iframe
+                  src={previewDocAppt.medicalDocumentUrl}
+                  title="PDF Lab Report"
+                  className="w-full h-80 rounded-lg"
+                />
+              ) : (
+                <div className="text-center py-10 space-y-3">
+                  <FileText className="size-12 mx-auto text-muted-foreground" />
+                  <p className="text-sm font-medium">{previewDocAppt.medicalDocumentName || "Medical File Attached"}</p>
+                  <Button asChild size="sm">
+                    <a href={previewDocAppt.medicalDocumentUrl} download={previewDocAppt.medicalDocumentName || "lab_report"}>
+                      Download File
+                    </a>
+                  </Button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center pt-2">
+              {previewDocAppt.medicalDocumentUrl ? (
+                <Button asChild variant="outline" size="sm">
+                  <a href={previewDocAppt.medicalDocumentUrl} download={previewDocAppt.medicalDocumentName || "lab_report"}>
+                    Download Original File
+                  </a>
+                </Button>
+              ) : <div />}
+              <Button onClick={() => setPreviewDocAppt(null)}>Close Preview</Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Interactive Digital Prescription Writer Modal */}
+      {rxModalAppt ? (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-background surface-panel border rounded-2xl max-w-2xl w-full p-6 space-y-5 shadow-2xl my-8">
+            <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-3">
-                <div className="p-3 bg-emerald-500/10 rounded-full text-emerald-500">
-                  <FileText className="size-6" />
+                <div className="p-2.5 bg-teal-500/10 rounded-xl text-teal-600 dark:text-teal-400">
+                  <Stethoscope className="size-6" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold">Write Prescription / Clinical Notes</h3>
+                  <h3 className="text-xl font-bold">Issue Digital Medical Prescription</h3>
                   <p className="text-xs text-muted-foreground">
-                    For patient: <span className="font-semibold">{editingNotesAppt.patientName}</span>
+                    Patient: <span className="font-semibold text-foreground">{rxModalAppt.patientName}</span> | Date: {rxModalAppt.date}
                   </p>
                 </div>
               </div>
-              <Button size="sm" variant="ghost" onClick={() => setEditingNotesAppt(null)}>
-                ✕
-              </Button>
+              <Button size="sm" variant="ghost" onClick={() => setRxModalAppt(null)}>✕</Button>
             </div>
 
-            <div className="space-y-3">
-              <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Prescription Advice & Notes
-              </label>
-              <textarea
-                rows={5}
-                value={notesText}
-                onChange={(e) => setNotesText(e.target.value)}
-                placeholder="Enter prescription advice, dosage instructions, or consultation notes for the patient..."
-                className="w-full p-3 border rounded-xl bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:outline-none"
-              />
+            <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-1">
+              {/* Diagnosis */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Clinical Diagnosis <span className="text-destructive">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={rxDiagnosis}
+                  onChange={(e) => setRxDiagnosis(e.target.value)}
+                  placeholder="e.g. Acute Sinusitis & Mild Fever"
+                  className="w-full p-2.5 text-sm border rounded-lg bg-background"
+                />
+              </div>
+
+              {/* Medicines Table Builder */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    Prescribed Oral Medications (Rx)
+                  </label>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-7 text-xs"
+                    onClick={() => setRxMedicines([...rxMedicines, { name: "", dosage: "", frequency: "", duration: "" }])}
+                  >
+                    + Add Medicine
+                  </Button>
+                </div>
+
+                <div className="space-y-2">
+                  {rxMedicines.map((med, idx) => (
+                    <div key={idx} className="grid grid-cols-12 gap-2 items-center bg-muted/30 p-2.5 rounded-lg border">
+                      <input
+                        type="text"
+                        placeholder="Medicine Name (e.g. Amoxicillin 500mg)"
+                        value={med.name}
+                        onChange={(e) => {
+                          const updated = [...rxMedicines];
+                          updated[idx].name = e.target.value;
+                          setRxMedicines(updated);
+                        }}
+                        className="col-span-4 p-2 text-xs border rounded-md bg-background"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Dosage (e.g. 1 Capsule)"
+                        value={med.dosage}
+                        onChange={(e) => {
+                          const updated = [...rxMedicines];
+                          updated[idx].dosage = e.target.value;
+                          setRxMedicines(updated);
+                        }}
+                        className="col-span-3 p-2 text-xs border rounded-md bg-background"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Frequency (e.g. Twice Daily)"
+                        value={med.frequency}
+                        onChange={(e) => {
+                          const updated = [...rxMedicines];
+                          updated[idx].frequency = e.target.value;
+                          setRxMedicines(updated);
+                        }}
+                        className="col-span-3 p-2 text-xs border rounded-md bg-background"
+                      />
+                      <div className="col-span-2 flex items-center gap-1">
+                        <input
+                          type="text"
+                          placeholder="5 Days"
+                          value={med.duration}
+                          onChange={(e) => {
+                            const updated = [...rxMedicines];
+                            updated[idx].duration = e.target.value;
+                            setRxMedicines(updated);
+                          }}
+                          className="w-full p-2 text-xs border rounded-md bg-background"
+                        />
+                        {rxMedicines.length > 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => setRxMedicines(rxMedicines.filter((_, i) => i !== idx))}
+                            className="text-destructive hover:bg-destructive/10 p-1 rounded-md text-xs font-bold shrink-0"
+                          >
+                            ✕
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Lab Tests */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Recommended Diagnostic / Lab Tests (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={rxLabTests}
+                  onChange={(e) => setRxLabTests(e.target.value)}
+                  placeholder="e.g. CBC, Blood Sugar Fasting, Chest X-Ray"
+                  className="w-full p-2.5 text-sm border rounded-lg bg-background"
+                />
+              </div>
+
+              {/* Follow-up Date */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Follow-Up Date (Optional)
+                </label>
+                <input
+                  type="date"
+                  value={rxFollowUpDate}
+                  onChange={(e) => setRxFollowUpDate(e.target.value)}
+                  className="w-full p-2.5 text-sm border rounded-lg bg-background"
+                />
+              </div>
+
+              {/* Notes / Advice */}
+              <div className="space-y-1">
+                <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  General Patient Advice & Instructions
+                </label>
+                <textarea
+                  rows={2}
+                  value={rxNotes}
+                  onChange={(e) => setRxNotes(e.target.value)}
+                  placeholder="e.g. Drink warm water, avoid cold items, rest for 3 days."
+                  className="w-full p-2.5 text-sm border rounded-lg bg-background"
+                />
+              </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <Button variant="outline" onClick={() => setEditingNotesAppt(null)}>
+            <div className="flex items-center justify-end gap-2 border-t pt-3">
+              <Button variant="outline" onClick={() => setRxModalAppt(null)}>
                 Cancel
               </Button>
-              <Button disabled={isSavingNotes} onClick={handleSaveNotes}>
-                {isSavingNotes ? "Saving..." : "Save Prescription"}
+              <Button disabled={isSavingRx} onClick={handleSaveDigitalPrescription} className="bg-teal-600 hover:bg-teal-700 text-white">
+                {isSavingRx ? "Issuing Prescription..." : "Save & Issue Prescription"}
               </Button>
             </div>
           </div>

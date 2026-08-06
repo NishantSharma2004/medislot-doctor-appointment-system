@@ -28,6 +28,12 @@ public record AppointmentDto(
         AppointmentStatus status,
         String reason,
         String notes,
+        String medicalDocumentUrl,
+        String medicalDocumentName,
+        String diagnosis,
+        String prescriptionJson,
+        String labTests,
+        String followUpDate,
         BigDecimal consultationFee
 ) {
     // Backward-compatible constructor for 13-argument instantiation in tests
@@ -67,6 +73,12 @@ public record AppointmentDto(
                 status,
                 reason,
                 null, // notes
+                null, // medicalDocumentUrl
+                null, // medicalDocumentName
+                null, // diagnosis
+                null, // prescriptionJson
+                null, // labTests
+                null, // followUpDate
                 consultationFee
         );
     }

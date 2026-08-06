@@ -9,6 +9,11 @@ import jakarta.validation.constraints.Size;
 public record CreateAppointmentRequest(
         @NotBlank String doctorId,
         @NotBlank String slotId,
-        @Size(max = 500) String reason
+        @Size(max = 500) String reason,
+        String medicalDocumentUrl,
+        String medicalDocumentName
 ) {
+    public CreateAppointmentRequest(String doctorId, String slotId, String reason) {
+        this(doctorId, slotId, reason, null, null);
+    }
 }

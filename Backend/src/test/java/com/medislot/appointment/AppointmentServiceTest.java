@@ -18,6 +18,7 @@ import com.medislot.common.exception.ForbiddenException;
 import com.medislot.doctor.entity.DoctorProfile;
 import com.medislot.doctor.repository.DoctorProfileRepository;
 import com.medislot.user.entity.User;
+import com.medislot.user.repository.PatientProfileRepository;
 import com.medislot.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +57,9 @@ class AppointmentServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Spy
+    @Mock
+    private PatientProfileRepository patientProfileRepository;
+
     private AppointmentStatusTransitionValidator statusTransitionValidator = new AppointmentStatusTransitionValidator();
 
     @Mock
@@ -74,6 +77,16 @@ class AppointmentServiceTest {
 
     @BeforeEach
     void setUp() {
+        statusTransitionValidator = new AppointmentStatusTransitionValidator();
+        appointmentService = new AppointmentService(
+                appointmentRepository,
+                availabilitySlotRepository,
+                doctorProfileRepository,
+                userRepository,
+                patientProfileRepository,
+                statusTransitionValidator,
+                eventPublisher
+        );
         UUID patientId = UUID.randomUUID();
         doctorId = UUID.randomUUID();
         slotId = UUID.randomUUID();

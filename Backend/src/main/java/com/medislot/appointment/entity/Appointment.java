@@ -58,6 +58,24 @@ public class Appointment extends AuditableEntity {
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
+    @Column(name = "medical_document_url", columnDefinition = "TEXT")
+    private String medicalDocumentUrl;
+
+    @Column(name = "medical_document_name")
+    private String medicalDocumentName;
+
+    @Column(name = "diagnosis", columnDefinition = "TEXT")
+    private String diagnosis;
+
+    @Column(name = "prescription_json", columnDefinition = "TEXT")
+    private String prescriptionJson;
+
+    @Column(name = "lab_tests", columnDefinition = "TEXT")
+    private String labTests;
+
+    @Column(name = "follow_up_date")
+    private String followUpDate;
+
     @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
@@ -150,6 +168,54 @@ public class Appointment extends AuditableEntity {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getMedicalDocumentUrl() {
+        return medicalDocumentUrl;
+    }
+
+    public void setMedicalDocumentUrl(String medicalDocumentUrl) {
+        this.medicalDocumentUrl = medicalDocumentUrl;
+    }
+
+    public String getMedicalDocumentName() {
+        return medicalDocumentName;
+    }
+
+    public void setMedicalDocumentName(String medicalDocumentName) {
+        this.medicalDocumentName = medicalDocumentName;
+    }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+
+    public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    public String getPrescriptionJson() {
+        return prescriptionJson;
+    }
+
+    public void setPrescriptionJson(String prescriptionJson) {
+        this.prescriptionJson = prescriptionJson;
+    }
+
+    public String getLabTests() {
+        return labTests;
+    }
+
+    public void setLabTests(String labTests) {
+        this.labTests = labTests;
+    }
+
+    public String getFollowUpDate() {
+        return followUpDate;
+    }
+
+    public void setFollowUpDate(String followUpDate) {
+        this.followUpDate = followUpDate;
     }
 
     public BigDecimal getConsultationFee() {

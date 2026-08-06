@@ -37,6 +37,8 @@ function DoctorProfilePage() {
 
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlotDto | null>(null);
   const [reason, setReason] = useState("");
+  const [documentUrl, setDocumentUrl] = useState<string | null>(null);
+  const [documentName, setDocumentName] = useState<string | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
 
@@ -46,7 +48,7 @@ function DoctorProfilePage() {
   });
 
   const availabilityQuery = useQuery({
-    queryKey: ["availability", doctorId],
+    queryKey: ["doctor-availability", doctorId],
     queryFn: () => doctorService.getAvailability(doctorId),
   });
 
@@ -78,10 +80,14 @@ function DoctorProfilePage() {
         doctorId: doctor.id,
         slotId: selectedSlot.id,
         reason: reason.trim() || undefined,
+        medicalDocumentUrl: documentUrl || undefined,
+        medicalDocumentName: documentName || undefined,
       });
       toast.success(`Appointment booked with ${doctor.fullName}`);
       setSelectedSlot(null);
       setReason("");
+      setDocumentUrl(null);
+      setDocumentName(null);
       availabilityQuery.refetch();
       navigate({ to: "/dashboard" });
     } catch (err) {
@@ -245,6 +251,37 @@ function DoctorProfilePage() {
                     onChange={(e) => setReason(e.target.value)}
                     rows={2}
                   />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-primary" /> Upload Lab Report / Medical Records (Optional, Max 5MB)
+                  </label>
+                  <Input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        if (file.size > 5 * 1024 * 1024) {
+                          toast.error("File size must be smaller than 5MB");
+                          return;
+                        }
+                        setDocumentName(file.name);
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setDocumentUrl(reader.result as string);
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="text-xs file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:border-0 file:rounded-md file:mr-2 cursor-pointer"
+                  />
+                  {documentName ? (
+                    <p className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1 pt-0.5">
+                      <CheckCircle2 className="size-3" /> Attached: {documentName}
+                    </p>
+                  ) : null}
                 </div>
 
                 <Button className="w-full gap-2" disabled={isBooking} onClick={handleBooking}>

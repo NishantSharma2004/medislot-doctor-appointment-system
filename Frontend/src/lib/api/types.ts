@@ -95,6 +95,12 @@ export interface AppointmentDto {
   status: AppointmentStatus;
   reason?: string;
   notes?: string;
+  medicalDocumentUrl?: string;
+  medicalDocumentName?: string;
+  diagnosis?: string;
+  prescriptionJson?: string;
+  labTests?: string;
+  followUpDate?: string;
   consultationFee: number;
 }
 
@@ -102,6 +108,23 @@ export interface CreateAppointmentRequest {
   doctorId: string;
   slotId: string;
   reason?: string;
+  medicalDocumentUrl?: string;
+  medicalDocumentName?: string;
+}
+
+export interface PrescriptionMedicine {
+  name: string;
+  dosage: string;
+  frequency: string;
+  duration: string;
+}
+
+export interface SavePrescriptionRequest {
+  diagnosis?: string;
+  prescriptionJson?: string;
+  labTests?: string;
+  followUpDate?: string;
+  notes?: string;
 }
 
 export interface PageResponse<T> {

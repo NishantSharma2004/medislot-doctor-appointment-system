@@ -179,4 +179,15 @@ public class AppointmentController {
         AppointmentDto dto = appointmentService.updateDoctorNotes(appointmentId, notes, currentUser);
         return ResponseEntity.ok(dto);
     }
+
+    @PostMapping("/api/v1/appointments/{appointmentId}/prescription")
+    @PreAuthorize("hasRole('DOCTOR') or hasRole('ADMIN')")
+    @Operation(summary = "Issue digital medical prescription", description = "Allows assigned doctor to write diagnosis, medicines, lab tests, follow-up date, and issue prescription.")
+    public ResponseEntity<AppointmentDto> savePrescription(
+            @PathVariable UUID appointmentId,
+            @Valid @RequestBody com.medislot.appointment.dto.SavePrescriptionRequest request,
+            @AuthenticationPrincipal User currentUser) {
+        AppointmentDto dto = appointmentService.savePrescription(appointmentId, request, currentUser);
+        return ResponseEntity.ok(dto);
+    }
 }

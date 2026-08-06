@@ -25,6 +25,7 @@ export interface AppointmentService {
     PageResponse<AppointmentDto>
   >;
   updateStatus(appointmentId: string, status: AppointmentStatus): Promise<AppointmentDto>;
+  savePrescription(appointmentId: string, payload: import("@/lib/api/types").SavePrescriptionRequest): Promise<AppointmentDto>;
   reschedule(appointmentId: string, slotId: string): Promise<AppointmentDto>;
   cancel(appointmentId: string): Promise<void>;
 }
@@ -43,7 +44,7 @@ function paginate(items: AppointmentDto[], page: number, size: number): PageResp
 }
 
 const mockAppointmentService: AppointmentService = {
-  async book({ doctorId, slotId, reason }) {
+  async book({ doctorId, slotId, reason, medicalDocumentUrl, medicalDocumentName }) {
     const limited = bookingLimiter();
     if (limited) return mockError(limited);
 
@@ -75,6 +76,8 @@ const mockAppointmentService: AppointmentService = {
       endTime: slot.endTime,
       status: "PENDING",
       reason,
+      medicalDocumentUrl,
+      medicalDocumentName,
       consultationFee: doctor.consultationFee,
     };
     store.unshift(appointment);
@@ -93,6 +96,19 @@ const mockAppointmentService: AppointmentService = {
     if (!appointment)
       return mockError({ status: 404, code: "NOT_FOUND", message: "Appointment not found." });
     appointment.status = status;
+    return delay(appointment);
+  },
+
+  async savePrescription(appointmentId, payload) {
+    const appointment = store.find((a) => a.id === appointmentId);
+    if (!appointment)
+      return mockError({ status: 404, code: "NOT_FOUND", message: "Appointment not found." });
+    appointment.diagnosis = payload.diagnosis;
+    appointment.prescriptionJson = payload.prescriptionJson;
+    appointment.labTests = payload.labTests;
+    appointment.followUpDate = payload.followUpDate;
+    appointment.notes = payload.notes;
+    appointment.status = "COMPLETED";
     return delay(appointment);
   },
 
@@ -143,6 +159,10 @@ const httpAppointmentService: AppointmentService = {
     const { data } = await apiClient.patch<AppointmentDto>(`/appointments/${appointmentId}/status`, {
       status,
     });
+    return data;
+  },
+  async savePrescription(appointmentId, payload) {
+    const { data } = await apiClient.post<AppointmentDto>(`/appointments/${appointmentId}/prescription`, payload);
     return data;
   },
   async reschedule(appointmentId, slotId) {

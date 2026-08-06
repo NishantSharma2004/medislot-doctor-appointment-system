@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
+import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/appointments")({
@@ -188,6 +189,17 @@ function MyAppointmentsPage() {
                     >
                       {appt.status}
                     </span>
+
+                    {(appt.diagnosis || appt.prescriptionJson) ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs gap-1 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10 font-semibold"
+                        onClick={() => generatePrescriptionPdf(appt)}
+                      >
+                        📄 Download Prescription PDF
+                      </Button>
+                    ) : null}
 
                     {(appt.status === "PENDING" || appt.status === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
                       <div className="flex gap-2">

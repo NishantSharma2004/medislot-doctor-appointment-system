@@ -132,6 +132,8 @@ public class AppointmentService {
         appointment.setSlotEndAt(slot.getSlotEndAt());
         appointment.setStatus(AppointmentStatus.PENDING);
         appointment.setReason(request.reason());
+        appointment.setMedicalDocumentUrl(request.medicalDocumentUrl());
+        appointment.setMedicalDocumentName(request.medicalDocumentName());
         appointment.setConsultationFee(doctor.getConsultationFee());
 
         slot.setStatus(SlotStatus.BOOKED);
@@ -229,6 +231,46 @@ public class AppointmentService {
         }
 
         log.info("Appointment [{}] status updated from [{}] to [{}] by user [{}]", appointmentId, oldStatus, newStatus, currentUser.getId());
+        return mapToDto(appointment);
+    }
+
+    @Transactional
+    public AppointmentDto savePrescription(UUID appointmentId, com.medislot.appointment.dto.SavePrescriptionRequest request, User currentUser) {
+        if (currentUser.getRole() != Role.DOCTOR && currentUser.getRole() != Role.ADMIN) {
+            throw new ForbiddenException("Only doctors can issue digital prescriptions.");
+        }
+
+        Appointment appointment = appointmentRepository.findByIdForUpdate(appointmentId)
+                .orElseThrow(() -> new NotFoundException("Appointment not found with ID: " + appointmentId));
+
+        if (currentUser.getRole() == Role.DOCTOR && !appointment.getDoctorId().equals(currentUser.getId())) {
+            throw new ForbiddenException("You can only issue prescriptions for your own appointments.");
+        }
+
+        if (request.diagnosis() != null && !request.diagnosis().isBlank()) {
+            appointment.setDiagnosis(request.diagnosis().trim());
+        }
+        if (request.prescriptionJson() != null && !request.prescriptionJson().isBlank()) {
+            appointment.setPrescriptionJson(request.prescriptionJson().trim());
+        }
+        if (request.labTests() != null && !request.labTests().isBlank()) {
+            appointment.setLabTests(request.labTests().trim());
+        }
+        if (request.followUpDate() != null && !request.followUpDate().isBlank()) {
+            appointment.setFollowUpDate(request.followUpDate().trim());
+        }
+        if (request.notes() != null && !request.notes().isBlank()) {
+            appointment.setNotes(request.notes().trim());
+        }
+
+        // Issuing a prescription marks the appointment as COMPLETED
+        if (appointment.getStatus() != AppointmentStatus.COMPLETED) {
+            appointment.setStatus(AppointmentStatus.COMPLETED);
+            eventPublisher.publishEvent(new AppointmentCompletedEvent(appointment));
+        }
+
+        appointment = appointmentRepository.save(appointment);
+        log.info("Digital prescription issued for appointment [{}] by doctor [{}]", appointmentId, currentUser.getId());
         return mapToDto(appointment);
     }
 
@@ -455,6 +497,12 @@ public class AppointmentService {
                 effectiveStatus,
                 appointment.getReason(),
                 appointment.getNotes(),
+                appointment.getMedicalDocumentUrl(),
+                appointment.getMedicalDocumentName(),
+                appointment.getDiagnosis(),
+                appointment.getPrescriptionJson(),
+                appointment.getLabTests(),
+                appointment.getFollowUpDate(),
                 appointment.getConsultationFee()
         );
     }
