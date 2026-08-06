@@ -80,6 +80,20 @@ function DoctorDeskPage() {
     }
   }, [authLoading, isAuthenticated, hasRole, navigate]);
 
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [docProfile, setDocProfile] = useState<DoctorDto | null>(null);
+
+  const fetchDoctorProfile = async () => {
+    if (user?.id) {
+      try {
+        const prof = await doctorService.getDoctor(user.id);
+        setDocProfile(prof);
+      } catch {
+        setDocProfile(null);
+      }
+    }
+  };
+
   const loadDoctorAppointments = async () => {
     setIsLoading(true);
     setError(null);
@@ -93,11 +107,21 @@ function DoctorDeskPage() {
     }
   };
 
-  const [docProfile, setDocProfile] = useState<DoctorDto | null>(null);
+  const handleRefreshWorkspace = async () => {
+    setIsRefreshing(true);
+    try {
+      await Promise.all([loadDoctorAppointments(), fetchDoctorProfile()]);
+      toast.success("Doctor Workspace Refreshed!");
+    } catch {
+      toast.error("Could not refresh workspace");
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     if (user?.id && isAuthenticated && hasRole(["DOCTOR"])) {
-      doctorService.getDoctor(user.id).then(setDocProfile).catch(() => setDocProfile(null));
+      fetchDoctorProfile();
     }
   }, [user?.id, isAuthenticated, hasRole]);
 
@@ -262,10 +286,12 @@ function DoctorDeskPage() {
               </Button>
               <Button
                 variant="outline"
-                onClick={loadDoctorAppointments}
+                onClick={handleRefreshWorkspace}
+                disabled={isRefreshing}
                 className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs sm:text-sm gap-2"
               >
-                <RefreshCw className="size-3.5" /> Refresh Workspace
+                <RefreshCw className={`size-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                {isRefreshing ? "Refreshing..." : "Refresh Workspace"}
               </Button>
             </div>
           </div>
