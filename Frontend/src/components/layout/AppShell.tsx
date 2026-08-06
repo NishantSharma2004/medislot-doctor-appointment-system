@@ -51,7 +51,7 @@ function useVisibleNav() {
 }
 
 export function AppHeader() {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, login, logout } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -67,7 +67,41 @@ export function AppHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
+    <>
+      {/* Demo Sandbox Quick Switch Bar */}
+      {user?.email === "patient@medislot.test" ? (
+        <div className="bg-emerald-600 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
+          <span>🧪 Demo Sandbox Active: Logged in as Demo Patient (Riya Sharma). Bookings route directly to Dr. Rakesh Dakar.</span>
+          <button
+            type="button"
+            onClick={async () => {
+              await login({ email: "doctor@medislot.test", password: "Password123!" });
+              navigate({ to: "/doctor", replace: true });
+            }}
+            className="underline hover:text-emerald-100 font-bold bg-white/20 px-2.5 py-0.5 rounded text-[11px] transition-colors cursor-pointer"
+          >
+            Switch to Demo Doctor Desk ➔
+          </button>
+        </div>
+      ) : null}
+
+      {user?.email === "doctor@medislot.test" ? (
+        <div className="bg-teal-700 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
+          <span>🧪 Demo Sandbox Active: Logged in as Demo Doctor (Dr. Rakesh Dakar). Inspect lab reports & issue prescriptions.</span>
+          <button
+            type="button"
+            onClick={async () => {
+              await login({ email: "patient@medislot.test", password: "Password123!" });
+              navigate({ to: "/dashboard", replace: true });
+            }}
+            className="underline hover:text-teal-100 font-bold bg-white/20 px-2.5 py-0.5 rounded text-[11px] transition-colors cursor-pointer"
+          >
+            Switch to Demo Patient View ➔
+          </button>
+        </div>
+      ) : null}
+
+      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
       <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:flex sm:justify-between">
         <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="MediSlot home">
           <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
@@ -167,6 +201,7 @@ export function AppHeader() {
         </div>
       </div>
     </header>
+    </>
   );
 }
 

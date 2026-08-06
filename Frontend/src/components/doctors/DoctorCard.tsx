@@ -40,6 +40,11 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
           <h3 className="truncate font-semibold">{doctor.fullName}</h3>
           <p className="truncate text-sm text-muted-foreground">{doctor.qualifications}</p>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {doctor.fullName.toLowerCase().includes("rakesh") || doctor.id === "e6d0d7aa-2279-4e3b-898f-5a4c49a3f3b2" ? (
+              <Badge variant="default" className="rounded-full bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 shadow-sm">
+                🧪 Official Demo Doctor
+              </Badge>
+            ) : null}
             <Badge variant="secondary" className="rounded-full">
               {doctor.specialization}
             </Badge>
