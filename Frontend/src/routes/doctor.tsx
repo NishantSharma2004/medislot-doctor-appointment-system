@@ -16,6 +16,11 @@ import {
   AlertCircle,
   Eye,
   Edit3,
+  Sparkles,
+  Building2,
+  Banknote,
+  ShieldCheck,
+  RefreshCw,
 } from "lucide-react";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
@@ -25,8 +30,9 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import { appointmentService } from "@/services/appointment.service";
+import { doctorService } from "@/services/doctor.service";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
-import type { ApiError, AppointmentDto, AppointmentStatus, PrescriptionMedicine } from "@/lib/api/types";
+import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, PrescriptionMedicine } from "@/lib/api/types";
 
 export const Route = createFileRoute("/doctor")({
   head: () => ({
@@ -86,6 +92,14 @@ function DoctorDeskPage() {
       setIsLoading(false);
     }
   };
+
+  const [docProfile, setDocProfile] = useState<DoctorDto | null>(null);
+
+  useEffect(() => {
+    if (user?.id && isAuthenticated && hasRole(["DOCTOR"])) {
+      doctorService.getDoctor(user.id).then(setDocProfile).catch(() => setDocProfile(null));
+    }
+  }, [user?.id, isAuthenticated, hasRole]);
 
   useEffect(() => {
     if (isAuthenticated && hasRole(["DOCTOR"])) {
@@ -178,19 +192,85 @@ function DoctorDeskPage() {
   return (
     <PageShell
       title={`Dr. ${user?.fullName ?? "Doctor"}'s Desk`}
-      description="Manage patient consultations, inspect health profiles, and update status."
-      actions={
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={loadDoctorAppointments}>
-            Refresh
-          </Button>
-          <Button onClick={() => navigate({ to: "/doctor/availability" })}>
-            Manage Availability Slots
-          </Button>
-        </div>
-      }
+      description="Personalized Doctor Workspace — Manage patient consultations, inspect health profiles, and issue digital prescriptions."
     >
       <div className="space-y-6">
+        {/* Personalized Doctor Profile Hero Banner */}
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-950 via-emerald-900 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-emerald-800/40">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-start gap-4 sm:gap-5">
+              <div className="relative flex-shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 flex items-center justify-center text-emerald-300 shadow-inner">
+                  <Stethoscope className="size-8 sm:size-10" />
+                </div>
+                <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] text-black font-bold">
+                  ✓
+                </span>
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                    <Sparkles className="size-3" /> Official Doctor Account
+                  </span>
+                  {docProfile?.specializationName ? (
+                    <Badge variant="outline" className="border-teal-400/40 text-teal-200 text-xs">
+                      {docProfile.specializationName}
+                    </Badge>
+                  ) : null}
+                </div>
+
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                  Dr. {user?.fullName || "Doctor"}
+                </h1>
+
+                <p className="text-xs sm:text-sm text-emerald-100/80 font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
+                  {docProfile?.qualifications ? <span>{docProfile.qualifications}</span> : null}
+                  {docProfile?.yearsOfExperience ? <span>• {docProfile.yearsOfExperience} Years Experience</span> : null}
+                  {docProfile?.clinicName ? (
+                    <span className="flex items-center gap-1">
+                      • <Building2 className="size-3.5 text-emerald-400" /> {docProfile.clinicName}, {docProfile.city}
+                    </span>
+                  ) : null}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-300">
+                  {docProfile?.consultationFee ? (
+                    <span className="flex items-center gap-1 font-semibold text-emerald-300">
+                      <Banknote className="size-3.5" /> Consultation Fee: ₹{docProfile.consultationFee}
+                    </span>
+                  ) : null}
+                  {docProfile?.registrationNumber ? (
+                    <span className="flex items-center gap-1 text-slate-300">
+                      <ShieldCheck className="size-3.5 text-emerald-400" /> Reg No: {docProfile.registrationNumber}
+                    </span>
+                  ) : null}
+                  <span className="flex items-center gap-1 text-slate-300">
+                    <Mail className="size-3.5 text-emerald-400" /> {user?.email}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Workspace Action Buttons */}
+            <div className="flex flex-wrap md:flex-col gap-2.5 shrink-0">
+              <Button
+                onClick={() => navigate({ to: "/doctor/availability" })}
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-950/50 text-xs sm:text-sm"
+              >
+                <Calendar className="size-4" /> Manage Availability Slots
+              </Button>
+              <Button
+                variant="outline"
+                onClick={loadDoctorAppointments}
+                className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs sm:text-sm gap-2"
+              >
+                <RefreshCw className="size-3.5" /> Refresh Workspace
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Doctor Stats Dashboard Header */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="surface-panel p-5 space-y-2 border-l-4 border-l-primary">
