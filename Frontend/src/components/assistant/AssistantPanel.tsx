@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope } from "lucide-react";
+import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope, Paperclip } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ interface AssistantMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
+  attachedFileName?: string;
   reply?: AssistantReply;
   error?: ApiError;
 }
@@ -37,6 +38,7 @@ export function AssistantPanel() {
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [attachedFile, setAttachedFile] = useState<{ name: string; content?: string } | null>(null);
   const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [isClient, setIsClient] = useState(false);
@@ -110,11 +112,12 @@ export function AssistantPanel() {
 
   async function send(text: string) {
     const question = text.trim();
-    if (!question || pending) return;
+    const currentFile = attachedFile;
+    if ((!question && !currentFile) || pending) return;
     if (!isAuthenticated) {
       setMessages((prev) => [
         ...prev,
-        { id: `u-${Date.now()}`, role: "user", text: question },
+        { id: `u-${Date.now()}`, role: "user", text: question || `Analyze ${currentFile?.name}`, attachedFileName: currentFile?.name },
         {
           id: `a-${Date.now()}`,
           role: "assistant",
@@ -126,10 +129,17 @@ export function AssistantPanel() {
     }
 
     setInput("");
-    setMessages((prev) => [...prev, { id: `u-${Date.now()}`, role: "user", text: question }]);
+    setAttachedFile(null);
+    setMessages((prev) => [
+      ...prev,
+      { id: `u-${Date.now()}`, role: "user", text: question || `Analyze uploaded lab report: ${currentFile?.name}`, attachedFileName: currentFile?.name },
+    ]);
     setPending(true);
     try {
-      const reply = await assistantService.chat(question);
+      const reply = await assistantService.chat(
+        question || `Analyze uploaded lab report: ${currentFile?.name}`,
+        currentFile || undefined,
+      );
       setMessages((prev) => [
         ...prev,
         { id: `a-${Date.now()}`, role: "assistant", text: reply.answer, reply },
@@ -265,7 +275,69 @@ export function AssistantPanel() {
                   message.error && "border border-destructive/40 bg-destructive/5 text-destructive",
                 )}
               >
+                {message.attachedFileName ? (
+                  <div className="mb-1 text-[10px] font-semibold text-emerald-300 dark:text-emerald-400 flex items-center gap-1">
+                    <FileText className="size-3" /> Attached: {message.attachedFileName}
+                  </div>
+                ) : null}
+
                 <p className="whitespace-pre-wrap">{message.text}</p>
+
+                {/* Structured AI Report Analysis Card */}
+                {message.reply?.reportAnalysis ? (
+                  <div className="mt-3 p-3 rounded-xl bg-background text-foreground border border-primary/20 space-y-3 shadow-xs">
+                    <div className="flex items-center justify-between border-b pb-2">
+                      <span className="text-xs font-bold text-primary flex items-center gap-1.5">
+                        <FileText className="size-3.5" /> {message.reply.reportAnalysis.fileName || "Lab Report Analysis"}
+                      </span>
+                      <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
+                        AI Analyzed ✓
+                      </Badge>
+                    </div>
+
+                    {/* Parameters Table */}
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-[11px] text-left border-collapse">
+                        <thead>
+                          <tr className="border-b bg-muted/50 text-muted-foreground">
+                            <th className="p-1 font-semibold">Test / Parameter</th>
+                            <th className="p-1 font-semibold">Observed</th>
+                            <th className="p-1 font-semibold">Normal</th>
+                            <th className="p-1 font-semibold text-right">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                          {message.reply.reportAnalysis.parameters.map((param) => (
+                            <tr key={param.name}>
+                              <td className="p-1 font-medium text-foreground">{param.name}</td>
+                              <td className="p-1 font-bold">{param.value}</td>
+                              <td className="p-1 text-muted-foreground text-[10px]">{param.normalRange}</td>
+                              <td className="p-1 text-right">
+                                <Badge
+                                  variant="outline"
+                                  className={cn(
+                                    "text-[9px] px-1.5 py-0 font-bold",
+                                    param.status === "HIGH" && "bg-destructive/15 text-destructive border-destructive/30",
+                                    param.status === "LOW" && "bg-amber-500/15 text-amber-600 border-amber-500/30",
+                                    param.status === "NORMAL" && "bg-emerald-500/15 text-emerald-600 border-emerald-500/30",
+                                  )}
+                                >
+                                  {param.status}
+                                </Badge>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Hindi & English Summary */}
+                    <div className="space-y-1 bg-muted/40 p-2 rounded-lg text-[11px]">
+                      <p className="font-semibold text-foreground">💡 Summary (Hindi & English):</p>
+                      <p className="text-muted-foreground leading-snug">{message.reply.reportAnalysis.summaryHindi}</p>
+                    </div>
+                  </div>
+                ) : null}
 
                 {/* Auto Doctor Match Card */}
                 {message.reply?.doctorMatch ? (
@@ -311,22 +383,61 @@ export function AssistantPanel() {
             {pending ? (
               <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
                 <Loader2 className="size-3.5 animate-spin text-primary" aria-hidden="true" />
-                Medi AI Assistant is searching clinic guidelines…
+                Medi AI Assistant is analyzing clinic guidelines & reports…
               </div>
             ) : null}
           </div>
 
           <form
-            className="border-t border-border/80 bg-card/50 p-3"
+            className="border-t border-border/80 bg-card/50 p-3 space-y-2"
             onSubmit={(event) => {
               event.preventDefault();
               void send(input);
             }}
           >
+            {/* Attached File Chip Preview */}
+            {attachedFile ? (
+              <div className="flex items-center justify-between bg-primary/10 border border-primary/30 rounded-lg px-2.5 py-1 text-xs text-primary font-medium">
+                <span className="truncate flex items-center gap-1.5">
+                  <FileText className="size-3.5" /> Attached: {attachedFile.name}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setAttachedFile(null)}
+                  className="text-muted-foreground hover:text-foreground p-0.5"
+                >
+                  <X className="size-3.5" />
+                </button>
+              </div>
+            ) : null}
+
             <label htmlFor="assistant-input" className="sr-only">
               Ask Medi AI Assistant
             </label>
             <div className="flex items-center gap-2">
+              <label
+                htmlFor="chat-file-upload"
+                className={`p-2.5 rounded-xl border border-border/80 hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer transition-colors shrink-0 ${
+                  !isAuthenticated ? "opacity-50 pointer-events-none" : ""
+                }`}
+                title="Attach Medical Report / Prescription File (PDF, JPG, PNG, TXT)"
+              >
+                <Paperclip className="size-4 text-primary" />
+                <input
+                  id="chat-file-upload"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.txt"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setAttachedFile({ name: file.name });
+                      if (!input) setInput(`Analyze my uploaded lab report: ${file.name}`);
+                    }
+                  }}
+                />
+              </label>
+
               <Textarea
                 id="assistant-input"
                 ref={textareaRef}
@@ -339,16 +450,16 @@ export function AssistantPanel() {
                     void send(input);
                   }
                 }}
-                placeholder={isAuthenticated ? "Ask about booking, policies or specializations..." : "Sign in to chat"}
+                placeholder={isAuthenticated ? "Ask symptoms or attach lab report file..." : "Sign in to chat"}
                 disabled={!isAuthenticated || pending}
                 className="max-h-24 min-h-10 resize-none py-2.5 text-xs rounded-xl border-border/80 focus-visible:ring-primary/40"
               />
               <Button
                 type="submit"
                 size="icon"
-                disabled={pending || !input.trim() || !isAuthenticated}
+                disabled={pending || (!input.trim() && !attachedFile) || !isAuthenticated}
                 aria-label="Send message"
-                className="size-10 shrink-0 rounded-xl shadow-sm"
+                className="shrink-0 rounded-xl"
               >
                 <Send className="size-4" aria-hidden="true" />
               </Button>

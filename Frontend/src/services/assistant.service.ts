@@ -15,44 +15,60 @@ export const ASSISTANT_DISCLAIMER =
   "I can help with app navigation, clinic policies and finding the right specialization. I do not diagnose conditions or recommend medicines.";
 
 export interface AssistantService {
-  chat(message: string): Promise<AssistantReply>;
+  chat(message: string, attachedFile?: { name: string; content?: string }): Promise<AssistantReply>;
 }
 
 const assistantLimiter = createMockRateLimiter(8, 30_000);
 
-const CLINICAL_TERMS = [
-  "diagnose", "diagnosis", "symptom", "medicine", "medication", "dose", "dosage",
-  "prescribe", "prescription", "treatment", "cure", "tablet", "pain", "fever",
-];
-
 const DEMO_DOCTOR_ID = "e6d0d7aa-2279-4e3b-898f-5a4c49a3f3b2"; // Dr. Rakesh Dakar
 
 const mockAssistantService: AssistantService = {
-  async chat(message) {
+  async chat(message, attachedFile) {
     const limited = assistantLimiter();
     if (limited) return mockError(limited);
 
     const text = message.toLowerCase();
+    const fileName = attachedFile?.name;
 
-    // 1. AI Lab Report & Medical Terminology Translator Mode
+    // 1. AI Lab Report & Medical Terminology Translator Mode (File Upload OR Report Keyword)
     if (
+      fileName ||
       text.includes("report") ||
       text.includes("blood test") ||
       text.includes("hba1c") ||
       text.includes("prescription") ||
       text.includes("sugar") ||
-      text.includes("lab")
+      text.includes("lab") ||
+      text.includes("cholesterol")
     ) {
       return delay({
         answer:
-          "📄 **AI Lab Report & Medical Terminology Analysis**:\n\n" +
-          "• **Key Finding**: Fasting Blood Sugar / HbA1c shows **8.2%** (Elevated above 6.5% normal range).\n" +
-          "• **Plain-English Meaning**: High blood glucose indicates pre-diabetes / diabetes. No panic required, but dietary care and medication are needed.\n" +
-          "• **Doctor Advice**: Follow Dr. Rakesh Dakar's prescription. Avoid refined sugar, stay hydrated, and schedule a follow-up test in 14 days.",
-        sources: [{ title: "Lab Test Guidelines", section: "Endocrinology", evidenceStrength: "STRONG" }],
+          `📄 **AI Lab Report & Medical Analysis (${fileName || "Patient Medical Record"})**:\n\n` +
+          "Our AI engine analyzed your blood test parameters and translated complex medical terminology into simple English & Hindi.\n\n" +
+          "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n" +
+          "• **Plain-English Meaning**: Your blood sugar levels indicate mild diabetes / hyperglycemia. No panic needed, but medical supervision is required.",
+        sources: [{ title: "Lab Test Guidelines & Clinical Ranges", section: "Endocrinology & Metabolic Health", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         isReportSummary: true,
+        reportAnalysis: {
+          fileName: fileName || "Blood_Test_Report.pdf",
+          summaryEnglish: "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
+          summaryHindi: "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
+          parameters: [
+            { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
+            { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
+            { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
+            { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
+            { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
+          ],
+          dietAdvice: [
+            "Avoid refined sugar, soft drinks, sweets, and processed carbohydrates.",
+            "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
+            "Engage in 30 minutes of daily brisk walking or light exercise.",
+            "Schedule a follow-up consultation with Dr. Rakesh Dakar for dosage adjustment.",
+          ],
+        },
         doctorMatch: {
           doctorId: DEMO_DOCTOR_ID,
           doctorName: "Dr. Rakesh Dakar",
@@ -60,7 +76,7 @@ const mockAssistantService: AssistantService = {
           qualifications: "MBBS, MD",
           consultationFee: 500,
           triageLevel: "ROUTINE",
-          reason: "Follow-up consultation for Diabetes & Blood Sugar control.",
+          reason: "Consultation recommended for Blood Sugar (HbA1c 8.2%) & Lipid Management.",
         },
       });
     }

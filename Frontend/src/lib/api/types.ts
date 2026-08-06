@@ -162,6 +162,21 @@ export interface DoctorMatchInfo {
   reason: string;
 }
 
+export interface LabParameter {
+  name: string;
+  value: string;
+  normalRange: string;
+  status: "HIGH" | "LOW" | "NORMAL";
+}
+
+export interface ReportAnalysisData {
+  fileName?: string;
+  summaryHindi: string;
+  summaryEnglish: string;
+  parameters: LabParameter[];
+  dietAdvice: string[];
+}
+
 export interface AssistantReply {
   answer: string;
   sources: AssistantSource[];
@@ -169,6 +184,7 @@ export interface AssistantReply {
   disclaimer: string;
   doctorMatch?: DoctorMatchInfo;
   isReportSummary?: boolean;
+  reportAnalysis?: ReportAnalysisData;
 }
 
 /** Normalized error shape produced by the Axios client for the whole UI. */
