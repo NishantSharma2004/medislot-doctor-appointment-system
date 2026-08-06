@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,13 +26,14 @@ const EVIDENCE_STYLES: Record<EvidenceStrength, string> = {
 };
 
 const SUGGESTIONS = [
+  "🩺 Check my symptoms (Chest pain & dizziness)",
+  "📄 Analyze & translate blood test report",
   "How do I book an appointment?",
-  "What is the cancellation policy?",
-  "Which specialization should I choose?",
   "What are the clinic timings?",
 ];
 
 export function AssistantPanel() {
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
@@ -265,6 +266,35 @@ export function AssistantPanel() {
                 )}
               >
                 <p className="whitespace-pre-wrap">{message.text}</p>
+
+                {/* Auto Doctor Match Card */}
+                {message.reply?.doctorMatch ? (
+                  <div className="mt-3 p-3 rounded-xl bg-primary/10 border border-primary/30 text-foreground space-y-2 animate-in fade-in">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
+                        <Sparkles className="size-3" /> Recommended Specialist
+                      </span>
+                      <Badge variant="outline" className="text-[10px] bg-background font-semibold">
+                        {message.reply.doctorMatch.triageLevel}
+                      </Badge>
+                    </div>
+                    <div>
+                      <p className="font-bold text-sm text-foreground">{message.reply.doctorMatch.doctorName}</p>
+                      <p className="text-[11px] text-muted-foreground">{message.reply.doctorMatch.specialization} · {message.reply.doctorMatch.qualifications}</p>
+                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold pt-0.5">Consultation Fee: ₹{message.reply.doctorMatch.consultationFee}</p>
+                    </div>
+                    <Button
+                      size="sm"
+                      className="w-full text-xs font-bold gap-1.5 h-8 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-sm"
+                      onClick={() => {
+                        setOpen(false);
+                        navigate({ to: "/doctors/$doctorId", params: { doctorId: message.reply!.doctorMatch!.doctorId } });
+                      }}
+                    >
+                      <CalendarClock className="size-3.5" /> Book Slot with {message.reply.doctorMatch.doctorName}
+                    </Button>
+                  </div>
+                ) : null}
 
                 {message.error?.status === 401 ? (
                   <div className="mt-2 pt-2 border-t border-destructive/20">

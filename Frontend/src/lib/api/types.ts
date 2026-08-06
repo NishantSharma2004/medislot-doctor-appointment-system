@@ -152,11 +152,23 @@ export interface AssistantSource {
   evidenceStrength: EvidenceStrength;
 }
 
+export interface DoctorMatchInfo {
+  doctorId: string;
+  doctorName: string;
+  specialization: string;
+  qualifications: string;
+  consultationFee: number;
+  triageLevel: "EMERGENCY" | "URGENT" | "ROUTINE";
+  reason: string;
+}
+
 export interface AssistantReply {
   answer: string;
   sources: AssistantSource[];
   sufficientEvidence: boolean;
   disclaimer: string;
+  doctorMatch?: DoctorMatchInfo;
+  isReportSummary?: boolean;
 }
 
 /** Normalized error shape produced by the Axios client for the whole UI. */
