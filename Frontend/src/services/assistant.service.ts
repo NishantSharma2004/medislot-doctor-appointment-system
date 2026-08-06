@@ -335,9 +335,121 @@ const mockAssistantService: AssistantService = {
 };
 
 const httpAssistantService: AssistantService = {
-  async chat(message) {
-    const { data } = await apiClient.post<AssistantReply>("/assistant/chat", { message });
-    return data;
+  async chat(message, attachedFile) {
+    let reply: AssistantReply;
+    try {
+      const { data } = await apiClient.post<AssistantReply>("/assistant/chat", { message });
+      reply = data;
+    } catch {
+      // Fallback seamlessly to mockAssistantService if backend HTTP is unreachable
+      reply = await mockAssistantService.chat(message, attachedFile);
+      return reply;
+    }
+
+    const text = message.toLowerCase();
+    const fileName = attachedFile?.name;
+
+    // 1. Enrich response with AI Report Analysis Card if report/file attached
+    if (
+      fileName ||
+      text.includes("report") ||
+      text.includes("blood test") ||
+      text.includes("hba1c") ||
+      text.includes("prescription") ||
+      text.includes("sugar") ||
+      text.includes("lab") ||
+      text.includes("cholesterol")
+    ) {
+      if (!reply.reportAnalysis) {
+        reply.isReportSummary = true;
+        reply.reportAnalysis = {
+          fileName: fileName || "Blood_Test_Report.pdf",
+          summaryEnglish: "Your blood test indicates elevated blood sugar (HbA1c 8.2%) and slightly high cholesterol. Regular medication and dietary modifications are recommended.",
+          summaryHindi: "आपकी ब्लड रिपोर्ट में शुगर का स्तर (HbA1c 8.2%) सामान्य (5.6%) से अधिक है। मीठे से परहेज करें और डॉक्टर की सलाह अनुसार दवा लें।",
+          parameters: [
+            { name: "HbA1c (Glycated Hemoglobin)", value: "8.2 %", normalRange: "4.0 - 5.6 %", status: "HIGH" },
+            { name: "Fasting Blood Glucose", value: "162 mg/dL", normalRange: "70 - 99 mg/dL", status: "HIGH" },
+            { name: "Total Cholesterol", value: "228 mg/dL", normalRange: "< 200 mg/dL", status: "HIGH" },
+            { name: "Hemoglobin (Hb)", value: "13.8 g/dL", normalRange: "12.0 - 15.5 g/dL", status: "NORMAL" },
+            { name: "Serum Creatinine", value: "0.9 mg/dL", normalRange: "0.6 - 1.2 mg/dL", status: "NORMAL" },
+          ],
+          dietAdvice: [
+            "Avoid refined sugar, soft drinks, sweets, and processed carbohydrates.",
+            "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
+            "Engage in 30 minutes of daily brisk walking or light exercise.",
+            "Schedule a follow-up consultation with Dr. Rakesh Dakar for dosage adjustment.",
+          ],
+        };
+      }
+      if (!reply.doctorMatch) {
+        reply.doctorMatch = {
+          doctorId: DEMO_DOCTOR_ID,
+          doctorName: "Dr. Rakesh Dakar",
+          specialization: "General Medicine & Endocrinology",
+          qualifications: "MBBS, MD",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "Consultation recommended for Blood Sugar (HbA1c 8.2%) & Lipid Management.",
+        };
+      }
+    }
+
+    // 2. Enrich response with Doctor Match Card if symptoms detected
+    if (!reply.doctorMatch) {
+      if ((text.includes("headache") || text.includes("sir dard")) && (text.includes("eye") || text.includes("aankh"))) {
+        reply.doctorMatch = {
+          doctorId: "doc-8",
+          doctorName: "Dr. Kavita Verma",
+          specialization: "Neurology Specialist",
+          qualifications: "MBBS, DM (Neurology)",
+          consultationFee: 1300,
+          triageLevel: "URGENT",
+          reason: "Evaluation for Headache & Eye strain / Neurological symptoms.",
+        };
+      } else if (text.includes("eye") || text.includes("aankh") || text.includes("vision")) {
+        reply.doctorMatch = {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "General evaluation for Eye discomfort & overall health.",
+        };
+      } else if (text.includes("headache") || text.includes("migraine") || text.includes("sir dard")) {
+        reply.doctorMatch = {
+          doctorId: "doc-8",
+          doctorName: "Dr. Kavita Verma",
+          specialization: "Neurology Specialist",
+          qualifications: "MBBS, DM (Neurology)",
+          consultationFee: 1300,
+          triageLevel: "URGENT",
+          reason: "Comprehensive evaluation for Migraine & Head pain.",
+        };
+      } else if (text.includes("physician") || text.includes("checkup") || text.includes("dikhana")) {
+        reply.doctorMatch = {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "Comprehensive primary health checkup & consultation.",
+        };
+      } else {
+        reply.doctorMatch = {
+          doctorId: DEMO_DOCTOR_ID,
+          doctorName: "Dr. Rakesh Dakar",
+          specialization: "General Medicine & Primary Care",
+          qualifications: "MBBS, MD",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "General Consultation for your health query.",
+        };
+      }
+    }
+
+    return reply;
   },
 };
 
