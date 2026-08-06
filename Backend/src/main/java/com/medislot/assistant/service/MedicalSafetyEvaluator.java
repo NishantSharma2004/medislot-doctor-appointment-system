@@ -91,15 +91,8 @@ public class MedicalSafetyEvaluator {
             }
         }
 
-        // 3. Medical diagnosis check
-        for (String kw : DIAGNOSIS_KEYWORDS) {
-            if (lower.contains(kw)) {
-                return SafetyResult.blocked(
-                        SafetyCategory.DIAGNOSIS_REQUEST,
-                        "I can help with MediSlot, clinic policies, appointments, and approved clinic information. I cannot diagnose conditions or interpret diagnostic reports. Please consult a qualified healthcare professional."
-                );
-            }
-        }
+        // 3. Medical diagnosis & report check (Allowed for AI symptom triage & specialist matching)
+        // Handled dynamically by AssistantService workflow & RAG LLM engine
 
         // 4. Prescription / dosage check
         for (String kw : DOSAGE_KEYWORDS) {

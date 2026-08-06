@@ -30,7 +30,7 @@ const mockAssistantService: AssistantService = {
     const text = message.toLowerCase();
     const fileName = attachedFile?.name;
 
-    // 1. AI Lab Report & Medical Terminology Translator Mode (File Upload OR Report Keyword)
+    // 1. File Upload / Lab Report Parsing Mode
     if (
       fileName ||
       text.includes("report") ||
@@ -43,10 +43,10 @@ const mockAssistantService: AssistantService = {
     ) {
       return delay({
         answer:
-          `📄 **AI Lab Report & Medical Analysis (${fileName || "Patient Medical Record"})**:\n\n` +
-          "Our AI engine analyzed your blood test parameters and translated complex medical terminology into simple English & Hindi.\n\n" +
+          `📄 **AI Medical Report Analysis (${fileName || "Patient Medical Record"})**:\n\n` +
+          "Our AI engine analyzed your blood test parameters and translated medical jargon into plain English & Hindi:\n\n" +
           "• **Key Finding**: Fasting Blood Sugar / HbA1c is **8.2%** (Elevated above 5.6% normal range).\n" +
-          "• **Plain-English Meaning**: Your blood sugar levels indicate mild diabetes / hyperglycemia. No panic needed, but medical supervision is required.",
+          "• **Plain-English Meaning**: Your blood glucose levels indicate pre-diabetes / hyperglycemia. Dietary care and doctor consultation are recommended.",
         sources: [{ title: "Lab Test Guidelines & Clinical Ranges", section: "Endocrinology & Metabolic Health", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
@@ -81,70 +81,255 @@ const mockAssistantService: AssistantService = {
       });
     }
 
-    // 2. AI Symptom Checker & Specialist Auto Match
-    if (text.includes("chest") || text.includes("heart") || text.includes("dizziness") || text.includes("breath")) {
+    // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
+    if (
+      (text.includes("headache") || text.includes("head pain") || text.includes("migraine") || text.includes("sir dard")) &&
+      (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight"))
+    ) {
+      return delay({
+        answer:
+          "🧠 **AI Symptom Triage**: **Neurology & Ophthalmology Consultation**\n\n" +
+          "Aapne bataya ki aapko **Headache** aur **Eye pain** dono hain. Yeh symptoms **Migraine with Ocular Strain** ya **Tension Headache** indicate kar sakte hain.\n\n" +
+          "• **Recommendation**: Is tarah ke dual symptoms ke liye **Dr. Kavita Verma (Neurology Specialist)** ya Senior **General Physician** se consult karna best rahega.\n" +
+          "• **Home Advice**: Screen time kam karein, room ki lights dim rakhein, paani piyein aur stress kam lein.",
+        sources: [{ title: "Neurological & Ocular Triage Protocols", section: "Clinical Guidance", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-8",
+          doctorName: "Dr. Kavita Verma",
+          specialization: "Neurology Specialist",
+          qualifications: "MBBS, DM (Neurology)",
+          consultationFee: 1300,
+          triageLevel: "URGENT",
+          reason: "Evaluation for Headache & Eye strain / Neurological symptoms.",
+        },
+      });
+    }
+
+    // 3. Eye Pain / Vision Issues
+    if (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight") || text.includes("optometry")) {
+      return delay({
+        answer:
+          "👁️ **AI Symptom Triage**: **Ophthalmology & General Medicine**\n\n" +
+          "Eye pain, dryness, ya vision strain ke liye **Eye Specialist (Ophthalmologist)** ya **General Physician** se checkup karwayein.\n\n" +
+          "• **Quick Tip**: Agar aakhon me jalan ya redness hai toh thande paani se saaf karein aur aakhon ko rub mat karein.",
+        sources: [{ title: "Ocular Health Protocols", section: "Primary Care", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "General evaluation for Eye discomfort & overall health.",
+        },
+      });
+    }
+
+    // 4. Headache / Migraine / Neurologist
+    if (text.includes("headache") || text.includes("migraine") || text.includes("sir dard") || text.includes("neuro")) {
+      return delay({
+        answer:
+          "🧠 **AI Symptom Triage**: **Neurology Specialist**\n\n" +
+          "Headache ya Migraine ke recurrent episodes ke liye **Neurology Specialist** se consult karna sabse safe rehta hai.\n\n" +
+          "• **Dr. Kavita Verma (DM Neurology)** migraine management aur nerve disorders me specialist hain.",
+        sources: [{ title: "Neurology Care Guidelines", section: "Headache Management", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-8",
+          doctorName: "Dr. Kavita Verma",
+          specialization: "Neurology Specialist",
+          qualifications: "MBBS, DM (Neurology)",
+          consultationFee: 1300,
+          triageLevel: "URGENT",
+          reason: "Comprehensive evaluation for Migraine & Head pain.",
+        },
+      });
+    }
+
+    // 5. General Physician / Primary Doctor
+    if (
+      text.includes("physician") ||
+      text.includes("general physician") ||
+      text.includes("doctor ke paas") ||
+      text.includes("dikhana") ||
+      text.includes("checkup") ||
+      text.includes("weakness") ||
+      text.includes("chakar") ||
+      text.includes("fatigue")
+    ) {
+      return delay({
+        answer:
+          "🩺 **AI Specialist Match**: **Senior General Physician**\n\n" +
+          "Aapki general health evaluation, routine checkups, aur initial medical guidance ke liye **Dr. Rajesh Sharma (Senior Physician)** ya **Dr. Rakesh Dakar** sabse ideal doctor hain.\n\n" +
+          "Voh aapki detailed medical history lekar zaroorat padne par specialized diagnostic test ya sub-specialist recommend karenge.",
+        sources: [{ title: "Primary Healthcare Guidelines", section: "General Practice", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "Comprehensive primary health checkup & consultation.",
+        },
+      });
+    }
+
+    // 6. ENT (Ear, Nose, Throat)
+    if (text.includes("ear") || text.includes("kaan") || text.includes("throat") || text.includes("gala") || text.includes("sinus") || text.includes("ent")) {
+      return delay({
+        answer:
+          "👂 **AI Specialist Match**: **ENT (Ear, Nose, Throat) Specialist**\n\n" +
+          "Sinus issues, ear discomfort, hearing problems, ya throat infection ke liye **Dr. Rahul Nair (ENT Specialist)** se consult karein.",
+        sources: [{ title: "ENT Guidelines", section: "Otology & Laryngology", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-6",
+          doctorName: "Dr. Rahul Nair",
+          specialization: "ENT Specialist",
+          qualifications: "MBBS, MS (ENT)",
+          consultationFee: 650,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Ear, Nose, Throat or Sinus concerns.",
+        },
+      });
+    }
+
+    // 7. Bone, Joint, & Back Pain (Orthopaedics)
+    if (text.includes("bone") || text.includes("joint") || text.includes("back pain") || text.includes("kamar") || text.includes("knee") || text.includes("ortho")) {
+      return delay({
+        answer:
+          "🦴 **AI Specialist Match**: **Orthopaedics Specialist**\n\n" +
+          "Joint pain, backache, knee stiffness, ya bone mobility issues ke liye **Dr. Sneha Kulkarni (Orthopaedics Specialist)** se consult karein.",
+        sources: [{ title: "Orthopedic Protocols", section: "Joint & Spine Care", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-5",
+          doctorName: "Dr. Sneha Kulkarni",
+          specialization: "Orthopaedics Specialist",
+          qualifications: "MBBS, MS (Orthopaedics)",
+          consultationFee: 900,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Joint mobility, Spine & Back pain.",
+        },
+      });
+    }
+
+    // 8. Skin, Hair, Rash, & Acne (Dermatology)
+    if (text.includes("skin") || text.includes("acne") || text.includes("itching") || text.includes("khujli") || text.includes("hair") || text.includes("derma")) {
+      return delay({
+        answer:
+          "🧴 **AI Specialist Match**: **Dermatology Specialist**\n\n" +
+          "Skin allergy, rash, acne, hair fall, ya nail issues ke liye **Dr. Meera Krishnan (Dermatology Specialist)** se consult karein.",
+        sources: [{ title: "Dermatology Protocols", section: "Skin Care", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-3",
+          doctorName: "Dr. Meera Krishnan",
+          specialization: "Dermatology Specialist",
+          qualifications: "MBBS, MD (Dermatology)",
+          consultationFee: 750,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Skin, Hair & Allergy management.",
+        },
+      });
+    }
+
+    // 9. Child Care (Pediatrics)
+    if (text.includes("child") || text.includes("bacche") || text.includes("kid") || text.includes("baby") || text.includes("pediatric")) {
+      return delay({
+        answer:
+          "👶 **AI Specialist Match**: **Pediatrics Specialist**\n\n" +
+          "Baccho ki health checkup, growth monitoring, immunisation, ya fever ke liye **Dr. Imran Qureshi (Pediatrics Specialist)** se consult karein.",
+        sources: [{ title: "Pediatric Care Protocols", section: "Child Health", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-4",
+          doctorName: "Dr. Imran Qureshi",
+          specialization: "Pediatrics Specialist",
+          qualifications: "MBBS, DCH",
+          consultationFee: 700,
+          triageLevel: "ROUTINE",
+          reason: "Child growth & Pediatric consultation.",
+        },
+      });
+    }
+
+    // 10. Cardiology & Heart Pain
+    if (text.includes("chest") || text.includes("heart") || text.includes("dil") || text.includes("breath") || text.includes("cardio")) {
       return delay({
         answer:
           "🩺 **AI Symptom Checker Triage**: **Cardiology & Heart Specialist**\n\n" +
-          "Based on your reported symptoms (*Chest discomfort / Dizziness*), our AI triage engine recommends consulting a **Cardiology Specialist**.\n\n" +
-          "⚠️ *Severity Alert*: If you experience severe radiating chest pain to arm/jaw or acute breathlessness, please visit the nearest ER immediately.",
+          "Chest discomfort, breathlessness, ya dizziness ke liye **Dr. Vikram Shetty (Cardiology Specialist)** ya **Dr. Rakesh Dakar** se consult karein.\n\n" +
+          "⚠️ *Emergency Alert*: Severe chest pain me turant nearest ER visit karein.",
         sources: [{ title: "Cardiology Clinical Triage Protocol", section: "Symptom Checker", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
-          doctorId: DEMO_DOCTOR_ID,
-          doctorName: "Dr. Rakesh Dakar",
-          specialization: "Cardiology & General Medicine",
-          qualifications: "MBBS, MD (Cardiology)",
-          consultationFee: 500,
+          doctorId: "doc-2",
+          doctorName: "Dr. Vikram Shetty",
+          specialization: "Cardiology Specialist",
+          qualifications: "MBBS, DM (Cardiology)",
+          consultationFee: 1200,
           triageLevel: text.includes("severe") ? "EMERGENCY" : "URGENT",
-          reason: "Symptoms indicate chest pain & dizziness — evaluation required.",
+          reason: "Cardiac & Chest discomfort evaluation.",
         },
       });
     }
 
-    if (text.includes("fever") || text.includes("cough") || text.includes("cold") || text.includes("headache") || text.includes("pain")) {
+    // 11. Friendly Conversational Greeting
+    if (
+      text.includes("hi") ||
+      text.includes("hello") ||
+      text.includes("hey") ||
+      text.includes("namaste") ||
+      text.includes("kaise ho") ||
+      text.includes("who are you") ||
+      text.includes("help")
+    ) {
       return delay({
         answer:
-          "🩺 **AI Symptom Checker Triage**: **General Medicine**\n\n" +
-          "Based on your symptoms (*Fever / Body Pain / Cold*), our AI triage engine recommends a consultation with a **General Medicine Specialist**.\n\n" +
-          "• Stay hydrated, monitor temperature every 4 hours, and rest adequately.",
-        sources: [{ title: "General Practice Guidelines", section: "Fever Management", evidenceStrength: "STRONG" }],
+          "👋 **Namaste! Main MediSlot AI Health Assistant hoon.**\n\n" +
+          "Main aapke medical symptoms samajhkar sahi Doctor match kar sakta hoon, Blood Test Reports analyze kar sakta hoon, aur Direct Booking me help kar sakta hoon.\n\n" +
+          "💡 *Try asking me*:\n" +
+          "• *'Mujhe headache aur eye pain hai, kis doctor ko dikhau?'*\n" +
+          "• *'I need a General Physician for routine checkup'*\n" +
+          "• *'Analyze my blood test report'* (ya 📎 Paperclip button se file attach karein!)",
+        sources: [],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
-        doctorMatch: {
-          doctorId: DEMO_DOCTOR_ID,
-          doctorName: "Dr. Rakesh Dakar",
-          specialization: "General Medicine",
-          qualifications: "MBBS, MD",
-          consultationFee: 500,
-          triageLevel: "ROUTINE",
-          reason: "Fever & general malaise consultation.",
-        },
       });
     }
 
-    const match = mockKnowledgeBase.find((doc) =>
-      doc.keywords.some((keyword) => text.includes(keyword)),
-    );
-
-    if (!match) {
-      return delay({
-        answer:
-          "I could not find this in the clinic's verified documents, so I would rather not guess. You can ask about symptoms (e.g. chest pain, fever), uploading lab reports, clinic timings, or choosing a doctor.",
-        sources: [],
-        sufficientEvidence: false,
-        disclaimer: ASSISTANT_DISCLAIMER,
-      });
-    }
-
+    // Default Smart Dynamic Conversational Response (Never refusals!)
     return delay({
-      answer: match.answer,
-      sources: [
-        { title: match.title, section: match.section, evidenceStrength: match.evidenceStrength },
-      ],
+      answer:
+        `💬 **Medi AI Health Assistant Response**:\n\n` +
+        `Aapne poocha: "${message}"\n\n` +
+        "Main aapki query ke basis par hamare Senior **General Physician (Dr. Rajesh Sharma)** ya **Demo Doctor (Dr. Rakesh Dakar)** ko consult karne ki recommendation deta hoon. Voh aapki complete medical history lekar correct clinical evaluation karenge.",
+      sources: [{ title: "General Clinical Care Guidelines", section: "Primary Patient Consultation", evidenceStrength: "MODERATE" }],
       sufficientEvidence: true,
       disclaimer: ASSISTANT_DISCLAIMER,
+      doctorMatch: {
+        doctorId: DEMO_DOCTOR_ID,
+        doctorName: "Dr. Rakesh Dakar",
+        specialization: "General Medicine & Primary Care",
+        qualifications: "MBBS, MD",
+        consultationFee: 500,
+        triageLevel: "ROUTINE",
+        reason: "General Consultation for your health query.",
+      },
     });
   },
 };

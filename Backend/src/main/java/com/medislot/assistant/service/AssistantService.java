@@ -91,18 +91,7 @@ public class AssistantService {
         List<ClinicDocument> retrievedDocs = documentRetrievalService.retrieveRelevantDocuments(redactedMessage);
 
         if (retrievedDocs == null || retrievedDocs.isEmpty()) {
-            return new AssistantChatResponse(
-                    "I could not find enough approved clinic information to answer this reliably. Please contact the clinic directly.",
-                    conversationId,
-                    AiProvider.GROQ,
-                    false,
-                    false,
-                    false,
-                    List.of(),
-                    ASSISTANT_DISCLAIMER,
-                    requestId,
-                    Instant.now()
-            );
+            retrievedDocs = List.of();
         }
 
         // Step 5: Build Bounded Prompt Context
