@@ -42,6 +42,7 @@ function DoctorProfilePage() {
   const [documentName, setDocumentName] = useState<string | null>(null);
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const doctorQuery = useQuery({
     queryKey: ["doctor", doctorId],
@@ -69,7 +70,7 @@ function DoctorProfilePage() {
 
   const handleBooking = async () => {
     if (!isAuthenticated) {
-      navigate({ to: "/login", search: { redirect: `/doctors/${doctorId}` } });
+      setShowAuthModal(true);
       return;
     }
     if (!selectedSlot) return;
@@ -356,6 +357,46 @@ function DoctorProfilePage() {
           </Button>
         </aside>
       </div>
+
+      {/* Guest Authentication Prompt Modal */}
+      {showAuthModal ? (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-background surface-panel border rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="text-center space-y-2">
+              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+                <Lock className="size-6" />
+              </div>
+              <h3 className="text-xl font-bold">Sign In Required to Book</h3>
+              <p className="text-sm text-muted-foreground">
+                You are currently browsing as a guest. To confirm your appointment slot with <strong className="text-foreground">{doctor.fullName}</strong>, please sign in or create a patient account.
+              </p>
+            </div>
+
+            <div className="space-y-2.5 pt-2">
+              <Button
+                className="w-full gap-2 font-semibold"
+                onClick={() => navigate({ to: "/login", search: { redirect: `/doctors/${doctorId}` } })}
+              >
+                Sign In to Your Account
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full gap-2 font-semibold border-primary/40 text-primary"
+                onClick={() => navigate({ to: "/register", search: { role: "PATIENT" } })}
+              >
+                Create New Patient Account
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full text-xs text-muted-foreground"
+                onClick={() => setShowAuthModal(false)}
+              >
+                Continue Browsing
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </PageShell>
   );
 }

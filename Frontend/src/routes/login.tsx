@@ -126,23 +126,28 @@ function LoginPage() {
 
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email address</Label>
+            <Label htmlFor="email">
+              Email Address <span className="text-destructive font-bold">*</span>
+            </Label>
             <Input
               id="email"
               type="email"
               placeholder={roleTab === "DOCTOR" ? "doctor@medislot.test" : "patient@medislot.test"}
               autoComplete="email"
               aria-invalid={Boolean(form.formState.errors.email)}
+              className={form.formState.errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
               {...form.register("email")}
             />
             {form.formState.errors.email ? (
-              <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+              <p className="text-xs font-semibold text-destructive">{form.formState.errors.email.message}</p>
             ) : null}
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">
+                Password <span className="text-destructive font-bold">*</span>
+              </Label>
               <Link
                 to="/forgot-password"
                 search={{ email: form.watch("email") || undefined }}
@@ -156,10 +161,11 @@ function LoginPage() {
               type="password"
               autoComplete="current-password"
               aria-invalid={Boolean(form.formState.errors.password)}
+              className={form.formState.errors.password ? "border-destructive focus-visible:ring-destructive" : ""}
               {...form.register("password")}
             />
             {form.formState.errors.password ? (
-              <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+              <p className="text-xs font-semibold text-destructive">{form.formState.errors.password.message}</p>
             ) : null}
           </div>
 

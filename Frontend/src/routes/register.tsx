@@ -177,27 +177,50 @@ export function RegisterPage() {
 
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <div className="space-y-1.5">
-            <Label htmlFor="fullName">{role === "DOCTOR" ? "Full Name (e.g. Dr. Rajesh Sharma)" : "Full Name"}</Label>
-            <Input id="fullName" placeholder={role === "DOCTOR" ? "Dr. Rajesh Sharma" : "Riya Sharma"} {...form.register("fullName")} />
+            <Label htmlFor="fullName">
+              {role === "DOCTOR" ? "Full Name (e.g. Dr. Rajesh Sharma)" : "Full Name"} <span className="text-destructive font-bold">*</span>
+            </Label>
+            <Input
+              id="fullName"
+              placeholder={role === "DOCTOR" ? "Dr. Rajesh Sharma" : "Riya Sharma"}
+              className={form.formState.errors.fullName ? "border-destructive focus-visible:ring-destructive" : ""}
+              {...form.register("fullName")}
+            />
             {form.formState.errors.fullName ? (
-              <p className="text-xs text-destructive">{form.formState.errors.fullName.message}</p>
+              <p className="text-xs font-semibold text-destructive">{form.formState.errors.fullName.message}</p>
             ) : null}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email Address</Label>
-              <Input id="email" type="email" placeholder="user@medislot.test" {...form.register("email")} />
+              <Label htmlFor="email">
+                Email Address <span className="text-destructive font-bold">*</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="user@medislot.test"
+                className={form.formState.errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
+                {...form.register("email")}
+              />
               {form.formState.errors.email ? (
-                <p className="text-xs text-destructive">{form.formState.errors.email.message}</p>
+                <p className="text-xs font-semibold text-destructive">{form.formState.errors.email.message}</p>
               ) : null}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input id="phone" type="tel" placeholder="+919876543210" {...form.register("phone")} />
+              <Label htmlFor="phone">
+                Phone Number <span className="text-destructive font-bold">*</span>
+              </Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+919876543210"
+                className={form.formState.errors.phone ? "border-destructive focus-visible:ring-destructive" : ""}
+                {...form.register("phone")}
+              />
               {form.formState.errors.phone ? (
-                <p className="text-xs text-destructive">{form.formState.errors.phone.message}</p>
+                <p className="text-xs font-semibold text-destructive">{form.formState.errors.phone.message}</p>
               ) : null}
             </div>
           </div>
@@ -261,18 +284,33 @@ export function RegisterPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" placeholder="At least 8 characters" {...form.register("password")} />
+              <Label htmlFor="password">
+                Password <span className="text-destructive font-bold">*</span>
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="At least 8 characters"
+                className={form.formState.errors.password ? "border-destructive focus-visible:ring-destructive" : ""}
+                {...form.register("password")}
+              />
               {form.formState.errors.password ? (
-                <p className="text-xs text-destructive">{form.formState.errors.password.message}</p>
+                <p className="text-xs font-semibold text-destructive">{form.formState.errors.password.message}</p>
               ) : null}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <Input id="confirmPassword" type="password" {...form.register("confirmPassword")} />
+              <Label htmlFor="confirmPassword">
+                Confirm Password <span className="text-destructive font-bold">*</span>
+              </Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                className={form.formState.errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""}
+                {...form.register("confirmPassword")}
+              />
               {form.formState.errors.confirmPassword ? (
-                <p className="text-xs text-destructive">{form.formState.errors.confirmPassword.message}</p>
+                <p className="text-xs font-semibold text-destructive">{form.formState.errors.confirmPassword.message}</p>
               ) : null}
             </div>
           </div>
