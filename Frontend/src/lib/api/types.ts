@@ -239,4 +239,17 @@ export interface HealthVitalDto {
   createdAt: string;
 }
 
+export interface DoctorReviewDto {
+  id: string;
+  doctorId: string;
+  patientId: string;
+  patientName: string;
+  appointmentId?: string;
+  rating: number; // 1 - 5
+  comment: string;
+  verifiedPatient: boolean;
+  createdAt: string;
+}
+
+
 

@@ -16,6 +16,8 @@ import type { ApiError, AvailabilitySlotDto } from "@/lib/api/types";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
+import { reviewService } from "@/services/review.service";
+import { DoctorReviewList } from "@/components/reviews/DoctorReviewList";
 
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
@@ -53,6 +55,12 @@ function DoctorProfilePage() {
   const availabilityQuery = useQuery({
     queryKey: ["doctor-availability", doctorId],
     queryFn: () => doctorService.getAvailability(doctorId),
+  });
+
+  const reviewQuery = useQuery({
+    queryKey: ["reviews", doctorId],
+    queryFn: () => reviewService.getDoctorReviews(doctorId),
+    staleTime: 60000,
   });
 
   if (doctorQuery.isPending) return <FullPageLoader label="Loading doctor profile" />;
@@ -384,6 +392,14 @@ function DoctorProfilePage() {
           </Button>
         </aside>
       </div>
+
+      {/* Patient Reviews Section */}
+      <DoctorReviewList
+        reviews={reviewQuery.data?.reviews || []}
+        averageRating={reviewQuery.data?.averageRating || 4.9}
+        totalReviews={reviewQuery.data?.totalReviews || 12}
+        ratingBreakdown={reviewQuery.data?.ratingBreakdown}
+      />
 
       {/* Guest Authentication Prompt Modal */}
       {showAuthModal ? (

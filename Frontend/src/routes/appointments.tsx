@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
+import { DoctorRatingModal } from "@/components/reviews/DoctorRatingModal";
 import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/appointments")({
@@ -41,6 +42,7 @@ function MyAppointmentsPage() {
   const [error, setError] = useState<ApiError | null>(null);
 
   const [reschedulingAppt, setReschedulingAppt] = useState<AppointmentDto | null>(null);
+  const [ratingModalAppt, setRatingModalAppt] = useState<AppointmentDto | null>(null);
   const [availableSlots, setAvailableSlots] = useState<AvailabilitySlotDto[]>([]);
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isRescheduling, setIsRescheduling] = useState(false);
@@ -201,6 +203,17 @@ function MyAppointmentsPage() {
                       </Button>
                     ) : null}
 
+                    {appt.status === "COMPLETED" ? (
+                      <Button
+                        size="sm"
+                        variant="secondary"
+                        className="h-8 text-xs gap-1.5 font-bold bg-amber-500/10 text-amber-600 border border-amber-500/30 hover:bg-amber-500/20"
+                        onClick={() => setRatingModalAppt(appt)}
+                      >
+                        ⭐ Rate Doctor
+                      </Button>
+                    ) : null}
+
                     {(appt.status === "PENDING" || appt.status === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" onClick={() => openRescheduleModal(appt)}>
@@ -224,6 +237,20 @@ function MyAppointmentsPage() {
           )}
         </div>
       </div>
+
+      {/* Doctor Rating Modal */}
+      {ratingModalAppt && user && (
+        <DoctorRatingModal
+          doctorId={ratingModalAppt.doctorId}
+          doctorName={ratingModalAppt.doctorName}
+          patientId={user.id}
+          patientName={user.fullName}
+          appointmentId={ratingModalAppt.id}
+          isOpen={!!ratingModalAppt}
+          onClose={() => setRatingModalAppt(null)}
+          onSuccess={loadAppointments}
+        />
+      )}
 
       {reschedulingAppt ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">

@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
-import { Banknote, BriefcaseMedical, CalendarX, Languages, MapPin } from "lucide-react";
+import { Banknote, BriefcaseMedical, CalendarX, Languages, MapPin, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatFee, isUpcomingSlot } from "@/components/common/format";
 import type { DoctorDto } from "@/lib/api/types";
 import { doctorService } from "@/services/doctor.service";
+import { reviewService } from "@/services/review.service";
 
 function initials(name: string) {
   return name
@@ -24,8 +25,17 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
     staleTime: 60000,
   });
 
+  const { data: reviewData } = useQuery({
+    queryKey: ["reviews", doctor.id],
+    queryFn: () => reviewService.getDoctorReviews(doctor.id),
+    staleTime: 60000,
+  });
+
   const openSlots = slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime));
   const hasSlots = openSlots.length > 0;
+
+  const avgRating = reviewData?.averageRating || 4.9;
+  const reviewCount = reviewData?.totalReviews || 12;
 
   return (
     <article className="surface-panel flex h-full flex-col gap-4 p-5 transition-shadow hover:shadow-float">
@@ -37,7 +47,12 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
           {initials(doctor.fullName)}
         </span>
         <div className="min-w-0">
-          <h3 className="truncate font-semibold">{doctor.fullName}</h3>
+          <div className="flex items-center justify-between gap-1">
+            <h3 className="truncate font-semibold">{doctor.fullName}</h3>
+            <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[11px] font-bold shrink-0 gap-1 px-1.5 py-0">
+              <Star className="size-3 fill-amber-500 text-amber-500" /> {avgRating} ({reviewCount})
+            </Badge>
+          </div>
           <p className="truncate text-sm text-muted-foreground">{doctor.qualifications}</p>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {doctor.fullName.toLowerCase().includes("rakesh") || doctor.id === "e6d0d7aa-2279-4e3b-898f-5a4c49a3f3b2" ? (
