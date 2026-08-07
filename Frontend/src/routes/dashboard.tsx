@@ -18,6 +18,7 @@ import {
   ShieldCheck,
   Building2,
   CalendarCheck2,
+  Pill,
 } from "lucide-react";
 import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { BackButton } from "@/components/common/BackButton";
@@ -32,6 +33,7 @@ import { doctorService } from "@/services/doctor.service";
 import { vitalsService } from "@/services/vitals.service";
 import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
 import { VitalsLogModal } from "@/components/vitals/VitalsLogModal";
+import { PillTrackerContainer } from "@/components/pills/PillTrackerContainer";
 import type { ApiError, AppointmentDto, AvailabilitySlotDto, HealthVitalDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/dashboard")({
@@ -59,10 +61,10 @@ function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
-  // Vitals State
+  // Vitals & Pill State
   const [vitals, setVitals] = useState<HealthVitalDto[]>([]);
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "VITALS">("OVERVIEW");
+  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "VITALS" | "PILLS">("OVERVIEW");
 
   const [reschedulingAppt, setReschedulingAppt] = useState<AppointmentDto | null>(null);
   const [availableSlots, setAvailableSlots] = useState<AvailabilitySlotDto[]>([]);
@@ -299,9 +301,24 @@ function DashboardPage() {
             </Badge>
           )}
         </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("PILLS")}
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-colors flex items-center gap-2 ${
+            activeTab === "PILLS" ? "bg-primary text-primary-foreground shadow-xs" : "bg-card text-muted-foreground hover:text-foreground border border-border/60"
+          }`}
+        >
+          <Pill className="size-4 text-sky-400" /> 💊 Medicine & Pill Tracker
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-sky-500/20 text-sky-300">
+            Daily Rx
+          </Badge>
+        </button>
       </div>
 
-      {activeTab === "VITALS" ? (
+      {activeTab === "PILLS" ? (
+        <PillTrackerContainer userId={user?.id} />
+      ) : activeTab === "VITALS" ? (
         <VitalsChartContainer
           vitals={vitals}
           onRefresh={loadVitals}
@@ -403,6 +420,9 @@ function DashboardPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Today's Medicine Quick Tracker Widget */}
+      <PillTrackerContainer userId={user?.id} compact />
 
       {/* Quick Actions & Shortcuts Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

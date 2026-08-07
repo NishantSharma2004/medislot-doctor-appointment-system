@@ -252,5 +252,21 @@ export interface DoctorReviewDto {
   createdAt: string;
 }
 
+export type DosageTiming = "MORNING" | "AFTERNOON" | "NIGHT";
+
+export interface PillLogDto {
+  id: string;
+  userId?: string;
+  medicineName: string;
+  dosage: string;
+  timing: DosageTiming;
+  taken: boolean;
+  takenAt?: string;
+  date: string; // YYYY-MM-DD
+  doctorName?: string;
+  prescriptionId?: string;
+  notes?: string;
+}
+
 
 
