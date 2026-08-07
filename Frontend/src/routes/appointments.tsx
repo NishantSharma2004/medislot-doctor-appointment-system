@@ -173,7 +173,7 @@ function MyAppointmentsPage() {
                     {appt.reason ? <p className="text-xs text-muted-foreground">Reason: {appt.reason}</p> : null}
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
                         appt.status === "CONFIRMED"

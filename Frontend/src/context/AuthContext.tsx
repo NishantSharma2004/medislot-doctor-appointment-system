@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { getStoredToken, registerUnauthorizedHandler, setStoredToken } from "@/lib/api/client";
+import { apiClient, getStoredToken, registerUnauthorizedHandler, setStoredToken } from "@/lib/api/client";
 import type { AuthResponse, LoginRequest, RegisterRequest, Role, UserDto } from "@/lib/api/types";
 import { authService } from "@/services/auth.service";
 
@@ -39,6 +39,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setUser(parsedUser);
         setToken(storedToken);
+
+        // Background sync user profile from backend /users/me to ensure avatar stays 100% updated on all devices!
+        apiClient
+          .get<{ profileImageUrl?: string } & UserDto>("/users/me")
+          .then(({ data }) => {
+            if (data) {
+              const avatar = data.profileImageUrl || savedAvatar;
+              if (avatar) {
+                window.localStorage.setItem(AVATAR_STORAGE_KEY_PREFIX + parsedUser.email, avatar);
+              }
+              setUser((prev) => {
+                if (!prev) return null;
+                const updated = {
+                  ...prev,
+                  ...data,
+                  profileImageUrl: avatar || prev.profileImageUrl,
+                };
+                window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+                return updated;
+              });
+            }
+          })
+          .catch(() => {});
       } catch {
         window.localStorage.removeItem(USER_STORAGE_KEY);
       }
@@ -65,10 +88,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const savedAvatar = window.localStorage.getItem(AVATAR_STORAGE_KEY_PREFIX + userObj.email);
     if (savedAvatar) {
       userObj.profileImageUrl = savedAvatar;
+    } else if (userObj.profileImageUrl) {
+      window.localStorage.setItem(AVATAR_STORAGE_KEY_PREFIX + userObj.email, userObj.profileImageUrl);
     }
     window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userObj));
     setUser(userObj);
     setToken(response.token);
+
+    // Sync avatar from backend on login
+    apiClient
+      .get<{ profileImageUrl?: string } & UserDto>("/users/me")
+      .then(({ data }) => {
+        if (data?.profileImageUrl) {
+          window.localStorage.setItem(AVATAR_STORAGE_KEY_PREFIX + userObj.email, data.profileImageUrl);
+          setUser((prev) => (prev ? { ...prev, profileImageUrl: data.profileImageUrl } : null));
+        }
+      })
+      .catch(() => {});
+
     return response;
   }, []);
 
