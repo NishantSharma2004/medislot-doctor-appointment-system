@@ -15,7 +15,3 @@ CREATE INDEX IF NOT EXISTS idx_availability_slots_doctor_date_status ON availabi
 -- 4. User Lookup (Email auth & Role indexing)
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-
--- 5. Notification & Vitals Queries
-CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read);
-CREATE INDEX IF NOT EXISTS idx_health_vitals_patient_date ON health_vitals(patient_id, log_date);
