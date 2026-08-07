@@ -127,9 +127,10 @@ export function AppHeader() {
         </nav>
 
         <div className="flex items-center justify-end gap-2">
-          <NotificationBell />
           {isAuthenticated && user ? (
-            <DropdownMenu>
+            <>
+              <NotificationBell />
+              <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
                   {user.profileImageUrl ? (
@@ -164,6 +165,7 @@ export function AppHeader() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          </>
           ) : (
             <div className="hidden items-center gap-2 sm:flex">
               <Button asChild variant="ghost" size="sm">

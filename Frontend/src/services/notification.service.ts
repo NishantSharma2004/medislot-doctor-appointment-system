@@ -65,8 +65,8 @@ function saveToStorage(notifications: NotificationDto[]) {
 
 export const notificationService = {
   async getNotifications(userId?: string): Promise<NotificationDto[]> {
+    if (!userId) return [];
     const all = loadFromStorage();
-    if (!userId) return all;
     return all.filter((n) => !n.userId || n.userId === userId);
   },
 

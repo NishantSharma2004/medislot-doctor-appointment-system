@@ -38,7 +38,7 @@ function getNotificationIcon(type: NotificationType) {
 }
 
 export function NotificationBell() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -47,16 +47,23 @@ export function NotificationBell() {
   const popoverRef = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = async () => {
-    const list = await notificationService.getNotifications(user?.id);
+    if (!isAuthenticated || !user?.id) {
+      setNotifications([]);
+      return;
+    }
+    const list = await notificationService.getNotifications(user.id);
     setNotifications(list);
   };
 
   useEffect(() => {
+    if (!isAuthenticated || !user?.id) return;
     fetchNotifications();
     // Poll for fresh notifications every 8 seconds
     const interval = setInterval(fetchNotifications, 8000);
     return () => clearInterval(interval);
-  }, [user?.id]);
+  }, [isAuthenticated, user?.id]);
+
+  if (!isAuthenticated || !user) return null;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
