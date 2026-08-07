@@ -271,6 +271,175 @@ const mockAssistantService: AssistantService = {
       return delay(parseUniversalMedicalReport(message, fileName));
     }
 
+    // 1.5. Doctor Name Query Lookup (e.g. "Rakesh Dakar", "Rajesh Sharma", "Kavita Verma", etc.)
+    if (text.includes("rakesh") || text.includes("dakar")) {
+      return delay({
+        answer:
+          "🩺 **Doctor Details**: **Dr. Rakesh Dakar**\n\n" +
+          "**Dr. Rakesh Dakar** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
+          "• **Specialization**: General Medicine & Primary Care\n" +
+          "• **Qualifications**: MBBS, MD (General Medicine)\n" +
+          "• **Consultation Fee**: ₹500\n" +
+          "• **Key Services**: Primary body checkups, chronic health management (Blood Pressure & Diabetes monitoring), viral fever treatment, and specialist referrals.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Primary Care", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rakesh Dakar",
+          specialization: "General Medicine & Primary Care",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "General Consultation for primary care & routine checkup.",
+        },
+      });
+    }
+
+    if (text.includes("rajesh") || text.includes("sharma")) {
+      return delay({
+        answer:
+          "🩺 **Doctor Details**: **Dr. Rajesh Sharma**\n\n" +
+          "**Dr. Rajesh Sharma** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
+          "• **Specialization**: General Medicine & Primary Care\n" +
+          "• **Qualifications**: MBBS, MD (General Medicine)\n" +
+          "• **Consultation Fee**: ₹500\n" +
+          "• **Key Services**: Comprehensive primary health checkups, preventive medicine, and lifestyle management.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Primary Care", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-7",
+          doctorName: "Dr. Rajesh Sharma",
+          specialization: "General Physician & Primary Care",
+          qualifications: "MBBS, MD (General Medicine)",
+          consultationFee: 500,
+          triageLevel: "ROUTINE",
+          reason: "General Consultation for primary care & routine checkup.",
+        },
+      });
+    }
+
+    if (text.includes("alok") || text.includes("banerjee")) {
+      return delay({
+        answer:
+          "👁️ **Doctor Details**: **Dr. Alok Banerjee**\n\n" +
+          "**Dr. Alok Banerjee** is an **Ophthalmology Specialist (Eye Care)** at MediSlot.\n\n" +
+          "• **Specialization**: Ophthalmology (Eye Care)\n" +
+          "• **Qualifications**: MBBS, MS (Ophthalmology)\n" +
+          "• **Consultation Fee**: ₹700\n" +
+          "• **Key Services**: Vision testing, eye infections, cataract consultations, and ocular health evaluations.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Ophthalmology", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-10",
+          doctorName: "Dr. Alok Banerjee",
+          specialization: "Ophthalmology",
+          qualifications: "MBBS, MS (Ophthalmology)",
+          consultationFee: 700,
+          triageLevel: "ROUTINE",
+          reason: "Specialized consultation for Eye Care & Vision testing.",
+        },
+      });
+    }
+
+    if (text.includes("kavita") || text.includes("verma")) {
+      return delay({
+        answer:
+          "🧠 **Doctor Details**: **Dr. Kavita Verma**\n\n" +
+          "**Dr. Kavita Verma** is a **Neurology Specialist (Brain & Nerves)** at MediSlot.\n\n" +
+          "• **Specialization**: Neurology (Brain & Nerves)\n" +
+          "• **Qualifications**: MBBS, DM (Neurology)\n" +
+          "• **Consultation Fee**: ₹1300\n" +
+          "• **Key Services**: Migraine management, nerve disorders, numbness, and neurological evaluations.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Neurology", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-8",
+          doctorName: "Dr. Kavita Verma",
+          specialization: "Neurology Specialist",
+          qualifications: "MBBS, DM (Neurology)",
+          consultationFee: 1300,
+          triageLevel: "URGENT",
+          reason: "Comprehensive evaluation for Brain, Nerves & Migraine.",
+        },
+      });
+    }
+
+    if (text.includes("vikram") || text.includes("shetty")) {
+      return delay({
+        answer:
+          "🩺 **Doctor Details**: **Dr. Vikram Shetty**\n\n" +
+          "**Dr. Vikram Shetty** is a **Cardiology Specialist (Heart Care)** at MediSlot.\n\n" +
+          "• **Specialization**: Cardiology (Heart Care)\n" +
+          "• **Qualifications**: MBBS, DM (Cardiology)\n" +
+          "• **Consultation Fee**: ₹1200\n" +
+          "• **Key Services**: Cardiac reviews, ECG interpretation, hypertension, and heart health evaluations.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Cardiology", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-2",
+          doctorName: "Dr. Vikram Shetty",
+          specialization: "Cardiology Specialist",
+          qualifications: "MBBS, DM (Cardiology)",
+          consultationFee: 1200,
+          triageLevel: "URGENT",
+          reason: "Cardiac & Heart discomfort evaluation.",
+        },
+      });
+    }
+
+    if (text.includes("meera") || text.includes("krishnan")) {
+      return delay({
+        answer:
+          "🧴 **Doctor Details**: **Dr. Meera Krishnan**\n\n" +
+          "**Dr. Meera Krishnan** is a **Dermatology Specialist (Skin & Hair)** at MediSlot.\n\n" +
+          "• **Specialization**: Dermatology (Skin & Hair)\n" +
+          "• **Qualifications**: MBBS, MD (Dermatology)\n" +
+          "• **Consultation Fee**: ₹750\n" +
+          "• **Key Services**: Skin allergy, acne treatments, hair fall care, and nail disorder management.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Dermatology", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-3",
+          doctorName: "Dr. Meera Krishnan",
+          specialization: "Dermatology Specialist",
+          qualifications: "MBBS, MD (Dermatology)",
+          consultationFee: 750,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Skin, Hair & Allergy management.",
+        },
+      });
+    }
+
+    if (text.includes("sneha") || text.includes("kulkarni")) {
+      return delay({
+        answer:
+          "🦴 **Doctor Details**: **Dr. Sneha Kulkarni**\n\n" +
+          "**Dr. Sneha Kulkarni** is an **Orthopaedics Specialist (Bone & Joint)** at MediSlot.\n\n" +
+          "• **Specialization**: Orthopaedics (Bone & Joint)\n" +
+          "• **Qualifications**: MBBS, MS (Orthopaedics)\n" +
+          "• **Consultation Fee**: ₹900\n" +
+          "• **Key Services**: Joint mobility, backache & spine care, fracture follow-ups, and knee pain treatment.",
+        sources: [{ title: "MediSlot Doctor Directory", section: "Orthopaedics", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+        doctorMatch: {
+          doctorId: "doc-5",
+          doctorName: "Dr. Sneha Kulkarni",
+          specialization: "Orthopaedics Specialist",
+          qualifications: "MBBS, MS (Orthopaedics)",
+          consultationFee: 900,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Joint mobility & Back pain.",
+        },
+      });
+    }
+
     // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
     // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
     if (
