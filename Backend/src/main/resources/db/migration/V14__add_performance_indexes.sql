@@ -1,0 +1,21 @@
+-- High-Performance B-Tree Database Indexes for MediSlot PostgreSQL Database
+
+-- 1. Appointment Queries (Patient history & Doctor schedule lookups)
+CREATE INDEX IF NOT EXISTS idx_appointments_patient_date ON appointments(patient_id, date);
+CREATE INDEX IF NOT EXISTS idx_appointments_doctor_date_status ON appointments(doctor_id, date, status);
+CREATE INDEX IF NOT EXISTS idx_appointments_status_date ON appointments(status, date);
+
+-- 2. Doctor Search & Filtering (City & Specialization)
+CREATE INDEX IF NOT EXISTS idx_doctor_profiles_city_spec ON doctor_profiles(city, specialization_id);
+CREATE INDEX IF NOT EXISTS idx_doctor_profiles_user_id ON doctor_profiles(user_id);
+
+-- 3. Availability Slot Search (Open slot query optimization)
+CREATE INDEX IF NOT EXISTS idx_availability_slots_doctor_date ON availability_slots(doctor_id, date, booked);
+
+-- 4. User Lookup (Email auth & Role indexing)
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+
+-- 5. Notification & Vitals Queries
+CREATE INDEX IF NOT EXISTS idx_notifications_user_read ON notifications(user_id, read);
+CREATE INDEX IF NOT EXISTS idx_health_vitals_patient_date ON health_vitals(patient_id, log_date);
