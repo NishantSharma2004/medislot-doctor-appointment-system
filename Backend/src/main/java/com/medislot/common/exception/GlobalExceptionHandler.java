@@ -132,6 +132,16 @@ public class GlobalExceptionHandler {
                     null
             ));
         }
+        if (path != null && path.contains("/users/me")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiErrorResponse(
+                    Instant.now(),
+                    HttpStatus.BAD_REQUEST.value(),
+                    "INVALID_PROFILE_DATA",
+                    "Profile details contain invalid or conflicting data.",
+                    path,
+                    null
+            ));
+        }
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),

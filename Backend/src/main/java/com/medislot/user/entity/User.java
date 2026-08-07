@@ -36,7 +36,7 @@ public class User extends AuditableEntity {
     @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "profile_image_url", length = 500)
+    @Column(name = "profile_image_url", columnDefinition = "TEXT")
     private String profileImageUrl;
 
     @Enumerated(EnumType.STRING)
