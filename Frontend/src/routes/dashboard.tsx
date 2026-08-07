@@ -29,7 +29,10 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
-import type { ApiError, AppointmentDto, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
+import { vitalsService } from "@/services/vitals.service";
+import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
+import { VitalsLogModal } from "@/components/vitals/VitalsLogModal";
+import type { ApiError, AppointmentDto, AvailabilitySlotDto, HealthVitalDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -56,10 +59,28 @@ function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
 
+  // Vitals State
+  const [vitals, setVitals] = useState<HealthVitalDto[]>([]);
+  const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"OVERVIEW" | "VITALS">("OVERVIEW");
+
   const [reschedulingAppt, setReschedulingAppt] = useState<AppointmentDto | null>(null);
   const [availableSlots, setAvailableSlots] = useState<AvailabilitySlotDto[]>([]);
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isRescheduling, setIsRescheduling] = useState(false);
+
+  const loadVitals = async () => {
+    if (user?.id) {
+      const list = await vitalsService.getPatientVitals(user.id);
+      setVitals(list);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.id) {
+      loadVitals();
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -252,8 +273,44 @@ function DashboardPage() {
         </div>
       </div>
 
-      {/* Visual Analytics Distribution Bar */}
-      {totalCount > 0 ? (
+      {/* Primary Dashboard View Tabs */}
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <button
+          type="button"
+          onClick={() => setActiveTab("OVERVIEW")}
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-colors flex items-center gap-2 ${
+            activeTab === "OVERVIEW" ? "bg-primary text-primary-foreground shadow-xs" : "bg-card text-muted-foreground hover:text-foreground border border-border/60"
+          }`}
+        >
+          <Calendar className="size-4" /> Appointments Overview
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("VITALS")}
+          className={`px-4 py-2 text-xs font-bold rounded-lg transition-colors flex items-center gap-2 ${
+            activeTab === "VITALS" ? "bg-primary text-primary-foreground shadow-xs" : "bg-card text-muted-foreground hover:text-foreground border border-border/60"
+          }`}
+        >
+          <Activity className="size-4 text-emerald-400" /> 📈 Health Vitals & Charts
+          {vitals.length > 0 && (
+            <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-white/20 text-white">
+              {vitals.length} Logs
+            </Badge>
+          )}
+        </button>
+      </div>
+
+      {activeTab === "VITALS" ? (
+        <VitalsChartContainer
+          vitals={vitals}
+          onRefresh={loadVitals}
+          onOpenLogModal={() => setIsLogModalOpen(true)}
+        />
+      ) : (
+        <>
+          {/* Visual Analytics Distribution Bar */}
+          {totalCount > 0 ? (
         <div className="surface-panel p-6 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-bold tracking-wide uppercase text-muted-foreground flex items-center gap-2">
@@ -465,6 +522,18 @@ function DashboardPage() {
           </div>
         )}
       </div>
+      </>
+      )}
+
+      {/* Vitals Log Modal */}
+      {user?.id && (
+        <VitalsLogModal
+          patientId={user.id}
+          isOpen={isLogModalOpen}
+          onClose={() => setIsLogModalOpen(false)}
+          onSuccess={loadVitals}
+        />
+      )}
 
       {/* Reschedule Modal */}
       {reschedulingAppt ? (

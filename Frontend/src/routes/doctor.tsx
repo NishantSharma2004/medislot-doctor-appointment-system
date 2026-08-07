@@ -32,8 +32,10 @@ import { apiClient } from "@/lib/api/client";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
+import { vitalsService } from "@/services/vitals.service";
+import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
-import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, PrescriptionMedicine } from "@/lib/api/types";
+import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, HealthVitalDto, PrescriptionMedicine } from "@/lib/api/types";
 
 export const Route = createFileRoute("/doctor")({
   head: () => ({
@@ -56,6 +58,8 @@ function DoctorDeskPage() {
 
   // Patient Profile Modal State
   const [inspectedPatient, setInspectedPatient] = useState<AppointmentDto | null>(null);
+  const [patientVitalsList, setPatientVitalsList] = useState<HealthVitalDto[]>([]);
+  const [showVitalsModal, setShowVitalsModal] = useState(false);
 
   // Document Preview Modal State
   const [previewDocAppt, setPreviewDocAppt] = useState<AppointmentDto | null>(null);
@@ -628,12 +632,50 @@ function DoctorDeskPage() {
               ) : null}
             </div>
 
-            <div className="pt-2 flex justify-end">
+            <div className="pt-2 flex items-center justify-between">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/10"
+                onClick={async () => {
+                  if (inspectedPatient?.patientId) {
+                    const list = await vitalsService.getPatientVitals(inspectedPatient.patientId);
+                    setPatientVitalsList(list);
+                    setShowVitalsModal(true);
+                  }
+                }}
+              >
+                📈 View Patient Health Vitals History
+              </Button>
               <Button onClick={() => setInspectedPatient(null)}>Close Profile</Button>
             </div>
           </div>
         </div>
       ) : null}
+
+      {/* Doctor Inspection - Patient Vitals Modal */}
+      {showVitalsModal && inspectedPatient && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-background surface-panel border rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl my-8">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h3 className="text-lg font-bold">Patient Health Vitals & Metabolic Trends</h3>
+                <p className="text-xs text-muted-foreground">
+                  Patient: <span className="font-semibold">{inspectedPatient.patientName}</span>
+                </p>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => setShowVitalsModal(false)}>✕</Button>
+            </div>
+
+            <VitalsChartContainer
+              vitals={patientVitalsList}
+              onRefresh={() => {}}
+              onOpenLogModal={() => {}}
+              readOnly={true}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Lab Report Preview Modal */}
       {previewDocAppt ? (

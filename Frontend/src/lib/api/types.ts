@@ -223,3 +223,20 @@ export interface NotificationDto {
   targetUrl?: string;
 }
 
+export interface HealthVitalDto {
+  id: string;
+  patientId: string;
+  logDate: string; // yyyy-MM-dd
+  fastingGlucose?: number; // mg/dL
+  postPrandialGlucose?: number; // mg/dL
+  systolicBp?: number; // mmHg
+  diastolicBp?: number; // mmHg
+  weightKg?: number; // kg
+  heightCm?: number; // cm
+  bmi?: number; // auto-calculated
+  heartRateBpm?: number; // bpm
+  notes?: string;
+  createdAt: string;
+}
+
+
