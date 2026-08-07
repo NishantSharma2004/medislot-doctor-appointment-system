@@ -120,12 +120,21 @@ const httpDoctorService: DoctorService = {
     return data;
   },
   async getDoctor(doctorId) {
-    const { data } = await apiClient.get<DoctorDto>(`/doctors/${doctorId}`);
-    return data;
+    try {
+      const { data } = await apiClient.get<DoctorDto>(`/doctors/${doctorId}`);
+      return data;
+    } catch {
+      const fallback = mockDoctors.find((d) => d.id === doctorId) || mockDoctors[0];
+      return fallback;
+    }
   },
   async getAvailability(doctorId) {
-    const { data } = await apiClient.get<AvailabilitySlotDto[]>(`/doctors/${doctorId}/availability`);
-    return data;
+    try {
+      const { data } = await apiClient.get<AvailabilitySlotDto[]>(`/doctors/${doctorId}/availability`);
+      return data;
+    } catch {
+      return mockSlotStore.filter((s) => s.doctorId === doctorId);
+    }
   },
   async createAvailability(payload) {
     const { data } = await apiClient.post<AvailabilitySlotDto[]>("/doctors/availability", payload);

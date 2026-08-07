@@ -272,15 +272,16 @@ const mockAssistantService: AssistantService = {
     }
 
     // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
+    // 2. Dual Symptom: Headache + Eye Pain (Neurology + Ophthalmology)
     if (
       (text.includes("headache") || text.includes("head pain") || text.includes("migraine") || text.includes("sir dard")) &&
       (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight"))
     ) {
       return delay({
         answer:
-          "🧠 **AI Symptom Triage**: **Neurology & Ophthalmology Consultation**\n\n" +
-          "Aapne bataya ki aapko **Headache** aur **Eye pain** dono hain. Yeh symptoms **Migraine with Ocular Strain** ya **Tension Headache** indicate kar sakte hain.\n\n" +
-          "• **Recommendation**: Is tarah ke dual symptoms ke liye **Dr. Kavita Verma (Neurology Specialist)** ya Senior **General Physician** se consult karna best rahega.\n" +
+          "🧠👁️ **AI Symptom Triage**: **Neurology & Ophthalmology Consultation**\n\n" +
+          "Aapne bataya ki aapko **Headache** aur **Eye pain / Vision strain** dono hain. Yeh symptoms **Migraine with Ocular Strain** ya **Nerve-related Vision strain** indicate kar sakte hain.\n\n" +
+          "• **Recommendation**: Is tarah ke symptoms ke liye **Dr. Kavita Verma (Neurology Specialist)** ya **Dr. Alok Banerjee (Ophthalmologist)** se consult karna best rahega.\n" +
           "• **Home Advice**: Screen time kam karein, room ki lights dim rakhein, paani piyein aur stress kam lein.",
         sources: [{ title: "Neurological & Ocular Triage Protocols", section: "Clinical Guidance", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
@@ -292,41 +293,41 @@ const mockAssistantService: AssistantService = {
           qualifications: "MBBS, DM (Neurology)",
           consultationFee: 1300,
           triageLevel: "URGENT",
-          reason: "Evaluation for Headache & Eye strain / Neurological symptoms.",
+          reason: "Evaluation for Headache & Nerve / Eye strain symptoms.",
         },
       });
     }
 
-    // 3. Eye Pain / Vision Issues
-    if (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight") || text.includes("optometry")) {
+    // 3. Eye Pain / Vision Issues / Ophthalmology
+    if (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight") || text.includes("optometry") || text.includes("cataract")) {
       return delay({
         answer:
-          "👁️ **AI Symptom Triage**: **Ophthalmology & General Medicine**\n\n" +
-          "Eye pain, dryness, ya vision strain ke liye **Eye Specialist (Ophthalmologist)** ya **General Physician** se checkup karwayein.\n\n" +
-          "• **Quick Tip**: Agar aakhon me jalan ya redness hai toh thande paani se saaf karein aur aakhon ko rub mat karein.",
-        sources: [{ title: "Ocular Health Protocols", section: "Primary Care", evidenceStrength: "STRONG" }],
+          "👁️ **AI Specialist Match**: **Ophthalmology Specialist (Eye Care)**\n\n" +
+          "Eye pain, dryness, vision strain, ya eye checkup ke liye **Dr. Alok Banerjee (Ophthalmology Specialist)** se consult karein.\n\n" +
+          "• **Quick Tip**: Agar aakhon me jalan ya redness hai toh thande paani se saaf karein aur screen break (20-20-20 rule) lein.",
+        sources: [{ title: "Ocular Health Protocols", section: "Ophthalmology Care", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician & Primary Care",
-          qualifications: "MBBS, MD (General Medicine)",
-          consultationFee: 500,
+          doctorId: "doc-10",
+          doctorName: "Dr. Alok Banerjee",
+          specialization: "Ophthalmology",
+          qualifications: "MBBS, MS (Ophthalmology)",
+          consultationFee: 700,
           triageLevel: "ROUTINE",
-          reason: "General evaluation for Eye discomfort & overall health.",
+          reason: "Specialized consultation for Eye Care & Vision testing.",
         },
       });
     }
 
-    // 4. Headache / Migraine / Neurologist
-    if (text.includes("headache") || text.includes("migraine") || text.includes("sir dard") || text.includes("neuro")) {
+    // 4. Headache / Migraine / Nerves / Neurologist
+    if (text.includes("nerve") || text.includes("nerves") || text.includes("headache") || text.includes("migraine") || text.includes("sir dard") || text.includes("neuro") || text.includes("brain")) {
       return delay({
         answer:
-          "🧠 **AI Symptom Triage**: **Neurology Specialist**\n\n" +
-          "Headache ya Migraine ke recurrent episodes ke liye **Neurology Specialist** se consult karna sabse safe rehta hai.\n\n" +
+          "🧠 **AI Specialist Match**: **Neurology Specialist (Brain & Nerves)**\n\n" +
+          "Headache, nerve weakness, migraine, ya brain & nerve related concerns ke liye **Dr. Kavita Verma (Neurology Specialist)** se consult karna best rahega.\n\n" +
           "• **Dr. Kavita Verma (DM Neurology)** migraine management aur nerve disorders me specialist hain.",
-        sources: [{ title: "Neurology Care Guidelines", section: "Headache Management", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Neurology Care Guidelines", section: "Headache & Nerve Management", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -336,7 +337,7 @@ const mockAssistantService: AssistantService = {
           qualifications: "MBBS, DM (Neurology)",
           consultationFee: 1300,
           triageLevel: "URGENT",
-          reason: "Comprehensive evaluation for Migraine & Head pain.",
+          reason: "Comprehensive evaluation for Brain, Nerves & Migraine.",
         },
       });
     }
@@ -350,12 +351,14 @@ const mockAssistantService: AssistantService = {
       text.includes("checkup") ||
       text.includes("weakness") ||
       text.includes("chakar") ||
-      text.includes("fatigue")
+      text.includes("fatigue") ||
+      text.includes("fever") ||
+      text.includes("bukhar")
     ) {
       return delay({
         answer:
           "🩺 **AI Specialist Match**: **Senior General Physician**\n\n" +
-          "Aapki general health evaluation, routine checkups, aur initial medical guidance ke liye **Dr. Rajesh Sharma (Senior Physician)** ya **Dr. Rakesh Dakar** sabse ideal doctor hain.\n\n" +
+          "Aapki general health evaluation, routine checkups, aur initial medical guidance ke liye **Dr. Rajesh Sharma (Senior Physician)** sabse ideal doctor hain.\n\n" +
           "Voh aapki detailed medical history lekar zaroorat padne par specialized diagnostic test ya sub-specialist recommend karenge.",
         sources: [{ title: "Primary Healthcare Guidelines", section: "General Practice", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
@@ -377,7 +380,7 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "👂 **AI Specialist Match**: **ENT (Ear, Nose, Throat) Specialist**\n\n" +
-          "Sinus issues, ear discomfort, hearing problems, ya throat infection ke liye **Dr. Rahul Nair (ENT Specialist)** se consult karein.",
+          "Sinus issues, ear discomfort, hearing reviews, ya throat infection ke liye **Dr. Rahul Nair (ENT Specialist)** se consult karein.",
         sources: [{ title: "ENT Guidelines", section: "Otology & Laryngology", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
@@ -461,7 +464,7 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🩺 **AI Symptom Checker Triage**: **Cardiology & Heart Specialist**\n\n" +
-          "Chest discomfort, breathlessness, ya dizziness ke liye **Dr. Vikram Shetty (Cardiology Specialist)** ya **Dr. Rakesh Dakar** se consult karein.\n\n" +
+          "Chest discomfort, breathlessness, ya dizziness ke liye **Dr. Vikram Shetty (Cardiology Specialist)** se consult karein.\n\n" +
           "⚠️ *Emergency Alert*: Severe chest pain me turant nearest ER visit karein.",
         sources: [{ title: "Cardiology Clinical Triage Protocol", section: "Symptom Checker", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
@@ -494,7 +497,7 @@ const mockAssistantService: AssistantService = {
           "Main aapke medical symptoms samajhkar sahi Doctor match kar sakta hoon, Blood Test Reports analyze kar sakta hoon, aur Direct Booking me help kar sakta hoon.\n\n" +
           "💡 *Try asking me*:\n" +
           "• *'Mujhe headache aur eye pain hai, kis doctor ko dikhau?'*\n" +
-          "• *'I need a General Physician for routine checkup'*\n" +
+          "• *'I need an Eye Specialist (Ophthalmologist)'*\n" +
           "• *'Analyze my blood test report'* (ya 📎 Paperclip button se file attach karein!)",
         sources: [],
         sufficientEvidence: true,
@@ -502,20 +505,20 @@ const mockAssistantService: AssistantService = {
       });
     }
 
-    // Default Smart Dynamic Conversational Response (Never refusals!)
+    // Default Smart Dynamic Conversational Response
     return delay({
       answer:
         `💬 **Medi AI Health Assistant Response**:\n\n` +
         `Aapne poocha: "${message}"\n\n` +
-        "Main aapki query ke basis par hamare Senior **General Physician (Dr. Rajesh Sharma)** ya **Demo Doctor (Dr. Rakesh Dakar)** ko consult karne ki recommendation deta hoon. Voh aapki complete medical history lekar correct clinical evaluation karenge.",
+        "Main aapki query ke basis par hamare Senior **General Physician (Dr. Rajesh Sharma)** ko consult karne ki recommendation deta hoon. Voh aapki complete medical history lekar correct clinical evaluation karenge.",
       sources: [{ title: "General Clinical Care Guidelines", section: "Primary Patient Consultation", evidenceStrength: "MODERATE" }],
       sufficientEvidence: true,
       disclaimer: ASSISTANT_DISCLAIMER,
       doctorMatch: {
-        doctorId: DEMO_DOCTOR_ID,
-        doctorName: "Dr. Rakesh Dakar",
-        specialization: "General Medicine & Primary Care",
-        qualifications: "MBBS, MD",
+        doctorId: "doc-7",
+        doctorName: "Dr. Rajesh Sharma",
+        specialization: "General Physician & Primary Care",
+        qualifications: "MBBS, MD (General Medicine)",
         consultationFee: 500,
         triageLevel: "ROUTINE",
         reason: "General Consultation for your health query.",
@@ -567,7 +570,7 @@ const httpAssistantService: AssistantService = {
             "Avoid refined sugar, soft drinks, sweets, and processed carbohydrates.",
             "Include high-fiber foods: Oats, green leafy vegetables, sprouts, and whole grains.",
             "Engage in 30 minutes of daily brisk walking or light exercise.",
-            "Schedule a follow-up consultation with Dr. Rakesh Dakar for dosage adjustment.",
+            "Schedule a follow-up consultation with Dr. Rajesh Sharma for dosage adjustment.",
           ],
         };
       }
@@ -584,7 +587,7 @@ const httpAssistantService: AssistantService = {
       }
     }
 
-    // 2. Enrich response with Doctor Match Card if symptoms detected
+    // 2. Enrich response with Doctor Match Card matching exact query symptoms
     if (!reply.doctorMatch) {
       if ((text.includes("headache") || text.includes("sir dard")) && (text.includes("eye") || text.includes("aankh"))) {
         reply.doctorMatch = {
@@ -596,17 +599,17 @@ const httpAssistantService: AssistantService = {
           triageLevel: "URGENT",
           reason: "Evaluation for Headache & Eye strain / Neurological symptoms.",
         };
-      } else if (text.includes("eye") || text.includes("aankh") || text.includes("vision")) {
+      } else if (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight") || text.includes("cataract")) {
         reply.doctorMatch = {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician & Primary Care",
-          qualifications: "MBBS, MD (General Medicine)",
-          consultationFee: 500,
+          doctorId: "doc-10",
+          doctorName: "Dr. Alok Banerjee",
+          specialization: "Ophthalmology",
+          qualifications: "MBBS, MS (Ophthalmology)",
+          consultationFee: 700,
           triageLevel: "ROUTINE",
-          reason: "General evaluation for Eye discomfort & overall health.",
+          reason: "Specialized consultation for Eye Care & Vision testing.",
         };
-      } else if (text.includes("headache") || text.includes("migraine") || text.includes("sir dard")) {
+      } else if (text.includes("nerve") || text.includes("nerves") || text.includes("headache") || text.includes("migraine") || text.includes("sir dard") || text.includes("brain")) {
         reply.doctorMatch = {
           doctorId: "doc-8",
           doctorName: "Dr. Kavita Verma",
@@ -614,17 +617,37 @@ const httpAssistantService: AssistantService = {
           qualifications: "MBBS, DM (Neurology)",
           consultationFee: 1300,
           triageLevel: "URGENT",
-          reason: "Comprehensive evaluation for Migraine & Head pain.",
+          reason: "Comprehensive evaluation for Brain, Nerves & Migraine.",
         };
-      } else if (text.includes("physician") || text.includes("checkup") || text.includes("dikhana")) {
+      } else if (text.includes("skin") || text.includes("acne") || text.includes("hair")) {
         reply.doctorMatch = {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician",
-          qualifications: "MBBS, MD (General Medicine)",
-          consultationFee: 500,
+          doctorId: "doc-3",
+          doctorName: "Dr. Meera Krishnan",
+          specialization: "Dermatology Specialist",
+          qualifications: "MBBS, MD (Dermatology)",
+          consultationFee: 750,
           triageLevel: "ROUTINE",
-          reason: "Comprehensive primary health checkup & consultation.",
+          reason: "Consultation for Skin, Hair & Allergy management.",
+        };
+      } else if (text.includes("bone") || text.includes("joint") || text.includes("back pain")) {
+        reply.doctorMatch = {
+          doctorId: "doc-5",
+          doctorName: "Dr. Sneha Kulkarni",
+          specialization: "Orthopaedics Specialist",
+          qualifications: "MBBS, MS (Orthopaedics)",
+          consultationFee: 900,
+          triageLevel: "ROUTINE",
+          reason: "Consultation for Joint mobility & Back pain.",
+        };
+      } else if (text.includes("chest") || text.includes("heart") || text.includes("cardio")) {
+        reply.doctorMatch = {
+          doctorId: "doc-2",
+          doctorName: "Dr. Vikram Shetty",
+          specialization: "Cardiology Specialist",
+          qualifications: "MBBS, DM (Cardiology)",
+          consultationFee: 1200,
+          triageLevel: "URGENT",
+          reason: "Cardiac & Chest discomfort evaluation.",
         };
       } else {
         reply.doctorMatch = {
