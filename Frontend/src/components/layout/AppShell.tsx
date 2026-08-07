@@ -15,6 +15,8 @@ import {
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth, homeRouteForRole } from "@/context/AuthContext";
 import { NotificationBell } from "@/components/common/NotificationBell";
+import type { Role } from "@/lib/api/types";
+import { cn } from "@/lib/utils";
 
 interface NavItem {
   to: string;
