@@ -175,6 +175,11 @@ public class AuthService {
     }
 
     @Transactional
+    public void logout(LogoutRequest request) {
+        logout(request, null);
+    }
+
+    @Transactional
     public void logout(LogoutRequest request, String accessToken) {
         if (request != null && request.refreshToken() != null && !request.refreshToken().isBlank()) {
             String hash = jwtService.hashToken(request.refreshToken());

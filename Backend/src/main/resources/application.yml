@@ -1,4 +1,5 @@
 server:
+  port: ${PORT:8080}
   compression:
     enabled: true
     mime-types: application/json,application/xml,text/html,text/xml,text/plain,application/javascript,text/css
@@ -190,9 +191,6 @@ ai:
   grounding:
     relevance-threshold: ${AI_RELEVANCE_THRESHOLD:0.2}
     retrieval-limit: ${AI_RETRIEVAL_LIMIT:5}
-
-server:
-  port: ${PORT:8080}
 
 management:
   endpoints:
