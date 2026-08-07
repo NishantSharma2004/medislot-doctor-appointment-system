@@ -1,8 +1,10 @@
 package com.medislot.specialization.service;
 
+import com.medislot.common.config.CacheConfig;
 import com.medislot.specialization.dto.SpecializationDto;
 import com.medislot.specialization.entity.Specialization;
 import com.medislot.specialization.repository.SpecializationRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ public class SpecializationService {
         this.specializationRepository = specializationRepository;
     }
 
+    @Cacheable(value = CacheConfig.CACHE_SPECIALIZATIONS)
     @Transactional(readOnly = true)
     public List<SpecializationDto> getActiveSpecializations() {
         return specializationRepository.findByActiveTrueOrderByNameAsc()

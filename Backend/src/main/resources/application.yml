@@ -2,6 +2,21 @@ spring:
   application:
     name: medislot-backend
 
+  cache:
+    type: ${SPRING_CACHE_TYPE:simple}
+    cache-names:
+      - doctorsSearchCache
+      - doctorDetailsCache
+      - specializationsCache
+      - doctorAvailabilityCache
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/medislot_db}
     username: ${DB_USERNAME:postgres}
