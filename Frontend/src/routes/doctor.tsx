@@ -31,6 +31,7 @@ import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
+import { notificationService } from "@/services/notification.service";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, PrescriptionMedicine } from "@/lib/api/types";
 
@@ -134,6 +135,26 @@ function DoctorDeskPage() {
   const handleUpdateStatus = async (appointmentId: string, status: AppointmentStatus) => {
     try {
       await appointmentService.updateStatus(appointmentId, status);
+      const appt = appointments.find((a) => a.id === appointmentId);
+      if (appt) {
+        if (status === "CONFIRMED") {
+          await notificationService.addNotification({
+            userId: appt.patientId,
+            title: "Appointment Confirmed! 🟢",
+            message: `Dr. ${docProfile?.fullName || appt.doctorName || "your doctor"} confirmed your appointment for ${appt.date} (${appt.startTime}).`,
+            type: "APPOINTMENT_CONFIRMED",
+            targetUrl: "/appointments",
+          });
+        } else if (status === "CANCELLED" || status === "REJECTED") {
+          await notificationService.addNotification({
+            userId: appt.patientId,
+            title: "Appointment Cancelled 🔴",
+            message: `Your appointment with Dr. ${docProfile?.fullName || appt.doctorName || "your doctor"} for ${appt.date} was cancelled.`,
+            type: "APPOINTMENT_CANCELLED",
+            targetUrl: "/appointments",
+          });
+        }
+      }
       toast.success(`Appointment status updated to ${status}`);
       loadDoctorAppointments();
     } catch (err) {
@@ -171,6 +192,15 @@ function DoctorDeskPage() {
         followUpDate: rxFollowUpDate,
         notes: rxNotes,
       });
+
+      await notificationService.addNotification({
+        userId: rxModalAppt.patientId,
+        title: "Digital Prescription Ready 📄",
+        message: `Dr. ${docProfile?.fullName || rxModalAppt.doctorName} has issued a digital PDF prescription for your visit.`,
+        type: "PRESCRIPTION_GENERATED",
+        targetUrl: "/appointments",
+      });
+
       toast.success("Digital medical prescription issued successfully!");
       setRxModalAppt(null);
       loadDoctorAppointments();

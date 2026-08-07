@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthContext";
 import type { ApiError, AvailabilitySlotDto } from "@/lib/api/types";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
+import { notificationService } from "@/services/notification.service";
 
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
@@ -94,6 +95,13 @@ function DoctorProfilePage() {
         reason: reason.trim() || undefined,
         medicalDocumentUrl: documentUrl || undefined,
         medicalDocumentName: documentName || undefined,
+      });
+      await notificationService.addNotification({
+        userId: user?.id,
+        title: "Appointment Booked! 📅",
+        message: `Your appointment request with ${doctor.fullName} for ${selectedSlot.date} (${selectedSlot.startTime}) is pending approval.`,
+        type: "SYSTEM",
+        targetUrl: "/appointments",
       });
       toast.success(`Appointment booked with ${doctor.fullName}`);
       setSelectedSlot(null);

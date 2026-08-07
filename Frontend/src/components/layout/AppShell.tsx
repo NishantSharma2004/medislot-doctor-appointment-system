@@ -14,8 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth, homeRouteForRole } from "@/context/AuthContext";
-import type { Role } from "@/lib/api/types";
-import { cn } from "@/lib/utils";
+import { NotificationBell } from "@/components/common/NotificationBell";
 
 interface NavItem {
   to: string;
@@ -126,6 +125,7 @@ export function AppHeader() {
         </nav>
 
         <div className="flex items-center justify-end gap-2">
+          <NotificationBell />
           {isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

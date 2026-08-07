@@ -204,3 +204,22 @@ export interface ApiError {
   retryAfterSeconds?: number;
   fieldErrors?: Record<string, string>;
 }
+
+export type NotificationType =
+  | "APPOINTMENT_CONFIRMED"
+  | "APPOINTMENT_CANCELLED"
+  | "PRESCRIPTION_GENERATED"
+  | "APPOINTMENT_REMINDER"
+  | "SYSTEM";
+
+export interface NotificationDto {
+  id: string;
+  userId?: string;
+  title: string;
+  message: string;
+  type: NotificationType;
+  read: boolean;
+  createdAt: string;
+  targetUrl?: string;
+}
+
