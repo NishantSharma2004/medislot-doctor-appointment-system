@@ -9,6 +9,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     public JwtAuthenticationFilter(
             JwtService jwtService,
-            TokenBlacklistService tokenBlacklistService,
+            @Autowired(required = false) TokenBlacklistService tokenBlacklistService,
             UserRepository userRepository) {
         this.jwtService = jwtService;
         this.tokenBlacklistService = tokenBlacklistService;
@@ -47,7 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7).trim();
-            if (!tokenBlacklistService.isBlacklisted(token) && jwtService.validateToken(token)) {
+            boolean isBlacklisted = (tokenBlacklistService != null) && tokenBlacklistService.isBlacklisted(token);
+            if (!isBlacklisted && jwtService.validateToken(token)) {
                 try {
                     UUID userId = jwtService.extractUserId(token);
                     Role role = jwtService.extractRole(token);
