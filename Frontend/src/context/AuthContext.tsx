@@ -4,6 +4,7 @@ import type { AuthResponse, LoginRequest, RegisterRequest, Role, UserDto } from 
 import { authService } from "@/services/auth.service";
 
 const USER_STORAGE_KEY = "medislot.user";
+const AVATAR_STORAGE_KEY_PREFIX = "medislot.avatar.";
 
 interface AuthContextValue {
   user: UserDto | null;
@@ -14,6 +15,8 @@ interface AuthContextValue {
   register: (payload: RegisterRequest) => Promise<AuthResponse>;
   logout: () => void;
   hasRole: (roles: Role[]) => boolean;
+  updateUserProfileImage: (imageUrl: string) => void;
+  refreshUser: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -29,7 +32,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedUser = window.localStorage.getItem(USER_STORAGE_KEY);
     if (storedToken && storedUser) {
       try {
-        setUser(JSON.parse(storedUser) as UserDto);
+        const parsedUser = JSON.parse(storedUser) as UserDto;
+        const savedAvatar = window.localStorage.getItem(AVATAR_STORAGE_KEY_PREFIX + parsedUser.email);
+        if (savedAvatar) {
+          parsedUser.profileImageUrl = savedAvatar;
+        }
+        setUser(parsedUser);
         setToken(storedToken);
       } catch {
         window.localStorage.removeItem(USER_STORAGE_KEY);
@@ -53,10 +61,39 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const persist = useCallback((response: AuthResponse) => {
     setStoredToken(response.token, response.refreshToken);
-    window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(response.user));
-    setUser(response.user);
+    const userObj = { ...response.user };
+    const savedAvatar = window.localStorage.getItem(AVATAR_STORAGE_KEY_PREFIX + userObj.email);
+    if (savedAvatar) {
+      userObj.profileImageUrl = savedAvatar;
+    }
+    window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userObj));
+    setUser(userObj);
     setToken(response.token);
     return response;
+  }, []);
+
+  const updateUserProfileImage = useCallback((imageUrl: string) => {
+    setUser((prev) => {
+      if (!prev) return null;
+      if (imageUrl) {
+        window.localStorage.setItem(AVATAR_STORAGE_KEY_PREFIX + prev.email, imageUrl);
+      } else {
+        window.localStorage.removeItem(AVATAR_STORAGE_KEY_PREFIX + prev.email);
+      }
+      const updated = { ...prev, profileImageUrl: imageUrl || undefined };
+      window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+
+  const refreshUser = useCallback(() => {
+    setUser((prev) => {
+      if (!prev) return null;
+      const savedAvatar = window.localStorage.getItem(AVATAR_STORAGE_KEY_PREFIX + prev.email);
+      const updated = { ...prev, profileImageUrl: savedAvatar || prev.profileImageUrl };
+      window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
   }, []);
 
   const value = useMemo<AuthContextValue>(
@@ -69,8 +106,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register: async (payload) => persist(await authService.register(payload)),
       logout,
       hasRole: (roles) => (user ? roles.includes(user.role) : false),
+      updateUserProfileImage,
+      refreshUser,
     }),
-    [user, token, isLoading, persist, logout],
+    [user, token, isLoading, persist, logout, updateUserProfileImage, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import type { ApiError } from "@/lib/api/types";
+import { getInitials } from "@/lib/utils";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -54,7 +55,7 @@ function calculateAge(dobString: string | null): number | null {
 }
 
 export function ProfilePage() {
-  const { user, isAuthenticated, isLoading: authLoading, refreshUser } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading, refreshUser, updateUserProfileImage } = useAuth();
   const navigate = useNavigate();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -88,7 +89,7 @@ export function ProfilePage() {
         const { data } = await apiClient.get<UserProfileData>("/users/me");
         setFullName(data.fullName || user?.fullName || "");
         setPhone(data.phone || user?.phone || "");
-        setProfileImageUrl(data.profileImageUrl || "");
+        setProfileImageUrl(data.profileImageUrl || user?.profileImageUrl || "");
         setDateOfBirth(data.dateOfBirth || "");
         setGender(data.gender || "Male");
         setAddressLine1(data.addressLine1 || "");
@@ -101,6 +102,7 @@ export function ProfilePage() {
         // Fallback to auth context
         setFullName(user?.fullName || "");
         setPhone(user?.phone || "");
+        setProfileImageUrl(user?.profileImageUrl || "");
       } finally {
         setLoadingProfile(false);
       }
@@ -122,8 +124,10 @@ export function ProfilePage() {
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") {
-        setProfileImageUrl(reader.result);
-        toast.success("Photo selected! Click 'Save Profile Details' below to update.");
+        const newUrl = reader.result;
+        setProfileImageUrl(newUrl);
+        updateUserProfileImage(newUrl);
+        toast.success("Photo updated & saved to your profile!");
       }
     };
     reader.readAsDataURL(file);
@@ -132,6 +136,7 @@ export function ProfilePage() {
   const handleRemoveImage = (e: React.MouseEvent) => {
     e.stopPropagation();
     setProfileImageUrl("");
+    updateUserProfileImage("");
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -155,6 +160,7 @@ export function ProfilePage() {
         postalCode,
         country,
       });
+      updateUserProfileImage(profileImageUrl);
       toast.success("Profile details updated successfully!");
       if (refreshUser) refreshUser();
     } catch (err) {
@@ -206,7 +212,7 @@ export function ProfilePage() {
               </div>
             ) : (
               <div className="size-24 rounded-full bg-primary/20 text-primary border-4 border-background shadow-lg flex items-center justify-center font-bold text-3xl transition-transform group-hover:scale-105">
-                {fullName ? fullName.slice(0, 2).toUpperCase() : "US"}
+                {getInitials(fullName)}
               </div>
             )}
 

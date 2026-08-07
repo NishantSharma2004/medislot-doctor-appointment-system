@@ -20,6 +20,7 @@ export interface UserDto {
   email: string;
   phone?: string;
   role: Role;
+  profileImageUrl?: string;
 }
 
 export interface AuthResponse {

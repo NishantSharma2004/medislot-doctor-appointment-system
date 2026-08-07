@@ -7,16 +7,7 @@ import { formatFee, isUpcomingSlot } from "@/components/common/format";
 import type { DoctorDto } from "@/lib/api/types";
 import { doctorService } from "@/services/doctor.service";
 import { reviewService } from "@/services/review.service";
-
-function initials(name: string) {
-  return name
-    .replace(/^Dr\.?\s*/i, "")
-    .split(" ")
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
+import { getInitials } from "@/lib/utils";
 
 export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
   const { data: slots = [] } = useQuery({
@@ -44,7 +35,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
           aria-hidden="true"
           className="grid size-12 shrink-0 place-items-center rounded-full bg-primary-soft text-sm font-bold text-accent-foreground"
         >
-          {initials(doctor.fullName)}
+          {getInitials(doctor.fullName)}
         </span>
         <div className="min-w-0">
           <div className="flex items-center justify-between gap-1">

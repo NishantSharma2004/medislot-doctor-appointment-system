@@ -16,7 +16,7 @@ import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/s
 import { useAuth, homeRouteForRole } from "@/context/AuthContext";
 import { NotificationBell } from "@/components/common/NotificationBell";
 import type { Role } from "@/lib/api/types";
-import { cn } from "@/lib/utils";
+import { cn, getInitials } from "@/lib/utils";
 
 interface NavItem {
   to: string;
@@ -132,7 +132,17 @@ export function AppHeader() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
-                  <User className="size-4" aria-hidden="true" />
+                  {user.profileImageUrl ? (
+                    <img
+                      src={user.profileImageUrl}
+                      alt={user.fullName}
+                      className="size-5 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span className="size-5 rounded-full bg-primary/20 text-primary font-bold text-[10px] flex items-center justify-center">
+                      {getInitials(user.fullName)}
+                    </span>
+                  )}
                   <span className="hidden max-w-28 truncate sm:inline">{user.fullName}</span>
                 </Button>
               </DropdownMenuTrigger>
