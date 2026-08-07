@@ -42,6 +42,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
     private final AuthenticationManager authenticationManager;
 
     public AuthService(
@@ -52,6 +53,7 @@ public class AuthService {
             RefreshTokenRepository refreshTokenRepository,
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
+            TokenBlacklistService tokenBlacklistService,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.patientProfileRepository = patientProfileRepository;
@@ -60,6 +62,7 @@ public class AuthService {
         this.refreshTokenRepository = refreshTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.tokenBlacklistService = tokenBlacklistService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -172,14 +175,17 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(LogoutRequest request) {
-        if (request.refreshToken() != null && !request.refreshToken().isBlank()) {
+    public void logout(LogoutRequest request, String accessToken) {
+        if (request != null && request.refreshToken() != null && !request.refreshToken().isBlank()) {
             String hash = jwtService.hashToken(request.refreshToken());
             refreshTokenRepository.findActiveByTokenHash(hash, Instant.now())
                     .ifPresent(token -> {
                         token.setRevokedAt(Instant.now());
                         refreshTokenRepository.save(token);
                     });
+        }
+        if (accessToken != null && !accessToken.isBlank()) {
+            tokenBlacklistService.blacklistToken(accessToken, System.currentTimeMillis() + jwtService.getAccessExpirationMs());
         }
     }
 

@@ -1,6 +1,7 @@
 package com.medislot.auth.security;
 
 import com.medislot.auth.service.JwtService;
+import com.medislot.auth.service.TokenBlacklistService;
 import com.medislot.common.enums.Role;
 import com.medislot.user.entity.User;
 import com.medislot.user.repository.UserRepository;
@@ -25,10 +26,15 @@ import java.util.UUID;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final TokenBlacklistService tokenBlacklistService;
     private final UserRepository userRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService, UserRepository userRepository) {
+    public JwtAuthenticationFilter(
+            JwtService jwtService,
+            TokenBlacklistService tokenBlacklistService,
+            UserRepository userRepository) {
         this.jwtService = jwtService;
+        this.tokenBlacklistService = tokenBlacklistService;
         this.userRepository = userRepository;
     }
 
@@ -41,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String authHeader = request.getHeader("Authorization");
         if (StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7).trim();
-            if (jwtService.validateToken(token)) {
+            if (!tokenBlacklistService.isBlacklisted(token) && jwtService.validateToken(token)) {
                 try {
                     UUID userId = jwtService.extractUserId(token);
                     Role role = jwtService.extractRole(token);
