@@ -15,6 +15,7 @@ import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as HealthRiskCalculatorRouteImport } from './routes/health-risk-calculator'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -52,6 +53,11 @@ const DoctorRoute = DoctorRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HealthRiskCalculatorRoute = HealthRiskCalculatorRouteImport.update({
+  id: '/health-risk-calculator',
+  path: '/health-risk-calculator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/health-risk-calculator'
     | '/login'
     | '/profile'
     | '/register'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/health-risk-calculator'
     | '/login'
     | '/profile'
     | '/register'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/health-risk-calculator'
     | '/login'
     | '/profile'
     | '/register'
@@ -202,6 +214,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DoctorRoute: typeof DoctorRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  HealthRiskCalculatorRoute: typeof HealthRiskCalculatorRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
@@ -254,6 +267,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/health-risk-calculator': {
+      id: '/health-risk-calculator'
+      path: '/health-risk-calculator'
+      fullPath: '/health-risk-calculator'
+      preLoaderRoute: typeof HealthRiskCalculatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -322,6 +342,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DoctorRoute: DoctorRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  HealthRiskCalculatorRoute: HealthRiskCalculatorRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
