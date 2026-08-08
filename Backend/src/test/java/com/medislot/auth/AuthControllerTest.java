@@ -124,6 +124,7 @@ class AuthControllerTest {
     @DisplayName("POST /api/v1/auth/login returns 200 OK and AuthResponse")
     void login_Success_Returns200() throws Exception {
         LoginRequest request = new LoginRequest("patient@example.com", "Password123!");
+        when(authService.login(any(LoginRequest.class), any())).thenReturn(testAuthResponse);
         when(authService.login(any(LoginRequest.class))).thenReturn(testAuthResponse);
 
         mockMvc.perform(post("/api/v1/auth/login")

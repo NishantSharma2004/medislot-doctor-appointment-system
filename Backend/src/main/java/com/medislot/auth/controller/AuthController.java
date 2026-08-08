@@ -45,8 +45,18 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Authenticate user credentials and obtain JWT access & refresh tokens")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        AuthResponse response = authService.login(request);
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request,
+            jakarta.servlet.http.HttpServletRequest servletRequest
+    ) {
+        String clientIp = servletRequest.getHeader("X-Forwarded-For");
+        if (clientIp == null || clientIp.isBlank()) {
+            clientIp = servletRequest.getRemoteAddr();
+        } else {
+            clientIp = clientIp.split(",")[0].trim();
+        }
+
+        AuthResponse response = authService.login(request, clientIp);
         return ResponseEntity.ok(response);
     }
 

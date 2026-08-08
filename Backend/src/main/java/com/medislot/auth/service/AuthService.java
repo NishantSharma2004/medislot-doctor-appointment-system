@@ -43,6 +43,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final TokenBlacklistService tokenBlacklistService;
+    private final BruteForceProtectionService bruteForceProtectionService;
     private final AuthenticationManager authenticationManager;
 
     public AuthService(
@@ -54,6 +55,7 @@ public class AuthService {
             PasswordEncoder passwordEncoder,
             JwtService jwtService,
             TokenBlacklistService tokenBlacklistService,
+            BruteForceProtectionService bruteForceProtectionService,
             AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.patientProfileRepository = patientProfileRepository;
@@ -63,6 +65,7 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.tokenBlacklistService = tokenBlacklistService;
+        this.bruteForceProtectionService = bruteForceProtectionService;
         this.authenticationManager = authenticationManager;
     }
 
@@ -140,19 +143,48 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(LoginRequest request) {
+        return login(request, null);
+    }
+
+    @Transactional
+    public AuthResponse login(LoginRequest request, String clientIp) {
         String normalizedEmail = request.email().trim().toLowerCase();
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(normalizedEmail, request.password())
-        );
+        if (bruteForceProtectionService != null && bruteForceProtectionService.isBlocked(clientIp, normalizedEmail)) {
+            long remainingMins = bruteForceProtectionService.getRemainingBlockMinutes(clientIp, normalizedEmail);
+            throw new BusinessException(
+                    HttpStatus.TOO_MANY_REQUESTS,
+                    "ACCOUNT_LOCKED",
+                    "Too many failed login attempts. Account/IP is temporarily locked for security. Please try again in " + remainingMins + " minutes."
+            );
+        }
+
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(normalizedEmail, request.password())
+            );
+        } catch (Exception e) {
+            if (bruteForceProtectionService != null) {
+                bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);
+            }
+            throw e;
+        }
 
         User user = userRepository.findByEmailIgnoreCase(normalizedEmail)
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password."));
+                .orElseThrow(() -> {
+                    if (bruteForceProtectionService != null) {
+                        bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);
+                    }
+                    return new UnauthorizedException("Invalid email or password.");
+                });
 
         if (!user.isEnabled()) {
             throw new UnauthorizedException("User account is disabled.");
         }
 
+        if (bruteForceProtectionService != null) {
+            bruteForceProtectionService.resetFailedAttempts(clientIp, normalizedEmail);
+        }
         refreshTokenRepository.revokeAllByUserId(user.getId(), Instant.now());
         return createAuthResponse(user);
     }
