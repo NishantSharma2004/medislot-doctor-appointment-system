@@ -20,7 +20,8 @@ import {
   CalendarCheck2,
   Pill,
 } from "lucide-react";
-import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
+import { formatTimeRange, isUpcomingSlot, getEffectiveAppointmentStatus } from "@/components/common/format";
+import { formatDoctorDisplayName } from "@/lib/utils";
 import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
@@ -156,12 +157,19 @@ function DashboardPage() {
   }
 
   const allAppointments = appointmentsPage.content;
-  const upcomingAppts = allAppointments.filter(
-    (a) => (a.status === "PENDING" || a.status === "CONFIRMED") && isUpcomingSlot(a.date, a.startTime)
-  );
-  const completedAppts = allAppointments.filter((a) => a.status === "COMPLETED");
-  const pendingAppts = allAppointments.filter((a) => a.status === "PENDING");
-  const missedOrExpiredAppts = allAppointments.filter((a) => a.status === "MISSED" || a.status === "EXPIRED" || a.status === "CANCELLED");
+  const upcomingAppts = allAppointments.filter((a) => {
+    const st = getEffectiveAppointmentStatus(a.status, a.date, a.startTime, a.endTime);
+    return (st === "PENDING" || st === "CONFIRMED") && isUpcomingSlot(a.date, a.startTime);
+  });
+  const completedAppts = allAppointments.filter((a) => getEffectiveAppointmentStatus(a.status, a.date, a.startTime, a.endTime) === "COMPLETED");
+  const pendingAppts = allAppointments.filter((a) => {
+    const st = getEffectiveAppointmentStatus(a.status, a.date, a.startTime, a.endTime);
+    return st === "PENDING" && isUpcomingSlot(a.date, a.startTime);
+  });
+  const missedOrExpiredAppts = allAppointments.filter((a) => {
+    const st = getEffectiveAppointmentStatus(a.status, a.date, a.startTime, a.endTime);
+    return st === "MISSED" || st === "EXPIRED" || st === "CANCELLED" || st === "REJECTED";
+  });
 
   const nextAppointment = upcomingAppts.length > 0 ? upcomingAppts[0] : null;
   const totalCount = allAppointments.length;
@@ -493,52 +501,60 @@ function DashboardPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {allAppointments.slice(0, 3).map((appt) => (
-              <div
-                key={appt.id}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl hover:border-primary/40 transition-colors gap-3 bg-card"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-foreground">{appt.doctorName}</span>
-                    <span className="text-xs text-muted-foreground">({appt.specialization})</span>
+            {allAppointments.slice(0, 5).map((appt) => {
+              const effStatus = getEffectiveAppointmentStatus(appt.status, appt.date, appt.startTime, appt.endTime);
+              return (
+                <div
+                  key={appt.id}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-xl hover:border-primary/40 transition-colors gap-3 bg-card"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-sm text-foreground">{formatDoctorDisplayName(appt.doctorName)}</span>
+                      <span className="text-xs text-muted-foreground">({appt.specialization})</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
+                      <span className="font-medium text-foreground">{formatTimeRange(appt.startTime, appt.endTime)}</span>
+                    </p>
+                    {effStatus === "EXPIRED" ? (
+                      <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                        💰 100% Full Refund Initiated (Doctor No-Response)
+                      </p>
+                    ) : null}
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Date: <span className="font-medium text-foreground">{appt.date}</span> | Time:{" "}
-                    <span className="font-medium text-foreground">{formatTimeRange(appt.startTime, appt.endTime)}</span>
-                  </p>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  {(appt.diagnosis || appt.prescriptionJson) ? (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-8 text-xs gap-1 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10 font-semibold"
-                      onClick={() => generatePrescriptionPdf(appt)}
+                  <div className="flex items-center gap-3">
+                    {(appt.diagnosis || appt.prescriptionJson) ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs gap-1 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10 font-semibold"
+                        onClick={() => generatePrescriptionPdf(appt)}
+                      >
+                        📄 Download Prescription PDF
+                      </Button>
+                    ) : null}
+
+                    <span
+                      className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
+                        effStatus === "CONFIRMED"
+                          ? "bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20"
+                          : effStatus === "COMPLETED"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                            : effStatus === "PENDING"
+                              ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20"
+                              : effStatus === "MISSED"
+                                ? "bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-500/20"
+                                : "bg-destructive/10 text-destructive border border-destructive/20"
+                      }`}
                     >
-                      📄 Download Prescription PDF
-                    </Button>
-                  ) : null}
-
-                  <span
-                    className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                      appt.status === "CONFIRMED"
-                        ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                        : appt.status === "COMPLETED"
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                          : appt.status === "PENDING"
-                            ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
-                            : appt.status === "MISSED"
-                              ? "bg-orange-500/10 text-orange-700 dark:text-orange-400"
-                              : "bg-destructive/10 text-destructive"
-                    }`}
-                  >
-                    {appt.status}
-                  </span>
+                      {effStatus === "EXPIRED" ? "EXPIRED (NO RESPONSE)" : effStatus}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

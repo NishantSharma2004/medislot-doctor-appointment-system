@@ -72,3 +72,20 @@ export function isUpcomingSlot(dateStr: string, startTimeStr: string): boolean {
     return true;
   }
 }
+
+export function getEffectiveAppointmentStatus(
+  status: string | AppointmentStatus,
+  dateStr?: string,
+  startTimeStr?: string,
+  endTimeStr?: string,
+): string {
+  if (!status) return "PENDING";
+  const upper = String(status).toUpperCase();
+  if (upper === "PENDING" || upper === "CONFIRMED") {
+    const timeToCheck = endTimeStr || startTimeStr;
+    if (dateStr && timeToCheck && !isUpcomingSlot(dateStr, timeToCheck)) {
+      return upper === "PENDING" ? "EXPIRED" : "MISSED";
+    }
+  }
+  return upper;
+}

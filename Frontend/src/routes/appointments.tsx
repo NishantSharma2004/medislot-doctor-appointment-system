@@ -1,7 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { formatTimeRange, isUpcomingSlot } from "@/components/common/format";
+import { formatTimeRange, isUpcomingSlot, getEffectiveAppointmentStatus } from "@/components/common/format";
+import { formatDoctorDisplayName } from "@/lib/utils";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PaginationControls } from "@/components/common/PaginationControls";
@@ -154,14 +155,16 @@ function MyAppointmentsPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {appointmentsPage.content.map((appt) => (
+            {appointmentsPage.content.map((appt) => {
+              const effStatus = getEffectiveAppointmentStatus(appt.status, appt.date, appt.startTime, appt.endTime);
+              return (
                 <div
                   key={appt.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:border-primary/50 transition-colors gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border rounded-lg hover:border-primary/50 transition-colors gap-4 bg-card"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-semibold text-foreground">{appt.doctorName}</span>
+                      <span className="font-semibold text-foreground">{formatDoctorDisplayName(appt.doctorName)}</span>
                       <span className="text-xs text-muted-foreground">({appt.specialization})</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
@@ -171,25 +174,28 @@ function MyAppointmentsPage() {
                       </span>
                     </p>
                     {appt.reason ? <p className="text-xs text-muted-foreground">Reason: {appt.reason}</p> : null}
+                    {effStatus === "EXPIRED" ? (
+                      <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 pt-1">
+                        💰 100% Full Refund Initiated (Doctor No-Response Fault)
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="flex flex-wrap items-center gap-2 sm:gap-3 shrink-0">
                     <span
                       className={`text-xs font-semibold px-2.5 py-1 rounded-full ${
-                        appt.status === "CONFIRMED"
-                          ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                          : appt.status === "COMPLETED"
-                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                            : appt.status === "PENDING"
-                              ? "bg-amber-500/10 text-amber-700 dark:text-amber-400"
-                              : appt.status === "MISSED"
-                                ? "bg-orange-500/10 text-orange-700 dark:text-orange-400"
-                                : appt.status === "EXPIRED" || appt.status === "CANCELLED" || appt.status === "REJECTED"
-                                  ? "bg-destructive/10 text-destructive"
-                                  : "bg-muted text-muted-foreground"
+                        effStatus === "CONFIRMED"
+                          ? "bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20"
+                          : effStatus === "COMPLETED"
+                            ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20"
+                            : effStatus === "PENDING"
+                              ? "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/20"
+                              : effStatus === "MISSED"
+                                ? "bg-orange-500/10 text-orange-700 dark:text-orange-400 border border-orange-500/20"
+                                : "bg-destructive/10 text-destructive border border-destructive/20"
                       }`}
                     >
-                      {appt.status}
+                      {effStatus === "EXPIRED" ? "EXPIRED (NO RESPONSE)" : effStatus}
                     </span>
 
                     {(appt.diagnosis || appt.prescriptionJson) ? (
@@ -203,7 +209,7 @@ function MyAppointmentsPage() {
                       </Button>
                     ) : null}
 
-                    {appt.status === "COMPLETED" ? (
+                    {effStatus === "COMPLETED" ? (
                       <Button
                         size="sm"
                         variant="secondary"
@@ -214,7 +220,7 @@ function MyAppointmentsPage() {
                       </Button>
                     ) : null}
 
-                    {(appt.status === "PENDING" || appt.status === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
+                    {(effStatus === "PENDING" || effStatus === "CONFIRMED") && isUpcomingSlot(appt.date, appt.startTime) ? (
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm" onClick={() => openRescheduleModal(appt)}>
                           Reschedule
@@ -226,7 +232,8 @@ function MyAppointmentsPage() {
                     ) : null}
                   </div>
                 </div>
-              ))}
+              );
+            })}
 
               <PaginationControls
                 page={appointmentsPage.page}
