@@ -200,6 +200,7 @@ export function ProfilePage() {
                 <img
                   src={profileImageUrl}
                   alt={fullName || "User Avatar"}
+                  onError={() => setProfileImageUrl("")}
                   className="size-24 rounded-full object-cover border-4 border-background shadow-lg transition-transform group-hover:scale-105"
                 />
                 <button

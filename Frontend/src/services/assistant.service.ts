@@ -271,12 +271,12 @@ const mockAssistantService: AssistantService = {
       return delay(parseUniversalMedicalReport(message, fileName));
     }
 
-    // 1.5. Doctor Name Query Lookup (e.g. "Rakesh Dakar", "Rajesh Sharma", "Kavita Verma", etc.)
-    if (text.includes("rakesh") || text.includes("dakar")) {
+    // 1.5. Doctor Name Query Lookup (e.g. "Rajesh Sharma", "Kavita Verma", etc.)
+    if (text.includes("rajesh") || text.includes("sharma")) {
       return delay({
         answer:
-          "🩺 **Doctor Details**: **Dr. Rakesh Dakar**\n\n" +
-          "**Dr. Rakesh Dakar** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
+          "🩺 **Doctor Details**: **Dr. Rajesh Sharma**\n\n" +
+          "**Dr. Rajesh Sharma** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
           "• **Specialization**: General Medicine & Primary Care\n" +
           "• **Qualifications**: MBBS, MD (General Medicine)\n" +
           "• **Consultation Fee**: ₹500\n" +
@@ -286,7 +286,7 @@ const mockAssistantService: AssistantService = {
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
           doctorId: "doc-7",
-          doctorName: "Dr. Rakesh Dakar",
+          doctorName: "Dr. Rajesh Sharma",
           specialization: "General Medicine & Primary Care",
           qualifications: "MBBS, MD (General Medicine)",
           consultationFee: 500,

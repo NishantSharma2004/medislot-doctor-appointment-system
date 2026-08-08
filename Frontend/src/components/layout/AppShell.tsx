@@ -25,6 +25,27 @@ interface NavItem {
   requiresAuth?: boolean;
 }
 
+export function UserAvatar({ name, imageUrl, className }: { name?: string; imageUrl?: string; className?: string }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (imageUrl && !hasError) {
+    return (
+      <img
+        src={imageUrl}
+        alt={name || "User"}
+        onError={() => setHasError(true)}
+        className={cn("size-5 rounded-full object-cover shrink-0", className)}
+      />
+    );
+  }
+
+  return (
+    <span className={cn("size-5 rounded-full bg-primary/20 text-primary font-bold text-[10px] flex items-center justify-center shrink-0", className)}>
+      {getInitials(name || "User")}
+    </span>
+  );
+}
+
 const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home" },
   { to: "/doctors", label: "Find a doctor", roles: ["PATIENT"] },
@@ -133,17 +154,7 @@ export function AppHeader() {
               <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
-                  {user.profileImageUrl ? (
-                    <img
-                      src={user.profileImageUrl}
-                      alt={user.fullName}
-                      className="size-5 rounded-full object-cover"
-                    />
-                  ) : (
-                    <span className="size-5 rounded-full bg-primary/20 text-primary font-bold text-[10px] flex items-center justify-center">
-                      {getInitials(user.fullName)}
-                    </span>
-                  )}
+                  <UserAvatar name={user.fullName} imageUrl={user.profileImageUrl} className="size-5" />
                   <span className="hidden max-w-28 truncate sm:inline">{user.fullName}</span>
                 </Button>
               </DropdownMenuTrigger>
