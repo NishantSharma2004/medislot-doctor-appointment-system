@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope, Paperclip } from "lucide-react";
+import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope, Paperclip, Trash2, Pencil } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -163,6 +164,16 @@ export function AssistantPanel() {
     }
   }
 
+  function handleEditMessage(msgToEdit: AssistantMessage) {
+    setInput(msgToEdit.text);
+    const idx = messages.findIndex((m) => m.id === msgToEdit.id);
+    if (idx !== -1) {
+      setMessages((prev) => prev.slice(0, idx));
+    }
+    textareaRef.current?.focus();
+    toast.info("Message loaded for editing");
+  }
+
   return (
     <>
       {/* Draggable Circular Robot Launcher Button */}
@@ -223,7 +234,22 @@ export function AssistantPanel() {
               <p className="truncate text-xs text-muted-foreground">Smart clinic navigation & policies (Drag me)</p>
             </div>
 
-            <Move className="hidden sm:block size-4 text-muted-foreground opacity-60 hover:opacity-100 transition-opacity" aria-hidden="true" />
+            <div className="flex items-center gap-1">
+              {messages.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMessages([]);
+                    toast.success("Chat history cleared");
+                  }}
+                  className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                  title="Clear chat history"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              ) : null}
+              <Move className="hidden sm:block size-4 text-muted-foreground opacity-60 hover:opacity-100 transition-opacity" aria-hidden="true" />
+            </div>
           </header>
 
           <div className="flex items-start gap-2 border-b border-border/60 bg-amber-500/10 px-4 py-2 text-xs text-amber-900 dark:text-amber-300">
@@ -275,6 +301,20 @@ export function AssistantPanel() {
                   message.error && "border border-destructive/40 bg-destructive/5 text-destructive",
                 )}
               >
+                {message.role === "user" ? (
+                  <div className="flex items-center justify-between gap-2 mb-1 border-b border-primary-foreground/20 pb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">You</span>
+                    <button
+                      type="button"
+                      onClick={() => handleEditMessage(message)}
+                      className="flex items-center gap-1 text-[10px] opacity-75 hover:opacity-100 transition-opacity bg-black/20 hover:bg-black/30 px-1.5 py-0.5 rounded font-medium cursor-pointer"
+                      title="Edit message (Fix typing mistake)"
+                    >
+                      <Pencil className="size-2.5" /> Edit
+                    </button>
+                  </div>
+                ) : null}
+
                 {message.attachedFileName ? (
                   <div className="mb-1 text-[10px] font-semibold text-emerald-300 dark:text-emerald-400 flex items-center gap-1">
                     <FileText className="size-3" /> Attached: {message.attachedFileName}

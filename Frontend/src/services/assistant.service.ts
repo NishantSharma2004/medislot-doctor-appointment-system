@@ -674,12 +674,47 @@ const mockAssistantService: AssistantService = {
       });
     }
 
-    // Default Smart Dynamic Conversational Response
+    // Check if query is about medical symptoms / doctor matching
+    const isMedicalQuery =
+      text.includes("symptom") ||
+      text.includes("pain") ||
+      text.includes("fever") ||
+      text.includes("cough") ||
+      text.includes("headache") ||
+      text.includes("chest") ||
+      text.includes("heart") ||
+      text.includes("eye") ||
+      text.includes("skin") ||
+      text.includes("acne") ||
+      text.includes("bone") ||
+      text.includes("joint") ||
+      text.includes("back") ||
+      text.includes("doctor") ||
+      text.includes("specialist") ||
+      text.includes("consult") ||
+      text.includes("disease") ||
+      text.includes("sick") ||
+      text.includes("illness") ||
+      text.includes("treatment");
+
+    if (!isMedicalQuery) {
+      return delay({
+        answer:
+          `ℹ️ **MediSlot Portal Information**:\n\n` +
+          `To search for doctors, book appointments, or view clinic information, you can use the **Find a Doctor** tab or search filters by specialization and city.\n\n` +
+          `If you are experiencing any health symptoms or need medical guidance, please describe your symptom (e.g. *'I have a headache'* or *'chest pain'*) and I will recommend the appropriate specialist.`,
+        sources: [{ title: "MediSlot Help & Navigation Guide", section: "Portal Services", evidenceStrength: "STRONG" }],
+        sufficientEvidence: true,
+        disclaimer: ASSISTANT_DISCLAIMER,
+      });
+    }
+
+    // Default Smart Dynamic Conversational Response for General Health Query
     return delay({
       answer:
         `💬 **Medi AI Health Assistant Response**:\n\n` +
-        `Aapne poocha: "${message}"\n\n` +
-        "Main aapki query ke basis par hamare Senior **General Physician (Dr. Rajesh Sharma)** ko consult karne ki recommendation deta hoon. Voh aapki complete medical history lekar correct clinical evaluation karenge.",
+        `Regarding your query: "${message}"\n\n` +
+        "Based on your query, we recommend consulting our **General Physician (Dr. Rajesh Sharma)** for a primary clinical evaluation.",
       sources: [{ title: "General Clinical Care Guidelines", section: "Primary Patient Consultation", evidenceStrength: "MODERATE" }],
       sufficientEvidence: true,
       disclaimer: ASSISTANT_DISCLAIMER,
@@ -690,7 +725,7 @@ const mockAssistantService: AssistantService = {
         qualifications: "MBBS, MD (General Medicine)",
         consultationFee: 500,
         triageLevel: "ROUTINE",
-        reason: "General Consultation for your health query.",
+        reason: "General Consultation for primary care.",
       },
     });
   },
@@ -817,16 +852,6 @@ const httpAssistantService: AssistantService = {
           consultationFee: 1200,
           triageLevel: "URGENT",
           reason: "Cardiac & Chest discomfort evaluation.",
-        };
-      } else {
-        reply.doctorMatch = {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician & Primary Care",
-          qualifications: "MBBS, MD",
-          consultationFee: 500,
-          triageLevel: "ROUTINE",
-          reason: "General Consultation for your health query.",
         };
       }
     }
