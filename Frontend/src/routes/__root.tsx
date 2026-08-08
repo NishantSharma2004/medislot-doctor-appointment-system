@@ -132,6 +132,8 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { Suspense } from "react";
+import { FullPageLoader } from "@/components/common/Loading";
 import { TelemetryErrorBoundary } from "@/lib/observability/telemetry";
 
 function RootComponent() {
@@ -150,8 +152,10 @@ function RootComponent() {
           <AppHeader />
           <main id="main-content" className="flex-1">
             <TelemetryErrorBoundary>
-              {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-              <Outlet />
+              {/* Required: nested routes render here with Suspense boundary for code splitting */}
+              <Suspense fallback={<FullPageLoader message="Loading page..." />}>
+                <Outlet />
+              </Suspense>
             </TelemetryErrorBoundary>
           </main>
           <AppFooter />

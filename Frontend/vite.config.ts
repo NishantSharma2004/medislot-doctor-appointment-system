@@ -17,5 +17,24 @@ export default defineConfig({
       port: 5173,
       strictPort: false,
     },
+    build: {
+      target: "esnext",
+      cssCodeSplit: true,
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes("node_modules")) {
+              if (id.includes("recharts")) return "vendor-charts";
+              if (id.includes("pdfmake")) return "vendor-pdf";
+              if (id.includes("lucide-react")) return "vendor-icons";
+              if (id.includes("@tanstack")) return "vendor-tanstack";
+              if (id.includes("react")) return "vendor-react";
+              return "vendor-core";
+            }
+          },
+        },
+      },
+    },
   },
 });
