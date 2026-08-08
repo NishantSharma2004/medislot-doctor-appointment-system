@@ -16,4 +16,6 @@ public interface AiProviderUsageLogRepository extends JpaRepository<AiProviderUs
               AND l.createdAt >= :since
             """)
     long countByUserIdSince(@Param("userId") UUID userId, @Param("since") Instant since);
+
+    int deleteByCreatedAtBefore(Instant cutoff);
 }
