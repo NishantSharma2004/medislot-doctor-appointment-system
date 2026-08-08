@@ -33,6 +33,7 @@ import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { vitalsService } from "@/services/vitals.service";
+import { formatDoctorDisplayName } from "@/lib/utils";
 import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, HealthVitalDto, PrescriptionMedicine } from "@/lib/api/types";
@@ -249,7 +250,7 @@ function DoctorDeskPage() {
 
   return (
     <PageShell
-      title={`Dr. ${user?.fullName ?? "Doctor"}'s Desk`}
+      title={`${formatDoctorDisplayName(user?.fullName)}'s Desk`}
       description="Personalized Doctor Workspace — Manage patient consultations, inspect health profiles, and issue digital prescriptions."
     >
       <div className="space-y-6">
@@ -279,7 +280,7 @@ function DoctorDeskPage() {
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                  Dr. {user?.fullName || "Doctor"}
+                  {formatDoctorDisplayName(user?.fullName)}
                 </h1>
 
                 <p className="text-xs sm:text-sm text-emerald-100/80 font-medium flex flex-wrap items-center gap-x-3 gap-y-1">

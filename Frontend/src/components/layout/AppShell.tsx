@@ -72,7 +72,7 @@ export function AppHeader() {
       {/* Demo Sandbox Quick Switch Bar */}
       {user?.email === "patient@medislot.test" ? (
         <div className="bg-emerald-600 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
-          <span>🧪 Demo Sandbox Active: Logged in as Demo Patient (Riya Sharma). Bookings route directly to Dr. Rakesh Dakar.</span>
+          <span>🧪 Demo Sandbox Active: Logged in as Demo Patient (Riya Sharma). Bookings route directly to Dr. Rajesh Sharma.</span>
           <button
             type="button"
             onClick={async () => {
@@ -88,7 +88,7 @@ export function AppHeader() {
 
       {user?.email === "doctor@medislot.test" ? (
         <div className="bg-teal-700 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
-          <span>🧪 Demo Sandbox Active: Logged in as Demo Doctor (Dr. Rakesh Dakar). Inspect lab reports & issue prescriptions.</span>
+          <span>🧪 Demo Sandbox Active: Logged in as Demo Doctor (Dr. Rajesh Sharma). Inspect lab reports & issue prescriptions.</span>
           <button
             type="button"
             onClick={async () => {
