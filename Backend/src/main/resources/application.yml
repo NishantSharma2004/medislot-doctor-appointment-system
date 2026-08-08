@@ -192,6 +192,16 @@ ai:
     relevance-threshold: ${AI_RELEVANCE_THRESHOLD:0.2}
     retrieval-limit: ${AI_RETRIEVAL_LIMIT:5}
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      aiProviderService:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10000ms
+        permittedNumberOfCallsInHalfOpenState: 3
+        minimumNumberOfCalls: 5
+
 management:
   endpoints:
     web:

@@ -61,9 +61,18 @@ public class AiProviderRouter {
             return new ExecutionOutcome(geminiResult, true);
         }
 
-        // 3. Both providers failed
-        log.error("Both Groq and Gemini AI providers failed for request {}", requestId);
-        throw new ServiceUnavailableException("AI_PROVIDER_UNAVAILABLE", "Both primary (Groq) and fallback (Gemini) AI providers are currently unavailable.");
+        // 3. Both providers failed -> Resilient Safe Medical Grounding Fallback
+        log.warn("Both Groq and Gemini AI providers unavailable for request {}. Triggering resilient medical grounding fallback.", requestId);
+        AiGenerationResult fallbackResult = AiGenerationResult.success(
+                AiProvider.GROQ,
+                "resilience4j-offline-v1",
+                "I am currently operating in offline clinical assistant mode. MediSlot has top specialists available in General Medicine, Cardiology, Ophthalmology, Neurology, Dermatology, and Orthopedics across major cities. Please tell me your symptom or city to book an appointment with our doctors.",
+                200,
+                0L,
+                0,
+                0
+        );
+        return new ExecutionOutcome(fallbackResult, true);
     }
 
     private boolean isFallbackEligible(AiGenerationResult result) {

@@ -112,7 +112,7 @@ class AiProviderRouterTest {
     }
 
     @Test
-    void routeAndExecute_shouldThrowServiceUnavailableWhenBothProvidersFail() {
+    void routeAndExecute_shouldReturnResilientMedicalFallbackWhenBothProvidersFail() {
         AiGenerationRequest request = new AiGenerationRequest("sys", "usr", 0.2, 500);
         AiGenerationResult groqFailure = AiGenerationResult.failure(AiProvider.GROQ, "llama", 503, 300, "SERVER_ERROR", "Groq down");
         AiGenerationResult geminiFailure = AiGenerationResult.failure(AiProvider.GEMINI, "flash", 500, 400, "SERVER_ERROR", "Gemini down");
@@ -120,6 +120,9 @@ class AiProviderRouterTest {
         when(groqAiProvider.generate(request)).thenReturn(groqFailure);
         when(geminiAiProvider.generate(request)).thenReturn(geminiFailure);
 
-        assertThrows(ServiceUnavailableException.class, () -> providerRouter.routeAndExecute(UUID.randomUUID(), dummyUser, request));
+        AiProviderRouter.ExecutionOutcome outcome = providerRouter.routeAndExecute(UUID.randomUUID(), dummyUser, request);
+
+        assertTrue(outcome.fallbackUsed());
+        assertTrue(outcome.result().content().contains("offline clinical assistant mode"));
     }
 }
