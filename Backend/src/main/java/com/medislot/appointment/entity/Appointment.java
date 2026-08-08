@@ -2,10 +2,12 @@ package com.medislot.appointment.entity;
 
 import com.medislot.common.entity.AuditableEntity;
 import com.medislot.common.enums.AppointmentStatus;
+import com.medislot.common.security.AesMedicalDataConverter;
 import com.medislot.availability.entity.AvailabilitySlot;
 import com.medislot.doctor.entity.DoctorProfile;
 import com.medislot.user.entity.User;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -55,6 +57,7 @@ public class Appointment extends AuditableEntity {
     @Column(name = "reason", columnDefinition = "TEXT")
     private String reason;
 
+    @Convert(converter = AesMedicalDataConverter.class)
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;
 
@@ -64,12 +67,15 @@ public class Appointment extends AuditableEntity {
     @Column(name = "medical_document_name")
     private String medicalDocumentName;
 
+    @Convert(converter = AesMedicalDataConverter.class)
     @Column(name = "diagnosis", columnDefinition = "TEXT")
     private String diagnosis;
 
+    @Convert(converter = AesMedicalDataConverter.class)
     @Column(name = "prescription_json", columnDefinition = "TEXT")
     private String prescriptionJson;
 
+    @Convert(converter = AesMedicalDataConverter.class)
     @Column(name = "lab_tests", columnDefinition = "TEXT")
     private String labTests;
 
