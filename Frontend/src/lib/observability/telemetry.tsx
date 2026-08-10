@@ -118,7 +118,7 @@ class TelemetryCollector {
                 keepalive: true,
                 headers: {
                   "Content-Type": "application/json",
-                  ...(apiKey ? { authorization: apiKey } : {}),
+                  ...(!isLocal && apiKey ? { authorization: apiKey } : {}),
                 },
                 body: payload,
               }).catch(() => {});
