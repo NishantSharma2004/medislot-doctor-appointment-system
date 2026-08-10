@@ -88,13 +88,20 @@ class TelemetryCollector {
             const payload = JSON.stringify({
               resourceLogs: [
                 {
-                  resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
+                  resource: {
+                    attributes: [
+                      { key: "service.name", value: { stringValue: "medislot-frontend" } },
+                      { key: "deployment.environment", value: { stringValue: import.meta.env.MODE || "production" } },
+                    ],
+                  },
                   scopeLogs: [
                     {
+                      scope: { name: "medislot-telemetry-collector" },
                       logRecords: [
                         {
                           timeUnixNano: (Date.now() * 1000000).toString(),
-                          severityText: params.type,
+                          severityNumber: 17,
+                          severityText: params.type === "API_FAILURE" ? "ERROR" : params.type,
                           body: { stringValue: event.message },
                           attributes: [
                             { key: "event.id", value: { stringValue: event.id } },
