@@ -51,10 +51,25 @@ function LoginPage() {
     setError(null);
     try {
       const response = await login(values);
+      const role = response.user.role;
+
+      // Enforce strict tab role validation (prevent Patient logging in via Doctor tab)
+      if (roleTab && role !== roleTab && (role === "PATIENT" || role === "DOCTOR")) {
+        const expectedRoleName = roleTab === "DOCTOR" ? "Doctor" : "Patient";
+        const actualRoleName = role === "DOCTOR" ? "Doctor" : "Patient";
+        const roleErrorMessage = `Account Role Mismatch: This account is registered as a ${actualRoleName}, but you selected ${expectedRoleName} Sign In tab.`;
+
+        setError({
+          status: 400,
+          message: roleErrorMessage,
+        });
+        toast.error(`Please select the ${actualRoleName} Sign In tab`);
+        return;
+      }
+
       toast.success(`Welcome back, ${response.user.fullName}`);
 
       let targetRedirect = search.redirect;
-      const role = response.user.role;
 
       // Prevent redirecting to unauthorized role pages when switching roles
       if (role === "PATIENT" && targetRedirect && (targetRedirect.startsWith("/doctor") || targetRedirect.startsWith("/admin"))) {
