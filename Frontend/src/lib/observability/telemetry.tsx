@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from "react";
+import HyperDX from "@hyperdx/browser";
 
 export interface TelemetryEvent {
   id: string;
@@ -20,6 +21,21 @@ class TelemetryCollector {
   public init() {
     if (this.isInitialized || typeof window === "undefined") return;
     this.isInitialized = true;
+
+    // Initialize official HyperDX Browser SDK for session replays and network capture
+    const apiKey = (import.meta as any).env?.VITE_HYPERDX_API_KEY;
+    if (apiKey) {
+      try {
+        HyperDX.init({
+          apiKey,
+          service: "medislot-frontend",
+          consoleCapture: true,
+          advancedNetworkCapture: true,
+        });
+      } catch {
+        // Fallback
+      }
+    }
 
     // Listen for unhandled JS errors
     window.addEventListener("error", (event) => {
