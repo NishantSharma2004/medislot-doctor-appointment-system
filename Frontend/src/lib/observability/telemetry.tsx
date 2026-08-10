@@ -86,32 +86,33 @@ class TelemetryCollector {
                 "Content-Type": "application/json",
                 ...(apiKey ? { authorization: apiKey } : {}),
               },
-            body: JSON.stringify({
-              resourceLogs: [
-                {
-                  resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
-                  scopeLogs: [
-                    {
-                      logRecords: [
-                        {
-                          timeUnixNano: (Date.now() * 1000000).toString(),
-                          severityText: params.type,
-                          body: { stringValue: event.message },
-                          attributes: [
-                            { key: "event.id", value: { stringValue: event.id } },
-                            { key: "http.status", value: { intValue: event.status || 500 } },
-                            { key: "url", value: { stringValue: event.url || "" } },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            }),
-          }).catch(() => {});
-        } catch {
-          // Silent fallback if collector container is offline
+              body: JSON.stringify({
+                resourceLogs: [
+                  {
+                    resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
+                    scopeLogs: [
+                      {
+                        logRecords: [
+                          {
+                            timeUnixNano: (Date.now() * 1000000).toString(),
+                            severityText: params.type,
+                            body: { stringValue: event.message },
+                            attributes: [
+                              { key: "event.id", value: { stringValue: event.id } },
+                              { key: "http.status", value: { intValue: event.status || 500 } },
+                              { key: "url", value: { stringValue: event.url || "" } },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              }),
+            }).catch(() => {});
+          } catch {
+            // Silent fallback if collector container is offline
+          }
         }
       }
     } else {
