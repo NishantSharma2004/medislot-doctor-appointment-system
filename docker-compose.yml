@@ -49,7 +49,10 @@ services:
     container_name: medislot-hyperdx-observability
     restart: unless-stopped
     ports:
-      - "8000:8000" # HyperDX Web UI Dashboard
+      - "9000:80"   # HyperDX Web UI Dashboard
+      - "9001:8080" # Alternative UI port
+      - "9002:3000" # Frontend UI port
+      - "8000:8000" # API Collector
       - "4318:4318" # OTLP HTTP Telemetry Ingestion Collector
 
 volumes:
