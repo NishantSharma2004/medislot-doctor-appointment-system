@@ -88,8 +88,12 @@ function DashboardPage() {
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       navigate({ to: "/login", search: { redirect: "/dashboard" } });
+    } else if (!authLoading && user?.role === "DOCTOR") {
+      navigate({ to: "/doctor", replace: true });
+    } else if (!authLoading && user?.role === "ADMIN") {
+      navigate({ to: "/admin", replace: true });
     }
-  }, [authLoading, isAuthenticated, navigate]);
+  }, [authLoading, isAuthenticated, user?.role, navigate]);
 
   const loadAppointments = async () => {
     setIsLoading(true);

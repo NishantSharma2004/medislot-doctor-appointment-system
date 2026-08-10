@@ -49,7 +49,7 @@ export function UserAvatar({ name, imageUrl, className }: { name?: string; image
 const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home" },
   { to: "/doctors", label: "Find a doctor", roles: ["PATIENT"] },
-  { to: "/health-risk-calculator", label: "🤖 AI Risk Calculator" },
+  { to: "/health-risk-calculator", label: "🤖 AI Risk Calculator", roles: ["PATIENT"] },
   { to: "/dashboard", label: "Dashboard", roles: ["PATIENT"], requiresAuth: true },
   { to: "/appointments", label: "Appointments", roles: ["PATIENT"], requiresAuth: true },
   { to: "/doctor", label: "Doctor desk", roles: ["DOCTOR"], requiresAuth: true },
