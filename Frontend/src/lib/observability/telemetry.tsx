@@ -71,12 +71,21 @@ class TelemetryCollector {
     if (params.type === "ERROR" || params.type === "API_FAILURE") {
       console.error(`[TELEMETRY_${params.type}]`, event.message, event);
 
-      // Export OTLP event to HyperDX ClickStack Collector when running in local environment
-      if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
-        try {
-          fetch("http://localhost:4318/v1/logs", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+      // Export OTLP event to HyperDX ClickStack Collector (Cloud or Local)
+      if (typeof window !== "undefined") {
+        const cloudEndpoint = (import.meta as any).env?.VITE_HYPERDX_ENDPOINT;
+        const apiKey = (import.meta as any).env?.VITE_HYPERDX_API_KEY;
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        const endpoint = cloudEndpoint || (isLocal ? "http://localhost:4318/v1/logs" : null);
+
+        if (endpoint) {
+          try {
+            fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...(apiKey ? { authorization: apiKey } : {}),
+              },
             body: JSON.stringify({
               resourceLogs: [
                 {
