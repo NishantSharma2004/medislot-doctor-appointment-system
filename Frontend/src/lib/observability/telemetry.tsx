@@ -83,36 +83,46 @@ class TelemetryCollector {
 
         if (endpoint) {
           try {
-            fetch(endpoint, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                ...(apiKey ? { authorization: apiKey } : {}),
-              },
-              body: JSON.stringify({
-                resourceLogs: [
-                  {
-                    resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
-                    scopeLogs: [
-                      {
-                        logRecords: [
-                          {
-                            timeUnixNano: (Date.now() * 1000000).toString(),
-                            severityText: params.type,
-                            body: { stringValue: event.message },
-                            attributes: [
-                              { key: "event.id", value: { stringValue: event.id } },
-                              { key: "http.status", value: { intValue: event.status || 500 } },
-                              { key: "url", value: { stringValue: event.url || "" } },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              }),
-            }).catch(() => {});
+            const payload = JSON.stringify({
+              resourceLogs: [
+                {
+                  resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
+                  scopeLogs: [
+                    {
+                      logRecords: [
+                        {
+                          timeUnixNano: (Date.now() * 1000000).toString(),
+                          severityText: params.type,
+                          body: { stringValue: event.message },
+                          attributes: [
+                            { key: "event.id", value: { stringValue: event.id } },
+                            { key: "http.status", value: { intValue: event.status || 500 } },
+                            { key: "url", value: { stringValue: event.url || "" } },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            });
+
+            // Use sendBeacon or no-cors fetch to bypass browser CORS preflight restrictions
+            if (!isLocal && typeof navigator !== "undefined" && navigator.sendBeacon) {
+              const blob = new Blob([payload], { type: "text/plain" });
+              navigator.sendBeacon(endpoint + (apiKey ? `?authorization=${encodeURIComponent(apiKey)}` : ""), blob);
+            } else {
+              fetch(endpoint, {
+                method: "POST",
+                mode: isLocal ? "cors" : "no-cors",
+                keepalive: true,
+                headers: {
+                  "Content-Type": "text/plain",
+                  ...(apiKey ? { authorization: apiKey } : {}),
+                },
+                body: payload,
+              }).catch(() => {});
+            }
           } catch {
             // Silent fallback if collector container is offline
           }
