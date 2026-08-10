@@ -71,8 +71,8 @@ class TelemetryCollector {
     if (params.type === "ERROR" || params.type === "API_FAILURE") {
       console.error(`[TELEMETRY_${params.type}]`, event.message, event);
 
-      // Asynchronously export OpenTelemetry (OTLP) event to HyperDX ClickStack Collector
-      if (typeof window !== "undefined") {
+      // Export OTLP event to HyperDX ClickStack Collector when running in local environment
+      if (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) {
         try {
           fetch("http://localhost:4318/v1/logs", {
             method: "POST",
