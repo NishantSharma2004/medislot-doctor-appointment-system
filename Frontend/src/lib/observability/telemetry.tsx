@@ -109,7 +109,7 @@ class TelemetryCollector {
 
             // Use sendBeacon or no-cors fetch to bypass browser CORS preflight restrictions
             if (!isLocal && typeof navigator !== "undefined" && navigator.sendBeacon) {
-              const blob = new Blob([payload], { type: "text/plain" });
+              const blob = new Blob([payload], { type: "application/json" });
               navigator.sendBeacon(endpoint + (apiKey ? `?authorization=${encodeURIComponent(apiKey)}` : ""), blob);
             } else {
               fetch(endpoint, {
@@ -117,7 +117,7 @@ class TelemetryCollector {
                 mode: isLocal ? "cors" : "no-cors",
                 keepalive: true,
                 headers: {
-                  "Content-Type": "text/plain",
+                  "Content-Type": "application/json",
                   ...(apiKey ? { authorization: apiKey } : {}),
                 },
                 body: payload,
