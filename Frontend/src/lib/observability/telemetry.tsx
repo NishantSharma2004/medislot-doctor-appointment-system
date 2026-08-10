@@ -70,6 +70,41 @@ class TelemetryCollector {
 
     if (params.type === "ERROR" || params.type === "API_FAILURE") {
       console.error(`[TELEMETRY_${params.type}]`, event.message, event);
+
+      // Asynchronously export OpenTelemetry (OTLP) event to HyperDX ClickStack Collector
+      if (typeof window !== "undefined") {
+        try {
+          fetch("http://localhost:4318/v1/logs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              resourceLogs: [
+                {
+                  resource: { attributes: [{ key: "service.name", value: { stringValue: "medislot-frontend" } }] },
+                  scopeLogs: [
+                    {
+                      logRecords: [
+                        {
+                          timeUnixNano: (Date.now() * 1000000).toString(),
+                          severityText: params.type,
+                          body: { stringValue: event.message },
+                          attributes: [
+                            { key: "event.id", value: { stringValue: event.id } },
+                            { key: "http.status", value: { intValue: event.status || 500 } },
+                            { key: "url", value: { stringValue: event.url || "" } },
+                          ],
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            }),
+          }).catch(() => {});
+        } catch {
+          // Silent fallback if collector container is offline
+        }
+      }
     } else {
       console.log(`[TELEMETRY_${params.type}]`, event.message, event);
     }

@@ -44,5 +44,13 @@ services:
       timeout: 5s
       retries: 3
 
+  hyperdx-observability:
+    image: docker.hyperdx.io/hyperdx/hyperdx-all-in-one:latest
+    container_name: medislot-hyperdx-observability
+    restart: unless-stopped
+    ports:
+      - "8000:8000" # HyperDX Web UI Dashboard
+      - "4318:4318" # OTLP HTTP Telemetry Ingestion Collector
+
 volumes:
   postgres_data:
