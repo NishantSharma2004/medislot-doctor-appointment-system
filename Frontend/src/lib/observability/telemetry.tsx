@@ -76,7 +76,10 @@ class TelemetryCollector {
         const cloudEndpoint = (import.meta as any).env?.VITE_HYPERDX_ENDPOINT;
         const apiKey = (import.meta as any).env?.VITE_HYPERDX_API_KEY;
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-        const endpoint = cloudEndpoint || (isLocal ? "http://localhost:4318/v1/logs" : null);
+        let endpoint = cloudEndpoint || (isLocal ? "http://localhost:4318/v1/logs" : null);
+        if (endpoint && endpoint.includes("in-otlp.hyperdx.io")) {
+          endpoint = endpoint.replace("in-otlp.hyperdx.io", "in.hyperdx.io");
+        }
 
         if (endpoint) {
           try {
