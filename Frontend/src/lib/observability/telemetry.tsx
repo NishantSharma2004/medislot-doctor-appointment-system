@@ -81,6 +81,8 @@ class TelemetryCollector {
           endpoint = endpoint.replace("in-otlp.hyperdx.io", "in.hyperdx.io");
         }
 
+        const isLocalEndpoint = endpoint ? (endpoint.includes("localhost") || endpoint.includes("127.0.0.1")) : false;
+
         if (endpoint) {
           try {
             const payload = JSON.stringify({
@@ -107,18 +109,18 @@ class TelemetryCollector {
               ],
             });
 
-            // Use sendBeacon or no-cors fetch to bypass browser CORS preflight restrictions
-            if (!isLocal && typeof navigator !== "undefined" && navigator.sendBeacon) {
+            // Use sendBeacon or no-cors fetch for cloud endpoints to bypass browser CORS preflight restrictions
+            if (!isLocalEndpoint && typeof navigator !== "undefined" && navigator.sendBeacon) {
               const blob = new Blob([payload], { type: "application/json" });
               navigator.sendBeacon(endpoint + (apiKey ? `?authorization=${encodeURIComponent(apiKey)}` : ""), blob);
             } else {
               fetch(endpoint, {
                 method: "POST",
-                mode: isLocal ? "cors" : "no-cors",
+                mode: isLocalEndpoint ? "cors" : "no-cors",
                 keepalive: true,
                 headers: {
                   "Content-Type": "application/json",
-                  ...(!isLocal && apiKey ? { authorization: apiKey } : {}),
+                  ...(!isLocalEndpoint && apiKey ? { authorization: apiKey } : {}),
                 },
                 body: payload,
               }).catch(() => {});
