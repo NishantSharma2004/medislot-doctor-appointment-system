@@ -109,9 +109,9 @@ class TelemetryCollector {
               ],
             });
 
-            // Use sendBeacon or no-cors fetch for cloud endpoints to bypass browser CORS preflight restrictions
+            // Use sendBeacon with text/plain type for cloud endpoints to guarantee 100% CORS-free background transmission
             if (!isLocalEndpoint && typeof navigator !== "undefined" && navigator.sendBeacon) {
-              const blob = new Blob([payload], { type: "application/json" });
+              const blob = new Blob([payload], { type: "text/plain" });
               navigator.sendBeacon(endpoint + (apiKey ? `?authorization=${encodeURIComponent(apiKey)}` : ""), blob);
             } else {
               fetch(endpoint, {
@@ -119,7 +119,7 @@ class TelemetryCollector {
                 mode: isLocalEndpoint ? "cors" : "no-cors",
                 keepalive: true,
                 headers: {
-                  "Content-Type": "application/json",
+                  "Content-Type": isLocalEndpoint ? "application/json" : "text/plain",
                   ...(!isLocalEndpoint && apiKey ? { authorization: apiKey } : {}),
                 },
                 body: payload,
