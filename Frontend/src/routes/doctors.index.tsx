@@ -1,7 +1,7 @@
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { SearchX, SlidersHorizontal } from "lucide-react";
-import { useState } from "react";
+import { SearchX, SlidersHorizontal, Zap, Sparkles } from "lucide-react";
+import { useState, useMemo } from "react";
 import { DoctorCardSkeletonGrid } from "@/components/common/Loading";
 import { EmptyState, ErrorState } from "@/components/common/ErrorState";
 import { PaginationControls } from "@/components/common/PaginationControls";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -22,6 +23,8 @@ import { isUpcomingSlot } from "@/components/common/format";
 import type { ApiError } from "@/lib/api/types";
 import { mockSpecializations } from "@/lib/api/mock-data";
 import { doctorService } from "@/services/doctor.service";
+import { DoctorSearchTrie } from "@/lib/dsa/DoctorSearchTrie";
+import { InvertedIndexEngine } from "@/lib/dsa/InvertedIndexSearch";
 
 const PAGE_SIZE = 6;
 const ANY = "ANY";
@@ -101,6 +104,28 @@ function DoctorSearchPage() {
   const result = doctorsQuery.data;
   const error = doctorsQuery.error as ApiError | null;
 
+  // --- DSA Step 1: Initialize Trie & Inverted Index Engine ---
+  const trieEngine = useMemo(() => {
+    const trie = new DoctorSearchTrie();
+    if (result?.content) {
+      trie.buildTrieFromDoctors(result.content);
+    }
+    return trie;
+  }, [result?.content]);
+
+  const invertedIndexEngine = useMemo(() => {
+    const engine = new InvertedIndexEngine();
+    if (result?.content) {
+      engine.buildIndexes(result.content);
+    }
+    return engine;
+  }, [result?.content]);
+
+  // --- DSA Step 2: Instant O(K) Trie Prefix Execution ---
+  const trieResult = useMemo(() => {
+    return trieEngine.searchPrefix(queryInput);
+  }, [trieEngine, queryInput]);
+
   const doctorIds = (result?.content ?? []).map((d) => d.id);
   const slotsQueries = useQueries({
     queries: doctorIds.map((id) => ({
@@ -151,24 +176,67 @@ function DoctorSearchPage() {
           </div>
 
           <form
-            className="space-y-1.5"
+            className="space-y-1.5 relative"
             onSubmit={(event) => {
               event.preventDefault();
               updateSearch({ query: queryInput.trim() || undefined });
             }}
           >
-            <Label htmlFor="doctor-query">Search by name or clinic</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="doctor-query">Search by name or clinic</Label>
+              {queryInput.trim().length > 0 ? (
+                <Badge variant="outline" className="text-[10px] font-mono bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30 gap-1 px-1.5 py-0">
+                  <Zap className="size-3 text-amber-500 fill-amber-500" /> Trie: {trieResult.searchTimeMs} ms
+                </Badge>
+              ) : null}
+            </div>
+
             <div className="flex gap-2">
               <Input
                 id="doctor-query"
                 value={queryInput}
                 onChange={(event) => setQueryInput(event.target.value)}
-                placeholder="e.g. Ananya"
+                placeholder="e.g. Ananya, Delhi, General"
               />
               <Button type="submit" variant="secondary">
                 Go
               </Button>
             </div>
+
+            {/* --- Live Trie Autocomplete Dropdown --- */}
+            {queryInput.trim().length > 0 && trieResult.matchedCount > 0 ? (
+              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-card border rounded-xl shadow-lg p-2 space-y-1 backdrop-blur-md">
+                <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground px-2 pb-1 border-b">
+                  <span className="flex items-center gap-1">
+                    <Sparkles className="size-3 text-teal-500" /> Trie Prefix Suggestions ({trieResult.matchedCount})
+                  </span>
+                  <span className="font-mono text-[10px] text-teal-600 dark:text-teal-400">O(K) Complexity</span>
+                </div>
+                <div className="max-h-40 overflow-y-auto space-y-1 pt-1">
+                  {(result?.content ?? [])
+                    .filter((d) => trieResult.matchingDoctorIds.includes(d.id))
+                    .slice(0, 4)
+                    .map((doctor) => (
+                      <button
+                        key={doctor.id}
+                        type="button"
+                        className="w-full text-left px-2 py-1.5 rounded-md hover:bg-teal-500/10 transition-colors flex items-center justify-between text-xs group"
+                        onClick={() => {
+                          setQueryInput(doctor.fullName);
+                          updateSearch({ query: doctor.fullName });
+                        }}
+                      >
+                        <span className="font-semibold text-foreground group-hover:text-teal-600 transition-colors">
+                          {doctor.fullName}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                          {doctor.specialization}
+                        </span>
+                      </button>
+                    ))}
+                </div>
+              </div>
+            ) : null}
           </form>
 
           <div className="space-y-1.5">
