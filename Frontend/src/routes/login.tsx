@@ -72,11 +72,19 @@ function LoginPage() {
 
       let targetRedirect = search.redirect;
 
-      // Prevent redirecting to unauthorized role pages when switching roles
-      if (role === "PATIENT" && targetRedirect && (targetRedirect.startsWith("/doctor") || targetRedirect.startsWith("/admin"))) {
-        targetRedirect = undefined;
-      } else if (role === "DOCTOR" && targetRedirect && (targetRedirect.startsWith("/admin") || targetRedirect.startsWith("/dashboard"))) {
-        targetRedirect = undefined;
+      // Strict role-based target redirect sanitizer
+      if (role === "PATIENT") {
+        if (targetRedirect && (targetRedirect.startsWith("/doctor") || targetRedirect.startsWith("/admin"))) {
+          targetRedirect = undefined;
+        }
+      } else if (role === "DOCTOR") {
+        if (!targetRedirect || !targetRedirect.startsWith("/doctor")) {
+          targetRedirect = undefined;
+        }
+      } else if (role === "ADMIN") {
+        if (!targetRedirect || !targetRedirect.startsWith("/admin")) {
+          targetRedirect = undefined;
+        }
       }
 
       navigate({ to: targetRedirect ?? homeRouteForRole(role), replace: true });
