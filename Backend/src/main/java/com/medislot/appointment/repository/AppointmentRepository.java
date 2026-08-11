@@ -131,10 +131,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             WHERE a.patient.id = :patientId
               AND a.doctor.userId = :doctorId
               AND a.status IN :statuses
-              AND (
-                a.slot.slotDate > CURRENT_DATE
-                OR (a.slot.slotDate = CURRENT_DATE AND a.slot.endTime > CURRENT_TIME)
-              )
+              AND a.slotEndAt > :now
             """)
     boolean existsByPatientIdAndDoctorUserIdAndStatusIn(
             @Param("patientId") UUID patientId,
@@ -145,16 +142,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     @Modifying
     @Transactional
-    @Query("""
-            UPDATE Appointment a
-            SET a.status = com.medislot.common.enums.AppointmentStatus.EXPIRED
-            WHERE a.status = com.medislot.common.enums.AppointmentStatus.PENDING
-              AND (
-                a.slot.slotDate < CURRENT_DATE
-                OR (a.slot.slotDate = CURRENT_DATE AND a.slot.endTime <= CURRENT_TIME)
-              )
-            """)
-    int autoExpirePastPendingAppointments();
+    @Query("UPDATE Appointment a SET a.status = com.medislot.common.enums.AppointmentStatus.EXPIRED WHERE a.status = com.medislot.common.enums.AppointmentStatus.PENDING AND a.slotEndAt < :now")
+    int autoExpirePastPendingAppointments(@Param("now") Instant now);
 
     long countByStatus(AppointmentStatus status);
 

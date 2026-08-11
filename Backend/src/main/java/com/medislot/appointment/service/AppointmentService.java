@@ -110,7 +110,7 @@ public class AppointmentService {
 
         // Auto-expire any past pending appointments in DB so past/missed slots don't block new bookings
         try {
-            appointmentRepository.autoExpirePastPendingAppointments();
+            appointmentRepository.autoExpirePastPendingAppointments(Instant.now());
         } catch (Exception e) {
             log.warn("Failed to auto-expire past pending appointments: {}", e.getMessage());
         }
