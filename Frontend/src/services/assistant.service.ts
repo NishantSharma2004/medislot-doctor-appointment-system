@@ -731,6 +731,56 @@ const mockAssistantService: AssistantService = {
   },
 };
 
+async function resolveRealDoctorMatch(text: string, existingMatch?: import("@/lib/api/types").DoctorMatchInfo): Promise<import("@/lib/api/types").DoctorMatchInfo | undefined> {
+  try {
+    const { doctorService } = await import("./doctor.service");
+    const doctorsPage = await doctorService.searchDoctors({ size: 30 });
+    const realDoctors = doctorsPage?.content || [];
+    if (realDoctors.length === 0) return existingMatch;
+
+    let targetSpec = existingMatch?.specialization || "";
+    const lower = text.toLowerCase();
+    if (lower.includes("eye") || lower.includes("aankh") || lower.includes("vision") || lower.includes("cataract")) {
+      targetSpec = "Ophthalmology";
+    } else if (lower.includes("skin") || lower.includes("acne") || lower.includes("dermatology")) {
+      targetSpec = "Dermatology";
+    } else if (lower.includes("heart") || lower.includes("cardio") || lower.includes("bp") || lower.includes("chest")) {
+      targetSpec = "Cardiology";
+    } else if (lower.includes("child") || lower.includes("kid") || lower.includes("baby") || lower.includes("pediatric")) {
+      targetSpec = "Pediatrics";
+    } else if (lower.includes("bone") || lower.includes("joint") || lower.includes("back pain")) {
+      targetSpec = "Orthopaedics";
+    } else if (lower.includes("ear") || lower.includes("nose") || lower.includes("throat") || lower.includes("ent")) {
+      targetSpec = "ENT";
+    } else if (lower.includes("headache") || lower.includes("migraine") || lower.includes("brain") || lower.includes("nerve")) {
+      targetSpec = "Neurology";
+    }
+
+    let matchedDoc = realDoctors.find((d) =>
+      targetSpec && d.specialization?.toLowerCase().includes(targetSpec.toLowerCase())
+    );
+
+    if (!matchedDoc) {
+      matchedDoc = realDoctors[0];
+    }
+
+    if (matchedDoc) {
+      return {
+        doctorId: matchedDoc.id,
+        doctorName: matchedDoc.fullName,
+        specialization: matchedDoc.specialization || "General Medicine",
+        qualifications: matchedDoc.qualifications || "MBBS",
+        consultationFee: matchedDoc.consultationFee || 500,
+        triageLevel: existingMatch?.triageLevel || "ROUTINE",
+        reason: existingMatch?.reason || `Consultation recommended with ${matchedDoc.fullName}`,
+      };
+    }
+  } catch {
+    // Fallback safely
+  }
+  return existingMatch;
+}
+
 const httpAssistantService: AssistantService = {
   async chat(message, attachedFile) {
     let reply: AssistantReply;
@@ -740,7 +790,6 @@ const httpAssistantService: AssistantService = {
     } catch {
       // Fallback seamlessly to mockAssistantService if backend HTTP is unreachable
       reply = await mockAssistantService.chat(message, attachedFile);
-      return reply;
     }
 
     const text = message.toLowerCase();
@@ -853,6 +902,26 @@ const httpAssistantService: AssistantService = {
           triageLevel: "URGENT",
           reason: "Cardiac & Chest discomfort evaluation.",
         };
+      }
+    }
+
+    // Resolve doctor match to real database doctor with valid UUID
+    const realMatch = await resolveRealDoctorMatch(message, reply.doctorMatch);
+    if (realMatch) {
+      const oldDoctorName = reply.doctorMatch?.doctorName;
+      reply.doctorMatch = realMatch;
+
+      if (reply.answer) {
+        if (oldDoctorName) {
+          reply.answer = reply.answer.replaceAll(oldDoctorName, realMatch.doctorName);
+        }
+        reply.answer = reply.answer
+          .replaceAll("Dr. Alok Banerjee", realMatch.doctorName)
+          .replaceAll("Dr. Vikram Shetty", realMatch.doctorName)
+          .replaceAll("Dr. Rajesh Sharma", realMatch.doctorName)
+          .replaceAll("Dr. Kavita Verma", realMatch.doctorName)
+          .replaceAll("Dr. Meera Krishnan", realMatch.doctorName)
+          .replaceAll("Dr. Sneha Kulkarni", realMatch.doctorName);
       }
     }
 
