@@ -142,6 +142,16 @@ public class GlobalExceptionHandler {
                     null
             ));
         }
+        if (path != null && path.contains("/doctors/availability")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiErrorResponse(
+                    Instant.now(),
+                    HttpStatus.CONFLICT.value(),
+                    "SLOT_OVERLAP_CONFLICT",
+                    "Availability slots already exist or overlap in this time window.",
+                    path,
+                    null
+            ));
+        }
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),

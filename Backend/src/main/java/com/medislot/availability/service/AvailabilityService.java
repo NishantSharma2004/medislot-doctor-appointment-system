@@ -83,8 +83,7 @@ public class AvailabilityService {
                     doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt
             );
             if (!existingAvailableSlots.isEmpty()) {
-                slotRepository.deleteAll(existingAvailableSlots);
-                slotRepository.flush();
+                slotRepository.deleteAllInBatch(existingAvailableSlots);
             }
 
             List<AvailabilitySlot> createdSlots = new ArrayList<>();
