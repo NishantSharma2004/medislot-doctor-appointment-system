@@ -63,6 +63,13 @@ public class DoctorController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/cities")
+    @Operation(summary = "Get list of distinct active doctor cities")
+    public ResponseEntity<java.util.List<String>> getCities() {
+        java.util.List<String> cities = doctorService.getDistinctCities();
+        return ResponseEntity.ok(cities);
+    }
+
     @GetMapping("/{doctorId}")
     @RateLimited(policy = "doctor-details")
     @Operation(summary = "Get detailed profile of an active doctor by ID")

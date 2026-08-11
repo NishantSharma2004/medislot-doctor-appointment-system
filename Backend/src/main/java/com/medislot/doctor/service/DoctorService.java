@@ -70,6 +70,11 @@ public class DoctorService {
         return mapToDto(doctor);
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<String> getDistinctCities() {
+        return doctorProfileRepository.findDistinctActiveCities();
+    }
+
     @CacheEvict(value = {CacheConfig.CACHE_DOCTORS_SEARCH, CacheConfig.CACHE_DOCTOR_DETAILS}, allEntries = true)
     public void clearDoctorCache() {
         // Cache invalidated upon doctor profile updates
