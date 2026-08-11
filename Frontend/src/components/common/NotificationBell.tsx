@@ -85,7 +85,7 @@ export function NotificationBell() {
   });
 
   const handleMarkAsRead = async (id: string, targetUrl?: string) => {
-    await notificationService.markAsRead(id);
+    await notificationService.markAsRead(id, user?.id);
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
     if (targetUrl) {
       setIsOpen(false);

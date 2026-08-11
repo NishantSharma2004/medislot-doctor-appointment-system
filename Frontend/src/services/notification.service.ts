@@ -1,63 +1,44 @@
 import type { NotificationDto, NotificationType } from "@/lib/api/types";
 
-const STORAGE_KEY = "medislot_notifications_v1";
+const STORAGE_KEY_PREFIX = "medislot_notifications_v3_";
 
-const INITIAL_NOTIFICATIONS: NotificationDto[] = [
-  {
-    id: "notif-1",
-    title: "Appointment Confirmed! 🟢",
-    message: "Dr. Rajesh Sharma confirmed your consultation slot for tomorrow at 10:00 AM.",
-    type: "APPOINTMENT_CONFIRMED",
-    read: false,
-    createdAt: new Date(Date.now() - 1000 * 60 * 25).toISOString(), // 25 mins ago
-    targetUrl: "/appointments",
-  },
-  {
-    id: "notif-2",
-    title: "Digital Prescription Ready 📄",
-    message: "Dr. Vikram Shetty has issued a PDF prescription for your Cardiology consultation.",
-    type: "PRESCRIPTION_GENERATED",
-    read: false,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3).toISOString(), // 3 hours ago
-    targetUrl: "/dashboard",
-  },
-  {
-    id: "notif-3",
-    title: "Upcoming Appointment Reminder ⏰",
-    message: "You have an upcoming consultation with Dr. Sneha Kulkarni today at 4:30 PM.",
-    type: "APPOINTMENT_REMINDER",
-    read: true,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
-    targetUrl: "/appointments",
-  },
-  {
-    id: "notif-4",
-    title: "Welcome to MediSlot! 🎉",
-    message: "Your account is active. Use AI Assistant for 1-click doctor matching & report analysis.",
-    type: "SYSTEM",
-    read: true,
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
-  },
-];
+function getStorageKey(userId?: string): string {
+  return userId ? `${STORAGE_KEY_PREFIX}${userId}` : `${STORAGE_KEY_PREFIX}guest`;
+}
 
-function loadFromStorage(): NotificationDto[] {
-  if (typeof window === "undefined") return INITIAL_NOTIFICATIONS;
+function loadFromStorage(userId?: string): NotificationDto[] {
+  if (typeof window === "undefined" || !userId) return [];
+  const key = getStorageKey(userId);
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_NOTIFICATIONS));
-      return INITIAL_NOTIFICATIONS;
+      // Personalized clean welcome notification for new accounts
+      const welcomeNotification: NotificationDto[] = [
+        {
+          id: `notif-welcome-${userId}`,
+          userId,
+          title: "Welcome to MediSlot! 🎉",
+          message: "Your account is active. Find top doctors, view available slots, and book your consultation anytime.",
+          type: "SYSTEM",
+          read: false,
+          createdAt: new Date().toISOString(),
+          targetUrl: "/doctors",
+        },
+      ];
+      localStorage.setItem(key, JSON.stringify(welcomeNotification));
+      return welcomeNotification;
     }
     return JSON.parse(raw);
   } catch {
-    return INITIAL_NOTIFICATIONS;
+    return [];
   }
 }
 
-function saveToStorage(notifications: NotificationDto[]) {
-  if (typeof window === "undefined") return;
+function saveToStorage(userId: string | undefined, notifications: NotificationDto[]) {
+  if (typeof window === "undefined" || !userId) return;
+  const key = getStorageKey(userId);
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notifications));
+    localStorage.setItem(key, JSON.stringify(notifications));
   } catch {
     // Ignore storage errors
   }
@@ -66,25 +47,21 @@ function saveToStorage(notifications: NotificationDto[]) {
 export const notificationService = {
   async getNotifications(userId?: string): Promise<NotificationDto[]> {
     if (!userId) return [];
-    const all = loadFromStorage();
-    return all.filter((n) => !n.userId || n.userId === userId);
+    return loadFromStorage(userId);
   },
 
-  async markAsRead(id: string): Promise<void> {
-    const all = loadFromStorage();
+  async markAsRead(id: string, userId?: string): Promise<void> {
+    if (!userId) return;
+    const all = loadFromStorage(userId);
     const updated = all.map((n) => (n.id === id ? { ...n, read: true } : n));
-    saveToStorage(updated);
+    saveToStorage(userId, updated);
   },
 
   async markAllAsRead(userId?: string): Promise<void> {
-    const all = loadFromStorage();
-    const updated = all.map((n) => {
-      if (!userId || !n.userId || n.userId === userId) {
-        return { ...n, read: true };
-      }
-      return n;
-    });
-    saveToStorage(updated);
+    if (!userId) return;
+    const all = loadFromStorage(userId);
+    const updated = all.map((n) => ({ ...n, read: true }));
+    saveToStorage(userId, updated);
   },
 
   async addNotification(params: {
@@ -94,9 +71,10 @@ export const notificationService = {
     type: NotificationType;
     targetUrl?: string;
   }): Promise<NotificationDto> {
-    const all = loadFromStorage();
+    if (!params.userId) return {} as NotificationDto;
+    const all = loadFromStorage(params.userId);
     const newNotif: NotificationDto = {
-      id: `notif-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      id: `notif-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
       userId: params.userId,
       title: params.title,
       message: params.message,
@@ -106,11 +84,12 @@ export const notificationService = {
       targetUrl: params.targetUrl,
     };
     const updated = [newNotif, ...all];
-    saveToStorage(updated);
+    saveToStorage(params.userId, updated);
     return newNotif;
   },
 
-  async clearAll(): Promise<void> {
-    saveToStorage([]);
+  async clearAll(userId?: string): Promise<void> {
+    if (!userId) return;
+    saveToStorage(userId, []);
   },
 };
