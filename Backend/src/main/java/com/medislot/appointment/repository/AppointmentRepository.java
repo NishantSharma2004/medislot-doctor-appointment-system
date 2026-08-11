@@ -7,8 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.Collection;
@@ -123,13 +125,36 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.slot.id = :slotId AND a.status IN :statuses")
     boolean existsBySlotIdAndStatusIn(@Param("slotId") UUID slotId, @Param("statuses") Collection<AppointmentStatus> statuses);
 
-    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.patient.id = :patientId AND a.doctor.userId = :doctorId AND a.status IN :statuses AND a.slotStartAt > :now")
+    @Query("""
+            SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END
+            FROM Appointment a
+            WHERE a.patient.id = :patientId
+              AND a.doctor.userId = :doctorId
+              AND a.status IN :statuses
+              AND (
+                a.slot.slotDate > CURRENT_DATE
+                OR (a.slot.slotDate = CURRENT_DATE AND a.slot.endTime > CURRENT_TIME)
+              )
+            """)
     boolean existsByPatientIdAndDoctorUserIdAndStatusIn(
             @Param("patientId") UUID patientId,
             @Param("doctorId") UUID doctorId,
             @Param("statuses") Collection<AppointmentStatus> statuses,
             @Param("now") Instant now
     );
+
+    @Modifying
+    @Transactional
+    @Query("""
+            UPDATE Appointment a
+            SET a.status = com.medislot.common.enums.AppointmentStatus.EXPIRED
+            WHERE a.status = com.medislot.common.enums.AppointmentStatus.PENDING
+              AND (
+                a.slot.slotDate < CURRENT_DATE
+                OR (a.slot.slotDate = CURRENT_DATE AND a.slot.endTime <= CURRENT_TIME)
+              )
+            """)
+    int autoExpirePastPendingAppointments();
 
     long countByStatus(AppointmentStatus status);
 
