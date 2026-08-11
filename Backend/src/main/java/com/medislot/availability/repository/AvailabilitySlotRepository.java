@@ -82,6 +82,12 @@ public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySl
     long countByDoctorUserIdAndStatus(UUID doctorId, SlotStatus status);
 
     @org.springframework.data.jpa.repository.Modifying
-    @Query("DELETE FROM AvailabilitySlot s WHERE s.doctor.userId = :doctorId AND s.status = 'AVAILABLE' AND s.slotEndAt < :now")
+    @Query("""
+            DELETE FROM AvailabilitySlot s
+            WHERE s.doctor.userId = :doctorId
+              AND s.status = 'AVAILABLE'
+              AND s.slotEndAt < :now
+              AND NOT EXISTS (SELECT a FROM Appointment a WHERE a.slot.id = s.id)
+            """)
     int deleteUnbookedPastSlots(@Param("doctorId") UUID doctorId, @Param("now") Instant now);
 }
