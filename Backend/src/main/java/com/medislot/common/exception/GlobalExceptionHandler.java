@@ -145,8 +145,8 @@ public class GlobalExceptionHandler {
         ApiErrorResponse body = new ApiErrorResponse(
                 Instant.now(),
                 HttpStatus.CONFLICT.value(),
-                "SLOT_ALREADY_BOOKED",
-                "The requested appointment slot or time range is no longer available.",
+                "DATA_INTEGRITY_VIOLATION",
+                "Data integrity conflict occurred. Please verify input data.",
                 path,
                 null
         );

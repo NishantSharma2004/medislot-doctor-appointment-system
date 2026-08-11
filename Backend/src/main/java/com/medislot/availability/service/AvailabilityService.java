@@ -84,6 +84,7 @@ public class AvailabilityService {
             );
             if (!existingAvailableSlots.isEmpty()) {
                 slotRepository.deleteAll(existingAvailableSlots);
+                slotRepository.flush();
             }
 
             List<AvailabilitySlot> createdSlots = new ArrayList<>();
@@ -103,7 +104,11 @@ public class AvailabilityService {
             }
 
             if (createdSlots.isEmpty()) {
-                throw new ConflictException("All requested slot intervals are already booked by patients.");
+                List<AvailabilitySlot> existingSlots = slotRepository.findSlotsFiltered(doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt);
+                if (!existingSlots.isEmpty()) {
+                    return mapToDto(existingSlots.get(0));
+                }
+                throw new ConflictException("The selected time range overlaps with existing booked appointments.");
             }
 
             return mapToDto(createdSlots.get(0));
