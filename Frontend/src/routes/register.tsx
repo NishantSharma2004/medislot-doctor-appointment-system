@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, Stethoscope, User } from "lucide-react";
+import { Loader2, Stethoscope, User, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -78,6 +78,8 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const search = Route.useSearch();
   const [role, setRole] = useState<Role>(search.role === "DOCTOR" ? "DOCTOR" : "PATIENT");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -287,13 +289,24 @@ export function RegisterPage() {
               <Label htmlFor="password">
                 Password <span className="text-destructive font-bold">*</span>
               </Label>
-              <Input
-                id="password"
-                type="password"
-                placeholder="At least 8 characters"
-                className={form.formState.errors.password ? "border-destructive focus-visible:ring-destructive" : ""}
-                {...form.register("password")}
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="At least 8 characters"
+                  className={`pr-10 ${form.formState.errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  {...form.register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none p-1 rounded-md transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  title={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
               {form.formState.errors.password ? (
                 <p className="text-xs font-semibold text-destructive">{form.formState.errors.password.message}</p>
               ) : null}
@@ -303,12 +316,23 @@ export function RegisterPage() {
               <Label htmlFor="confirmPassword">
                 Confirm Password <span className="text-destructive font-bold">*</span>
               </Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                className={form.formState.errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""}
-                {...form.register("confirmPassword")}
-              />
+              <div className="relative">
+                <Input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  className={`pr-10 ${form.formState.errors.confirmPassword ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  {...form.register("confirmPassword")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none p-1 rounded-md transition-colors"
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  title={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
               {form.formState.errors.confirmPassword ? (
                 <p className="text-xs font-semibold text-destructive">{form.formState.errors.confirmPassword.message}</p>
               ) : null}

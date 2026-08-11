@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ErrorState } from "@/components/common/ErrorState";
@@ -33,6 +34,8 @@ function ResetPasswordPage() {
   const [token, setToken] = useState(search.token ?? "");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [apiError, setApiError] = useState<ApiError | null>(null);
@@ -119,31 +122,55 @@ function ResetPasswordPage() {
 
           <div className="space-y-1.5">
             <Label htmlFor="reset-new-password">New Password</Label>
-            <Input
-              id="reset-new-password"
-              type="password"
-              value={newPassword}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                setValidationError(null);
-              }}
-              placeholder="At least 8 characters"
-              required
-            />
+            <div className="relative">
+              <Input
+                id="reset-new-password"
+                type={showNewPassword ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  setValidationError(null);
+                }}
+                placeholder="At least 8 characters"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showNewPassword ? "Hide password" : "Show password"}
+                title={showNewPassword ? "Hide password" : "Show password"}
+              >
+                {showNewPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
           </div>
 
           <div className="space-y-1.5">
             <Label htmlFor="reset-confirm-password">Confirm New Password</Label>
-            <Input
-              id="reset-confirm-password"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => {
-                setConfirmPassword(e.target.value)}
-              }
-              placeholder="Re-enter your new password"
-              required
-            />
+            <div className="relative">
+              <Input
+                id="reset-confirm-password"
+                type={showConfirmPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => {
+                  setConfirmPassword(e.target.value);
+                }}
+                placeholder="Re-enter your new password"
+                className="pr-10"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none p-1 rounded-md transition-colors"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                title={showConfirmPassword ? "Hide password" : "Show password"}
+              >
+                {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+              </button>
+            </div>
             {newPassword && confirmPassword && newPassword !== confirmPassword ? (
               <p className="text-xs font-semibold text-destructive mt-1">
                 ❌ Passwords do not match
