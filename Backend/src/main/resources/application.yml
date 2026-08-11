@@ -213,6 +213,8 @@ management:
   health:
     db:
       enabled: false
+    redis:
+      enabled: false
     mail:
       enabled: false
 
