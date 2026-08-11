@@ -123,7 +123,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
     @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.slot.id = :slotId AND a.status IN :statuses")
     boolean existsBySlotIdAndStatusIn(@Param("slotId") UUID slotId, @Param("statuses") Collection<AppointmentStatus> statuses);
 
-    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.patient.id = :patientId AND a.doctor.userId = :doctorId AND a.status IN :statuses AND a.slotEndAt > :now")
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN TRUE ELSE FALSE END FROM Appointment a WHERE a.patient.id = :patientId AND a.doctor.userId = :doctorId AND a.status IN :statuses AND a.slotStartAt > :now")
     boolean existsByPatientIdAndDoctorUserIdAndStatusIn(
             @Param("patientId") UUID patientId,
             @Param("doctorId") UUID doctorId,

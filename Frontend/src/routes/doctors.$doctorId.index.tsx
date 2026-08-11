@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
 import { ErrorState } from "@/components/common/ErrorState";
@@ -38,6 +38,7 @@ function DoctorProfilePage() {
   const { doctorId } = Route.useParams();
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const bookingFormRef = useRef<HTMLDivElement>(null);
 
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlotDto | null>(null);
   const [reason, setReason] = useState("");
@@ -244,7 +245,12 @@ function DoctorProfilePage() {
                       <button
                         key={slot.id}
                         type="button"
-                        onClick={() => setSelectedSlot(slot)}
+                        onClick={() => {
+                          setSelectedSlot(slot);
+                          setTimeout(() => {
+                            bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                          }, 80);
+                        }}
                         className={`p-3 rounded-lg border text-left transition-all flex flex-col gap-1 ${
                           isSelected
                             ? "border-primary bg-primary/10 font-semibold shadow-xs ring-2 ring-primary/30"
@@ -267,7 +273,7 @@ function DoctorProfilePage() {
             )}
 
             {selectedSlot ? (
-              <div className="mt-4 border-t pt-4 space-y-4 bg-primary/5 p-4 rounded-lg">
+              <div ref={bookingFormRef} className="mt-4 border-t pt-4 space-y-4 bg-primary/5 p-4 rounded-lg scroll-mt-6">
                 <div className="flex items-center justify-between text-sm">
                   <span className="font-semibold">
                     Selected Slot: {selectedSlot.date} ({formatTimeRange(selectedSlot.startTime, selectedSlot.endTime)})

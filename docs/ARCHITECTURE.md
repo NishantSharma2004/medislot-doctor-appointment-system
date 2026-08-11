@@ -11,7 +11,7 @@ Vercel Frontend (React + Vite + TanStack Router)
     │
     │ HTTPS REST API calls (JWT Bearer Auth)
     ▼
-Railway Backend (Spring Boot 3.4.1 / Java 21)
+Render Backend (Spring Boot 3.4.1 / Java 21)
     │
     ├── Spring Security (Stateless JWT Filter)
     ├── Bucket4j Rate Limiting Interceptor
@@ -19,9 +19,9 @@ Railway Backend (Spring Boot 3.4.1 / Java 21)
     ├── Audit Logger (Isolated REQUIRES_NEW Transactions)
     └── Notification Logger (Masked Emails)
     │
-    │ Railway Private Connection
+    │ Render Private Connection
     ▼
-Railway PostgreSQL 18 (Flyway Migrations V1-V6, Full-Text Search tsvector)
+Render PostgreSQL 18 (Flyway Migrations V1-V6, Full-Text Search tsvector)
 ```
 
 ## Core Modules
