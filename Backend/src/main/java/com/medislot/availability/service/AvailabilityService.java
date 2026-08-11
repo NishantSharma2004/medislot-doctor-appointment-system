@@ -78,12 +78,12 @@ public class AvailabilityService {
 
         // If time window is larger than slotMinutes, auto-chunk into discrete slots
         if (totalMinutes > durationMinutes) {
-            // Delete any unbooked (AVAILABLE) existing slots in this time window so they can be re-chunked cleanly
-            List<AvailabilitySlot> existingAvailableSlots = slotRepository.findSlotsFiltered(
-                    doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt
+            // Delete only unbooked slots that have NO appointments linked to them
+            List<AvailabilitySlot> deletableSlots = slotRepository.findDeletableUnbookedSlots(
+                    doctor.getUserId(), startAt, endAt
             );
-            if (!existingAvailableSlots.isEmpty()) {
-                slotRepository.deleteAllInBatch(existingAvailableSlots);
+            if (!deletableSlots.isEmpty()) {
+                slotRepository.deleteAllInBatch(deletableSlots);
             }
 
             List<AvailabilitySlot> createdSlots = new ArrayList<>();
@@ -103,7 +103,7 @@ public class AvailabilityService {
             }
 
             if (createdSlots.isEmpty()) {
-                List<AvailabilitySlot> existingSlots = slotRepository.findSlotsFiltered(doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt);
+                List<AvailabilitySlot> existingSlots = slotRepository.findOverlappingSlots(doctor.getUserId(), SlotStatus.AVAILABLE, startAt, endAt);
                 if (!existingSlots.isEmpty()) {
                     return mapToDto(existingSlots.get(0));
                 }
@@ -111,6 +111,13 @@ public class AvailabilityService {
             }
 
             return mapToDto(createdSlots.get(0));
+        }
+
+        List<AvailabilitySlot> deletableSlots = slotRepository.findDeletableUnbookedSlots(
+                doctor.getUserId(), startAt, endAt
+        );
+        if (!deletableSlots.isEmpty()) {
+            slotRepository.deleteAllInBatch(deletableSlots);
         }
 
         if (slotRepository.existsOverlappingSlot(doctor.getUserId(), startAt, endAt, null)) {

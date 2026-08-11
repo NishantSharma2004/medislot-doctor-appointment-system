@@ -34,6 +34,32 @@ public interface AvailabilitySlotRepository extends JpaRepository<AvailabilitySl
             @Param("toInstant") Instant toInstant);
 
     @Query("""
+            SELECT s FROM AvailabilitySlot s
+            WHERE s.doctor.userId = :doctorId
+              AND (:status IS NULL OR s.status = :status)
+              AND (s.slotStartAt < :endAt AND s.slotEndAt > :startAt)
+            ORDER BY s.slotStartAt ASC
+            """)
+    List<AvailabilitySlot> findOverlappingSlots(
+            @Param("doctorId") UUID doctorId,
+            @Param("status") SlotStatus status,
+            @Param("startAt") Instant startAt,
+            @Param("endAt") Instant endAt);
+
+    @Query("""
+            SELECT s FROM AvailabilitySlot s
+            WHERE s.doctor.userId = :doctorId
+              AND s.status = 'AVAILABLE'
+              AND (s.slotStartAt < :endAt AND s.slotEndAt > :startAt)
+              AND NOT EXISTS (SELECT a FROM Appointment a WHERE a.slot.id = s.id)
+            ORDER BY s.slotStartAt ASC
+            """)
+    List<AvailabilitySlot> findDeletableUnbookedSlots(
+            @Param("doctorId") UUID doctorId,
+            @Param("startAt") Instant startAt,
+            @Param("endAt") Instant endAt);
+
+    @Query("""
             SELECT CASE WHEN COUNT(s) > 0 THEN TRUE ELSE FALSE END
             FROM AvailabilitySlot s
             WHERE s.doctor.userId = :doctorId
