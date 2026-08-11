@@ -141,6 +141,7 @@ export interface DoctorSearchParams {
   specialization?: string;
   city?: string;
   maxFee?: number;
+  hasAvailableSlots?: boolean;
   page?: number;
   size?: number;
 }

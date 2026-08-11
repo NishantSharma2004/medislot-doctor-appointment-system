@@ -96,6 +96,7 @@ function DoctorSearchPage() {
         specialization: search.specialization,
         city: search.city,
         maxFee: search.maxFee,
+        hasAvailableSlots: search.availability === "AVAILABLE" ? true : undefined,
         page,
         size: PAGE_SIZE,
       }),

@@ -27,7 +27,7 @@ public class DoctorService {
         this.doctorProfileRepository = doctorProfileRepository;
     }
 
-    @Cacheable(value = CacheConfig.CACHE_DOCTORS_SEARCH, key = "{#search, #city, #specializationId, #specializationName, #maxFee, #minExperience, #page, #size, #sortBy, #sortDirection}")
+    @Cacheable(value = CacheConfig.CACHE_DOCTORS_SEARCH, key = "{#search, #city, #specializationId, #specializationName, #maxFee, #minExperience, #hasAvailableSlots, #page, #size, #sortBy, #sortDirection}")
     @Transactional(readOnly = true)
     public PageResponse<DoctorDto> searchDoctors(
             String search,
@@ -36,6 +36,7 @@ public class DoctorService {
             String specializationName,
             BigDecimal maxFee,
             Integer minExperience,
+            Boolean hasAvailableSlots,
             int page,
             int size,
             String sortBy,
@@ -55,6 +56,8 @@ public class DoctorService {
                 specializationName,
                 maxFee,
                 minExperience,
+                hasAvailableSlots,
+                java.time.Instant.now(),
                 pageable
         );
 

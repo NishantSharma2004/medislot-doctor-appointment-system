@@ -24,6 +24,12 @@ public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, UU
               AND (CAST(:specializationName AS string) IS NULL OR LOWER(s.name) = LOWER(CAST(:specializationName AS string)))
               AND (:maxFee IS NULL OR d.consultationFee <= :maxFee)
               AND (:minExperience IS NULL OR d.yearsOfExperience >= :minExperience)
+              AND (:hasAvailableSlots IS NULL OR :hasAvailableSlots = FALSE OR EXISTS (
+                    SELECT slot FROM com.medislot.availability.entity.AvailabilitySlot slot
+                    WHERE slot.doctor.userId = d.userId
+                      AND slot.status = com.medislot.common.enums.SlotStatus.AVAILABLE
+                      AND slot.slotStartAt > :now
+                  ))
               AND (
                     CAST(:search AS string) IS NULL OR CAST(:search AS string) = ''
                     OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
@@ -41,6 +47,12 @@ public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, UU
               AND (CAST(:specializationName AS string) IS NULL OR LOWER(s.name) = LOWER(CAST(:specializationName AS string)))
               AND (:maxFee IS NULL OR d.consultationFee <= :maxFee)
               AND (:minExperience IS NULL OR d.yearsOfExperience >= :minExperience)
+              AND (:hasAvailableSlots IS NULL OR :hasAvailableSlots = FALSE OR EXISTS (
+                    SELECT slot FROM com.medislot.availability.entity.AvailabilitySlot slot
+                    WHERE slot.doctor.userId = d.userId
+                      AND slot.status = com.medislot.common.enums.SlotStatus.AVAILABLE
+                      AND slot.slotStartAt > :now
+                  ))
               AND (
                     CAST(:search AS string) IS NULL OR CAST(:search AS string) = ''
                     OR LOWER(u.fullName) LIKE LOWER(CONCAT('%', CAST(:search AS string), '%'))
@@ -55,6 +67,8 @@ public interface DoctorProfileRepository extends JpaRepository<DoctorProfile, UU
             @Param("specializationName") String specializationName,
             @Param("maxFee") BigDecimal maxFee,
             @Param("minExperience") Integer minExperience,
+            @Param("hasAvailableSlots") Boolean hasAvailableSlots,
+            @Param("now") java.time.Instant now,
             Pageable pageable);
 
     @Query("""

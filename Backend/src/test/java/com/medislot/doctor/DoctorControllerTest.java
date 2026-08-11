@@ -103,7 +103,7 @@ class DoctorControllerTest {
                 true
         );
 
-        when(doctorService.searchDoctors(any(), any(), any(), any(), any(), any(), anyInt(), anyInt(), any(), any()))
+        when(doctorService.searchDoctors(any(), any(), any(), any(), any(), any(), any(), anyInt(), anyInt(), any(), any()))
                 .thenReturn(pageResponse);
 
         mockMvc.perform(get("/api/v1/doctors")
