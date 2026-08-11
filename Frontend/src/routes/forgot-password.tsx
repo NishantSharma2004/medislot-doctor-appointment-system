@@ -57,6 +57,7 @@ function ForgotPasswordPage() {
       setResendCooldown(30);
       if (res.data?.resetToken) {
         setTokenCode(res.data.resetToken);
+        setShowOtpOnScreen(true);
       }
       toast.success(`Password reset email sent to ${email}`);
     } catch (err) {
