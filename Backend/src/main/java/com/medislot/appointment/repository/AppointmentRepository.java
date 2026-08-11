@@ -140,10 +140,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             @Param("now") Instant now
     );
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Appointment a SET a.status = com.medislot.common.enums.AppointmentStatus.EXPIRED WHERE a.status = com.medislot.common.enums.AppointmentStatus.PENDING AND a.slotEndAt < :now")
-    int autoExpirePastPendingAppointments(@Param("now") Instant now);
+
 
     long countByStatus(AppointmentStatus status);
 

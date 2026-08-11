@@ -108,13 +108,6 @@ public class AppointmentService {
             throw new ConflictException("SLOT_ALREADY_BOOKED", "An active appointment already exists for this slot.");
         }
 
-        // Auto-expire any past pending appointments in DB so past/missed slots don't block new bookings
-        try {
-            appointmentRepository.autoExpirePastPendingAppointments(Instant.now());
-        } catch (Exception e) {
-            log.warn("Failed to auto-expire past pending appointments: {}", e.getMessage());
-        }
-
         // Check if patient already has an active upcoming appointment with this specific doctor
         if (appointmentRepository.existsByPatientIdAndDoctorUserIdAndStatusIn(currentUser.getId(), doctorId, ACTIVE_STATUSES, Instant.now())) {
             throw new ConflictException("PATIENT_EXISTING_APPOINTMENT_WITH_DOCTOR",
