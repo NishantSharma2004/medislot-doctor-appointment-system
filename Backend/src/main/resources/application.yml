@@ -211,6 +211,8 @@ management:
     health:
       show-details: when_authorized
   health:
+    db:
+      enabled: false
     mail:
       enabled: false
 
