@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText } from "lucide-react";
+import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
@@ -246,6 +246,10 @@ function DoctorProfilePage() {
                         key={slot.id}
                         type="button"
                         onClick={() => {
+                          if (!isAuthenticated) {
+                            setShowAuthModal(true);
+                            return;
+                          }
                           setSelectedSlot(slot);
                           setTimeout(() => {
                             bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -423,24 +427,24 @@ function DoctorProfilePage() {
 
             <div className="space-y-2.5 pt-2">
               <Button
-                className="w-full gap-2 font-semibold"
+                className="w-full gap-2 font-semibold shadow-sm"
                 onClick={() => navigate({ to: "/login", search: { redirect: `/doctors/${doctorId}` } })}
               >
-                Sign In to Your Account
+                <LogIn className="size-4" /> Sign In to Existing Account
               </Button>
               <Button
                 variant="outline"
-                className="w-full gap-2 font-semibold border-primary/40 text-primary"
+                className="w-full gap-2 font-semibold border-primary/40 text-primary hover:bg-primary/10"
                 onClick={() => navigate({ to: "/register", search: { role: "PATIENT" } })}
               >
-                Create New Patient Account
+                <UserPlus className="size-4" /> Create New Patient Account
               </Button>
               <Button
                 variant="ghost"
                 className="w-full text-xs text-muted-foreground"
                 onClick={() => setShowAuthModal(false)}
               >
-                Continue Browsing
+                Cancel & Continue Browsing
               </Button>
             </div>
           </div>
