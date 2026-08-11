@@ -185,3 +185,19 @@
     var(--color-surface) 100%
   );
 }
+
+/* Suppress native browser password reveal eye icons (MS Edge, Chrome, Safari) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-contacts-auto-fill-button {
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  right: 0 !important;
+}
