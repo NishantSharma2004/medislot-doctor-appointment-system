@@ -10,9 +10,13 @@ export type Role = "PATIENT" | "DOCTOR" | "ADMIN";
 export type AppointmentStatus =
   | "PENDING"
   | "CONFIRMED"
+  | "IN_CONSULTATION"
   | "REJECTED"
   | "COMPLETED"
-  | "CANCELLED";
+  | "CANCELLED"
+  | "EXPIRED"
+  | "MISSED"
+  | "SKIPPED";
 
 export interface UserDto {
   id: string;
@@ -103,6 +107,18 @@ export interface AppointmentDto {
   labTests?: string;
   followUpDate?: string;
   consultationFee: number;
+  tokenNumber?: number;
+}
+
+export interface OpdQueueResponse {
+  doctorId: string;
+  doctorName: string;
+  date: string;
+  currentlyServingToken?: number;
+  currentlyServingPatientName?: string;
+  totalTokensToday: number;
+  remainingPatients: number;
+  queue: AppointmentDto[];
 }
 
 export interface CreateAppointmentRequest {

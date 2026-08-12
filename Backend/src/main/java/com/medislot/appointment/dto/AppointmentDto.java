@@ -34,7 +34,8 @@ public record AppointmentDto(
         String prescriptionJson,
         String labTests,
         String followUpDate,
-        BigDecimal consultationFee
+        BigDecimal consultationFee,
+        Integer tokenNumber
 ) {
     // Backward-compatible constructor for 13-argument instantiation in tests
     public AppointmentDto(
@@ -79,7 +80,8 @@ public record AppointmentDto(
                 null, // prescriptionJson
                 null, // labTests
                 null, // followUpDate
-                consultationFee
+                consultationFee,
+                null // tokenNumber
         );
     }
 }

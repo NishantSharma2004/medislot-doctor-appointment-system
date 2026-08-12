@@ -8,6 +8,7 @@ import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PaginationControls } from "@/components/common/PaginationControls";
 import { PageShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
@@ -178,6 +179,26 @@ function MyAppointmentsPage() {
                       <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1 pt-1">
                         💰 100% Full Refund Initiated (Doctor No-Response Fault)
                       </p>
+                    ) : null}
+
+                    {/* Live OPD Token Badge */}
+                    {appt.tokenNumber ? (
+                      <div className="mt-3 p-3 rounded-xl bg-gradient-to-r from-teal-950/40 via-emerald-950/30 to-slate-900 border border-emerald-500/30 flex flex-wrap items-center justify-between gap-3 text-xs">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-sm border border-emerald-500/30">
+                            #{appt.tokenNumber}
+                          </div>
+                          <div>
+                            <span className="font-bold text-emerald-300">OPD Token #{appt.tokenNumber}</span>
+                            <p className="text-[11px] text-muted-foreground">
+                              Chronological Consultation Token for {appt.date}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="border-emerald-500/40 text-emerald-300 bg-emerald-500/10 font-bold">
+                          Token Assigned
+                        </Badge>
+                      </div>
                     ) : null}
                   </div>
 

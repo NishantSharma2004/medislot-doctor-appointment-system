@@ -6,9 +6,11 @@ package com.medislot.common.enums;
 public enum AppointmentStatus {
     PENDING,
     CONFIRMED,
+    IN_CONSULTATION,
     REJECTED,
     COMPLETED,
     CANCELLED,
     EXPIRED,
-    MISSED
+    MISSED,
+    SKIPPED
 }

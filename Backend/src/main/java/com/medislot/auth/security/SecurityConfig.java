@@ -76,7 +76,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/doctors/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/doctors/*/availability").permitAll()
                         
-                        // Doctor Availability & Dashboard APIs
+                        // Doctor Availability, Queue & Dashboard APIs
+                        .requestMatchers(HttpMethod.GET, "/api/v1/doctors/queue/*").permitAll()
+                        .requestMatchers("/api/v1/doctors/queue/**").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.POST, "/api/v1/doctors/availability").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.PATCH, "/api/v1/doctors/availability/*").hasRole("DOCTOR")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/doctors/availability/*").hasRole("DOCTOR")

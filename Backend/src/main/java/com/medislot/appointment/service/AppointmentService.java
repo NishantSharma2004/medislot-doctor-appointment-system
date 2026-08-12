@@ -503,7 +503,8 @@ public class AppointmentService {
                 appointment.getPrescriptionJson(),
                 appointment.getLabTests(),
                 appointment.getFollowUpDate(),
-                appointment.getConsultationFee()
+                appointment.getConsultationFee(),
+                null
         );
     }
 }

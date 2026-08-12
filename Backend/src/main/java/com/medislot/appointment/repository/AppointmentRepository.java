@@ -155,4 +155,23 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.doctor.userId = :doctorId AND a.status = :status")
     long countByDoctorUserIdAndStatus(@Param("doctorId") UUID doctorId, @Param("status") AppointmentStatus status);
+
+    @Query("""
+            SELECT a FROM Appointment a
+            JOIN FETCH a.patient p
+            JOIN FETCH a.doctor d
+            JOIN FETCH d.user du
+            JOIN FETCH d.specialization s
+            JOIN FETCH a.slot sl
+            WHERE a.doctor.userId = :doctorId
+              AND a.slotStartAt >= :dayStart
+              AND a.slotStartAt < :dayEnd
+              AND a.status NOT IN ('CANCELLED', 'REJECTED', 'EXPIRED')
+            ORDER BY a.slotStartAt ASC
+            """)
+    java.util.List<Appointment> findTodayOpdQueue(
+            @Param("doctorId") UUID doctorId,
+            @Param("dayStart") Instant dayStart,
+            @Param("dayEnd") Instant dayEnd
+    );
 }
