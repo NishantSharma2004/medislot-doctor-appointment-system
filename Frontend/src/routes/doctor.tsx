@@ -222,7 +222,7 @@ function DoctorDeskPage() {
         }
       }
       toast.success(`Appointment status updated to ${status}`);
-      loadDoctorAppointments();
+      await Promise.all([loadDoctorAppointments(), fetchTodayQueue()]);
     } catch (err) {
       const apiErr = err as ApiError;
       toast.error(apiErr.message || "Failed to update status");
@@ -550,33 +550,48 @@ function DoctorDeskPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {filteredAppointments.map((appt) => (
-                <div
-                  key={appt.id}
-                  className="flex flex-col lg:flex-row lg:items-center justify-between p-5 border rounded-xl hover:border-primary/50 transition-all gap-4 bg-card"
-                >
-                  <div className="space-y-2 max-w-2xl">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-lg text-foreground">{appt.patientName}</span>
-                      {appt.patientAge ? (
-                        <Badge variant="outline" className="text-xs">
-                          {appt.patientAge} Yrs ({appt.patientGender || "N/A"})
+              {filteredAppointments.map((appt) => {
+                const queueItem = opdQueue?.queue?.find((q) => q.id === appt.id);
+                const tokenNum = queueItem?.tokenNumber || appt.tokenNumber;
+                const isInConsultation = appt.status === "IN_CONSULTATION";
+
+                return (
+                  <div
+                    key={appt.id}
+                    className={`flex flex-col lg:flex-row lg:items-center justify-between p-5 border rounded-xl transition-all gap-4 ${
+                      isInConsultation
+                        ? "bg-emerald-950/20 border-2 border-emerald-500/60 shadow-lg shadow-emerald-950/30"
+                        : "bg-card hover:border-primary/50"
+                    }`}
+                  >
+                    <div className="space-y-2 max-w-2xl">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {tokenNum ? (
+                          <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-black">
+                            Token #{tokenNum}
+                          </span>
+                        ) : null}
+                        <span className="font-bold text-lg text-foreground">{appt.patientName}</span>
+                        {appt.patientAge ? (
+                          <Badge variant="outline" className="text-xs">
+                            {appt.patientAge} Yrs ({appt.patientGender || "N/A"})
+                          </Badge>
+                        ) : null}
+                        <Badge
+                          className={isInConsultation ? "bg-emerald-500 text-slate-950 font-black animate-pulse" : ""}
+                          variant={
+                            appt.status === "CONFIRMED"
+                              ? "default"
+                              : appt.status === "COMPLETED"
+                              ? "secondary"
+                              : appt.status === "PENDING"
+                              ? "outline"
+                              : "destructive"
+                          }
+                        >
+                          {isInConsultation ? "🟢 IN CONSULTATION (IN CABIN)" : appt.status}
                         </Badge>
-                      ) : null}
-                      <Badge
-                        variant={
-                          appt.status === "CONFIRMED"
-                            ? "default"
-                            : appt.status === "COMPLETED"
-                            ? "secondary"
-                            : appt.status === "PENDING"
-                            ? "outline"
-                            : "destructive"
-                        }
-                      >
-                        {appt.status}
-                      </Badge>
-                    </div>
+                      </div>
 
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                       <span className="flex items-center gap-1.5 font-medium text-foreground">
@@ -698,7 +713,8 @@ function DoctorDeskPage() {
                     ) : null}
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           )}
         </div>

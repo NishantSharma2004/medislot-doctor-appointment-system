@@ -14,8 +14,10 @@ import java.util.Set;
 public class AppointmentStatusTransitionValidator {
 
     private static final Map<AppointmentStatus, Set<AppointmentStatus>> ALLOWED_TRANSITIONS = Map.of(
-            AppointmentStatus.PENDING, Set.of(AppointmentStatus.CONFIRMED, AppointmentStatus.REJECTED, AppointmentStatus.CANCELLED, AppointmentStatus.EXPIRED),
-            AppointmentStatus.CONFIRMED, Set.of(AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED, AppointmentStatus.MISSED),
+            AppointmentStatus.PENDING, Set.of(AppointmentStatus.CONFIRMED, AppointmentStatus.IN_CONSULTATION, AppointmentStatus.REJECTED, AppointmentStatus.CANCELLED, AppointmentStatus.EXPIRED, AppointmentStatus.SKIPPED),
+            AppointmentStatus.CONFIRMED, Set.of(AppointmentStatus.IN_CONSULTATION, AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED, AppointmentStatus.MISSED, AppointmentStatus.SKIPPED),
+            AppointmentStatus.IN_CONSULTATION, Set.of(AppointmentStatus.COMPLETED, AppointmentStatus.SKIPPED, AppointmentStatus.CANCELLED),
+            AppointmentStatus.SKIPPED, Set.of(AppointmentStatus.IN_CONSULTATION, AppointmentStatus.COMPLETED, AppointmentStatus.CANCELLED),
             AppointmentStatus.REJECTED, Set.of(),
             AppointmentStatus.COMPLETED, Set.of(),
             AppointmentStatus.CANCELLED, Set.of(),
