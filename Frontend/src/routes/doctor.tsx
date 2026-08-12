@@ -394,57 +394,59 @@ function DoctorDeskPage() {
         </div>
 
         {/* Live OPD Token Queue Caller Panel */}
-        <div className="surface-panel p-5 sm:p-6 rounded-2xl border-2 border-emerald-500/30 bg-gradient-to-br from-emerald-950/20 via-slate-900/40 to-slate-950 shadow-xl space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-border">
+        <div className="rounded-2xl border border-emerald-500/40 bg-slate-900 text-white p-5 sm:p-6 shadow-xl space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3.5 border-b border-slate-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold border border-emerald-500/30">
                 <Activity className="size-5" />
               </div>
               <div>
-                <h2 className="text-lg font-bold flex items-center gap-2">
+                <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
                   Live OPD Token Queue Caller
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
                     LIVE OPD
                   </span>
                 </h2>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-slate-300 font-medium">
                   Chronological patient tokens ordered by consultation start time today.
                 </p>
               </div>
             </div>
 
             {/* Big Token Status Badge */}
-            <div className="flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded-xl border border-border">
+            <div className="flex items-center gap-3 bg-slate-950 px-4 py-2.5 rounded-xl border border-emerald-500/30">
               <div className="text-right">
-                <div className="text-[10px] uppercase font-bold text-muted-foreground">Currently Serving</div>
+                <div className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Currently Serving</div>
                 <div className="text-sm font-black text-emerald-400">
                   {opdQueue?.currentlyServingToken ? `Token #${opdQueue.currentlyServingToken}` : "No Active Call"}
                 </div>
               </div>
-              <div className="text-2xl font-black text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-lg border border-emerald-500/30">
+              <div className="text-2xl font-black text-emerald-300 bg-emerald-500/20 px-3.5 py-1 rounded-lg border border-emerald-500/40">
                 {opdQueue?.currentlyServingToken || "-"}
               </div>
             </div>
           </div>
 
           {/* Active Patient Serving Card & Action Buttons */}
-          <div className="grid sm:grid-cols-3 gap-4 bg-slate-900/50 p-4 rounded-xl border border-border">
-            <div className="sm:col-span-2 space-y-1">
-              <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">Patient In Consultation</span>
-              <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
+          <div className="grid sm:grid-cols-3 gap-4 bg-slate-950 p-4 sm:p-5 rounded-xl border border-slate-800">
+            <div className="sm:col-span-2 space-y-1.5">
+              <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-widest block">
+                PATIENT IN CONSULTATION
+              </span>
+              <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
                 {opdQueue?.currentlyServingPatientName ? opdQueue.currentlyServingPatientName : "Waiting for Next Patient..."}
               </h3>
-              <p className="text-xs text-muted-foreground">
-                Remaining Patients Waiting: <strong className="text-emerald-400">{opdQueue?.remainingPatients || 0}</strong> | Total Today: {opdQueue?.totalTokensToday || 0}
+              <p className="text-xs text-slate-300 font-medium pt-1">
+                Remaining Patients Waiting: <strong className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">{opdQueue?.remainingPatients || 0}</strong> | Total Today: <span className="text-white font-bold">{opdQueue?.totalTokensToday || 0}</span>
               </p>
             </div>
 
             {/* Caller Controls */}
-            <div className="flex flex-col gap-2 justify-center">
+            <div className="flex flex-col gap-2.5 justify-center">
               <Button
                 onClick={handleCallNextPatient}
                 disabled={isOpdLoading || (opdQueue?.remainingPatients || 0) === 0}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold gap-2 text-xs"
+                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black gap-2 text-xs sm:text-sm py-2.5 shadow-lg shadow-emerald-950/50"
               >
                 <Volume2 className="size-4" /> 🔔 Call Next Patient
               </Button>
@@ -455,7 +457,7 @@ function DoctorDeskPage() {
                   variant="outline"
                   onClick={handleCompleteConsultation}
                   disabled={isOpdLoading || !opdQueue?.currentlyServingToken}
-                  className="text-xs text-emerald-400 border-emerald-500/40 hover:bg-emerald-500/10"
+                  className="text-xs font-bold text-emerald-300 border-emerald-500/40 bg-emerald-950/50 hover:bg-emerald-500/20"
                 >
                   ✅ Complete
                 </Button>
@@ -464,7 +466,7 @@ function DoctorDeskPage() {
                   variant="outline"
                   onClick={handleSkipPatient}
                   disabled={isOpdLoading || !opdQueue?.currentlyServingToken}
-                  className="text-xs text-amber-400 border-amber-500/40 hover:bg-amber-500/10"
+                  className="text-xs font-bold text-amber-300 border-amber-500/40 bg-amber-950/50 hover:bg-amber-500/20"
                 >
                   ⏭️ Skip
                 </Button>
