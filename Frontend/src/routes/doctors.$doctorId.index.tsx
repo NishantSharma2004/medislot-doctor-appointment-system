@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus } from "lucide-react";
+import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus, AlertTriangle } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
@@ -63,6 +63,18 @@ function DoctorProfilePage() {
     queryFn: () => reviewService.getDoctorReviews(doctorId),
     staleTime: 60000,
   });
+
+  const myAppointmentsQuery = useQuery({
+    queryKey: ["my-appointments"],
+    queryFn: () => appointmentService.getMyAppointmens({ page: 0, size: 50 }),
+    enabled: isAuthenticated && user?.role === "PATIENT",
+  });
+
+  const activeApptWithThisDoctor = myAppointmentsQuery.data?.content?.find(
+    (a) =>
+      (a.doctorId === doctorId || a.doctorName === doctorQuery.data?.fullName) &&
+      (a.status === "PENDING" || a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
+  );
 
   if (doctorQuery.isPending) return <FullPageLoader label="Loading doctor profile" />;
   if (doctorQuery.error)
@@ -174,6 +186,21 @@ function DoctorProfilePage() {
 
           {/* Bookable Time Slots Section */}
           <section className="surface-panel p-6 space-y-4" id="slots-section">
+            {activeApptWithThisDoctor ? (
+              <div className="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 rounded-xl space-y-2">
+                <div className="flex items-center gap-2 font-bold text-sm">
+                  <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span>Active Appointment In Progress</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  You already have an active ({activeApptWithThisDoctor.status}) appointment with Dr. {doctor.fullName} for {activeApptWithThisDoctor.date} ({activeApptWithThisDoctor.startTime}). Please wait for your doctor to complete it or cancel it before booking another slot.
+                </p>
+                <Button size="sm" variant="outline" className="text-xs font-semibold gap-1.5 border-amber-500/40 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20" onClick={() => navigate({ to: "/appointments" })}>
+                  <CalendarClock className="size-3.5" /> View My Appointments
+                </Button>
+              </div>
+            ) : null}
+
             {bookingError ? (
               <div className="p-4 bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 rounded-lg flex items-center justify-between gap-2 text-sm font-medium">
                 <span>⚠️ {bookingError}</span>
@@ -248,6 +275,10 @@ function DoctorProfilePage() {
                         onClick={() => {
                           if (!isAuthenticated) {
                             setShowAuthModal(true);
+                            return;
+                          }
+                          if (activeApptWithThisDoctor) {
+                            toast.warning(`You already have an active (${activeApptWithThisDoctor.status}) appointment with Dr. ${doctor.fullName}. Please check your My Appointments page.`);
                             return;
                           }
                           setSelectedSlot(slot);
