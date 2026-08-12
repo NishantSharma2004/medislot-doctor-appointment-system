@@ -73,6 +73,7 @@ public class DoctorService {
         return mapToDto(doctor);
     }
 
+    @Cacheable(value = "doctorCities")
     @Transactional(readOnly = true)
     public java.util.List<String> getDistinctCities() {
         return doctorProfileRepository.findDistinctActiveCities();

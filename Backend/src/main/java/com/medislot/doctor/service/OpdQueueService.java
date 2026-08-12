@@ -25,21 +25,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.medislot.doctor.sse.OpdQueueSseRegistry;
+
 @Service
 public class OpdQueueService {
 
     private final AppointmentRepository appointmentRepository;
     private final DoctorProfileRepository doctorProfileRepository;
     private final AppointmentService appointmentService;
+    private final OpdQueueSseRegistry opdQueueSseRegistry;
 
     public OpdQueueService(
             AppointmentRepository appointmentRepository,
             DoctorProfileRepository doctorProfileRepository,
-            AppointmentService appointmentService
+            AppointmentService appointmentService,
+            OpdQueueSseRegistry opdQueueSseRegistry
     ) {
         this.appointmentRepository = appointmentRepository;
         this.doctorProfileRepository = doctorProfileRepository;
         this.appointmentService = appointmentService;
+        this.opdQueueSseRegistry = opdQueueSseRegistry;
     }
 
     @Transactional(readOnly = true)
@@ -162,7 +167,9 @@ public class OpdQueueService {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "NO_PATIENTS_IN_QUEUE", "No remaining waiting patients in today's OPD queue.");
         }
 
-        return getTodayQueueForDoctor(currentUser);
+        OpdQueueResponse response = getTodayQueueForDoctor(currentUser);
+        opdQueueSseRegistry.broadcastQueueUpdate(doctor.getUserId(), response);
+        return response;
     }
 
     @Transactional
@@ -181,7 +188,9 @@ public class OpdQueueService {
             }
         }
 
-        return getTodayQueueForDoctor(currentUser);
+        OpdQueueResponse response = getTodayQueueForDoctor(currentUser);
+        opdQueueSseRegistry.broadcastQueueUpdate(doctor.getUserId(), response);
+        return response;
     }
 
     @Transactional
@@ -201,7 +210,9 @@ public class OpdQueueService {
             }
         }
 
-        return getTodayQueueForDoctor(currentUser);
+        OpdQueueResponse response = getTodayQueueForDoctor(currentUser);
+        opdQueueSseRegistry.broadcastQueueUpdate(doctor.getUserId(), response);
+        return response;
     }
 
     private DoctorProfile validateDoctorRoleAndGetProfile(User user) {

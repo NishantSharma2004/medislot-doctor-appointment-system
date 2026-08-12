@@ -14,9 +14,19 @@ import java.util.UUID;
 public class OpdQueueController {
 
     private final OpdQueueService opdQueueService;
+    private final com.medislot.doctor.sse.OpdQueueSseRegistry opdQueueSseRegistry;
 
-    public OpdQueueController(OpdQueueService opdQueueService) {
+    public OpdQueueController(
+            OpdQueueService opdQueueService,
+            com.medislot.doctor.sse.OpdQueueSseRegistry opdQueueSseRegistry
+    ) {
         this.opdQueueService = opdQueueService;
+        this.opdQueueSseRegistry = opdQueueSseRegistry;
+    }
+
+    @GetMapping(value = "/{doctorId}/subscribe", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public org.springframework.web.servlet.mvc.method.annotation.SseEmitter subscribeToQueue(@PathVariable UUID doctorId) {
+        return opdQueueSseRegistry.subscribe(doctorId);
     }
 
     @GetMapping("/today")

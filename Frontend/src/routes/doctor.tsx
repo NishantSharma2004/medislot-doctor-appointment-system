@@ -189,6 +189,25 @@ function DoctorDeskPage() {
     if (user?.id && isAuthenticated && hasRole(["DOCTOR"])) {
       fetchDoctorProfile();
       fetchTodayQueue();
+
+      // Subscribe to 1ms SSE live OPD queue updates
+      const backendUrl = import.meta.env.VITE_API_URL || "https://medislot-doctor-appointment-system.onrender.com/api/v1";
+      const sseUrl = `${backendUrl}/doctors/queue/${user.id}/subscribe`;
+      const eventSource = new EventSource(sseUrl);
+
+      eventSource.addEventListener("opd-queue-update", (event) => {
+        try {
+          const data: OpdQueueResponse = JSON.parse(event.data);
+          setOpdQueue(data);
+          loadDoctorAppointments();
+        } catch (e) {
+          console.error("SSE parse error", e);
+        }
+      });
+
+      return () => {
+        eventSource.close();
+      };
     }
   }, [user?.id, isAuthenticated, hasRole]);
 

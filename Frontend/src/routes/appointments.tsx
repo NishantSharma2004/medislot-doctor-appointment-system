@@ -78,6 +78,32 @@ function MyAppointmentsPage() {
     }
   }, [isAuthenticated, page, statusFilter]);
 
+  // Subscribe to live SSE OPD queue updates for patient's doctor today
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split("T")[0];
+    const todayAppt = appointmentsPage.content.find(
+      (a) => a.date === todayStr && (a.status === "PENDING" || a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
+    );
+
+    if (todayAppt?.doctorId) {
+      const backendUrl = import.meta.env.VITE_API_URL || "https://medislot-doctor-appointment-system.onrender.com/api/v1";
+      const sseUrl = `${backendUrl}/doctors/queue/${todayAppt.doctorId}/subscribe`;
+      const eventSource = new EventSource(sseUrl);
+
+      eventSource.addEventListener("opd-queue-update", (event) => {
+        try {
+          loadAppointments();
+        } catch (e) {
+          console.error("Patient SSE parse error", e);
+        }
+      });
+
+      return () => {
+        eventSource.close();
+      };
+    }
+  }, [appointmentsPage.content]);
+
   const handleCancel = async (appointmentId: string) => {
     if (!confirm("Are you sure you want to cancel this appointment?")) return;
     try {
