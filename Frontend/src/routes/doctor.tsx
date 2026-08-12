@@ -323,10 +323,17 @@ function DoctorDeskPage() {
   const confirmedCount = appointments.filter((a) => a.status === "CONFIRMED").length;
   const completedCount = appointments.filter((a) => a.status === "COMPLETED").length;
 
-  const filteredAppointments = appointments.filter((appt) => {
-    if (selectedFilter === "ALL") return true;
-    return appt.status === selectedFilter;
-  });
+  const filteredAppointments = [...appointments]
+    .filter((appt) => {
+      if (selectedFilter === "ALL") return true;
+      return appt.status === selectedFilter;
+    })
+    .sort((a, b) => {
+      if (a.date !== b.date) {
+        return a.date.localeCompare(b.date);
+      }
+      return a.startTime.localeCompare(b.startTime);
+    });
 
   return (
     <PageShell
@@ -423,7 +430,7 @@ function DoctorDeskPage() {
                 <h2 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
                   Live OPD Token Queue Caller
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
-                    LIVE OPD
+                    TODAY: {new Date().toISOString().split("T")[0]}
                   </span>
                 </h2>
                 <p className="text-xs text-slate-300 font-medium">
@@ -456,7 +463,16 @@ function DoctorDeskPage() {
                 {opdQueue?.currentlyServingPatientName ? opdQueue.currentlyServingPatientName : "Waiting for Next Patient..."}
               </h3>
               <p className="text-xs text-slate-300 font-medium pt-1">
-                Remaining Patients Waiting: <strong className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">{opdQueue?.remainingPatients || 0}</strong> | Total Today: <span className="text-white font-bold">{opdQueue?.totalTokensToday || 0}</span>
+                Remaining Patients Waiting Today: <strong className="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30">{opdQueue?.remainingPatients || 0}</strong> | Total Today: <span className="text-white font-bold">{opdQueue?.totalTokensToday || 0}</span>
+                {(() => {
+                  const todayStr = new Date().toISOString().split("T")[0];
+                  const upcomingCount = appointments.filter((a) => a.date > todayStr && (a.status === "CONFIRMED" || a.status === "PENDING")).length;
+                  return upcomingCount > 0 ? (
+                    <span className="ml-2 text-teal-300 font-medium bg-teal-500/10 px-2 py-0.5 rounded border border-teal-500/30">
+                      ℹ️ {upcomingCount} upcoming consultations scheduled for tomorrow/future
+                    </span>
+                  ) : null;
+                })()}
               </p>
             </div>
 
