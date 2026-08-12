@@ -195,28 +195,38 @@ export function ProfilePage() {
             onClick={() => fileInputRef.current?.click()}
             title="Click to upload profile photo"
           >
-            {profileImageUrl ? (
-              <div className="relative">
-                <img
-                  src={profileImageUrl}
-                  alt={fullName || "User Avatar"}
-                  onError={() => setProfileImageUrl("")}
-                  className="size-24 rounded-full object-cover border-4 border-background shadow-lg transition-transform group-hover:scale-105"
-                />
-                <button
-                  type="button"
-                  onClick={handleRemoveImage}
-                  title="Remove photo"
-                  className="absolute -top-1 -right-1 size-7 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                >
-                  <Trash2 className="size-3.5" aria-hidden="true" />
-                </button>
-              </div>
-            ) : (
-              <div className="size-24 rounded-full bg-primary/20 text-primary border-4 border-background shadow-lg flex items-center justify-center font-bold text-3xl transition-transform group-hover:scale-105">
-                {getInitials(fullName)}
-              </div>
-            )}
+            {(() => {
+              const cleanUrl = profileImageUrl?.trim().replace(/^["']|["']$/g, "") || "";
+              const isValidWebUrl =
+                cleanUrl &&
+                (cleanUrl.startsWith("http://") ||
+                  cleanUrl.startsWith("https://") ||
+                  cleanUrl.startsWith("data:image/") ||
+                  cleanUrl.startsWith("/"));
+
+              return isValidWebUrl ? (
+                <div className="relative">
+                  <img
+                    src={cleanUrl}
+                    alt={fullName || "User Avatar"}
+                    onError={() => setProfileImageUrl("")}
+                    className="size-24 rounded-full object-cover border-4 border-background shadow-lg transition-transform group-hover:scale-105"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    title="Remove photo"
+                    className="absolute -top-1 -right-1 size-7 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                  >
+                    <Trash2 className="size-3.5" aria-hidden="true" />
+                  </button>
+                </div>
+              ) : (
+                <div className="size-24 rounded-full bg-primary/20 text-primary border-4 border-background shadow-lg flex items-center justify-center font-bold text-3xl transition-transform group-hover:scale-105">
+                  {getInitials(fullName)}
+                </div>
+              );
+            })()}
 
             {/* Camera / Plus badge on avatar bottom-right */}
             <div

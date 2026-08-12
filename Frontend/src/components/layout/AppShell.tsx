@@ -28,10 +28,18 @@ interface NavItem {
 export function UserAvatar({ name, imageUrl, className }: { name?: string; imageUrl?: string; className?: string }) {
   const [hasError, setHasError] = useState(false);
 
-  if (imageUrl && !hasError) {
+  const cleanUrl = imageUrl?.trim().replace(/^["']|["']$/g, "") || "";
+  const isValidWebUrl =
+    cleanUrl &&
+    (cleanUrl.startsWith("http://") ||
+      cleanUrl.startsWith("https://") ||
+      cleanUrl.startsWith("data:image/") ||
+      cleanUrl.startsWith("/"));
+
+  if (isValidWebUrl && !hasError) {
     return (
       <img
-        src={imageUrl}
+        src={cleanUrl}
         alt={name || "User"}
         onError={() => setHasError(true)}
         className={cn("size-5 rounded-full object-cover shrink-0", className)}
