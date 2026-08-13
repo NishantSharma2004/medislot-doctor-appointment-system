@@ -78,6 +78,27 @@ function MyAppointmentsPage() {
     }
   }, [isAuthenticated, page, statusFilter]);
 
+  const playCallChime = () => {
+    try {
+      const AudioContextClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      if (!AudioContextClass) return;
+      const audioCtx = new AudioContextClass();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+      osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.5);
+    } catch (e) {
+      console.error("Audio chime error", e);
+    }
+  };
+
   // Subscribe to live SSE OPD queue updates for patient's doctor today
   useEffect(() => {
     const todayStr = new Date().toISOString().split("T")[0];
@@ -92,7 +113,17 @@ function MyAppointmentsPage() {
 
       eventSource.addEventListener("opd-queue-update", (event) => {
         try {
+          const q: OpdQueueResponse = JSON.parse(event.data);
           loadAppointments();
+          if (
+            (q.currentlyServingPatientName && q.currentlyServingPatientName.includes(user?.fullName || "")) ||
+            (q.currentlyServingToken && todayAppt.tokenNumber && q.currentlyServingToken === todayAppt.tokenNumber)
+          ) {
+            playCallChime();
+            toast.success(`🔔 YOUR TOKEN #${todayAppt.tokenNumber || 1} IS BEING CALLED NOW! Please proceed to Dr. ${todayAppt.doctorName}'s cabin.`, {
+              duration: 12000,
+            });
+          }
         } catch (e) {
           console.error("Patient SSE parse error", e);
         }
@@ -102,7 +133,7 @@ function MyAppointmentsPage() {
         eventSource.close();
       };
     }
-  }, [appointmentsPage.content]);
+  }, [appointmentsPage.content, user?.fullName]);
 
   const handleCancel = async (appointmentId: string) => {
     if (!confirm("Are you sure you want to cancel this appointment?")) return;
@@ -150,6 +181,59 @@ function MyAppointmentsPage() {
   return (
     <PageShell title="My Appointments" description="Track, reschedule or cancel your booked clinic appointments.">
       <div className="surface-panel p-6 space-y-6">
+        {/* Patient Live OPD Queue Calling Banner */}
+        {(() => {
+          const todayStr = new Date().toISOString().split("T")[0];
+          const todayAppt = appointmentsPage.content.find(
+            (a) => a.date === todayStr && (a.status === "PENDING" || a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
+          );
+
+          if (!todayAppt) return null;
+          const isInConsultation = todayAppt.status === "IN_CONSULTATION";
+
+          return (
+            <div
+              className={`p-5 rounded-2xl border transition-all space-y-3 ${
+                isInConsultation
+                  ? "bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 border-2 border-emerald-500 shadow-xl shadow-emerald-950/50"
+                  : "bg-slate-900 text-white border-emerald-500/30"
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-400 font-black text-2xl flex items-center justify-center border border-emerald-500/40 shadow-inner">
+                    #{todayAppt.tokenNumber || 1}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-400">
+                      YOUR TODAY'S OPD TOKEN
+                    </span>
+                    <h3 className="text-xl font-black text-white flex items-center gap-2">
+                      Token #{todayAppt.tokenNumber || 1} — Dr. {todayAppt.doctorName}
+                    </h3>
+                    <p className="text-xs text-slate-300 font-medium">
+                      Consultation Slot Today ({todayAppt.date}) at {todayAppt.startTime}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="shrink-0">
+                  {isInConsultation ? (
+                    <div className="px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-black text-xs sm:text-sm animate-pulse flex items-center gap-2 shadow-lg">
+                      <span>🔔 DOCTOR IS CALLING YOU INTO CABIN NOW!</span>
+                    </div>
+                  ) : (
+                    <div className="px-4 py-2 rounded-xl bg-slate-950 border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center gap-2">
+                      <span className="size-2 rounded-full bg-emerald-400 animate-ping"></span>
+                      Status: {todayAppt.status}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-wrap gap-1.5 bg-muted p-1 rounded-lg">
             {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((status) => (

@@ -476,6 +476,19 @@ public class AppointmentService {
             }
         }
 
+        Integer tokenNumber = null;
+        if (appointment.getDoctorId() != null && appointment.getSlotStartAt() != null && effectiveStatus != AppointmentStatus.CANCELLED && effectiveStatus != AppointmentStatus.REJECTED && effectiveStatus != AppointmentStatus.EXPIRED) {
+            try {
+                Instant slotStart = appointment.getSlotStartAt();
+                java.time.LocalDate slotDate = java.time.LocalDate.ofInstant(slotStart, java.time.ZoneId.of("Asia/Kolkata"));
+                Instant dayStart = slotDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant();
+                Instant dayEnd = slotDate.plusDays(1).atStartOfDay(java.time.ZoneOffset.UTC).toInstant();
+                tokenNumber = appointmentRepository.findTokenNumberForAppointment(appointment.getDoctorId(), dayStart, dayEnd, slotStart);
+            } catch (Exception e) {
+                tokenNumber = null;
+            }
+        }
+
         return new AppointmentDto(
                 appointment.getId().toString(),
                 appointment.getDoctorId() != null ? appointment.getDoctorId().toString() : null,
@@ -504,7 +517,7 @@ public class AppointmentService {
                 appointment.getLabTests(),
                 appointment.getFollowUpDate(),
                 appointment.getConsultationFee(),
-                null
+                tokenNumber
         );
     }
 }

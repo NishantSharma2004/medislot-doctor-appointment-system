@@ -174,4 +174,20 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             @Param("dayStart") Instant dayStart,
             @Param("dayEnd") Instant dayEnd
     );
+
+    @Query("""
+            SELECT CAST(COUNT(a) + 1 AS integer)
+            FROM Appointment a
+            WHERE a.doctor.userId = :doctorId
+              AND a.slotStartAt >= :dayStart
+              AND a.slotStartAt < :dayEnd
+              AND a.status NOT IN ('CANCELLED', 'REJECTED', 'EXPIRED')
+              AND a.slotStartAt < :targetSlotStartAt
+            """)
+    Integer findTokenNumberForAppointment(
+            @Param("doctorId") UUID doctorId,
+            @Param("dayStart") Instant dayStart,
+            @Param("dayEnd") Instant dayEnd,
+            @Param("targetSlotStartAt") Instant targetSlotStartAt
+    );
 }
