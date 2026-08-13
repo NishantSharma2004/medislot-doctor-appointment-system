@@ -14,6 +14,6 @@ CREATE INDEX IF NOT EXISTS idx_availability_slots_expired_cleanup
     ON availability_slots (status, slot_end_at) 
     WHERE status = 'AVAILABLE';
 
--- 4. User Notification Stream Indexing (Instant Unread Bell Counter)
-CREATE INDEX IF NOT EXISTS idx_notifications_user_unread 
-    ON notifications (user_id, read, created_at DESC);
+-- 4. User Notification Stream Indexing (Instant Bell Counter)
+CREATE INDEX IF NOT EXISTS idx_notification_logs_user_status 
+    ON notification_logs (user_id, status, created_at DESC);
