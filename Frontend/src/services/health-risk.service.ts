@@ -135,17 +135,22 @@ export async function analyzeHealthRisk(request: HealthRiskRequest): Promise<Hea
         sys >= 130 ? "नमक का सेवन कम करें और प्रोसेस्ड खान-पान से बचें।" : "रोजाना कम से कम 30 मिनट वाक करें।",
       ],
       recommendedDoctor: {
-        doctorId: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "doc-2" : "doc-7",
-        doctorName: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "Dr. Vikram Shetty" : "Dr. Rajesh Sharma",
+        doctorId: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "d1000001-0000-4000-8000-000000000002" : "d1000001-0000-4000-8000-000000000001",
+        doctorName: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "Dr. Ananya Roy" : "Dr. Rajesh Sharma",
         specialization: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "Cardiology Specialist" : "General Physician & Primary Care",
         qualifications: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "MBBS, DM (Cardiology)" : "MBBS, MD (General Medicine)",
-        consultationFee: cardStatus === "HIGH" || cardStatus === "CRISIS" ? 1200 : 500,
+        consultationFee: cardStatus === "HIGH" || cardStatus === "CRISIS" ? 800 : 500,
         reason: "Clinical consultation recommended based on your AI health risk profile.",
       },
       clinicalDisclaimer: "Medical Disclaimer: This AI/ML Health Risk Prediction is an algorithm-based preliminary assessment grounded in ADA & AHA clinical guidelines.",
     };
   }
 
-  const { data } = await apiClient.post<HealthRiskResponse>("/health-risk/analyze", request);
-  return data;
+  try {
+    const { data } = await apiClient.post<HealthRiskResponse>("/health-risk/analyze", request);
+    return data;
+  } catch (err) {
+    console.error("API call /health-risk/analyze failed, falling back to local prediction", err);
+    return fallbackAnalyze(request);
+  }
 }

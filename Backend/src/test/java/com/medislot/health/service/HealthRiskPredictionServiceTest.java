@@ -1,9 +1,12 @@
 package com.medislot.health.service;
 
 import com.medislot.health.dto.HealthRiskDto;
+import com.medislot.availability.repository.AvailabilitySlotRepository;
+import com.medislot.doctor.repository.DoctorProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -12,10 +15,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class HealthRiskPredictionServiceTest {
 
     private HealthRiskPredictionService service;
+    private DoctorProfileRepository doctorProfileRepository;
+    private AvailabilitySlotRepository availabilitySlotRepository;
 
     @BeforeEach
     void setUp() {
-        service = new HealthRiskPredictionService();
+        doctorProfileRepository = Mockito.mock(DoctorProfileRepository.class);
+        availabilitySlotRepository = Mockito.mock(AvailabilitySlotRepository.class);
+        service = new HealthRiskPredictionService(doctorProfileRepository, availabilitySlotRepository);
     }
 
     @Test
