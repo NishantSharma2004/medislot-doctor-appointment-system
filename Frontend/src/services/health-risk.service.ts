@@ -140,7 +140,9 @@ export async function analyzeHealthRisk(request: HealthRiskRequest): Promise<Hea
         specialization: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "Cardiology Specialist" : "General Physician & Primary Care",
         qualifications: cardStatus === "HIGH" || cardStatus === "CRISIS" ? "MBBS, DM (Cardiology)" : "MBBS, MD (General Medicine)",
         consultationFee: cardStatus === "HIGH" || cardStatus === "CRISIS" ? 800 : 500,
-        reason: "Clinical consultation recommended based on your AI health risk profile.",
+        reason: cardStatus === "HIGH" || cardStatus === "CRISIS"
+          ? "High Cardiovascular / BP strain detected. Cardiology evaluation recommended. (Currently no open slots available for online booking. Please check back later.)"
+          : "Elevated Fasting/PP Glucose levels detected. Primary Care correlation recommended. (Currently no open slots available for online booking. Please check back later.)",
       },
       clinicalDisclaimer: "Medical Disclaimer: This AI/ML Health Risk Prediction is an algorithm-based preliminary assessment grounded in ADA & AHA clinical guidelines.",
     };
