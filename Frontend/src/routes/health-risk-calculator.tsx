@@ -394,20 +394,46 @@ function HealthRiskCalculatorPage() {
                       <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
                         <Stethoscope className="size-3.5" /> Recommended Specialist Doctor
                       </span>
-                      <Badge variant="outline" className="text-[10px] border-emerald-400/40 text-emerald-200">
-                        1-Click Booking
+                      <Badge variant="outline" className={cn(
+                        "text-[10px]",
+                        result.recommendedDoctor.reason?.includes("Currently no open slots available")
+                          ? "border-amber-400/40 text-amber-300 bg-amber-500/10"
+                          : "border-emerald-400/40 text-emerald-200 bg-emerald-500/10"
+                      )}>
+                        {result.recommendedDoctor.reason?.includes("Currently no open slots available") ? "No Slots Open" : "Slots Available ✓"}
                       </Badge>
                     </div>
                     <div>
                       <h4 className="text-base font-black text-white">{result.recommendedDoctor.doctorName}</h4>
                       <p className="text-xs text-emerald-100/80">{result.recommendedDoctor.specialization} · {result.recommendedDoctor.qualifications}</p>
                       <p className="text-xs text-emerald-300 font-semibold mt-0.5">Consultation Fee: ₹{result.recommendedDoctor.consultationFee}</p>
+
+                      {/* Live Slot Status Warning/Success */}
+                      {result.recommendedDoctor.reason?.includes("Currently no open slots available") ? (
+                        <div className="mt-2 p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-xs font-semibold text-amber-200 flex items-center gap-1.5">
+                          <AlertTriangle className="size-4 text-amber-400 shrink-0" />
+                          <span>Currently no open consultation slots available for online booking. Please check back later or check other active specialists.</span>
+                        </div>
+                      ) : (
+                        <div className="mt-2 p-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-xs font-semibold text-emerald-200 flex items-center gap-1.5">
+                          <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
+                          <span>Open consultation slots available today! Click below to confirm appointment.</span>
+                        </div>
+                      )}
                     </div>
                     <Button
                       onClick={() => navigate({ to: "/doctors/$doctorId", params: { doctorId: result.recommendedDoctor!.doctorId } })}
-                      className="w-full h-10 text-xs font-bold gap-2 bg-emerald-500 hover:bg-emerald-400 text-black shadow-md cursor-pointer"
+                      className={cn(
+                        "w-full h-10 text-xs font-bold gap-2 text-black shadow-md cursor-pointer transition-all",
+                        result.recommendedDoctor.reason?.includes("Currently no open slots available")
+                          ? "bg-amber-400 hover:bg-amber-300"
+                          : "bg-emerald-500 hover:bg-emerald-400"
+                      )}
                     >
-                      <CalendarClock className="size-4" /> Book Appointment with {result.recommendedDoctor.doctorName}
+                      <CalendarClock className="size-4" />
+                      {result.recommendedDoctor.reason?.includes("Currently no open slots available")
+                        ? `View ${result.recommendedDoctor.doctorName}'s Profile & Slots`
+                        : `Book Appointment with ${result.recommendedDoctor.doctorName}`}
                     </Button>
                   </div>
                 ) : null}

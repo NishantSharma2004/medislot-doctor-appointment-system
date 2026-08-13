@@ -394,16 +394,35 @@ export function AssistantPanel() {
                       <p className="font-bold text-sm text-foreground">{message.reply.doctorMatch.doctorName}</p>
                       <p className="text-[11px] text-muted-foreground">{message.reply.doctorMatch.specialization} · {message.reply.doctorMatch.qualifications}</p>
                       <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold pt-0.5">Consultation Fee: ₹{message.reply.doctorMatch.consultationFee}</p>
+                      
+                      {/* Slot Availability Notice Badge */}
+                      {message.reply.doctorMatch.reason?.includes("Currently no open slots available") ? (
+                        <div className="mt-1.5 p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-[10px] font-semibold text-amber-700 dark:text-amber-300 flex items-center gap-1">
+                          <AlertTriangle className="size-3 text-amber-500 shrink-0" /> Currently no open slots available for online booking.
+                        </div>
+                      ) : (
+                        <div className="mt-1.5 p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
+                          <CheckCircle2 className="size-3 text-emerald-500 shrink-0" /> Open consultation slots available today.
+                        </div>
+                      )}
                     </div>
                     <Button
                       size="sm"
-                      className="w-full text-xs font-bold gap-1.5 h-8 bg-emerald-600 hover:bg-emerald-500 text-white cursor-pointer shadow-sm"
+                      className={cn(
+                        "w-full text-xs font-bold gap-1.5 h-8 text-white cursor-pointer shadow-sm",
+                        message.reply.doctorMatch.reason?.includes("Currently no open slots available")
+                          ? "bg-amber-600 hover:bg-amber-500"
+                          : "bg-emerald-600 hover:bg-emerald-500"
+                      )}
                       onClick={() => {
                         setOpen(false);
                         navigate({ to: "/doctors/$doctorId", params: { doctorId: message.reply!.doctorMatch!.doctorId } });
                       }}
                     >
-                      <CalendarClock className="size-3.5" /> Book Slot with {message.reply.doctorMatch.doctorName}
+                      <CalendarClock className="size-3.5" />
+                      {message.reply.doctorMatch.reason?.includes("Currently no open slots available")
+                        ? `View ${message.reply.doctorMatch.doctorName}'s Profile`
+                        : `Book Slot with ${message.reply.doctorMatch.doctorName}`}
                     </Button>
                   </div>
                 ) : null}

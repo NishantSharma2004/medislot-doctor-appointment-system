@@ -55,11 +55,11 @@ function parseUniversalMedicalReport(messageText: string, fileName?: string): As
         ],
       },
       doctorMatch: {
-        doctorId: "doc-2",
-        doctorName: "Dr. Vikram Shetty",
+        doctorId: "d1000001-0000-4000-8000-000000000002",
+        doctorName: "Dr. Ananya Roy",
         specialization: "Cardiology Specialist",
         qualifications: "MBBS, MD, DM (Cardiology)",
-        consultationFee: 1200,
+        consultationFee: 800,
         triageLevel: "URGENT",
         reason: "Consultation recommended for Elevated Blood Pressure (145/92 mmHg) & Cardiac Evaluation.",
       },
@@ -95,7 +95,7 @@ function parseUniversalMedicalReport(messageText: string, fileName?: string): As
         ],
       },
       doctorMatch: {
-        doctorId: "doc-7",
+        doctorId: "d1000001-0000-4000-8000-000000000001",
         doctorName: "Dr. Rajesh Sharma",
         specialization: "General Physician & Primary Care",
         qualifications: "MBBS, MD (General Medicine)",
@@ -136,7 +136,7 @@ function parseUniversalMedicalReport(messageText: string, fileName?: string): As
         ],
       },
       doctorMatch: {
-        doctorId: "doc-7",
+        doctorId: "d1000001-0000-4000-8000-000000000001",
         doctorName: "Dr. Rajesh Sharma",
         specialization: "General Physician & Primary Care",
         qualifications: "MBBS, MD (General Medicine)",
@@ -176,8 +176,8 @@ function parseUniversalMedicalReport(messageText: string, fileName?: string): As
         ],
       },
       doctorMatch: {
-        doctorId: "doc-5",
-        doctorName: "Dr. Sneha Kulkarni",
+        doctorId: "d1000001-0000-4000-8000-000000000004",
+        doctorName: "Dr. Priya Nair",
         specialization: "Orthopaedics Specialist",
         qualifications: "MS (Orthopaedics), DNB",
         consultationFee: 900,
@@ -230,7 +230,7 @@ function parseUniversalMedicalReport(messageText: string, fileName?: string): As
       ],
     },
     doctorMatch: {
-      doctorId: "doc-7",
+      doctorId: "d1000001-0000-4000-8000-000000000001",
       doctorName: "Dr. Rajesh Sharma",
       specialization: "General Physician & Primary Care",
       qualifications: "MBBS, MD (General Medicine)",
@@ -285,33 +285,9 @@ const mockAssistantService: AssistantService = {
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
-          doctorId: "doc-7",
+          doctorId: "d1000001-0000-4000-8000-000000000001",
           doctorName: "Dr. Rajesh Sharma",
           specialization: "General Medicine & Primary Care",
-          qualifications: "MBBS, MD (General Medicine)",
-          consultationFee: 500,
-          triageLevel: "ROUTINE",
-          reason: "General Consultation for primary care & routine checkup.",
-        },
-      });
-    }
-
-    if (text.includes("rajesh") || text.includes("sharma")) {
-      return delay({
-        answer:
-          "🩺 **Doctor Details**: **Dr. Rajesh Sharma**\n\n" +
-          "**Dr. Rajesh Sharma** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
-          "• **Specialization**: General Medicine & Primary Care\n" +
-          "• **Qualifications**: MBBS, MD (General Medicine)\n" +
-          "• **Consultation Fee**: ₹500\n" +
-          "• **Key Services**: Comprehensive primary health checkups, preventive medicine, and lifestyle management.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Primary Care", evidenceStrength: "STRONG" }],
-        sufficientEvidence: true,
-        disclaimer: ASSISTANT_DISCLAIMER,
-        doctorMatch: {
-          doctorId: "doc-7",
-          doctorName: "Dr. Rajesh Sharma",
-          specialization: "General Physician & Primary Care",
           qualifications: "MBBS, MD (General Medicine)",
           consultationFee: 500,
           triageLevel: "ROUTINE",
@@ -333,7 +309,7 @@ const mockAssistantService: AssistantService = {
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
-          doctorId: "doc-10",
+          doctorId: "d1000001-0000-4000-8000-000000000006",
           doctorName: "Dr. Alok Banerjee",
           specialization: "Ophthalmology",
           qualifications: "MBBS, MS (Ophthalmology)",
@@ -734,7 +710,8 @@ const mockAssistantService: AssistantService = {
 async function resolveRealDoctorMatch(text: string, existingMatch?: import("@/lib/api/types").DoctorMatchInfo): Promise<import("@/lib/api/types").DoctorMatchInfo | undefined> {
   try {
     const { doctorService } = await import("./doctor.service");
-    const doctorsPage = await doctorService.searchDoctors({ size: 30 });
+    const { isUpcomingSlot } = await import("@/components/common/format");
+    const doctorsPage = await doctorService.searchDoctors({ size: 50 });
     const realDoctors = doctorsPage?.content || [];
     if (realDoctors.length === 0) return existingMatch;
 
@@ -756,15 +733,48 @@ async function resolveRealDoctorMatch(text: string, existingMatch?: import("@/li
       targetSpec = "Neurology";
     }
 
-    let matchedDoc = realDoctors.find((d) =>
-      targetSpec && d.specialization?.toLowerCase().includes(targetSpec.toLowerCase())
-    );
+    let matchedDoc: import("@/lib/api/types").DoctorDto | undefined;
+    let hasSlots = false;
 
+    // 1. Check if any doctor in target specialization has open available slots
+    for (const doc of realDoctors) {
+      if (targetSpec && doc.specialization?.toLowerCase().includes(targetSpec.toLowerCase())) {
+        try {
+          const slots = await doctorService.getAvailability(doc.id);
+          const upcoming = slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime));
+          if (upcoming.length > 0) {
+            matchedDoc = doc;
+            hasSlots = true;
+            break;
+          }
+        } catch {}
+      }
+    }
+
+    // 2. If no target doctor has open slots, pick the target specialist (or first active doctor)
     if (!matchedDoc) {
-      matchedDoc = realDoctors[0];
+      matchedDoc = realDoctors.find((d) =>
+        targetSpec && d.specialization?.toLowerCase().includes(targetSpec.toLowerCase())
+      ) || realDoctors[0];
+
+      if (matchedDoc) {
+        try {
+          const slots = await doctorService.getAvailability(matchedDoc.id);
+          const upcoming = slots.filter((s) => !s.booked && isUpcomingSlot(s.date, s.startTime));
+          hasSlots = upcoming.length > 0;
+        } catch {}
+      }
     }
 
     if (matchedDoc) {
+      const slotNotice = hasSlots
+        ? "Available slots open for booking."
+        : "Currently no open slots available for online booking. Please check back later.";
+
+      const cleanReason = (existingMatch?.reason || `Consultation recommended with ${matchedDoc.fullName}`)
+        .replace(/ \(Currently no open slots available for online booking\.\)/g, "")
+        .replace(/ \(Available slots open for booking today\.\)/g, "");
+
       return {
         doctorId: matchedDoc.id,
         doctorName: matchedDoc.fullName,
@@ -772,7 +782,7 @@ async function resolveRealDoctorMatch(text: string, existingMatch?: import("@/li
         qualifications: matchedDoc.qualifications || "MBBS",
         consultationFee: matchedDoc.consultationFee || 500,
         triageLevel: existingMatch?.triageLevel || "ROUTINE",
-        reason: existingMatch?.reason || `Consultation recommended with ${matchedDoc.fullName}`,
+        reason: `${cleanReason} (${slotNotice})`,
       };
     }
   } catch {
@@ -829,7 +839,7 @@ const httpAssistantService: AssistantService = {
       }
       if (!reply.doctorMatch) {
         reply.doctorMatch = {
-          doctorId: "doc-7",
+          doctorId: "d1000001-0000-4000-8000-000000000001",
           doctorName: "Dr. Rajesh Sharma",
           specialization: "General Physician & Primary Care",
           qualifications: "MBBS, MD",
@@ -844,8 +854,8 @@ const httpAssistantService: AssistantService = {
     if (!reply.doctorMatch) {
       if ((text.includes("headache") || text.includes("sir dard")) && (text.includes("eye") || text.includes("aankh"))) {
         reply.doctorMatch = {
-          doctorId: "doc-8",
-          doctorName: "Dr. Kavita Verma",
+          doctorId: "d1000001-0000-4000-8000-000000000004",
+          doctorName: "Dr. Priya Nair",
           specialization: "Neurology Specialist",
           qualifications: "MBBS, DM (Neurology)",
           consultationFee: 1300,
@@ -854,8 +864,8 @@ const httpAssistantService: AssistantService = {
         };
       } else if (text.includes("eye") || text.includes("aankh") || text.includes("vision") || text.includes("sight") || text.includes("cataract")) {
         reply.doctorMatch = {
-          doctorId: "doc-10",
-          doctorName: "Dr. Alok Banerjee",
+          doctorId: "d1000001-0000-4000-8000-000000000006",
+          doctorName: "Dr. Sunita Kulkarni",
           specialization: "Ophthalmology",
           qualifications: "MBBS, MS (Ophthalmology)",
           consultationFee: 700,
@@ -864,8 +874,8 @@ const httpAssistantService: AssistantService = {
         };
       } else if (text.includes("nerve") || text.includes("nerves") || text.includes("headache") || text.includes("migraine") || text.includes("sir dard") || text.includes("brain")) {
         reply.doctorMatch = {
-          doctorId: "doc-8",
-          doctorName: "Dr. Kavita Verma",
+          doctorId: "d1000001-0000-4000-8000-000000000004",
+          doctorName: "Dr. Priya Nair",
           specialization: "Neurology Specialist",
           qualifications: "MBBS, DM (Neurology)",
           consultationFee: 1300,
@@ -874,8 +884,8 @@ const httpAssistantService: AssistantService = {
         };
       } else if (text.includes("skin") || text.includes("acne") || text.includes("hair")) {
         reply.doctorMatch = {
-          doctorId: "doc-3",
-          doctorName: "Dr. Meera Krishnan",
+          doctorId: "d1000001-0000-4000-8000-000000000003",
+          doctorName: "Dr. Vikram Patel",
           specialization: "Dermatology Specialist",
           qualifications: "MBBS, MD (Dermatology)",
           consultationFee: 750,
@@ -884,8 +894,8 @@ const httpAssistantService: AssistantService = {
         };
       } else if (text.includes("bone") || text.includes("joint") || text.includes("back pain")) {
         reply.doctorMatch = {
-          doctorId: "doc-5",
-          doctorName: "Dr. Sneha Kulkarni",
+          doctorId: "d1000001-0000-4000-8000-000000000004",
+          doctorName: "Dr. Priya Nair",
           specialization: "Orthopaedics Specialist",
           qualifications: "MBBS, MS (Orthopaedics)",
           consultationFee: 900,
@@ -894,11 +904,11 @@ const httpAssistantService: AssistantService = {
         };
       } else if (text.includes("chest") || text.includes("heart") || text.includes("cardio")) {
         reply.doctorMatch = {
-          doctorId: "doc-2",
-          doctorName: "Dr. Vikram Shetty",
+          doctorId: "d1000001-0000-4000-8000-000000000002",
+          doctorName: "Dr. Ananya Roy",
           specialization: "Cardiology Specialist",
           qualifications: "MBBS, DM (Cardiology)",
-          consultationFee: 1200,
+          consultationFee: 800,
           triageLevel: "URGENT",
           reason: "Cardiac & Chest discomfort evaluation.",
         };

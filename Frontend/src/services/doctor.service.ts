@@ -68,7 +68,7 @@ const mockDoctorService: DoctorService = {
   },
 
   async createAvailability(payload) {
-    const doctorId = "doc-1";
+    const doctorId = "d1000001-0000-4000-8000-000000000001";
     const created: AvailabilitySlotDto[] = [];
     let cursor = payload.startTime;
     while (cursor < payload.endTime) {

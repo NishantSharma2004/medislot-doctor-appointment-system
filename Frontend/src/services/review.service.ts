@@ -3,10 +3,10 @@ import type { DoctorReviewDto } from "@/lib/api/types";
 const STORAGE_KEY = "medislot_reviews_v1";
 
 const INITIAL_REVIEWS: DoctorReviewDto[] = [
-  // Dr. Rajesh Sharma (doc-7)
+  // Dr. Rajesh Sharma (d1000001-0000-4000-8000-000000000001)
   {
     id: "rev-1",
-    doctorId: "doc-7",
+    doctorId: "d1000001-0000-4000-8000-000000000001",
     patientId: "patient-1",
     patientName: "Riya Sharma",
     appointmentId: "appt-seed-1",
@@ -17,7 +17,7 @@ const INITIAL_REVIEWS: DoctorReviewDto[] = [
   },
   {
     id: "rev-2",
-    doctorId: "doc-7",
+    doctorId: "d1000001-0000-4000-8000-000000000001",
     patientId: "patient-2",
     patientName: "Amitabh Verma",
     rating: 5,
@@ -27,7 +27,7 @@ const INITIAL_REVIEWS: DoctorReviewDto[] = [
   },
   {
     id: "rev-3",
-    doctorId: "doc-7",
+    doctorId: "d1000001-0000-4000-8000-000000000001",
     patientId: "patient-3",
     patientName: "Pooja Patel",
     rating: 4,
@@ -36,20 +36,20 @@ const INITIAL_REVIEWS: DoctorReviewDto[] = [
     createdAt: "2026-08-01T09:15:00Z",
   },
 
-  // Dr. Ananya Rao (doc-1)
+  // Dr. Ananya Roy (d1000001-0000-4000-8000-000000000002)
   {
     id: "rev-4",
-    doctorId: "doc-1",
+    doctorId: "d1000001-0000-4000-8000-000000000002",
     patientId: "patient-4",
     patientName: "Sanjay Gupta",
     rating: 5,
-    comment: "Best endocrinologist in Delhi NCR! Balanced my thyroid dosage properly.",
+    comment: "Best cardiologist in Mumbai! Balanced my blood pressure medication properly.",
     verifiedPatient: true,
     createdAt: "2026-08-05T11:00:00Z",
   },
   {
     id: "rev-5",
-    doctorId: "doc-1",
+    doctorId: "d1000001-0000-4000-8000-000000000002",
     patientId: "patient-5",
     patientName: "Neha Mehta",
     rating: 5,
@@ -58,14 +58,14 @@ const INITIAL_REVIEWS: DoctorReviewDto[] = [
     createdAt: "2026-08-02T14:45:00Z",
   },
 
-  // Dr. Vikram Shetty (doc-2)
+  // Dr. Vikram Patel (d1000001-0000-4000-8000-000000000003)
   {
     id: "rev-6",
-    doctorId: "doc-2",
+    doctorId: "d1000001-0000-4000-8000-000000000003",
     patientId: "patient-6",
     patientName: "Rohan Malhotra",
     rating: 5,
-    comment: "Outstanding cardiologist. Checked ECG and prescribed clear blood pressure control plan.",
+    comment: "Outstanding dermatologist. Recommended clear skin care plan.",
     verifiedPatient: true,
     createdAt: "2026-08-03T16:10:00Z",
   },

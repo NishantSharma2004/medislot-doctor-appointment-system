@@ -304,12 +304,12 @@ public class HealthRiskPredictionService {
 
         // Safe Fallback for empty database
         return new HealthRiskDto.RecommendedDoctor(
-                "doc-7",
+                "d1000001-0000-4000-8000-000000000001",
                 "Dr. Rajesh Sharma",
                 "General Physician & Primary Care",
                 "MBBS, MD (General Medicine)",
                 500,
-                "Routine health checkup and preventive lifestyle consultation."
+                "Routine health checkup and preventive lifestyle consultation. (Currently no open slots available for online booking.)"
         );
     }
 }
