@@ -84,64 +84,99 @@ public class HealthRiskPredictionService {
     }
 
     private HealthRiskDto.DiabetesRisk calculateDiabetesRisk(int fasting, int pp, int age, double bmi) {
-        double fastingScore = Math.max(0, (fasting - 90) * 0.45);
-        double ppScore = Math.max(0, (pp - 130) * 0.35);
-        double bmiScore = Math.max(0, (bmi - 23.0) * 1.5);
-        double ageScore = Math.max(0, (age - 35) * 0.2);
+        double prob = 10.0;
+        String level = "Normal Glucose Tolerance";
+        String status = "NORMAL";
+        String summary = "Your fasting blood glucose levels are within normal limits (70-99 mg/dL).";
 
-        double totalProb = Math.min(99.0, Math.max(2.0, fastingScore + ppScore + bmiScore + ageScore));
-        totalProb = Math.round(totalProb * 10.0) / 10.0;
+        if (fasting >= 126 || pp >= 200) {
+            prob = 88.5 + Math.min(10.0, (fasting - 126) * 0.15 + (bmi > 28 ? 3.0 : 0.0));
+            level = "High Type-2 Diabetes Risk / Hyperglycemia";
+            status = "HIGH";
+            summary = String.format("Fasting glucose (%d mg/dL) or PP glucose (%d mg/dL) indicates elevated blood sugar consistent with Type-2 Diabetes.", fasting, pp);
+        } else if (fasting >= 100 || pp >= 140) {
+            prob = 55.0 + Math.min(30.0, (fasting - 100) * 1.2 + (age > 45 ? 5.0 : 0.0));
+            level = "Pre-Diabetes / Impaired Glucose Tolerance";
+            status = "ELEVATED";
+            summary = String.format("Fasting glucose (%d mg/dL) indicates early glucose intolerance (Pre-Diabetes). Dietary care is advised.", fasting);
+        } else if (fasting < 70) {
+            prob = 40.0;
+            level = "Hypoglycemia Risk (Low Blood Sugar)";
+            status = "ELEVATED";
+            summary = String.format("Fasting glucose (%d mg/dL) is below normal limits (<70 mg/dL). Monitor for dizziness or weakness.", fasting);
+        }
 
-        String level = totalProb < 25.0 ? "LOW" : totalProb < 55.0 ? "MODERATE" : totalProb < 80.0 ? "HIGH" : "VERY_HIGH";
-        String status = totalProb < 25.0 ? "NORMAL" : totalProb < 55.0 ? "ELEVATED" : "HIGH";
-
-        String summary = String.format("Fasting Glucose %d mg/dL and PP Glucose %d mg/dL. Diabetes probability is %.1f%% (%s).",
-                fasting, pp, totalProb, level);
-
-        return new HealthRiskDto.DiabetesRisk(level, totalProb, status, summary);
+        prob = Math.min(99.0, Math.max(5.0, prob));
+        return new HealthRiskDto.DiabetesRisk(level, Math.round(prob * 10.0) / 10.0, status, summary);
     }
 
-    private HealthRiskDto.CardiologyRisk calculateCardiologyRisk(int sys, int dia, int hr, int age, double bmi) {
-        double sysScore = Math.max(0, (sys - 115) * 0.55);
-        double diaScore = Math.max(0, (dia - 75) * 0.45);
-        double hrScore = Math.max(0, (hr - 75) * 0.2);
+    private HealthRiskDto.CardiologyRisk calculateCardiologyRisk(int sys, int dia, int heartRate, int age, double bmi) {
+        double prob = 12.0;
+        String stage = "Normal Blood Pressure";
+        String status = "NORMAL";
+        String summary = "Your blood pressure is within normal healthy limits (<120/80 mmHg).";
 
-        double totalProb = Math.min(99.0, Math.max(3.0, sysScore + diaScore + hrScore + (age > 45 ? 5.0 : 0.0)));
-        totalProb = Math.round(totalProb * 10.0) / 10.0;
+        if (sys >= 180 || dia >= 120) {
+            prob = 95.0;
+            stage = "Hypertensive Crisis (Emergency Risk)";
+            status = "CRISIS";
+            summary = String.format("Blood Pressure (%d/%d mmHg) indicates a Hypertensive Crisis. Immediate medical evaluation is required.", sys, dia);
+        } else if (sys >= 140 || dia >= 90) {
+            prob = 78.0 + Math.min(15.0, (sys - 140) * 0.4 + (age > 50 ? 4.0 : 0.0));
+            stage = "Stage 2 Hypertension";
+            status = "HIGH";
+            summary = String.format("Blood Pressure (%d/%d mmHg) indicates Stage 2 Hypertension. Regular doctor consultation recommended.", sys, dia);
+        } else if (sys >= 130 || dia >= 80) {
+            prob = 52.0 + Math.min(20.0, (sys - 130) * 1.5);
+            stage = "Stage 1 Hypertension";
+            status = "ELEVATED";
+            summary = String.format("Blood Pressure (%d/%d mmHg) shows mild elevation (Stage 1 Hypertension). Reduce dietary sodium.", sys, dia);
+        } else if (sys >= 120 && sys <= 129 && dia < 80) {
+            prob = 32.0;
+            stage = "Elevated Blood Pressure";
+            status = "ELEVATED";
+            summary = String.format("Blood Pressure (%d/%d mmHg) is slightly elevated above optimal levels.", sys, dia);
+        }
 
-        String stage = sys >= 140 || dia >= 90 ? "Stage 2 Hypertension" :
-                sys >= 130 || dia >= 80 ? "Stage 1 Hypertension" :
-                        sys >= 120 ? "Elevated BP" : "Normal BP";
-
-        String status = totalProb >= 60.0 ? "CRISIS" : totalProb >= 40.0 ? "HIGH" : totalProb >= 20.0 ? "ELEVATED" : "NORMAL";
-
-        String summary = String.format("Blood Pressure %d/%d mmHg with resting Heart Rate %d bpm (%s). Cardiovascular risk is %.1f%%.",
-                sys, dia, hr, stage, totalProb);
-
-        return new HealthRiskDto.CardiologyRisk(stage, totalProb, status, summary);
+        prob = Math.min(99.0, Math.max(5.0, prob));
+        return new HealthRiskDto.CardiologyRisk(stage, Math.round(prob * 10.0) / 10.0, status, summary);
     }
 
     private List<String> analyzeMedicationWarnings(List<String> meds, int fasting, int sys) {
         List<String> warnings = new ArrayList<>();
-        if (meds == null) return warnings;
+        if (meds == null || meds.isEmpty()) return warnings;
 
-        for (String med : meds) {
-            String lower = med.toLowerCase();
-            if (lower.contains("metformin") && fasting < 70) {
-                warnings.add("Warning: Metformin with fasting glucose below 70 mg/dL increases hypoglycemia risk. Consult your physician.");
+        for (String m : meds) {
+            String medLower = m.toLowerCase();
+            if (medLower.contains("steroid") || medLower.contains("prednisone") || medLower.contains("dexamethasone")) {
+                if (fasting > 100) {
+                    warnings.add("⚠️ Steroid medication detected: Corticosteroids can elevate blood glucose levels. Clinical dosage monitoring is advised.");
+                }
             }
-            if ((lower.contains("nsaid") || lower.contains("ibuprofen") || lower.contains("naproxen")) && sys >= 130) {
-                warnings.add("Caution: Regular NSAID / Ibuprofen use can further elevate Systolic BP.");
+            if (medLower.contains("decongestant") || medLower.contains("pseudoephedrine")) {
+                if (sys > 130) {
+                    warnings.add("⚠️ Decongestant medication detected: Nasal decongestants can constrict blood vessels and increase Blood Pressure.");
+                }
+            }
+            if (medLower.contains("nsaid") || medLower.contains("ibuprofen") || medLower.contains("naproxen")) {
+                if (sys > 140) {
+                    warnings.add("⚠️ NSAID Painkiller detected: Long-term NSAID use can elevate fluid retention and Blood Pressure.");
+                }
             }
         }
         return warnings;
     }
 
     private int computeOverallRiskScore(HealthRiskDto.DiabetesRisk diabetes, HealthRiskDto.CardiologyRisk cardio, double bmi, int age, int medWarningCount) {
-        double score = (diabetes.getProbability() * 0.45) + (cardio.getProbability() * 0.45) + (medWarningCount * 5.0);
-        if (bmi >= 30.0) score += 5.0;
-        if (age >= 60) score += 5.0;
-        return (int) Math.min(100, Math.max(5, Math.round(score)));
+        double score = (diabetes.getProbability() * 0.45) + (cardio.getProbability() * 0.45);
+        if (bmi > 30) score += 6.0;
+        else if (bmi > 25) score += 3.0;
+
+        if (age > 60) score += 5.0;
+        else if (age > 45) score += 2.5;
+
+        score += (medWarningCount * 4.0);
+        return Math.min(99, Math.max(10, (int) Math.round(score)));
     }
 
     private List<String> generateLifestyleAdviceEnglish(int fasting, int sys, double bmi) {
