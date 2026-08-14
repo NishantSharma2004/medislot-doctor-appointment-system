@@ -145,6 +145,7 @@ public class AuthService {
         return login(request, null);
     }
 
+    @Transactional
     public AuthResponse login(LoginRequest request, String clientIp) {
         String normalizedEmail = request.email().trim().toLowerCase();
 

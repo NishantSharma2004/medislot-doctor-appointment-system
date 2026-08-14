@@ -22,6 +22,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID
             @Param("tokenHash") String tokenHash,
             @Param("now") Instant now);
 
+    @org.springframework.transaction.annotation.Transactional
     @Modifying
     @Query("UPDATE RefreshToken rt SET rt.revokedAt = :revokedAt WHERE rt.user.id = :userId AND rt.revokedAt IS NULL")
     int revokeAllByUserId(@Param("userId") UUID userId, @Param("revokedAt") Instant revokedAt);
