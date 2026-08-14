@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS prescriptions (
     id UUID PRIMARY KEY,
     appointment_id UUID NOT NULL UNIQUE REFERENCES appointments(id) ON DELETE CASCADE,
     patient_id UUID NOT NULL REFERENCES users(id),
-    doctor_id UUID NOT NULL REFERENCES doctor_profiles(id),
+    doctor_id UUID NOT NULL REFERENCES doctor_profiles(user_id),
     rx_number VARCHAR(50) NOT NULL UNIQUE,
     diagnosis TEXT,
     symptoms TEXT,
