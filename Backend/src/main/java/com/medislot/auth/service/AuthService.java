@@ -141,12 +141,10 @@ public class AuthService {
         return createAuthResponse(savedUser);
     }
 
-    @Transactional
     public AuthResponse login(LoginRequest request) {
         return login(request, null);
     }
 
-    @Transactional
     public AuthResponse login(LoginRequest request, String clientIp) {
         String normalizedEmail = request.email().trim().toLowerCase();
 
@@ -167,7 +165,7 @@ public class AuthService {
             if (bruteForceProtectionService != null) {
                 bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);
             }
-            throw e;
+            throw new UnauthorizedException("Invalid email or password.");
         }
 
         User user = userRepository.findByEmailIgnoreCase(normalizedEmail)
