@@ -165,7 +165,7 @@ public class AuthService {
             if (bruteForceProtectionService != null) {
                 bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);
             }
-            throw new UnauthorizedException("Invalid email or password.");
+            throw e;
         }
 
         User user = userRepository.findByEmailIgnoreCase(normalizedEmail)
