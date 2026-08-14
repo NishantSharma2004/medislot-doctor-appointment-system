@@ -21,9 +21,9 @@ USER medislot:medislot
 # Copy built JAR from builder stage
 COPY --from=builder /app/target/doctor-appointment-backend-*.jar app.jar
 
-# Environment variables
+# Environment variables optimized for Render 512MB RAM free tier
 ENV PORT=8080 \
-    JAVA_OPTS="-Xms128m -Xmx320m -XX:TieredStopAtLevel=1 -XX:+UseG1GC -Dspring.backgroundpreinitializer.ignore=true"
+    JAVA_OPTS="-Xms96m -Xmx220m -XX:MaxMetaspaceSize=110m -XX:ReservedCodeCacheSize=48m -Xss256k -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -Dspring.backgroundpreinitializer.ignore=true"
 
 EXPOSE 8080
 
