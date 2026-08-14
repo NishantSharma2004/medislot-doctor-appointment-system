@@ -5,19 +5,37 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
 
   const isPrescriptionDto = "rxNumber" in data;
 
-  const doctorName = isPrescriptionDto ? (data as PrescriptionDto).doctorName : (data as AppointmentDto).doctorName;
-  const doctorSpec = isPrescriptionDto ? ((data as PrescriptionDto).doctorSpecialization || "General Medicine") : ((data as AppointmentDto).specialization || "General Practice");
-  const doctorReg = isPrescriptionDto ? ((data as PrescriptionDto).doctorRegistrationNumber || "REG-MED-101") : "REG-MED-101";
-  const clinicName = isPrescriptionDto ? ((data as PrescriptionDto).clinicName || "MediSlot Clinic") : "MediSlot Clinic";
+  const doctorName = isPrescriptionDto
+    ? (data as PrescriptionDto).doctorName
+    : (data as AppointmentDto).doctorName;
+  const doctorSpec = isPrescriptionDto
+    ? ((data as PrescriptionDto).doctorSpecialization || "General Medicine")
+    : ((data as AppointmentDto).specialization || "General Practice");
+  const doctorReg = isPrescriptionDto
+    ? ((data as PrescriptionDto).doctorRegistrationNumber || "REG-MED-101")
+    : "REG-MED-101";
+  const clinicName = isPrescriptionDto
+    ? ((data as PrescriptionDto).clinicName || "MediSlot Clinic")
+    : "MediSlot Clinic";
 
   const patientName = data.patientName;
-  const rxNumber = isPrescriptionDto ? (data as PrescriptionDto).rxNumber : `RX-#${data.id.slice(0, 8)}`;
+  const rxNumber = isPrescriptionDto
+    ? (data as PrescriptionDto).rxNumber
+    : `RX-#${data.id.slice(0, 8)}`;
   const diagnosis = data.diagnosis;
   const symptoms = isPrescriptionDto ? (data as PrescriptionDto).symptoms : undefined;
-  const labTests = isPrescriptionDto ? (data as PrescriptionDto).labTestsRecommended : (data as AppointmentDto).labTests;
-  const clinicalAdvice = isPrescriptionDto ? (data as PrescriptionDto).clinicalAdvice : (data as AppointmentDto).notes;
-  const followUpDate = isPrescriptionDto ? (data as PrescriptionDto).followUpDate : (data as AppointmentDto).followUpDate;
-  const createdAtStr = isPrescriptionDto ? new Date((data as PrescriptionDto).createdAt).toLocaleDateString("en-IN") : (data as AppointmentDto).date;
+  const labTests = isPrescriptionDto
+    ? (data as PrescriptionDto).labTestsRecommended
+    : (data as AppointmentDto).labTests;
+  const clinicalAdvice = isPrescriptionDto
+    ? (data as PrescriptionDto).clinicalAdvice
+    : (data as AppointmentDto).notes;
+  const followUpDate = isPrescriptionDto
+    ? (data as PrescriptionDto).followUpDate
+    : (data as AppointmentDto).followUpDate;
+  const createdAtStr = isPrescriptionDto
+    ? new Date((data as PrescriptionDto).createdAt).toLocaleDateString("en-IN")
+    : (data as AppointmentDto).date;
 
   if (isPrescriptionDto) {
     medicines = (data as PrescriptionDto).medicines || [];
@@ -43,8 +61,9 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
   <title>Prescription_${patientName.replace(/\s+/g, "_")}_${rxNumber}.pdf</title>
   <style>
     @media print {
-      body { margin: 0; padding: 15px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; }
+      body { margin: 0; padding: 15px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; color: #1e293b; background: #ffffff !important; }
       .no-print { display: none !important; }
+      .prescription-card { box-shadow: none !important; border: none !important; padding: 0 !important; }
     }
     body {
       font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -69,11 +88,6 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
       border-bottom: 2px solid #0d9488;
       padding-bottom: 20px;
       margin-bottom: 24px;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
     .brand-title {
       font-size: 26px;
@@ -106,7 +120,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
       padding: 16px 20px;
       border-radius: 8px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 12px;
       font-size: 13px;
       margin-bottom: 24px;
@@ -129,7 +143,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
       font-style: italic;
     }
     .section-title {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -227,7 +241,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
         <strong>${patientName}</strong>
       </div>
       <div>
-        <span>Prescription Rx No.</span>
+        <span>Rx Reference No.</span>
         <strong>${rxNumber}</strong>
       </div>
       <div>
@@ -246,110 +260,6 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
         🩺 ${diagnosis} ${symptoms ? `<span style="font-weight: normal; color: #475569; font-size: 12px; display: block; margin-top: 4px;">Symptoms: ${symptoms}</span>` : ""}
       </div>
     ` : ""}
-    table.med-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 24px;
-      font-size: 13px;
-    }
-    table.med-table th {
-      background: #f8fafc;
-      text-align: left;
-      padding: 10px 12px;
-      border-bottom: 2px solid #e2e8f0;
-      color: #475569;
-      font-weight: 700;
-    }
-    table.med-table td {
-      padding: 12px;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    table.med-table tr:nth-child(even) {
-      background: #fafafa;
-    }
-    .footer {
-      margin-top: 40px;
-      pt: 20px;
-      border-top: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-    .stamp-box {
-      border: 2px dashed #94a3b8;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-align: center;
-      color: #0d9488;
-      font-weight: 700;
-      font-size: 12px;
-    }
-    .btn-print {
-      background: #0d9488;
-      color: #ffffff;
-      border: none;
-      padding: 10px 24px;
-      font-size: 14px;
-      font-weight: 600;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 20px;
-    }
-  </style>
-</head>
-<body>
-  <div style="text-align: right;" class="no-print">
-    <button onclick="window.print()" class="btn-print">🖨️ Print / Save as PDF</button>
-  </div>
-
-  <div class="prescription-card">
-    <div class="header">
-      <div class="brand">
-        <div>
-          <div class="brand-title">MediSlot</div>
-          <div class="brand-subtitle">Smart Digital Healthcare Platform</div>
-        </div>
-      </div>
-      <div class="doctor-meta">
-        <div class="doctor-name">Dr. ${appt.doctorName}</div>
-        <div class="doctor-spec">${appt.specialization}</div>
-        <div style="font-size: 11px; color: #64748b; margin-top: 2px;">MediSlot Verified Practitioner</div>
-      </div>
-    </div>
-
-    <div class="patient-bar">
-      <div>
-        <span>Patient Name</span>
-        <strong>${appt.patientName}</strong>
-      </div>
-      <div>
-        <span>Age / Gender</span>
-        <strong>${appt.patientAge ? `${appt.patientAge} Yrs` : "N/A"} / ${appt.patientGender || "N/A"}</strong>
-      </div>
-      <div>
-        <span>Consultation Date</span>
-        <strong>${appt.date}</strong>
-      </div>
-      <div>
-        <span>Rx Reference ID</span>
-        <strong>#${appt.id.slice(0, 8)}</strong>
-      </div>
-      <div>
-        <span>Time Slot</span>
-        <strong>${appt.startTime} - ${appt.endTime}</strong>
-      </div>
-      <div>
-        <span>Follow-Up Date</span>
-        <strong>${appt.followUpDate || "As needed"}</strong>
-      </div>
-    </div>
-
-    ${appt.diagnosis ? `
-      <div class="section-title">Clinical Diagnosis</div>
-      <div class="diagnosis-box">
-        🩺 ${appt.diagnosis}
-      </div>
-    ` : ""}
 
     <div class="rx-symbol">Rx</div>
 
@@ -360,37 +270,37 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
             <th>#</th>
             <th>Medicine Name</th>
             <th>Dosage</th>
-            <th>Frequency</th>
+            <th>Frequency / Timing</th>
             <th>Duration</th>
           </tr>
         </thead>
         <tbody>
-          ${medicines.map((m, idx) => `
+          ${medicines.map((m: any, idx) => `
             <tr>
               <td><strong>${idx + 1}</strong></td>
-              <td><strong style="color: #0f172a;">${m.name}</strong></td>
-              <td>${m.dosage}</td>
-              <td>${m.frequency}</td>
-              <td>${m.duration}</td>
+              <td><strong style="color: #0f172a;">${m.medicineName || m.name}</strong></td>
+              <td>${m.dosage || "As directed"}</td>
+              <td>${m.frequency || "1-0-1"} ${m.timing ? `(${m.timing})` : ""}</td>
+              <td>${m.durationDays || m.duration || "5 Days"}</td>
             </tr>
           `).join("")}
         </tbody>
       </table>
     ` : `
-      <p style="font-size: 13px; color: #64748b; italic;">No specific oral medications prescribed.</p>
+      <p style="font-size: 13px; color: #64748b; font-style: italic;">No specific oral medications prescribed.</p>
     `}
 
-    ${appt.labTests ? `
+    ${labTests ? `
       <div class="section-title" style="margin-top: 20px;">Recommended Diagnostic Tests</div>
       <div style="font-size: 13px; color: #1e293b; background: #fff7ed; border: 1px solid #ffedd5; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-        🧪 <strong>${appt.labTests}</strong>
+        🧪 <strong>${labTests}</strong>
       </div>
     ` : ""}
 
-    ${appt.notes ? `
+    ${clinicalAdvice ? `
       <div class="section-title" style="margin-top: 20px;">Doctor Advice & Instructions</div>
       <div style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 20px;">
-        ${appt.notes}
+        ${clinicalAdvice}
       </div>
     ` : ""}
 
@@ -401,7 +311,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
       </div>
       <div class="stamp-box">
         ELECTRONICALLY SIGNED<br/>
-        <span style="font-size: 10px; font-weight: 400; color: #64748b;">Dr. ${appt.doctorName}</span>
+        <span style="font-size: 10px; font-weight: 400; color: #64748b;">Dr. ${doctorName}</span>
       </div>
     </div>
   </div>
