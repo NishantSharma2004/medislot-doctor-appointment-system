@@ -112,10 +112,28 @@ function DoctorAvailabilityPage() {
   const handleSeedQuickSlots = async (targetDateStr: string) => {
     setIsCreating(true);
     try {
+      let startLocalTime = "09:00";
+      let endLocalTime = "17:00";
+
+      // If seeding for TODAY and current time is past 9 AM, seed upcoming slots of today
+      if (targetDateStr === todayStr) {
+        const now = new Date();
+        const currentHour = now.getHours();
+        if (currentHour >= 17) {
+          const nextMin = now.getMinutes() < 30 ? "30" : "00";
+          const nextHr = now.getMinutes() < 30 ? currentHour : currentHour + 1;
+          startLocalTime = `${String(nextHr).padStart(2, "0")}:${nextMin}`;
+          endLocalTime = "23:59";
+        } else if (currentHour >= 9) {
+          startLocalTime = `${String(currentHour + 1).padStart(2, "0")}:00`;
+          endLocalTime = "23:59";
+        }
+      }
+
       await apiClient.post("/doctors/availability", {
         date: targetDateStr,
-        startLocalTime: "09:00",
-        endLocalTime: "17:00",
+        startLocalTime,
+        endLocalTime,
         slotMinutes: 30,
       });
       toast.success(`Slots created for ${targetDateStr}`);

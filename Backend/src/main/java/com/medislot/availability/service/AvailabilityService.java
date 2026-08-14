@@ -94,6 +94,12 @@ public class AvailabilityService {
 
                 Instant chunkEnd = chunkStart.plus(java.time.Duration.ofMinutes(durationMinutes));
 
+                // Auto-skip individual slot chunks that are already in the past
+                if (chunkStart.isBefore(Instant.now().minusSeconds(60))) {
+                    chunkStart = chunkEnd;
+                    continue;
+                }
+
                 if (!slotRepository.existsOverlappingSlot(doctor.getUserId(), chunkStart, chunkEnd, null)) {
                     AvailabilitySlot slot = buildSlot(doctor, chunkStart, chunkEnd, SlotStatus.AVAILABLE);
                     createdSlots.add(slotRepository.save(slot));
@@ -231,8 +237,8 @@ public class AvailabilityService {
         if (!startAt.isBefore(endAt)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "INVALID_TIME_RANGE", "Slot start time must be strictly before end time.");
         }
-        if (startAt.isBefore(Instant.now().minusSeconds(60))) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "INVALID_TIME_RANGE", "Slot start time cannot be in the past.");
+        if (endAt.isBefore(Instant.now().minusSeconds(60))) {
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "INVALID_TIME_RANGE", "Slot time window is entirely in the past.");
         }
     }
 
