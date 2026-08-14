@@ -72,6 +72,14 @@ public class DataSourceConfig {
             cleanUrl = "jdbc:" + cleanUrl;
         }
 
+        // Automatic PgBouncer transaction pooler parameter injection
+        if (!cleanUrl.contains("prepareThreshold=")) {
+            cleanUrl += (cleanUrl.contains("?") ? "&" : "?") + "prepareThreshold=0";
+        }
+        if (!cleanUrl.contains("search_path=")) {
+            cleanUrl += (cleanUrl.contains("?") ? "&" : "?") + "options=-c%20search_path%3Dpublic";
+        }
+
         config.setJdbcUrl(cleanUrl);
         config.setUsername(username);
         config.setPassword(password);
