@@ -15,6 +15,7 @@ import { doctorService } from "@/services/doctor.service";
 import { prescriptionService } from "@/services/prescription.service";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import { DoctorRatingModal } from "@/components/reviews/DoctorRatingModal";
+import { HealthVaultModal } from "@/components/vault/HealthVaultModal";
 import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
 
 export const Route = createFileRoute("/appointments")({
@@ -49,6 +50,10 @@ function MyAppointmentsPage() {
   const [availableSlots, setAvailableSlots] = useState<AvailabilitySlotDto[]>([]);
   const [selectedSlotId, setSelectedSlotId] = useState<string>("");
   const [isRescheduling, setIsRescheduling] = useState(false);
+
+  // Health Vault Modal State
+  const [vaultModalOpen, setVaultModalOpen] = useState(false);
+  const [sharingAppt, setSharingAppt] = useState<AppointmentDto | null>(null);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -245,23 +250,36 @@ function MyAppointmentsPage() {
         })()}
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex flex-wrap gap-1.5 bg-muted p-1 rounded-lg">
-            {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((status) => (
-              <button
-                key={status}
-                onClick={() => {
-                  setStatusFilter(status);
-                  setPage(0);
-                }}
-                className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
-                  statusFilter === status
-                    ? "bg-background text-foreground shadow-xs font-semibold"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {status}
-              </button>
-            ))}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap gap-1.5 bg-muted p-1 rounded-lg">
+              {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((status) => (
+                <button
+                  key={status}
+                  onClick={() => {
+                    setStatusFilter(status);
+                    setPage(0);
+                  }}
+                  className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                    statusFilter === status
+                      ? "bg-background text-foreground shadow-xs font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {status}
+                </button>
+              ))}
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-teal-500/40 text-teal-600 dark:text-teal-400 hover:bg-teal-500/10 font-bold gap-1.5 text-xs h-8"
+              onClick={() => {
+                setSharingAppt(null);
+                setVaultModalOpen(true);
+              }}
+            >
+              📂 My Health Vault (Locker)
+            </Button>
           </div>
         </div>
 
@@ -338,6 +356,20 @@ function MyAppointmentsPage() {
                     >
                       {effStatus === "EXPIRED" ? "EXPIRED (NO RESPONSE)" : effStatus}
                     </span>
+
+                    {(effStatus === "PENDING" || effStatus === "CONFIRMED" || effStatus === "IN_CONSULTATION") ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 text-xs gap-1 border-teal-500/40 text-teal-600 dark:text-teal-400 hover:bg-teal-500/10 font-bold"
+                        onClick={() => {
+                          setSharingAppt(appt);
+                          setVaultModalOpen(true);
+                        }}
+                      >
+                        📎 Share Medical Record
+                      </Button>
+                    ) : null}
 
                     {(effStatus === "COMPLETED" || appt.diagnosis || appt.prescriptionJson) ? (
                       <Button
@@ -440,6 +472,15 @@ function MyAppointmentsPage() {
           </div>
         </div>
       ) : null}
+
+      {/* Health Vault & Sharing Modal */}
+      <HealthVaultModal
+        isOpen={vaultModalOpen}
+        onClose={() => setVaultModalOpen(false)}
+        appointmentId={sharingAppt?.id}
+        doctorName={sharingAppt?.doctorName}
+        onRecordShared={loadAppointments}
+      />
     </PageShell>
   );
 }

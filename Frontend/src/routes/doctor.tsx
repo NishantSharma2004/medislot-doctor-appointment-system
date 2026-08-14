@@ -35,6 +35,7 @@ import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { opdQueueService } from "@/services/opd-queue.service";
 import { prescriptionService } from "@/services/prescription.service";
+import { healthVaultService, type VaultFile } from "@/services/health-vault.service";
 import { vitalsService } from "@/services/vitals.service";
 import { formatDoctorDisplayName } from "@/lib/utils";
 import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
@@ -64,6 +65,17 @@ function DoctorDeskPage() {
   const [inspectedPatient, setInspectedPatient] = useState<AppointmentDto | null>(null);
   const [patientVitalsList, setPatientVitalsList] = useState<HealthVitalDto[]>([]);
   const [showVitalsModal, setShowVitalsModal] = useState(false);
+  const [sharedVaultFiles, setSharedVaultFiles] = useState<VaultFile[]>([]);
+
+  const handleInspectPatient = async (appt: AppointmentDto) => {
+    setInspectedPatient(appt);
+    try {
+      const files = await healthVaultService.getAppointmentSharedFiles(appt.id);
+      setSharedVaultFiles(files);
+    } catch {
+      setSharedVaultFiles([]);
+    }
+  };
 
   // Document Preview Modal State
   const [previewDocAppt, setPreviewDocAppt] = useState<AppointmentDto | null>(null);
@@ -705,7 +717,7 @@ function DoctorDeskPage() {
                       size="sm"
                       variant="outline"
                       className="gap-1.5"
-                      onClick={() => setInspectedPatient(appt)}
+                      onClick={() => handleInspectPatient(appt)}
                     >
                       <Eye className="size-4" /> View Patient Info
                     </Button>
@@ -847,6 +859,45 @@ function DoctorDeskPage() {
                   <p className="text-sm font-medium">{inspectedPatient.reason}</p>
                 </div>
               ) : null}
+
+              {/* Shared Vault Records Section */}
+              <div className="p-3.5 bg-teal-950/20 border border-teal-500/30 rounded-xl space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-teal-400 flex items-center gap-1.5">
+                    📎 Patient Shared Locker Records ({sharedVaultFiles.length})
+                  </span>
+                  <Badge variant="outline" className="border-teal-500/40 text-teal-300 text-[10px]">
+                    Consent Granted
+                  </Badge>
+                </div>
+                {sharedVaultFiles.length === 0 ? (
+                  <p className="text-xs text-muted-foreground italic">
+                    No specific Vault medical records explicitly shared for this appointment.
+                  </p>
+                ) : (
+                  <div className="space-y-2 pt-1">
+                    {sharedVaultFiles.map((file) => (
+                      <div
+                        key={file.id}
+                        className="p-2.5 rounded-lg bg-card border border-border flex items-center justify-between gap-2 text-xs"
+                      >
+                        <div className="truncate">
+                          <span className="font-semibold text-foreground block truncate">{file.fileName}</span>
+                          <span className="text-[11px] text-muted-foreground">Category: {file.category}</span>
+                        </div>
+                        <a
+                          href={file.fileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 font-bold shrink-0 transition-colors"
+                        >
+                          📄 Open File
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="pt-2 flex items-center justify-between">
