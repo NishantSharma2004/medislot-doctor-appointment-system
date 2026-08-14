@@ -284,6 +284,31 @@ export interface PillLogDto {
   prescriptionId?: string;
   notes?: string;
 }
+export interface PrescriptionMedicine {
+  id?: string;
+  medicineName: string;
+  dosage?: string;
+  frequency?: string;
+  timing?: string;
+  durationDays?: string;
+}
 
-
-
+export interface PrescriptionDto {
+  id: string;
+  rxNumber: string;
+  appointmentId: string;
+  doctorId: string;
+  doctorName: string;
+  doctorRegistrationNumber?: string;
+  doctorSpecialization?: string;
+  clinicName?: string;
+  patientId: string;
+  patientName: string;
+  diagnosis?: string;
+  symptoms?: string;
+  medicines: PrescriptionMedicine[];
+  labTestsRecommended?: string;
+  clinicalAdvice?: string;
+  followUpDate?: string;
+  createdAt: string;
+}

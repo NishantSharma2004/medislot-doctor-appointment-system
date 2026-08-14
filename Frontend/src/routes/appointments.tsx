@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
+import { prescriptionService } from "@/services/prescription.service";
 import { generatePrescriptionPdf } from "@/lib/pdf/PrescriptionPdfTemplate";
 import { DoctorRatingModal } from "@/components/reviews/DoctorRatingModal";
 import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, PageResponse } from "@/lib/api/types";
@@ -77,6 +78,15 @@ function MyAppointmentsPage() {
       loadAppointments();
     }
   }, [isAuthenticated, page, statusFilter]);
+
+  const handleDownloadRx = async (appt: AppointmentDto) => {
+    try {
+      const rx = await prescriptionService.getPrescriptionByAppointment(appt.id);
+      generatePrescriptionPdf(rx);
+    } catch {
+      generatePrescriptionPdf(appt);
+    }
+  };
 
   const playCallChime = () => {
     try {
@@ -329,14 +339,14 @@ function MyAppointmentsPage() {
                       {effStatus === "EXPIRED" ? "EXPIRED (NO RESPONSE)" : effStatus}
                     </span>
 
-                    {(appt.diagnosis || appt.prescriptionJson) ? (
+                    {(effStatus === "COMPLETED" || appt.diagnosis || appt.prescriptionJson) ? (
                       <Button
                         size="sm"
                         variant="outline"
                         className="h-8 text-xs gap-1 border-teal-500/40 text-teal-700 dark:text-teal-300 hover:bg-teal-500/10 font-semibold"
-                        onClick={() => generatePrescriptionPdf(appt)}
+                        onClick={() => handleDownloadRx(appt)}
                       >
-                        📄 Download Prescription PDF
+                        📄 Download Official Rx PDF
                       </Button>
                     ) : null}
 

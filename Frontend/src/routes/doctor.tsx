@@ -34,6 +34,7 @@ import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { opdQueueService } from "@/services/opd-queue.service";
+import { prescriptionService } from "@/services/prescription.service";
 import { vitalsService } from "@/services/vitals.service";
 import { formatDoctorDisplayName } from "@/lib/utils";
 import { VitalsChartContainer } from "@/components/vitals/VitalsChartContainer";
@@ -270,6 +271,27 @@ function DoctorDeskPage() {
     setIsSavingRx(true);
     try {
       const validMeds = rxMedicines.filter((m) => m.name.trim().length > 0);
+
+      try {
+        await prescriptionService.createPrescription({
+          appointmentId: rxModalAppt.id,
+          diagnosis: rxDiagnosis || "Clinical Consultation",
+          symptoms: rxModalAppt.reason || "General Symptoms",
+          medicines: validMeds.map((m) => ({
+            medicineName: m.name,
+            dosage: m.dosage,
+            frequency: m.frequency,
+            timing: "After Meals",
+            durationDays: m.duration,
+          })),
+          labTestsRecommended: rxLabTests,
+          clinicalAdvice: rxNotes,
+          followUpDate: rxFollowUpDate || undefined,
+        });
+      } catch (e) {
+        console.warn("REST prescription call fallback", e);
+      }
+
       await appointmentService.savePrescription(rxModalAppt.id, {
         diagnosis: rxDiagnosis,
         prescriptionJson: validMeds.length > 0 ? JSON.stringify(validMeds) : undefined,
@@ -286,7 +308,7 @@ function DoctorDeskPage() {
         targetUrl: "/appointments",
       });
 
-      toast.success("Digital medical prescription issued successfully!");
+      toast.success("Digital medical prescription issued & appointment completed!");
       setRxModalAppt(null);
       loadDoctorAppointments();
     } catch (err) {
