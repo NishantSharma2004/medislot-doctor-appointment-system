@@ -937,8 +937,21 @@ const httpAssistantService: AssistantService = {
 
     return reply;
   },
+
+  async analyzeLabReport(payload: { fileName: string; reportText?: string }): Promise<any> {
+    if (USE_MOCK_API) {
+      await delay(800);
+      const reply = parseUniversalMedicalReport(payload.reportText || "", payload.fileName);
+      return {
+        ...(reply.reportAnalysis!),
+        recommendedDoctor: reply.doctorMatch,
+      };
+    }
+    const { data } = await apiClient.post("/assistant/analyze-report", payload);
+    return data;
+  },
 };
 
-export const assistantService: AssistantService = USE_MOCK_API
+export const assistantService = USE_MOCK_API
   ? mockAssistantService
   : httpAssistantService;

@@ -12,10 +12,12 @@ import {
   Smartphone,
   HardDrive,
   FileCheck,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { healthVaultService, type VaultFile } from "@/services/health-vault.service";
+import { LabReportAnalyzerModal } from "@/components/assistant/LabReportAnalyzerModal";
 
 interface HealthVaultModalProps {
   isOpen: boolean;
@@ -37,6 +39,10 @@ export function HealthVaultModal({
   const [selectedFileIds, setSelectedFileIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+
+  // AI Lab Report Analyzer Modal State
+  const [analyzerModalOpen, setAnalyzerModalOpen] = useState(false);
+  const [analyzerFileTarget, setAnalyzerFileTarget] = useState<string>("");
 
   // Upload Form State
   const [uploadName, setUploadName] = useState("");
@@ -268,15 +274,29 @@ export function HealthVaultModal({
                           </div>
                         </div>
 
-                        <a
-                          href={file.fileUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-xs text-teal-400 hover:underline flex items-center gap-1 font-semibold shrink-0"
-                        >
-                          <FileText className="w-3.5 h-3.5" /> View File
-                        </a>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setAnalyzerFileTarget(file.fileName);
+                              setAnalyzerModalOpen(true);
+                            }}
+                            className="text-xs text-purple-400 hover:text-purple-300 bg-purple-500/10 hover:bg-purple-500/20 px-2 py-1 rounded-md border border-purple-500/30 font-bold flex items-center gap-1 transition-colors"
+                          >
+                            <Sparkles className="w-3 h-3 text-purple-400" /> AI Analyze
+                          </button>
+
+                          <a
+                            href={file.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs text-teal-400 hover:underline flex items-center gap-1 font-semibold"
+                          >
+                            <FileText className="w-3.5 h-3.5" /> View
+                          </a>
+                        </div>
                       </div>
                     );
                   })}
@@ -384,6 +404,13 @@ export function HealthVaultModal({
           </div>
         </div>
       </div>
+
+      {/* AI Lab Report OCR Analyzer Modal */}
+      <LabReportAnalyzerModal
+        isOpen={analyzerModalOpen}
+        onClose={() => setAnalyzerModalOpen(false)}
+        initialFileName={analyzerFileTarget}
+      />
     </div>
   );
 }

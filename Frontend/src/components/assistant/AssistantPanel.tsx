@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import { toDisplayMessage } from "@/lib/api/client";
 import type { ApiError, AssistantReply, EvidenceStrength } from "@/lib/api/types";
 import { ASSISTANT_DISCLAIMER, assistantService } from "@/services/assistant.service";
+import { LabReportAnalyzerModal } from "@/components/assistant/LabReportAnalyzerModal";
 import { cn } from "@/lib/utils";
 
 interface AssistantMessage {
@@ -38,6 +39,7 @@ export function AssistantPanel() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
+  const [analyzerOpen, setAnalyzerOpen] = useState(false);
   const [input, setInput] = useState("");
   const [attachedFile, setAttachedFile] = useState<{ name: string; content?: string } | null>(null);
   const [pending, setPending] = useState(false);
@@ -234,7 +236,15 @@ export function AssistantPanel() {
               <p className="truncate text-xs text-muted-foreground">Smart clinic navigation & policies (Drag me)</p>
             </div>
 
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-7 text-xs border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-bold gap-1"
+                onClick={() => setAnalyzerOpen(true)}
+              >
+                <Sparkles className="size-3 text-purple-400" /> 🧪 Analyze Report
+              </Button>
               {messages.length > 0 ? (
                 <button
                   type="button"
@@ -526,6 +536,12 @@ export function AssistantPanel() {
           </form>
         </section>
       ) : null}
+
+      {/* AI Lab Report Reader Modal */}
+      <LabReportAnalyzerModal
+        isOpen={analyzerOpen}
+        onClose={() => setAnalyzerOpen(false)}
+      />
     </>
   );
 }

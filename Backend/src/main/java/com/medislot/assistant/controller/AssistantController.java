@@ -2,8 +2,9 @@ package com.medislot.assistant.controller;
 
 import com.medislot.assistant.dto.AssistantChatRequest;
 import com.medislot.assistant.dto.AssistantChatResponse;
+import com.medislot.assistant.dto.ReportAnalysisDto;
 import com.medislot.assistant.service.AssistantService;
-import com.medislot.common.exception.UnauthorizedException;
+import com.medislot.assistant.service.ReportAnalysisService;
 import com.medislot.common.ratelimit.RateLimited;
 import com.medislot.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,9 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AssistantController {
 
     private final AssistantService assistantService;
+    private final ReportAnalysisService reportAnalysisService;
 
-    public AssistantController(AssistantService assistantService) {
+    public AssistantController(AssistantService assistantService, ReportAnalysisService reportAnalysisService) {
         this.assistantService = assistantService;
+        this.reportAnalysisService = reportAnalysisService;
     }
 
     @PostMapping("/chat")
@@ -52,6 +55,19 @@ public class AssistantController {
             @AuthenticationPrincipal User currentUser
     ) {
         AssistantChatResponse response = assistantService.processChat(request, currentUser);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/analyze-report")
+    @RateLimited(policy = "assistant-chat")
+    @Operation(
+            summary = "Analyze Blood Test Report with Medical AI",
+            description = "Parses blood test PDF/Image, extracts parameters into structured format, and generates dual-language (English/Hindi) clinical summary."
+    )
+    public ResponseEntity<ReportAnalysisDto.Response> analyzeReport(
+            @RequestBody ReportAnalysisDto.Request request
+    ) {
+        ReportAnalysisDto.Response response = reportAnalysisService.analyzeReport(request);
         return ResponseEntity.ok(response);
     }
 }
