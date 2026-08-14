@@ -231,7 +231,7 @@ public class AvailabilityService {
         if (!startAt.isBefore(endAt)) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "INVALID_TIME_RANGE", "Slot start time must be strictly before end time.");
         }
-        if (startAt.isBefore(Instant.now())) {
+        if (startAt.isBefore(Instant.now().minusSeconds(60))) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, "INVALID_TIME_RANGE", "Slot start time cannot be in the past.");
         }
     }
