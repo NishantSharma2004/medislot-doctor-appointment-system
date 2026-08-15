@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus, AlertTriangle } from "lucide-react";
+import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus, AlertTriangle, Sun, SunMedium, Moon } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
@@ -240,70 +240,105 @@ function DoctorProfilePage() {
                 </Button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                {(availabilityQuery.data ?? [])
-                  .filter((slot) => isUpcomingSlot(slot.date, slot.startTime))
-                  .map((slot) => {
-                    const isBooked = slot.booked || slot.status === "BOOKED";
-                    const isSelected = selectedSlot?.id === slot.id;
+              <div className="space-y-6">
+                {(() => {
+                  const upcomingSlots = (availabilityQuery.data ?? []).filter((slot) => isUpcomingSlot(slot.date, slot.startTime));
+                  const morningSlots = upcomingSlots.filter((slot) => {
+                    const hour = parseInt(slot.startTime.split(":")[0], 10);
+                    return hour < 12;
+                  });
+                  const afternoonSlots = upcomingSlots.filter((slot) => {
+                    const hour = parseInt(slot.startTime.split(":")[0], 10);
+                    return hour >= 12 && hour < 16;
+                  });
+                  const eveningSlots = upcomingSlots.filter((slot) => {
+                    const hour = parseInt(slot.startTime.split(":")[0], 10);
+                    return hour >= 16;
+                  });
 
-                    if (isBooked) {
-                      return (
-                        <div
-                          key={slot.id}
-                          onClick={() => toast.warning("This slot is already booked by another patient. Please choose an available slot.")}
-                          className="p-3 rounded-lg border border-border/40 bg-muted/50 cursor-not-allowed opacity-75 flex flex-col gap-1 select-none"
-                          title="Already Booked"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-muted-foreground">{slot.date}</span>
-                            <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10">
-                              Already Booked
-                            </Badge>
-                          </div>
-                          <span className="text-sm font-medium line-through text-muted-foreground">
-                            {formatTimeRange(slot.startTime, slot.endTime)}
-                          </span>
-                        </div>
-                      );
-                    }
-
+                  const renderCategoryGroup = (title: string, icon: React.ReactNode, slots: AvailabilitySlotDto[]) => {
+                    if (slots.length === 0) return null;
                     return (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        onClick={() => {
-                          if (!isAuthenticated) {
-                            setShowAuthModal(true);
-                            return;
-                          }
-                          if (activeApptWithThisDoctor) {
-                            toast.warning(`You already have an active (${activeApptWithThisDoctor.status}) appointment with Dr. ${doctor.fullName}. Please check your My Appointments page.`);
-                            return;
-                          }
-                          setSelectedSlot(slot);
-                          setTimeout(() => {
-                            bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-                          }, 80);
-                        }}
-                        className={`p-3 rounded-lg border text-left transition-all flex flex-col gap-1 ${
-                          isSelected
-                            ? "border-primary bg-primary/10 font-semibold shadow-xs ring-2 ring-primary/30"
-                            : "border-input hover:bg-accent hover:border-primary/50"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-semibold text-primary">{slot.date}</span>
-                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
-                            Available
-                          </Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-2">
+                          {icon}
+                          <span>{title} ({slots.length} Slots)</span>
                         </div>
-                        <span className="text-sm font-medium">
-                          {formatTimeRange(slot.startTime, slot.endTime)}
-                        </span>
-                      </button>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                          {slots.map((slot) => {
+                            const isBooked = slot.booked || slot.status === "BOOKED";
+                            const isSelected = selectedSlot?.id === slot.id;
+
+                            if (isBooked) {
+                              return (
+                                <div
+                                  key={slot.id}
+                                  onClick={() => toast.warning("This slot is already booked by another patient. Please choose an available slot.")}
+                                  className="p-3.5 rounded-xl border border-border/40 bg-muted/50 cursor-not-allowed opacity-75 flex flex-col gap-1 select-none"
+                                  title="Already Booked"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-xs font-semibold text-muted-foreground">{slot.date}</span>
+                                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10">
+                                      Already Booked
+                                    </Badge>
+                                  </div>
+                                  <span className="text-sm font-medium line-through text-muted-foreground">
+                                    {formatTimeRange(slot.startTime, slot.endTime)}
+                                  </span>
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <button
+                                key={slot.id}
+                                type="button"
+                                onClick={() => {
+                                  if (!isAuthenticated) {
+                                    setShowAuthModal(true);
+                                    return;
+                                  }
+                                  if (activeApptWithThisDoctor) {
+                                    toast.warning(`You already have an active (${activeApptWithThisDoctor.status}) appointment with Dr. ${doctor.fullName}. Please check your My Appointments page.`);
+                                    return;
+                                  }
+                                  setSelectedSlot(slot);
+                                  setTimeout(() => {
+                                    bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+                                  }, 80);
+                                }}
+                                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                                  isSelected
+                                    ? "border-emerald-500 bg-emerald-500/10 font-semibold shadow-md ring-2 ring-emerald-500/30"
+                                    : "border-border/80 hover:bg-accent hover:border-emerald-500/50"
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{slot.date}</span>
+                                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                                    Available
+                                  </Badge>
+                                </div>
+                                <span className="text-sm font-bold text-foreground">
+                                  {formatTimeRange(slot.startTime, slot.endTime)}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     );
-                  })}
+                  };
+
+                  return (
+                    <>
+                      {renderCategoryGroup("Morning Sessions 🌅", <Sun className="size-4 text-amber-500" />, morningSlots)}
+                      {renderCategoryGroup("Afternoon Sessions ☀️", <SunMedium className="size-4 text-orange-500" />, afternoonSlots)}
+                      {renderCategoryGroup("Evening Sessions 🌙", <Moon className="size-4 text-teal-400" />, eveningSlots)}
+                    </>
+                  );
+                })()}
               </div>
             )}
 
