@@ -60,6 +60,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/health-risk-calculator", label: "🤖 AI Risk Calculator", roles: ["PATIENT"] },
   { to: "/dashboard", label: "Dashboard", roles: ["PATIENT"], requiresAuth: true },
   { to: "/appointments", label: "Appointments", roles: ["PATIENT"], requiresAuth: true },
+  { to: "/health-vault", label: "📂 Health Vault", roles: ["PATIENT"], requiresAuth: true },
   { to: "/doctor", label: "Doctor desk", roles: ["DOCTOR"], requiresAuth: true },
   { to: "/doctor/availability", label: "Availability", roles: ["DOCTOR"], requiresAuth: true },
   { to: "/admin", label: "Admin Panel", roles: ["ADMIN"], requiresAuth: true },
