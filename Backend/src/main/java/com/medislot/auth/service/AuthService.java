@@ -22,6 +22,7 @@ import com.medislot.doctor.repository.DoctorProfileRepository;
 import com.medislot.specialization.entity.Specialization;
 import com.medislot.specialization.repository.SpecializationRepository;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -147,7 +148,8 @@ public class AuthService {
 
     @Transactional
     public AuthResponse login(LoginRequest request, String clientIp) {
-        String normalizedEmail = request.email().trim().toLowerCase();
+        String normalizedEmail = request.email() != null ? request.email().trim().toLowerCase() : "";
+        String rawPassword = request.password() != null ? request.password() : "";
 
         if (bruteForceProtectionService != null && bruteForceProtectionService.isBlocked(clientIp, normalizedEmail)) {
             long remainingMins = bruteForceProtectionService.getRemainingBlockMinutes(clientIp, normalizedEmail);
@@ -160,8 +162,13 @@ public class AuthService {
 
         try {
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(normalizedEmail, request.password())
+                    new UsernamePasswordAuthenticationToken(normalizedEmail, rawPassword)
             );
+        } catch (org.springframework.security.core.AuthenticationException e) {
+            if (bruteForceProtectionService != null) {
+                bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);
+            }
+            throw new BadCredentialsException("Invalid email or password.", e);
         } catch (Exception e) {
             if (bruteForceProtectionService != null) {
                 bruteForceProtectionService.recordFailedAttempt(clientIp, normalizedEmail);

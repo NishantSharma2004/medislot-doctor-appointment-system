@@ -30,15 +30,7 @@ import com.medislot.common.observability.TelemetryService;
 public class GlobalExceptionHandler {
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-    private final TelemetryService telemetryService;
-
-    public GlobalExceptionHandler() {
-        this.telemetryService = new TelemetryService();
-    }
-
-    public GlobalExceptionHandler(TelemetryService telemetryService) {
-        this.telemetryService = telemetryService != null ? telemetryService : new TelemetryService();
-    }
+    private final TelemetryService telemetryService = new TelemetryService();
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiErrorResponse> handleBusinessException(BusinessException ex, HttpServletRequest request) {
