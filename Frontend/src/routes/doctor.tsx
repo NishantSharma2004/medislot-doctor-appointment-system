@@ -60,6 +60,7 @@ function DoctorDeskPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<ApiError | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<"ALL" | AppointmentStatus>("ALL");
+  const [deskTab, setDeskTab] = useState<"OPD_QUEUE" | "ALL_APPOINTMENTS" | "PATIENT_RECORDS">("OPD_QUEUE");
 
   // Patient Profile Modal State
   const [inspectedPatient, setInspectedPatient] = useState<AppointmentDto | null>(null);
@@ -453,7 +454,42 @@ function DoctorDeskPage() {
           </div>
         </div>
 
+        {/* Workspace Navigation Tabs */}
+        <div className="flex border-b border-border/80 space-x-2 pt-2">
+          <button
+            onClick={() => setDeskTab("OPD_QUEUE")}
+            className={`px-5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+              deskTab === "OPD_QUEUE"
+                ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-t-xl"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Activity className="size-4" /> Today's OPD Queue 🔔
+          </button>
+          <button
+            onClick={() => setDeskTab("ALL_APPOINTMENTS")}
+            className={`px-5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+              deskTab === "ALL_APPOINTMENTS"
+                ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-t-xl"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Calendar className="size-4" /> All Consultations ({appointments.length})
+          </button>
+          <button
+            onClick={() => setDeskTab("PATIENT_RECORDS")}
+            className={`px-5 py-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+              deskTab === "PATIENT_RECORDS"
+                ? "border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-t-xl"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <FileText className="size-4" /> Patient Medical Records 📂
+          </button>
+        </div>
+
         {/* Live OPD Token Queue Caller Panel */}
+        {deskTab === "OPD_QUEUE" ? (
         <div className="rounded-2xl border border-emerald-500/40 bg-slate-900 text-white p-5 sm:p-6 shadow-xl space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3.5 border-b border-slate-800">
             <div className="flex items-center gap-3">
@@ -543,6 +579,7 @@ function DoctorDeskPage() {
             </div>
           </div>
         </div>
+        ) : null}
 
         {/* Doctor Stats Dashboard Header */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
