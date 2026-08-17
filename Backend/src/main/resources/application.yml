@@ -209,13 +209,17 @@ management:
         include: health,info
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: never
   health:
+    defaults:
+      enabled: false
     db:
       enabled: false
     redis:
       enabled: false
     mail:
+      enabled: false
+    diskspace:
       enabled: false
 
 logging:

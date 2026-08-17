@@ -23,7 +23,7 @@ COPY --from=builder /app/target/doctor-appointment-backend-*.jar app.jar
 
 # Environment variables optimized for Render 512MB RAM free tier & IPv4 networking
 ENV PORT=8080 \
-    JAVA_OPTS="-Xms96m -Xmx220m -XX:MaxMetaspaceSize=110m -XX:ReservedCodeCacheSize=48m -Xss256k -XX:TieredStopAtLevel=1 -XX:+UseSerialGC -Dspring.backgroundpreinitializer.ignore=true -Djava.net.preferIPv4Stack=true"
+    JAVA_OPTS="-Xms128m -Xmx256m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=192m -XX:ReservedCodeCacheSize=64m -Xss256k -XX:+UseSerialGC -Dspring.backgroundpreinitializer.ignore=true -Djava.net.preferIPv4Stack=true"
 
 EXPOSE 8080
 
