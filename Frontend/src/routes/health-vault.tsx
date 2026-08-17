@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   FileText,
@@ -18,6 +18,11 @@ import {
   FileCheck2,
   Image as ImageIcon,
   Activity,
+  UploadCloud,
+  FileUp,
+  Link,
+  Trash2,
+  CheckCircle2,
 } from "lucide-react";
 import { BackButton } from "@/components/common/BackButton";
 import { ErrorState } from "@/components/common/ErrorState";
@@ -63,11 +68,18 @@ function HealthVaultPage() {
 
   // Upload Modal State
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+  const [uploadSource, setUploadSource] = useState<"FILE" | "LINK">("FILE");
   const [newFileName, setNewFileName] = useState("");
   const [newCategory, setNewCategory] = useState<VaultFile["category"]>("LAB_REPORT");
   const [newFileUrl, setNewFileUrl] = useState("");
   const [newNotes, setNewNotes] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+
+  // File Upload State
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileDataUrl, setFileDataUrl] = useState<string>("");
+  const [isDragOver, setIsDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Preview Modal State
   const [previewFile, setPreviewFile] = useState<VaultFile | null>(null);
@@ -101,26 +113,82 @@ function HealthVaultPage() {
     }
   }, [isAuthenticated, user?.role]);
 
+  const resetUploadForm = () => {
+    setNewFileName("");
+    setNewFileUrl("");
+    setNewNotes("");
+    setSelectedFile(null);
+    setFileDataUrl("");
+    setUploadSource("FILE");
+    setIsDragOver(false);
+  };
+
+  const processSelectedFile = (file: File) => {
+    if (file.size > 15 * 1024 * 1024) {
+      toast.error("File size exceeds 15MB limit. Please select a smaller document.");
+      return;
+    }
+    setSelectedFile(file);
+
+    // Auto-populate document title if not filled yet
+    if (!newFileName.trim()) {
+      const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+      setNewFileName(cleanTitle);
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      if (e.target?.result) {
+        setFileDataUrl(e.target.result as string);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      processSelectedFile(file);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      processSelectedFile(file);
+    }
+  };
+
   const handleUploadFile = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newFileName.trim()) {
-      toast.error("Please enter a file name");
+      toast.error("Please enter a document title");
+      return;
+    }
+    if (uploadSource === "FILE" && !fileDataUrl) {
+      toast.error("Please select a file to upload from your device");
       return;
     }
     setIsUploading(true);
     try {
-      const finalUrl = newFileUrl.trim() || "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+      const finalUrl =
+        uploadSource === "FILE"
+          ? fileDataUrl
+          : newFileUrl.trim() || "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+
       await healthVaultService.uploadToVault({
         fileName: newFileName.trim(),
         category: newCategory,
         fileUrl: finalUrl,
+        fileType: selectedFile?.type || "application/pdf",
+        fileSizeBytes: selectedFile?.size || 524288,
         notes: newNotes.trim(),
       });
       toast.success("Medical document saved to your Vault!");
       setIsUploadModalOpen(false);
-      setNewFileName("");
-      setNewFileUrl("");
-      setNewNotes("");
+      resetUploadForm();
       loadVaultFiles();
     } catch (err) {
       const apiErr = err as ApiError;
@@ -182,7 +250,10 @@ function HealthVaultPage() {
           </div>
 
           <Button
-            onClick={() => setIsUploadModalOpen(true)}
+            onClick={() => {
+              resetUploadForm();
+              setIsUploadModalOpen(true);
+            }}
             className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-950/60 text-sm py-6 px-6 rounded-xl"
           >
             <Plus className="size-5" /> Upload Document to Vault
@@ -241,7 +312,7 @@ function HealthVaultPage() {
                 : "Your Health Vault is currently empty. Upload your lab reports, prescriptions, or X-rays to get started!"}
             </p>
           </div>
-          <Button onClick={() => setIsUploadModalOpen(true)} className="gap-2 font-semibold bg-emerald-600 text-white">
+          <Button onClick={() => { resetUploadForm(); setIsUploadModalOpen(true); }} className="gap-2 font-semibold bg-emerald-600 text-white">
             <Plus className="size-4" /> Add First Document
           </Button>
         </div>
@@ -295,7 +366,7 @@ function HealthVaultPage() {
                     <Eye className="size-3.5 text-teal-500" /> Preview
                   </Button>
 
-                  <a href={file.fileUrl} target="_blank" rel="noreferrer" className="w-full">
+                  <a href={file.fileUrl} target="_blank" rel="noreferrer" download={file.fileName} className="w-full">
                     <Button size="sm" variant="secondary" className="w-full text-xs font-semibold gap-1.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20">
                       <Download className="size-3.5" /> Download
                     </Button>
@@ -322,6 +393,118 @@ function HealthVaultPage() {
             </div>
 
             <form onSubmit={handleUploadFile} className="space-y-4">
+              {/* Source Switcher Tabs */}
+              <div className="flex rounded-xl bg-muted/60 p-1 gap-1 text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setUploadSource("FILE")}
+                  className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                    uploadSource === "FILE"
+                      ? "bg-background text-foreground shadow-sm font-bold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <UploadCloud className="size-4 text-emerald-500" /> Upload File from Device
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUploadSource("LINK")}
+                  className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition-all ${
+                    uploadSource === "LINK"
+                      ? "bg-background text-foreground shadow-sm font-bold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Link className="size-4 text-teal-500" /> Cloud Link / URL
+                </button>
+              </div>
+
+              {/* Upload Dropzone / File Picker */}
+              {uploadSource === "FILE" ? (
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold">Select Document or Image *</Label>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*,application/pdf,.docx"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+
+                  {selectedFile ? (
+                    <div className="p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/10 flex items-center justify-between gap-3 animate-in fade-in duration-200">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shrink-0">
+                          {selectedFile.type.startsWith("image/") ? (
+                            <ImageIcon className="size-6" />
+                          ) : (
+                            <FileText className="size-6" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-bold text-xs line-clamp-1 text-foreground">{selectedFile.name}</p>
+                          <div className="flex items-center gap-2 mt-0.5">
+                            <Badge variant="outline" className="text-[9px] border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5">
+                              ✓ Ready to upload
+                            </Badge>
+                            <span className="text-[11px] text-muted-foreground">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/20 rounded-lg px-2.5 shrink-0"
+                      >
+                        Change
+                      </Button>
+                    </div>
+                  ) : (
+                    <div
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setIsDragOver(true);
+                      }}
+                      onDragLeave={() => setIsDragOver(false)}
+                      onDrop={handleDrop}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`p-6 sm:p-8 rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer text-center space-y-3 ${
+                        isDragOver
+                          ? "border-emerald-500 bg-emerald-500/10 scale-[1.01]"
+                          : "border-border/80 hover:border-emerald-500/60 bg-muted/30 hover:bg-muted/50"
+                      }`}
+                    >
+                      <div className="size-14 rounded-2xl bg-emerald-500/15 text-emerald-500 flex items-center justify-center mx-auto shadow-inner">
+                        <UploadCloud className="size-8" />
+                      </div>
+                      <div className="space-y-1">
+                        <p className="font-bold text-sm text-foreground">
+                          Click to browse <span className="text-muted-foreground font-normal">or drag and drop file</span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          PDF, PNG, JPG, JPEG, WEBP, or DOCX (Max 15MB)
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <Label htmlFor="doc-url" className="text-xs font-bold">Document Link / Cloud URL *</Label>
+                  <Input
+                    id="doc-url"
+                    placeholder="https://drive.google.com/... or cloud PDF URL"
+                    value={newFileUrl}
+                    onChange={(e) => setNewFileUrl(e.target.value)}
+                    className="rounded-xl"
+                  />
+                  <p className="text-[11px] text-muted-foreground">Paste a direct link to your document hosted on Google Drive or Cloud Storage.</p>
+                </div>
+              )}
+
               <div className="space-y-1.5">
                 <Label htmlFor="doc-title" className="text-xs font-bold">Document Title *</Label>
                 <Input
@@ -348,18 +531,6 @@ function HealthVaultPage() {
                   <option value="DISCHARGE_SUMMARY">Discharge Summary 🏥</option>
                   <option value="OTHER">Other Medical Record 📁</option>
                 </select>
-              </div>
-
-              <div className="space-y-1.5">
-                <Label htmlFor="doc-url" className="text-xs font-bold">Document Link / Cloud URL (Optional)</Label>
-                <Input
-                  id="doc-url"
-                  placeholder="https://drive.google.com/... or cloud PDF URL"
-                  value={newFileUrl}
-                  onChange={(e) => setNewFileUrl(e.target.value)}
-                  className="rounded-xl"
-                />
-                <p className="text-[11px] text-muted-foreground">If left empty, a secure demo report placeholder will be generated.</p>
               </div>
 
               <div className="space-y-1.5">
@@ -402,7 +573,7 @@ function HealthVaultPage() {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <a href={previewFile.fileUrl} target="_blank" rel="noreferrer">
+                <a href={previewFile.fileUrl} target="_blank" rel="noreferrer" download={previewFile.fileName}>
                   <Button size="sm" variant="outline" className="gap-1 text-xs">
                     <Download className="size-3.5" /> Download
                   </Button>
@@ -414,7 +585,7 @@ function HealthVaultPage() {
             </div>
 
             <div className="flex-1 overflow-auto bg-black/20 rounded-xl p-2 min-h-[400px] flex items-center justify-center">
-              {previewFile.fileUrl.endsWith(".pdf") || previewFile.fileType === "application/pdf" ? (
+              {previewFile.fileUrl.startsWith("data:application/pdf") || previewFile.fileUrl.endsWith(".pdf") || previewFile.fileType === "application/pdf" ? (
                 <iframe src={previewFile.fileUrl} className="w-full h-full min-h-[500px] rounded-lg border-0" title={previewFile.fileName} />
               ) : (
                 <img src={previewFile.fileUrl} alt={previewFile.fileName} className="max-w-full max-h-[550px] object-contain rounded-lg shadow-md" />
