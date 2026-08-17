@@ -46,6 +46,18 @@ public class User extends AuditableEntity {
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;
 
+    @Column(name = "no_show_count")
+    private int noShowCount = 0;
+
+    @Column(name = "total_missed_visits")
+    private int totalMissedVisits = 0;
+
+    @Column(name = "is_cash_booking_suspended")
+    private boolean isCashBookingSuspended = false;
+
+    @Column(name = "total_accumulated_dues", precision = 10, scale = 2)
+    private java.math.BigDecimal totalAccumulatedDues = java.math.BigDecimal.ZERO;
+
     public User() {
     }
 
@@ -129,5 +141,37 @@ public class User extends AuditableEntity {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public int getNoShowCount() {
+        return noShowCount;
+    }
+
+    public void setNoShowCount(int noShowCount) {
+        this.noShowCount = noShowCount;
+    }
+
+    public int getTotalMissedVisits() {
+        return totalMissedVisits;
+    }
+
+    public void setTotalMissedVisits(int totalMissedVisits) {
+        this.totalMissedVisits = totalMissedVisits;
+    }
+
+    public boolean isCashBookingSuspended() {
+        return isCashBookingSuspended;
+    }
+
+    public void setCashBookingSuspended(boolean cashBookingSuspended) {
+        isCashBookingSuspended = cashBookingSuspended;
+    }
+
+    public java.math.BigDecimal getTotalAccumulatedDues() {
+        return totalAccumulatedDues != null ? totalAccumulatedDues : java.math.BigDecimal.ZERO;
+    }
+
+    public void setTotalAccumulatedDues(java.math.BigDecimal totalAccumulatedDues) {
+        this.totalAccumulatedDues = totalAccumulatedDues;
     }
 }

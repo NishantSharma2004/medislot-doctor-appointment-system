@@ -25,6 +25,10 @@ export interface UserDto {
   phone?: string;
   role: Role;
   profileImageUrl?: string;
+  noShowCount?: number;
+  totalMissedVisits?: number;
+  isCashBookingSuspended?: boolean;
+  totalAccumulatedDues?: number;
 }
 
 export interface AuthResponse {
@@ -108,6 +112,16 @@ export interface AppointmentDto {
   followUpDate?: string;
   consultationFee: number;
   tokenNumber?: number;
+  paymentMode?: string;
+  paymentStatus?: string;
+  razorpayOrderId?: string;
+  penaltyAmount?: number;
+  doctorActionStatus?: string;
+  rejectionReason?: string;
+  patientNoShowCount?: number;
+  patientTotalMissedVisits?: number;
+  isCashBookingSuspended?: boolean;
+  patientTotalAccumulatedDues?: number;
 }
 
 export interface OpdQueueResponse {
@@ -127,6 +141,7 @@ export interface CreateAppointmentRequest {
   reason?: string;
   medicalDocumentUrl?: string;
   medicalDocumentName?: string;
+  paymentMode?: string;
 }
 
 export interface PrescriptionMedicine {

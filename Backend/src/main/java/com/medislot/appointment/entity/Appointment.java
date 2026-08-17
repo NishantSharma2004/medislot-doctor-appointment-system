@@ -85,6 +85,27 @@ public class Appointment extends AuditableEntity {
     @Column(name = "consultation_fee", nullable = false, precision = 10, scale = 2)
     private BigDecimal consultationFee;
 
+    @Column(name = "payment_mode", length = 30)
+    private String paymentMode = "PAY_AT_CLINIC"; // ONLINE_RAZORPAY, PAY_AT_CLINIC
+
+    @Column(name = "payment_status", length = 30)
+    private String paymentStatus = "PENDING_AT_CLINIC"; // PENDING, PAID, PENDING_AT_CLINIC, FAILED, REFUNDED
+
+    @Column(name = "razorpay_order_id")
+    private String razorpayOrderId;
+
+    @Column(name = "razorpay_payment_id")
+    private String razorpayPaymentId;
+
+    @Column(name = "penalty_amount", precision = 10, scale = 2)
+    private BigDecimal penaltyAmount = BigDecimal.ZERO;
+
+    @Column(name = "doctor_action_status", length = 30)
+    private String doctorActionStatus = "ACCEPTED"; // ACCEPTED, REJECTED, PENDING_APPROVAL
+
+    @Column(name = "rejection_reason", columnDefinition = "TEXT")
+    private String rejectionReason;
+
     @Version
     @Column(name = "version", nullable = false)
     private Long version;
@@ -230,6 +251,62 @@ public class Appointment extends AuditableEntity {
 
     public void setConsultationFee(BigDecimal consultationFee) {
         this.consultationFee = consultationFee;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getRazorpayPaymentId() {
+        return razorpayPaymentId;
+    }
+
+    public void setRazorpayPaymentId(String razorpayPaymentId) {
+        this.razorpayPaymentId = razorpayPaymentId;
+    }
+
+    public BigDecimal getPenaltyAmount() {
+        return penaltyAmount != null ? penaltyAmount : BigDecimal.ZERO;
+    }
+
+    public void setPenaltyAmount(BigDecimal penaltyAmount) {
+        this.penaltyAmount = penaltyAmount;
+    }
+
+    public String getDoctorActionStatus() {
+        return doctorActionStatus != null ? doctorActionStatus : "ACCEPTED";
+    }
+
+    public void setDoctorActionStatus(String doctorActionStatus) {
+        this.doctorActionStatus = doctorActionStatus;
+    }
+
+    public String getRejectionReason() {
+        return rejectionReason;
+    }
+
+    public void setRejectionReason(String rejectionReason) {
+        this.rejectionReason = rejectionReason;
     }
 
     public Long getVersion() {

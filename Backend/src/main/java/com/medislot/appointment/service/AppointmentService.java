@@ -4,6 +4,7 @@ import com.medislot.appointment.dto.AppointmentDto;
 import com.medislot.appointment.dto.CreateAppointmentRequest;
 import com.medislot.appointment.dto.RescheduleAppointmentRequest;
 
+import java.math.BigDecimal;
 import com.medislot.appointment.entity.Appointment;
 import com.medislot.appointment.event.AppointmentBookedEvent;
 import com.medislot.appointment.event.AppointmentCancelledEvent;
@@ -489,6 +490,8 @@ public class AppointmentService {
             }
         }
 
+        User patientUser = appointment.getPatient();
+
         return new AppointmentDto(
                 appointment.getId().toString(),
                 appointment.getDoctorId() != null ? appointment.getDoctorId().toString() : null,
@@ -517,7 +520,17 @@ public class AppointmentService {
                 appointment.getLabTests(),
                 appointment.getFollowUpDate(),
                 appointment.getConsultationFee(),
-                tokenNumber
+                tokenNumber,
+                appointment.getPaymentMode(),
+                appointment.getPaymentStatus(),
+                appointment.getRazorpayOrderId(),
+                appointment.getPenaltyAmount(),
+                appointment.getDoctorActionStatus(),
+                appointment.getRejectionReason(),
+                patientUser != null ? patientUser.getNoShowCount() : 0,
+                patientUser != null ? patientUser.getTotalMissedVisits() : 0,
+                patientUser != null ? patientUser.isCashBookingSuspended() : false,
+                patientUser != null ? patientUser.getTotalAccumulatedDues() : BigDecimal.ZERO
         );
     }
 }

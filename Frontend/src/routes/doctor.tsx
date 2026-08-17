@@ -35,6 +35,7 @@ import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { opdQueueService } from "@/services/opd-queue.service";
 import { prescriptionService } from "@/services/prescription.service";
+import { paymentService } from "@/services/payment.service";
 import { healthVaultService, type VaultFile } from "@/services/health-vault.service";
 import { vitalsService } from "@/services/vitals.service";
 import { formatDoctorDisplayName } from "@/lib/utils";
@@ -683,6 +684,17 @@ function DoctorDeskPage() {
                             {appt.patientAge} Yrs ({appt.patientGender || "N/A"})
                           </Badge>
                         ) : null}
+
+                        {(appt.patientTotalMissedVisits || 0) > 0 || (appt.patientNoShowCount || 0) > 0 ? (
+                          <Badge variant="outline" className="text-xs font-bold border-rose-500/40 text-rose-600 dark:text-rose-400 bg-rose-500/10 px-2 py-0.5 flex items-center gap-1">
+                            ⚠️ High No-Show Risk ({appt.patientTotalMissedVisits || appt.patientNoShowCount} Missed Visits)
+                          </Badge>
+                        ) : null}
+
+                        <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5 border border-border">
+                          💳 {appt.paymentMode === "ONLINE_RAZORPAY" ? "ONLINE RAZORPAY" : "PAY AT CLINIC"} ({appt.paymentStatus || "PENDING"})
+                        </Badge>
+
                         <Badge
                           className={isInConsultation ? "bg-emerald-500 text-slate-950 font-black animate-pulse" : ""}
                           variant={
@@ -750,6 +762,32 @@ function DoctorDeskPage() {
 
                   {/* Actions Bar */}
                   <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {appt.status === "PENDING" ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold gap-1 text-xs"
+                          onClick={() => handleUpdateStatus(appt.id, "CONFIRMED")}
+                        >
+                          <CheckCircle2 className="size-3.5" /> Accept ✅
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="gap-1 text-xs font-bold"
+                          onClick={async () => {
+                            const reason = prompt("Enter reason for declining this booking request (e.g. Frequent No-Show Patient):", "Frequent No-Show Patient");
+                            if (reason !== null) {
+                              await paymentService.doctorRespond(appt.id, false, reason);
+                              toast.info("Appointment declined by doctor.");
+                              loadDoctorAppointments();
+                            }
+                          }}
+                        >
+                          <XCircle className="size-3.5" /> Decline ❌
+                        </Button>
+                      </>
+                    ) : null}
                     <Button
                       size="sm"
                       variant="outline"

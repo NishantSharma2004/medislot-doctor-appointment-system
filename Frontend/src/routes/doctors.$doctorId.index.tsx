@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus, AlertTriangle, Sun, SunMedium, Moon } from "lucide-react";
+import { Banknote, BadgeCheck, CalendarClock, Languages, MapPin, CheckCircle2, FileText, Lock, LogIn, UserPlus, AlertTriangle, Sun, SunMedium, Moon, CreditCard, Wallet, QrCode } from "lucide-react";
 import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { formatFee, formatTimeRange, isUpcomingSlot } from "@/components/common/format";
@@ -12,12 +12,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
-import type { ApiError, AvailabilitySlotDto } from "@/lib/api/types";
+import type { ApiError, AvailabilitySlotDto, AppointmentDto } from "@/lib/api/types";
 import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { reviewService } from "@/services/review.service";
 import { DoctorReviewList } from "@/components/reviews/DoctorReviewList";
+import { RazorpayCheckoutModal } from "@/components/payment/RazorpayCheckoutModal";
+import { MedicalInvoiceModal } from "@/components/payment/MedicalInvoiceModal";
 
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
@@ -44,9 +46,14 @@ function DoctorProfilePage() {
   const [reason, setReason] = useState("");
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
   const [documentName, setDocumentName] = useState<string | null>(null);
+  const [paymentMode, setPaymentMode] = useState<"ONLINE_RAZORPAY" | "PAY_AT_CLINIC">("ONLINE_RAZORPAY");
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const [createdAppointment, setCreatedAppointment] = useState<AppointmentDto | null>(null);
+  const [isRazorpayModalOpen, setIsRazorpayModalOpen] = useState(false);
+  const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
 
   const doctorQuery = useQuery({
     queryKey: ["doctor", doctorId],
@@ -107,16 +114,25 @@ function DoctorProfilePage() {
     }
     if (!selectedSlot) return;
 
+    if (paymentMode === "PAY_AT_CLINIC" && user?.isCashBookingSuspended) {
+      toast.error("Your Cash Booking privileges are suspended due to 3 consecutive missed visits. Please select Online Payment.");
+      return;
+    }
+
     setIsBooking(true);
     setBookingError(null);
     try {
-      await appointmentService.book({
+      const created = await appointmentService.book({
         doctorId: doctor.id,
         slotId: selectedSlot.id,
         reason: reason.trim() || undefined,
         medicalDocumentUrl: documentUrl || undefined,
         medicalDocumentName: documentName || undefined,
+        paymentMode,
       });
+
+      setCreatedAppointment(created);
+
       await notificationService.addNotification({
         userId: user?.id,
         title: "Appointment Booked! 📅",
@@ -124,13 +140,18 @@ function DoctorProfilePage() {
         type: "SYSTEM",
         targetUrl: "/appointments",
       });
-      toast.success(`Appointment booked with ${doctor.fullName}`);
-      setSelectedSlot(null);
-      setReason("");
-      setDocumentUrl(null);
-      setDocumentName(null);
-      availabilityQuery.refetch();
-      navigate({ to: "/dashboard" });
+
+      if (paymentMode === "ONLINE_RAZORPAY") {
+        setIsRazorpayModalOpen(true);
+      } else {
+        toast.success(`Appointment booked with Dr. ${doctor.fullName}`);
+        setIsInvoiceModalOpen(true);
+        setSelectedSlot(null);
+        setReason("");
+        setDocumentUrl(null);
+        setDocumentName(null);
+        availabilityQuery.refetch();
+      }
     } catch (err) {
       const apiErr = err as ApiError;
       const isTrueSlotConflict = apiErr.code === "SLOT_NOT_AVAILABLE" || apiErr.code === "SLOT_ALREADY_BOOKED";
@@ -258,65 +279,38 @@ function DoctorProfilePage() {
 
                   const renderCategoryGroup = (title: string, icon: React.ReactNode, slots: AvailabilitySlotDto[]) => {
                     if (slots.length === 0) return null;
+
                     return (
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground border-b border-border/50 pb-2">
+                      <div key={title} className="space-y-2.5">
+                        <div className="flex items-center gap-2 text-xs font-bold text-foreground uppercase tracking-wider border-b border-border/40 pb-1.5">
                           {icon}
-                          <span>{title} ({slots.length} Slots)</span>
+                          <span>{title}</span>
+                          <Badge variant="secondary" className="text-[10px] rounded-full px-2 py-0">
+                            {slots.length}
+                          </Badge>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                           {slots.map((slot) => {
-                            const isBooked = slot.booked || slot.status === "BOOKED";
                             const isSelected = selectedSlot?.id === slot.id;
-
-                            if (isBooked) {
-                              return (
-                                <div
-                                  key={slot.id}
-                                  onClick={() => toast.warning("This slot is already booked by another patient. Please choose an available slot.")}
-                                  className="p-3.5 rounded-xl border border-border/40 bg-muted/50 cursor-not-allowed opacity-75 flex flex-col gap-1 select-none"
-                                  title="Already Booked"
-                                >
-                                  <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-muted-foreground">{slot.date}</span>
-                                    <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-amber-500/40 text-amber-600 dark:text-amber-400 bg-amber-500/10">
-                                      Already Booked
-                                    </Badge>
-                                  </div>
-                                  <span className="text-sm font-medium line-through text-muted-foreground">
-                                    {formatTimeRange(slot.startTime, slot.endTime)}
-                                  </span>
-                                </div>
-                              );
-                            }
-
                             return (
                               <button
                                 key={slot.id}
                                 type="button"
                                 onClick={() => {
-                                  if (!isAuthenticated) {
-                                    setShowAuthModal(true);
-                                    return;
-                                  }
-                                  if (activeApptWithThisDoctor) {
-                                    toast.warning(`You already have an active (${activeApptWithThisDoctor.status}) appointment with Dr. ${doctor.fullName}. Please check your My Appointments page.`);
-                                    return;
-                                  }
                                   setSelectedSlot(slot);
                                   setTimeout(() => {
-                                    bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-                                  }, 80);
+                                    bookingFormRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                                  }, 100);
                                 }}
-                                className={`p-3.5 rounded-xl border text-left transition-all flex flex-col gap-1.5 ${
+                                className={`p-3 rounded-xl border text-left transition-all duration-200 flex flex-col justify-between space-y-1.5 ${
                                   isSelected
-                                    ? "border-emerald-500 bg-emerald-500/10 font-semibold shadow-md ring-2 ring-emerald-500/30"
-                                    : "border-border/80 hover:bg-accent hover:border-emerald-500/50"
+                                    ? "border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold ring-2 ring-emerald-500/40 shadow-sm"
+                                    : "border-border/80 hover:border-emerald-500/50 hover:bg-emerald-500/5 bg-card text-foreground"
                                 }`}
                               >
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs font-semibold text-emerald-600 dark:text-emerald-400">{slot.date}</span>
-                                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                                <div className="flex items-center justify-between text-xs">
+                                  <span className="font-semibold text-muted-foreground">{slot.date}</span>
+                                  <Badge variant="outline" className="text-[9px] border-emerald-500/30 text-emerald-600 bg-emerald-500/10 px-1.5">
                                     Available
                                   </Badge>
                                 </div>
@@ -351,6 +345,76 @@ function DoctorProfilePage() {
                   <Button variant="ghost" size="sm" onClick={() => setSelectedSlot(null)}>
                     Change
                   </Button>
+                </div>
+
+                {/* Dues & Suspension Warnings */}
+                {user?.isCashBookingSuspended ? (
+                  <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-600 dark:text-rose-400 rounded-xl text-xs flex items-start gap-2">
+                    <AlertTriangle className="size-4 shrink-0 mt-0.5" />
+                    <span>
+                      <strong>Cash Privileges Suspended:</strong> You missed 3 consecutive cash visits. You must book via Online Payment.
+                    </span>
+                  </div>
+                ) : null}
+
+                {user?.totalAccumulatedDues && user.totalAccumulatedDues > 0 ? (
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/30 text-amber-700 dark:text-amber-300 rounded-xl text-xs space-y-1">
+                    <div className="flex items-center justify-between font-bold">
+                      <span className="flex items-center gap-1.5">
+                        <AlertTriangle className="size-4 text-amber-500" />
+                        Previous Missed Visit Dues (50% Penalty)
+                      </span>
+                      <span>+ ₹{user.totalAccumulatedDues}</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground">
+                      This penalty from previous missed visits will be added to your booking total.
+                    </p>
+                  </div>
+                ) : null}
+
+                {/* Payment Method Selector */}
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">Payment Method Choice *</label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setPaymentMode("ONLINE_RAZORPAY")}
+                      className={`p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition-all ${
+                        paymentMode === "ONLINE_RAZORPAY"
+                          ? "border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm"
+                          : "border-border/80 hover:bg-muted/50 text-muted-foreground"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <CreditCard className="size-4 text-emerald-500" />
+                        <span>Pay Online (Razorpay / UPI)</span>
+                      </div>
+                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5">Fast & Secure</Badge>
+                    </button>
+
+                    <button
+                      type="button"
+                      disabled={user?.isCashBookingSuspended}
+                      onClick={() => setPaymentMode("PAY_AT_CLINIC")}
+                      className={`p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition-all ${
+                        user?.isCashBookingSuspended
+                          ? "opacity-50 cursor-not-allowed border-border/50 text-muted-foreground"
+                          : paymentMode === "PAY_AT_CLINIC"
+                          ? "border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm"
+                          : "border-border/80 hover:bg-muted/50 text-muted-foreground"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Banknote className="size-4 text-teal-500" />
+                        <span>Pay Cash at Clinic</span>
+                      </div>
+                      {user?.isCashBookingSuspended ? (
+                        <Badge variant="destructive" className="text-[9px] px-1.5">Suspended</Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-[9px] px-1.5">On Visit</Badge>
+                      )}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
@@ -397,18 +461,27 @@ function DoctorProfilePage() {
                   ) : null}
                 </div>
 
-                <Button className="w-full gap-2" disabled={isBooking} onClick={handleBooking}>
+                <Button className="w-full gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold" disabled={isBooking} onClick={handleBooking}>
                   {isBooking ? (
                     "Booking appointment..."
                   ) : (
                     <>
-                      <CheckCircle2 className="size-4" /> Confirm Appointment ({formatFee(doctor.consultationFee)})
+                      <CheckCircle2 className="size-4" /> Proceed to {paymentMode === "ONLINE_RAZORPAY" ? "Online Payment" : "Cash Booking"} ({formatFee((doctor.consultationFee || 500) + (user?.totalAccumulatedDues || 0))})
                     </>
                   )}
                 </Button>
               </div>
             ) : null}
           </section>
+
+          {/* Doctor Reviews */}
+          <DoctorReviewList
+            doctorId={doctorId}
+            reviews={reviewQuery.data?.reviews ?? []}
+            averageRating={reviewQuery.data?.averageRating ?? 0}
+            totalReviews={reviewQuery.data?.totalReviews ?? 0}
+            onReviewAdded={() => reviewQuery.refetch()}
+          />
         </div>
 
         <aside className="surface-panel h-fit space-y-4 p-6">
@@ -419,102 +492,83 @@ function DoctorProfilePage() {
             <div className="flex items-start gap-2">
               <Banknote className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <dt className="text-muted-foreground">Consultation fee</dt>
-                <dd className="font-medium">{formatFee(doctor.consultationFee)}</dd>
+                <dt className="font-semibold">Consultation fee</dt>
+                <dd className="text-muted-foreground">{formatFee(doctor.consultationFee)} per visit</dd>
               </div>
             </div>
             <div className="flex items-start gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
               <div>
-                <dt className="text-muted-foreground">Clinic</dt>
-                <dd className="font-medium">
+                <dt className="font-semibold">Clinic & Location</dt>
+                <dd className="text-muted-foreground">
                   {doctor.clinicName}, {doctor.city}
                 </dd>
               </div>
             </div>
-            <div className="flex items-start gap-2">
-              <Languages className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <dt className="text-muted-foreground">Languages</dt>
-                <dd className="font-medium">{doctor.languages.join(", ")}</dd>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <BadgeCheck className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <dt className="text-muted-foreground">Medical registration</dt>
-                <dd className="font-medium">{doctor.registrationNumber}</dd>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <CalendarClock className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <dt className="text-muted-foreground">Open slots published</dt>
-                <dd className="font-medium">
-                  {availabilityQuery.isPending ? "Checking…" : `${availableSlots.length} available`}
-                </dd>
-              </div>
-            </div>
           </dl>
-
-          <Button
-            className="w-full"
-            onClick={() => {
-              const el = document.getElementById("slots-section");
-              el?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            Choose a slot
-          </Button>
         </aside>
       </div>
 
-      {/* Patient Reviews Section */}
-      <DoctorReviewList
-        reviews={reviewQuery.data?.reviews || []}
-        averageRating={reviewQuery.data?.averageRating || 4.9}
-        totalReviews={reviewQuery.data?.totalReviews || 12}
-        ratingBreakdown={reviewQuery.data?.ratingBreakdown}
-      />
-
-      {/* Guest Authentication Prompt Modal */}
+      {/* Auth Modal */}
       {showAuthModal ? (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-background surface-panel border rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-in fade-in zoom-in-95">
-            <div className="text-center space-y-2">
-              <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="surface-panel w-full max-w-md p-6 rounded-2xl shadow-2xl border border-border space-y-5">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-emerald-500/10 text-emerald-500">
                 <Lock className="size-6" />
               </div>
-              <h3 className="text-xl font-bold">Sign In Required to Book</h3>
-              <p className="text-sm text-muted-foreground">
-                You are currently browsing as a guest. To confirm your appointment slot with <strong className="text-foreground">{doctor.fullName}</strong>, please sign in or create a patient account.
-              </p>
+              <div>
+                <h3 className="font-bold text-lg text-foreground">Authentication Required</h3>
+                <p className="text-xs text-muted-foreground">Please sign in to book your consultation.</p>
+              </div>
             </div>
-
-            <div className="space-y-2.5 pt-2">
-              <Button
-                className="w-full gap-2 font-semibold shadow-sm"
-                onClick={() => navigate({ to: "/login", search: { redirect: `/doctors/${doctorId}` } })}
-              >
-                <LogIn className="size-4" /> Sign In to Existing Account
+            <div className="grid grid-cols-2 gap-3 pt-2">
+              <Button variant="outline" onClick={() => navigate({ to: "/login", search: { redirect: `/doctors/${doctorId}` } })} className="gap-2 rounded-xl">
+                <LogIn className="size-4" /> Sign In
               </Button>
-              <Button
-                variant="outline"
-                className="w-full gap-2 font-semibold border-primary/40 text-primary hover:bg-primary/10"
-                onClick={() => navigate({ to: "/register", search: { role: "PATIENT" } })}
-              >
-                <UserPlus className="size-4" /> Create New Patient Account
-              </Button>
-              <Button
-                variant="ghost"
-                className="w-full text-xs text-muted-foreground"
-                onClick={() => setShowAuthModal(false)}
-              >
-                Cancel & Continue Browsing
+              <Button onClick={() => navigate({ to: "/register", search: { redirect: `/doctors/${doctorId}` } })} className="gap-2 rounded-xl bg-emerald-600 text-white font-bold">
+                <UserPlus className="size-4" /> Create Account
               </Button>
             </div>
           </div>
         </div>
+      ) : null}
+
+      {/* Razorpay Checkout Modal */}
+      {createdAppointment ? (
+        <RazorpayCheckoutModal
+          isOpen={isRazorpayModalOpen}
+          onClose={() => {
+            setIsRazorpayModalOpen(false);
+            setIsInvoiceModalOpen(true);
+          }}
+          appointmentId={createdAppointment.id}
+          doctorName={doctor.fullName}
+          consultationFee={doctor.consultationFee}
+          penaltyAmount={user?.totalAccumulatedDues || 0}
+          onSuccess={() => {
+            setIsRazorpayModalOpen(false);
+            setIsInvoiceModalOpen(true);
+            availabilityQuery.refetch();
+          }}
+        />
+      ) : null}
+
+      {/* Invoice Modal */}
+      {createdAppointment ? (
+        <MedicalInvoiceModal
+          isOpen={isInvoiceModalOpen}
+          onClose={() => {
+            setIsInvoiceModalOpen(false);
+            setSelectedSlot(null);
+            setReason("");
+            setDocumentUrl(null);
+            setDocumentName(null);
+            availabilityQuery.refetch();
+            navigate({ to: "/appointments" });
+          }}
+          appointment={createdAppointment}
+        />
       ) : null}
     </PageShell>
   );
