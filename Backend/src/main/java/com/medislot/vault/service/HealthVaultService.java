@@ -121,8 +121,9 @@ public class HealthVaultService {
             throw new ForbiddenException("You are not authorized to delete this vault file.");
         }
 
+        sharedRecordRepository.deleteByVaultFileId(fileId);
         healthVaultRepository.delete(vaultFile);
-        log.info("Deleted vault file [{}] for patient [{}]", fileId, patientId);
+        log.info("Deleted vault file [{}] and associated shared records for patient [{}]", fileId, patientId);
     }
 
     private HealthVaultDto.Response mapToResponse(HealthVaultFile f) {

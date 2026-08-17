@@ -13,4 +13,5 @@ public interface AppointmentSharedRecordRepository extends JpaRepository<Appoint
     List<AppointmentSharedRecord> findByAppointmentIdOrderBySharedAtDesc(UUID appointmentId);
     boolean existsByAppointmentIdAndVaultFileId(UUID appointmentId, UUID vaultFileId);
     Optional<AppointmentSharedRecord> findByAppointmentIdAndVaultFileId(UUID appointmentId, UUID vaultFileId);
+    void deleteByVaultFileId(UUID vaultFileId);
 }
