@@ -112,6 +112,19 @@ public class HealthVaultService {
                 .toList();
     }
 
+    @Transactional
+    public void deleteVaultFile(UUID patientId, UUID fileId) {
+        HealthVaultFile vaultFile = healthVaultRepository.findById(fileId)
+                .orElseThrow(() -> new NotFoundException("Vault file not found: " + fileId));
+
+        if (!vaultFile.getPatient().getId().equals(patientId)) {
+            throw new ForbiddenException("You are not authorized to delete this vault file.");
+        }
+
+        healthVaultRepository.delete(vaultFile);
+        log.info("Deleted vault file [{}] for patient [{}]", fileId, patientId);
+    }
+
     private HealthVaultDto.Response mapToResponse(HealthVaultFile f) {
         HealthVaultDto.Response dto = new HealthVaultDto.Response();
         dto.setId(f.getId());

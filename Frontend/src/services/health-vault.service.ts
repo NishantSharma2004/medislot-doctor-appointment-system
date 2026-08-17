@@ -106,4 +106,15 @@ export const healthVaultService = {
     const { data } = await apiClient.get<VaultFile[]>(`/health-vault/appointment/${appointmentId}`);
     return data;
   },
+
+  async deleteVaultFile(id: string): Promise<void> {
+    if (USE_MOCK_API) {
+      const idx = mockVaultFiles.findIndex((f) => f.id === id);
+      if (idx !== -1) {
+        mockVaultFiles.splice(idx, 1);
+      }
+      return;
+    }
+    await apiClient.delete(`/health-vault/${id}`);
+  },
 };

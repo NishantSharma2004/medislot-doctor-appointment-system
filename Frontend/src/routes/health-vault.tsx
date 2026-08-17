@@ -84,6 +84,10 @@ function HealthVaultPage() {
   // Preview Modal State
   const [previewFile, setPreviewFile] = useState<VaultFile | null>(null);
 
+  // Delete Confirmation State
+  const [deleteConfirmFile, setDeleteConfirmFile] = useState<VaultFile | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   useEffect(() => {
     if (!authLoading) {
       if (!isAuthenticated) {
@@ -195,6 +199,22 @@ function HealthVaultPage() {
       toast.error(apiErr.message || "Failed to upload document");
     } finally {
       setIsUploading(false);
+    }
+  };
+
+  const handleDeleteFile = async () => {
+    if (!deleteConfirmFile) return;
+    setIsDeleting(true);
+    try {
+      await healthVaultService.deleteVaultFile(deleteConfirmFile.id);
+      toast.success(`"${deleteConfirmFile.fileName}" removed from Health Vault`);
+      setDeleteConfirmFile(null);
+      loadVaultFiles();
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.message || "Failed to delete document");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -328,9 +348,20 @@ function HealthVaultPage() {
                   <div className="p-3 rounded-xl bg-accent text-accent-foreground group-hover:scale-105 transition-transform">
                     {getCategoryIcon(file.category)}
                   </div>
-                  <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider rounded-lg px-2 py-0.5 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
-                    {file.category.replace("_", " ")}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-wider rounded-lg px-2 py-0.5 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10">
+                      {file.category.replace("_", " ")}
+                    </Badge>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setDeleteConfirmFile(file)}
+                      title="Delete document"
+                      className="size-7 p-0 rounded-lg text-rose-500 hover:text-rose-600 hover:bg-rose-500/15 transition-colors"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
                 </div>
 
                 <div>
@@ -598,6 +629,40 @@ function HealthVaultPage() {
                 {previewFile.notes}
               </div>
             ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirmFile ? (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="surface-panel w-full max-w-md p-6 rounded-2xl shadow-2xl border border-border space-y-4 animate-in fade-in zoom-in duration-200">
+            <div className="flex items-center gap-3 text-rose-500">
+              <div className="p-3 rounded-2xl bg-rose-500/10">
+                <Trash2 className="size-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-foreground">Delete Document?</h3>
+                <p className="text-xs text-muted-foreground">This action cannot be undone.</p>
+              </div>
+            </div>
+
+            <p className="text-sm text-foreground/90 bg-muted/50 p-3 rounded-xl border border-border/50">
+              Are you sure you want to permanently delete <strong className="text-foreground">"{deleteConfirmFile.fileName}"</strong> from your Health Vault?
+            </p>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setDeleteConfirmFile(null)} className="rounded-xl">
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteFile}
+                disabled={isDeleting}
+                className="bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl gap-2"
+              >
+                <Trash2 className="size-4" /> {isDeleting ? "Deleting..." : "Delete Document"}
+              </Button>
+            </div>
           </div>
         </div>
       ) : null}
