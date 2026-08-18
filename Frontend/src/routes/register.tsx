@@ -73,6 +73,17 @@ export const Route = createFileRoute("/register")({
   component: RegisterPage,
 });
 
+const COUNTRY_CODES = [
+  { code: "+91", flag: "🇮🇳", name: "India", digits: 10, placeholder: "9844123440" },
+  { code: "+1", flag: "🇺🇸", name: "USA / Canada", digits: 10, placeholder: "2025550143" },
+  { code: "+44", flag: "🇬🇧", name: "UK", digits: 10, placeholder: "7911123456" },
+  { code: "+971", flag: "🇦🇪", name: "UAE", digits: 9, placeholder: "501234567" },
+  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia", digits: 9, placeholder: "512345678" },
+  { code: "+65", flag: "🇸🇬", name: "Singapore", digits: 8, placeholder: "81234567" },
+  { code: "+61", flag: "🇦🇺", name: "Australia", digits: 9, placeholder: "412345678" },
+  { code: "+49", flag: "🇩🇪", name: "Germany", digits: 11, placeholder: "15123456789" },
+];
+
 export function RegisterPage() {
   const { register: registerAccount } = useAuth();
   const navigate = useNavigate();
@@ -81,6 +92,10 @@ export function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
+
+  const [countryCode, setCountryCode] = useState("+91");
+  const [phoneDigits, setPhoneDigits] = useState("");
+  const selectedCountry = COUNTRY_CODES.find((c) => c.code === countryCode) || COUNTRY_CODES[0];
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -214,13 +229,51 @@ export function RegisterPage() {
               <Label htmlFor="phone">
                 Phone Number <span className="text-destructive font-bold">*</span>
               </Label>
-              <Input
-                id="phone"
-                type="tel"
-                placeholder="+919876543210"
-                className={form.formState.errors.phone ? "border-destructive focus-visible:ring-destructive" : ""}
-                {...form.register("phone")}
-              />
+              <div className="flex gap-2">
+                <Select
+                  value={countryCode}
+                  onValueChange={(val) => {
+                    setCountryCode(val);
+                    const sel = COUNTRY_CODES.find((c) => c.code === val);
+                    const maxLen = sel?.digits || 10;
+                    const trimmed = phoneDigits.slice(0, maxLen);
+                    setPhoneDigits(trimmed);
+                    form.setValue("phone", `${val}${trimmed}`, { shouldValidate: true });
+                  }}
+                >
+                  <SelectTrigger className="w-[110px] shrink-0 font-semibold text-xs h-10">
+                    <SelectValue placeholder="+91" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {COUNTRY_CODES.map((c) => (
+                      <SelectItem key={c.code} value={c.code} className="text-xs">
+                        {c.flag} {c.code} ({c.name})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <div className="relative flex-1">
+                  <Input
+                    id="phone"
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder={selectedCountry.placeholder}
+                    value={phoneDigits}
+                    onChange={(e) => {
+                      const rawDigits = e.target.value.replace(/\D/g, "");
+                      const maxDigits = selectedCountry.digits;
+                      const trimmedDigits = rawDigits.slice(0, maxDigits);
+                      setPhoneDigits(trimmedDigits);
+                      form.setValue("phone", `${countryCode}${trimmedDigits}`, { shouldValidate: true });
+                    }}
+                    className={`h-10 pr-12 ${form.formState.errors.phone ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                  />
+                  <span className="absolute right-2 top-2.5 text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                    {phoneDigits.length}/{selectedCountry.digits}
+                  </span>
+                </div>
+              </div>
               {form.formState.errors.phone ? (
                 <p className="text-xs font-semibold text-destructive">{form.formState.errors.phone.message}</p>
               ) : null}

@@ -21,6 +21,9 @@ import com.medislot.doctor.entity.DoctorProfile;
 import com.medislot.doctor.repository.DoctorProfileRepository;
 import com.medislot.specialization.entity.Specialization;
 import com.medislot.specialization.repository.SpecializationRepository;
+import com.medislot.notification.service.NotificationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,6 +39,8 @@ import java.util.UUID;
 @Service
 public class AuthService {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+
     private final UserRepository userRepository;
     private final PatientProfileRepository patientProfileRepository;
     private final DoctorProfileRepository doctorProfileRepository;
@@ -46,6 +51,7 @@ public class AuthService {
     private final TokenBlacklistService tokenBlacklistService;
     private final BruteForceProtectionService bruteForceProtectionService;
     private final AuthenticationManager authenticationManager;
+    private final NotificationService notificationService;
 
     public AuthService(
             UserRepository userRepository,
@@ -57,7 +63,8 @@ public class AuthService {
             JwtService jwtService,
             TokenBlacklistService tokenBlacklistService,
             BruteForceProtectionService bruteForceProtectionService,
-            AuthenticationManager authenticationManager) {
+            AuthenticationManager authenticationManager,
+            NotificationService notificationService) {
         this.userRepository = userRepository;
         this.patientProfileRepository = patientProfileRepository;
         this.doctorProfileRepository = doctorProfileRepository;
@@ -68,6 +75,7 @@ public class AuthService {
         this.tokenBlacklistService = tokenBlacklistService;
         this.bruteForceProtectionService = bruteForceProtectionService;
         this.authenticationManager = authenticationManager;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -137,6 +145,24 @@ public class AuthService {
         } else {
             PatientProfile patientProfile = new PatientProfile(savedUser);
             patientProfileRepository.save(patientProfile);
+        }
+
+        try {
+            if (notificationService != null) {
+                notificationService.sendEmailNotification(
+                        savedUser.getId(),
+                        null,
+                        savedUser.getEmail(),
+                        "WELCOME_REGISTRATION",
+                        "Welcome to MediSlot Healthcare! 🎉",
+                        "Hello " + savedUser.getFullName() + ",\n\n"
+                                + "Thank you for creating your MediSlot " + savedUser.getRole() + " account!\n"
+                                + "Your registered email address is: " + savedUser.getEmail() + "\n\n"
+                                + "You can now log in, schedule online/clinic doctor consultations, and manage your health vault records."
+                );
+            }
+        } catch (Exception e) {
+            log.warn("Failed to dispatch welcome email notification to {}: {}", savedUser.getEmail(), e.getMessage());
         }
 
         return createAuthResponse(savedUser);

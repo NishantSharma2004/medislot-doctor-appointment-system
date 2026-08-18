@@ -59,6 +59,9 @@ class AuthServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
+    @Mock
+    private com.medislot.notification.service.NotificationService notificationService;
+
     @InjectMocks
     private AuthService authService;
 
