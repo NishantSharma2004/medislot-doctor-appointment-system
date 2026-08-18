@@ -7,19 +7,19 @@ import { reviewService } from "@/services/review.service";
 interface DoctorRatingModalProps {
   doctorId: string;
   doctorName: string;
-  patientId: string;
-  patientName: string;
+  patientId?: string;
+  patientName?: string;
   appointmentId: string;
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export function DoctorRatingModal({
   doctorId,
   doctorName,
-  patientId,
-  patientName,
+  patientId = "patient-anon",
+  patientName = "Verified Patient",
   appointmentId,
   isOpen,
   onClose,
@@ -51,10 +51,10 @@ export function DoctorRatingModal({
         verifiedPatient: true,
       });
 
-      toast.success(`Thank you! Your 5-star review for ${doctorName} has been published! ⭐`);
-      onSuccess();
+      toast.success(`Thank you! Your ${rating}-star review for ${doctorName} has been published! ⭐`);
+      if (onSuccess) onSuccess();
       onClose();
-    } catch {
+    } catch (err) {
       toast.error("Could not submit review. Please try again.");
     } finally {
       setIsSubmitting(false);

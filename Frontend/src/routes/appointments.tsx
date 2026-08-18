@@ -492,6 +492,12 @@ function MyAppointmentsPage() {
           appointmentId={ratingModalAppt.id}
           doctorId={ratingModalAppt.doctorId}
           doctorName={ratingModalAppt.doctorName}
+          patientId={user?.id}
+          patientName={user?.fullName || "Verified Patient"}
+          onSuccess={() => {
+            loadAppointments();
+            setRatingModalAppt(null);
+          }}
         />
       ) : null}
 
