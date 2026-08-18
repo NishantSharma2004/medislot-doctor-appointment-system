@@ -22,12 +22,16 @@ import {
   ShieldCheck,
   RefreshCw,
   Volume2,
+  Trash2,
+  ArrowUpDown,
+  X,
 } from "lucide-react";
 import { ErrorState } from "@/components/common/ErrorState";
 import { FullPageLoader, InlineLoader } from "@/components/common/Loading";
 import { PageShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/context/AuthContext";
 import { apiClient } from "@/lib/api/client";
 import { appointmentService } from "@/services/appointment.service";
@@ -82,6 +86,11 @@ function DoctorDeskPage() {
   // Document Preview Modal State
   const [previewDocAppt, setPreviewDocAppt] = useState<AppointmentDto | null>(null);
 
+  // Sorting & Deletion State
+  const [sortOrder, setSortOrder] = useState<"NEWEST" | "OLDEST">("NEWEST");
+  const [apptToDelete, setApptToDelete] = useState<AppointmentDto | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   // Digital Prescription Writer State
   const [rxModalAppt, setRxModalAppt] = useState<AppointmentDto | null>(null);
   const [rxDiagnosis, setRxDiagnosis] = useState("");
@@ -127,6 +136,27 @@ function DoctorDeskPage() {
       setError(err as ApiError);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const [editingNotesAppt, setEditingNotesAppt] = useState<AppointmentDto | null>(null);
+  const [notesText, setNotesText] = useState("");
+  const [isSavingNotes, setIsSavingNotes] = useState(false);
+
+  const handleSaveNotes = async () => {
+    if (!editingNotesAppt) return;
+    setIsSavingNotes(true);
+    try {
+      await apiClient.patch(`/appointments/${editingNotesAppt.id}/notes`, { notes: notesText });
+      toast.success("Prescription / Notes updated successfully");
+      setEditingNotesAppt(null);
+      setNotesText("");
+      loadDoctorAppointments();
+    } catch (err) {
+      const apiErr = err as ApiError;
+      toast.error(apiErr.message || "Failed to save prescription notes");
+    } finally {
+      setIsSavingNotes(false);
     }
   };
 
@@ -627,21 +657,39 @@ function DoctorDeskPage() {
               </p>
             </div>
 
-            {/* Filter Pills */}
-            <div className="flex flex-wrap gap-1 bg-muted/50 p-1 rounded-lg">
-              {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((filterKey) => (
-                <button
-                  key={filterKey}
-                  onClick={() => setSelectedFilter(filterKey)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
-                    selectedFilter === filterKey
-                      ? "bg-background text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {filterKey}
-                </button>
-              ))}
+            {/* Filter Pills & Sort Dropdown */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="flex flex-wrap gap-1 bg-muted/50 p-1 rounded-lg">
+                {(["ALL", "PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"] as const).map((filterKey) => (
+                  <button
+                    key={filterKey}
+                    onClick={() => setSelectedFilter(filterKey)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                      selectedFilter === filterKey
+                        ? "bg-background text-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {filterKey}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sort Order Dropdown */}
+              <div className="flex items-center gap-1.5 border-l pl-2.5 border-border">
+                <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                  <ArrowUpDown className="size-3.5" /> Sort:
+                </span>
+                <Select value={sortOrder} onValueChange={(val: "NEWEST" | "OLDEST") => setSortOrder(val)}>
+                  <SelectTrigger className="h-8 text-xs font-semibold w-[145px] rounded-lg">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="NEWEST">Newest First ⬇️</SelectItem>
+                    <SelectItem value="OLDEST">Oldest First ⬆️</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
 
@@ -855,6 +903,17 @@ function DoctorDeskPage() {
                         </Button>
                       </>
                     ) : null}
+
+                    {/* Delete Appointment Record Button 🗑️ */}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-8 w-8 p-0 text-rose-500 hover:text-rose-600 hover:bg-rose-500/10 rounded-lg shrink-0"
+                      title="Delete / Cancel Consultation Record"
+                      onClick={() => setApptToDelete(appt)}
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
                   </div>
                 </div>
               );
@@ -1236,6 +1295,52 @@ function DoctorDeskPage() {
               </Button>
               <Button disabled={isSavingRx} onClick={handleSaveDigitalPrescription} className="bg-teal-600 hover:bg-teal-700 text-white">
                 {isSavingRx ? "Issuing Prescription..." : "Save & Issue Prescription"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Delete Confirmation Modal */}
+      {apptToDelete ? (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="surface-panel w-full max-w-md p-6 rounded-2xl shadow-2xl border border-border space-y-4">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center gap-2 text-rose-500 font-bold text-base">
+                <Trash2 className="size-5" />
+                <span>Delete Consultation Record</span>
+              </div>
+              <Button size="sm" variant="ghost" onClick={() => setApptToDelete(null)} className="size-8 p-0 rounded-full">
+                <X className="size-4" />
+              </Button>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Are you sure you want to permanently cancel & remove this consultation record for <strong>{apptToDelete.patientName}</strong> on <strong>{apptToDelete.date} ({apptToDelete.startTime})</strong>?
+            </p>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" size="sm" onClick={() => setApptToDelete(null)} className="rounded-xl">
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                disabled={isDeleting}
+                onClick={async () => {
+                  setIsDeleting(true);
+                  try {
+                    await appointmentService.cancel(apptToDelete.id);
+                    toast.success("Consultation record deleted successfully!");
+                    setApptToDelete(null);
+                    await loadDoctorAppointments();
+                  } catch (err: any) {
+                    toast.error(err.message || "Failed to delete consultation record.");
+                  } finally {
+                    setIsDeleting(false);
+                  }
+                }}
+                className="gap-1.5 rounded-xl font-bold"
+              >
+                <Trash2 className="size-4" /> {isDeleting ? "Deleting..." : "Delete Record"}
               </Button>
             </div>
           </div>
