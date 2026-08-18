@@ -202,13 +202,19 @@ public class UserService {
 
     @Transactional
     public String forgotPassword(ForgotPasswordRequest request) {
-        Optional<User> userOpt = userRepository.findByEmailIgnoreCase(request.email().trim());
+        String targetEmail = request.email().trim();
+        Optional<User> userOpt = userRepository.findByEmailIgnoreCase(targetEmail);
         if (userOpt.isEmpty()) {
             return null;
         }
 
         User user = userOpt.get();
-        passwordResetTokenRepository.deleteByUser(user);
+        try {
+            passwordResetTokenRepository.deleteByUser(user);
+            passwordResetTokenRepository.flush();
+        } catch (Exception e) {
+            log.warn("Could not delete previous password reset tokens for user {}: {}", user.getId(), e.getMessage());
+        }
 
         SecureRandom random = new SecureRandom();
         int otpInt = 100000 + random.nextInt(900000);
@@ -220,17 +226,23 @@ public class UserService {
         resetToken.setTokenHash(tokenHash);
         resetToken.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
         resetToken.setAttemptCount(0);
-        passwordResetTokenRepository.save(resetToken);
+        passwordResetTokenRepository.saveAndFlush(resetToken);
 
         auditLogService.record(user.getId(), user.getRole().name(), "PASSWORD_RESET_REQUEST", "USER", user.getId(), "SUCCESS", "{}");
-        notificationService.sendEmailNotification(
-            user.getId(),
-            null,
-            user.getEmail(),
-            "PASSWORD_RESET",
-            "Your MediSlot Password Reset OTP: " + rawToken,
-            "Your MediSlot password reset OTP code is: " + rawToken + "\n\nThis OTP is valid for 10 minutes. Do not share this code with anyone."
-        );
+
+        try {
+            notificationService.sendEmailNotification(
+                user.getId(),
+                null,
+                user.getEmail(),
+                "PASSWORD_RESET",
+                "Your MediSlot Password Reset OTP: " + rawToken,
+                "Your MediSlot password reset OTP code is: " + rawToken + "\n\nThis OTP is valid for 10 minutes. Do not share this code with anyone."
+            );
+        } catch (Exception e) {
+            log.warn("Failed to dispatch password reset email notification to {}: {}", user.getEmail(), e.getMessage());
+        }
+
         return rawToken;
     }
 
