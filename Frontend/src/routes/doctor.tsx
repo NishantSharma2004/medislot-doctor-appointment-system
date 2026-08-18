@@ -57,6 +57,36 @@ export const Route = createFileRoute("/doctor")({
   component: DoctorDeskPage,
 });
 
+function openFileSecurely(fileUrl: string, fileName: string = "medical_document") {
+  if (!fileUrl) return;
+
+  if (fileUrl.startsWith("data:")) {
+    try {
+      const parts = fileUrl.split(",");
+      const mime = parts[0].match(/:(.*?);/)?.[1] || "application/octet-stream";
+      const bstr = atob(parts[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      const blob = new Blob([u8arr], { type: mime });
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = fileName.endsWith(".pdf") || mime === "application/pdf" ? (fileName.endsWith(".pdf") ? fileName : `${fileName}.pdf`) : fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    } catch {
+      window.open(fileUrl, "_blank");
+    }
+  } else {
+    window.open(fileUrl, "_blank");
+  }
+}
+
 function DoctorDeskPage() {
   const { user, isAuthenticated, isLoading: authLoading, hasRole } = useAuth();
   const navigate = useNavigate();
@@ -1001,14 +1031,21 @@ function DoctorDeskPage() {
                           <span className="font-semibold text-foreground block truncate">{file.fileName}</span>
                           <span className="text-[11px] text-muted-foreground">Category: {file.category}</span>
                         </div>
-                        <a
-                          href={file.fileUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 font-bold shrink-0 transition-colors"
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (inspectedPatient) {
+                              setPreviewDocAppt({
+                                ...inspectedPatient,
+                                medicalDocumentUrl: file.fileUrl,
+                                medicalDocumentName: file.fileName,
+                              });
+                            }
+                          }}
+                          className="px-2.5 py-1 rounded bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 font-bold shrink-0 transition-colors cursor-pointer"
                         >
                           📄 Open File
-                        </a>
+                        </button>
                       </div>
                     ))}
                   </div>
@@ -1103,10 +1140,12 @@ function DoctorDeskPage() {
 
             <div className="flex justify-between items-center pt-2">
               {previewDocAppt.medicalDocumentUrl ? (
-                <Button asChild variant="outline" size="sm">
-                  <a href={previewDocAppt.medicalDocumentUrl} download={previewDocAppt.medicalDocumentName || "lab_report"}>
-                    Download Original File
-                  </a>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openFileSecurely(previewDocAppt.medicalDocumentUrl!, previewDocAppt.medicalDocumentName || "lab_report")}
+                >
+                  📥 Download / Open File
                 </Button>
               ) : <div />}
               <Button onClick={() => setPreviewDocAppt(null)}>Close Preview</Button>
