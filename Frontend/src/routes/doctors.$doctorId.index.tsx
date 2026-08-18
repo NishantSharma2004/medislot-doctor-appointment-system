@@ -17,9 +17,8 @@ import { appointmentService } from "@/services/appointment.service";
 import { doctorService } from "@/services/doctor.service";
 import { notificationService } from "@/services/notification.service";
 import { reviewService } from "@/services/review.service";
-import { DoctorReviewList } from "@/components/reviews/DoctorReviewList";
-import { RazorpayCheckoutModal } from "@/components/payment/RazorpayCheckoutModal";
-import { MedicalInvoiceModal } from "@/components/payment/MedicalInvoiceModal";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { healthVaultService, type VaultFile } from "@/services/health-vault.service";
 
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
@@ -46,6 +45,18 @@ function DoctorProfilePage() {
   const [reason, setReason] = useState("");
   const [documentUrl, setDocumentUrl] = useState<string | null>(null);
   const [documentName, setDocumentName] = useState<string | null>(null);
+  const [docSourceMode, setDocSourceMode] = useState<"DEVICE" | "VAULT">("DEVICE");
+  const [vaultFiles, setVaultFiles] = useState<VaultFile[]>([]);
+  const [selectedVaultFileId, setSelectedVaultFileId] = useState<string>("");
+
+  const loadVaultFiles = async () => {
+    try {
+      const files = await healthVaultService.getVaultFiles();
+      setVaultFiles(files);
+    } catch {
+      setVaultFiles([]);
+    }
+  };
   const [paymentMode, setPaymentMode] = useState<"ONLINE_RAZORPAY" | "PAY_AT_CLINIC">("ONLINE_RAZORPAY");
   const [isBooking, setIsBooking] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
@@ -430,34 +441,123 @@ function DoctorProfilePage() {
                   />
                 </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                    <FileText className="size-3.5 text-primary" /> Upload Lab Report / Medical Records (Optional, Max 5MB)
+                {/* Medical Document Attachment Section (Device Upload vs Health Vault Picker) */}
+                <div className="space-y-2 pt-1 border-t">
+                  <label className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                    <FileText className="size-3.5 text-emerald-500" /> Upload Lab Report / Medical Records (Optional)
                   </label>
-                  <Input
-                    type="file"
-                    accept=".pdf,.jpg,.jpeg,.png"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        if (file.size > 5 * 1024 * 1024) {
-                          toast.error("File size must be smaller than 5MB");
-                          return;
+
+                  {/* Dual Mode Choice Selector */}
+                  <div className="flex gap-2 p-1 bg-muted/60 rounded-xl">
+                    <button
+                      type="button"
+                      onClick={() => setDocSourceMode("DEVICE")}
+                      className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                        docSourceMode === "DEVICE"
+                          ? "bg-background text-foreground shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <span>📁 Option 1: Upload from Device</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDocSourceMode("VAULT");
+                        if (isAuthenticated) {
+                          loadVaultFiles();
                         }
-                        setDocumentName(file.name);
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          setDocumentUrl(reader.result as string);
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="text-xs file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:border-0 file:rounded-md file:mr-2 cursor-pointer"
-                  />
+                      }}
+                      className={`flex-1 py-1.5 px-3 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1.5 ${
+                        docSourceMode === "VAULT"
+                          ? "bg-background text-foreground shadow-xs"
+                          : "text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      <span>📂 Option 2: Pick from Health Vault</span>
+                    </button>
+                  </div>
+
+                  {docSourceMode === "DEVICE" ? (
+                    <Input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          if (file.size > 15 * 1024 * 1024) {
+                            toast.error("File size must be smaller than 15MB");
+                            return;
+                          }
+                          setDocumentName(file.name);
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setDocumentUrl(reader.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      className="text-xs file:text-xs file:font-semibold file:bg-primary/10 file:text-primary file:border-0 file:rounded-md file:mr-2 cursor-pointer bg-card"
+                    />
+                  ) : (
+                    <div className="space-y-2">
+                      {vaultFiles.length === 0 ? (
+                        <div className="p-3 border border-dashed rounded-xl text-center space-y-1.5 bg-muted/20">
+                          <p className="text-xs text-muted-foreground font-medium">No saved documents in your Health Vault locker.</p>
+                          <button
+                            type="button"
+                            onClick={() => setDocSourceMode("DEVICE")}
+                            className="text-xs font-bold text-teal-400 hover:underline"
+                          >
+                            Upload from device instead
+                          </button>
+                        </div>
+                      ) : (
+                        <Select
+                          value={selectedVaultFileId}
+                          onValueChange={(val) => {
+                            setSelectedVaultFileId(val);
+                            const vf = vaultFiles.find((f) => f.id === val);
+                            if (vf) {
+                              setDocumentName(vf.fileName);
+                              setDocumentUrl(vf.fileUrl);
+                              toast.success(`Attached "${vf.fileName}" from Health Vault!`);
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="h-9 text-xs font-semibold rounded-lg bg-card">
+                            <SelectValue placeholder="Choose a document from your Health Vault locker..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {vaultFiles.map((vf) => (
+                              <SelectItem key={vf.id} value={vf.id} className="text-xs">
+                                📄 {vf.fileName} ({vf.category})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                  )}
+
                   {documentName ? (
-                    <p className="text-[11px] font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1 pt-0.5">
-                      <CheckCircle2 className="size-3" /> Attached: {documentName}
-                    </p>
+                    <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-xs text-emerald-400 font-bold">
+                      <span className="truncate flex items-center gap-1.5">
+                        <CheckCircle2 className="size-3.5 text-emerald-500" /> Attached: {documentName}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setDocumentName(null);
+                          setDocumentUrl(null);
+                          setSelectedVaultFileId("");
+                        }}
+                        className="text-rose-400 hover:underline text-[11px] ml-2 shrink-0"
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ) : null}
                 </div>
 
