@@ -363,23 +363,6 @@ function DoctorDeskPage() {
     }
   };
 
-  const handleSaveNotes = async () => {
-    if (!editingNotesAppt) return;
-    setIsSavingNotes(true);
-    try {
-      await apiClient.patch(`/appointments/${editingNotesAppt.id}/notes`, { notes: notesText });
-      toast.success("Prescription / Notes updated successfully");
-      setEditingNotesAppt(null);
-      setNotesText("");
-      loadDoctorAppointments();
-    } catch (err) {
-      const apiErr = err as ApiError;
-      toast.error(apiErr.message || "Failed to save prescription notes");
-    } finally {
-      setIsSavingNotes(false);
-    }
-  };
-
   if (authLoading || !isAuthenticated) {
     return <FullPageLoader label="Verifying doctor credentials" />;
   }
@@ -1332,8 +1315,9 @@ function DoctorDeskPage() {
                     toast.success("Consultation record deleted successfully!");
                     setApptToDelete(null);
                     await loadDoctorAppointments();
-                  } catch (err: any) {
-                    toast.error(err.message || "Failed to delete consultation record.");
+                  } catch (err) {
+                    const apiErr = err as ApiError;
+                    toast.error(apiErr.message || "Failed to delete consultation record.");
                   } finally {
                     setIsDeleting(false);
                   }
