@@ -211,7 +211,6 @@ public class UserService {
         User user = userOpt.get();
         try {
             passwordResetTokenRepository.deleteByUser(user);
-            passwordResetTokenRepository.flush();
         } catch (Exception e) {
             log.warn("Could not delete previous password reset tokens for user {}: {}", user.getId(), e.getMessage());
         }
@@ -226,7 +225,7 @@ public class UserService {
         resetToken.setTokenHash(tokenHash);
         resetToken.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
         resetToken.setAttemptCount(0);
-        passwordResetTokenRepository.saveAndFlush(resetToken);
+        passwordResetTokenRepository.save(resetToken);
 
         auditLogService.record(user.getId(), user.getRole().name(), "PASSWORD_RESET_REQUEST", "USER", user.getId(), "SUCCESS", "{}");
 
