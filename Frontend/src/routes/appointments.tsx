@@ -502,7 +502,11 @@ function MyAppointmentsPage() {
           setVaultModalOpen(false);
           setSharingAppt(null);
         }}
-        sharingAppt={sharingAppt}
+        appointmentId={sharingAppt?.id}
+        doctorName={sharingAppt?.doctorName}
+        onRecordShared={() => {
+          loadAppointments();
+        }}
       />
     </PageShell>
   );
