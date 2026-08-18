@@ -241,8 +241,8 @@ export function RegisterPage() {
                     form.setValue("phone", `${val}${trimmed}`, { shouldValidate: true });
                   }}
                 >
-                  <SelectTrigger className="w-[110px] shrink-0 font-semibold text-xs h-10">
-                    <SelectValue placeholder="+91" />
+                  <SelectTrigger className="w-[95px] shrink-0 font-bold text-xs h-10 px-2.5">
+                    <SelectValue>{selectedCountry.flag} {selectedCountry.code}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {COUNTRY_CODES.map((c) => (
@@ -253,7 +253,7 @@ export function RegisterPage() {
                   </SelectContent>
                 </Select>
 
-                <div className="relative flex-1">
+                <div className="flex-1">
                   <Input
                     id="phone"
                     type="tel"
@@ -267,11 +267,8 @@ export function RegisterPage() {
                       setPhoneDigits(trimmedDigits);
                       form.setValue("phone", `${countryCode}${trimmedDigits}`, { shouldValidate: true });
                     }}
-                    className={`h-10 pr-12 ${form.formState.errors.phone ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    className={`h-10 font-medium ${form.formState.errors.phone ? "border-destructive focus-visible:ring-destructive" : ""}`}
                   />
-                  <span className="absolute right-2 top-2.5 text-[10px] font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                    {phoneDigits.length}/{selectedCountry.digits}
-                  </span>
                 </div>
               </div>
               {form.formState.errors.phone ? (
