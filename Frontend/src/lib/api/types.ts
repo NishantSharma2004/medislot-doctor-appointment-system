@@ -145,10 +145,14 @@ export interface CreateAppointmentRequest {
 }
 
 export interface PrescriptionMedicine {
-  name: string;
-  dosage: string;
-  frequency: string;
-  duration: string;
+  id?: string;
+  name?: string;
+  medicineName?: string;
+  dosage?: string;
+  frequency?: string;
+  timing?: string;
+  duration?: string;
+  durationDays?: string;
 }
 
 export interface SavePrescriptionRequest {
@@ -298,14 +302,6 @@ export interface PillLogDto {
   doctorName?: string;
   prescriptionId?: string;
   notes?: string;
-}
-export interface PrescriptionMedicine {
-  id?: string;
-  medicineName: string;
-  dosage?: string;
-  frequency?: string;
-  timing?: string;
-  durationDays?: string;
 }
 
 export interface PrescriptionDto {

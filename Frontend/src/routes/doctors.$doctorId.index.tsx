@@ -19,6 +19,9 @@ import { notificationService } from "@/services/notification.service";
 import { reviewService } from "@/services/review.service";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { healthVaultService, type VaultFile } from "@/services/health-vault.service";
+import { DoctorReviewList } from "@/components/reviews/DoctorReviewList";
+import { RazorpayCheckoutModal } from "@/components/payment/RazorpayCheckoutModal";
+import { MedicalInvoiceModal } from "@/components/payment/MedicalInvoiceModal";
 
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
@@ -84,12 +87,12 @@ function DoctorProfilePage() {
 
   const myAppointmentsQuery = useQuery({
     queryKey: ["my-appointments"],
-    queryFn: () => appointmentService.getMyAppointmens({ page: 0, size: 50 }),
+    queryFn: () => appointmentService.myAppointments({ page: 0, size: 50 }),
     enabled: isAuthenticated && user?.role === "PATIENT",
   });
 
   const activeApptWithThisDoctor = myAppointmentsQuery.data?.content?.find(
-    (a) =>
+    (a: AppointmentDto) =>
       (a.doctorId === doctorId || a.doctorName === doctorQuery.data?.fullName) &&
       (a.status === "PENDING" || a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
   );
@@ -165,7 +168,7 @@ function DoctorProfilePage() {
       }
     } catch (err) {
       const apiErr = err as ApiError;
-      const isTrueSlotConflict = apiErr.code === "SLOT_NOT_AVAILABLE" || apiErr.code === "SLOT_ALREADY_BOOKED";
+      const isTrueSlotConflict = (apiErr.code as string) === "SLOT_NOT_AVAILABLE" || (apiErr.code as string) === "SLOT_ALREADY_BOOKED";
       if (isTrueSlotConflict) {
         setBookingError("This slot was just booked by another patient! Please select another available slot.");
         setSelectedSlot(null);
@@ -576,11 +579,9 @@ function DoctorProfilePage() {
 
           {/* Doctor Reviews */}
           <DoctorReviewList
-            doctorId={doctorId}
             reviews={reviewQuery.data?.reviews ?? []}
             averageRating={reviewQuery.data?.averageRating ?? 0}
             totalReviews={reviewQuery.data?.totalReviews ?? 0}
-            onReviewAdded={() => reviewQuery.refetch()}
           />
         </div>
 

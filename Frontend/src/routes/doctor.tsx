@@ -352,11 +352,11 @@ function DoctorDeskPage() {
           diagnosis: rxDiagnosis || "Clinical Consultation",
           symptoms: rxModalAppt.reason || "General Symptoms",
           medicines: validMeds.map((m) => ({
-            medicineName: m.name,
+            medicineName: m.name || m.medicineName || "",
             dosage: m.dosage,
             frequency: m.frequency,
             timing: "After Meals",
-            durationDays: m.duration,
+            durationDays: m.duration || m.durationDays,
           })),
           labTestsRecommended: rxLabTests,
           clinicalAdvice: rxNotes,
@@ -437,9 +437,9 @@ function DoctorDeskPage() {
                   <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
                     <Sparkles className="size-3" /> Official Doctor Account
                   </span>
-                  {docProfile?.specializationName ? (
+                  {docProfile?.specialization ? (
                     <Badge variant="outline" className="border-teal-400/40 text-teal-200 text-xs">
-                      {docProfile.specializationName}
+                      {docProfile.specialization}
                     </Badge>
                   ) : null}
                 </div>
