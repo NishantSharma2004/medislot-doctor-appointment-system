@@ -378,10 +378,9 @@ function DoctorDeskPage() {
       return appt.status === selectedFilter;
     })
     .sort((a, b) => {
-      if (a.date !== b.date) {
-        return a.date.localeCompare(b.date);
-      }
-      return a.startTime.localeCompare(b.startTime);
+      const dtA = `${a.date} ${a.startTime}`;
+      const dtB = `${b.date} ${b.startTime}`;
+      return sortOrder === "NEWEST" ? dtB.localeCompare(dtA) : dtA.localeCompare(dtB);
     });
 
   return (
