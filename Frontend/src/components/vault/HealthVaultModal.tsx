@@ -228,6 +228,21 @@ export function HealthVaultModal({
         <div className="p-6 overflow-y-auto flex-1 space-y-4">
           {activeTab === "VAULT" ? (
             <div>
+              {/* Header Action bar inside Vault tab */}
+              <div className="flex items-center justify-between pb-3 border-b mb-3">
+                <span className="text-xs text-muted-foreground font-medium">
+                  {vaultFiles.length} file(s) saved in your Locker
+                </span>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-8 text-xs font-bold gap-1.5 border-teal-500/50 text-teal-400 hover:bg-teal-500/10 rounded-lg"
+                  onClick={() => setActiveTab("UPLOAD")}
+                >
+                  <Upload className="w-3.5 h-3.5" /> 📤 Upload New Document
+                </Button>
+              </div>
+
               {isLoading ? (
                 <div className="text-center py-8 text-xs text-muted-foreground">Loading your Health Vault...</div>
               ) : vaultFiles.length === 0 ? (
