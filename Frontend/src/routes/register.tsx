@@ -150,49 +150,58 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="mx-auto flex w-full max-w-lg flex-col px-4 py-10">
-      <BackButton className="mb-4 self-start" />
-      <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Choose account type below to get started with MediSlot.
-      </p>
-
-      <div className="surface-panel mt-6 p-6 space-y-6">
-        {/* Role Switcher Tabs */}
-        <div className="flex rounded-lg bg-muted p-1 text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => {
-              setRole("PATIENT");
-              form.setValue("role", "PATIENT");
-            }}
-            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
-              role === "PATIENT"
-                ? "bg-background text-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <User className="size-4 text-primary" /> Patient Account
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setRole("DOCTOR");
-              form.setValue("role", "DOCTOR");
-            }}
-            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
-              role === "DOCTOR"
-                ? "bg-background text-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Stethoscope className="size-4 text-primary" /> Doctor Account
-          </button>
+    <div className="min-h-screen bg-[#FAF8F5] py-12 px-4 flex flex-col justify-center items-center font-sans">
+      <div className="w-full max-w-lg">
+        <BackButton className="mb-6 self-start" />
+        
+        <div className="text-center space-y-2 mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+            ✨ Get Started With MediSlot
+          </span>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Create Your Account
+          </h1>
+          <p className="text-xs text-slate-600">
+            Choose account type below to get started with MediSlot healthcare network.
+          </p>
         </div>
 
-        {error ? <ErrorState error={error} title="Could not create account" /> : null}
+        <div className="rounded-3xl border border-amber-200/80 bg-white p-8 shadow-xs space-y-6">
+          {/* Role Switcher Tabs */}
+          <div className="flex rounded-2xl bg-amber-50 p-1 text-xs font-bold border border-amber-200/60">
+            <button
+              type="button"
+              onClick={() => {
+                setRole("PATIENT");
+                form.setValue("role", "PATIENT");
+              }}
+              className={`flex-1 rounded-xl py-2.5 transition-all flex items-center justify-center gap-2 ${
+                role === "PATIENT"
+                  ? "bg-white text-slate-900 shadow-xs font-extrabold border border-amber-300"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <User className="size-4 text-amber-600" /> Patient Account
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setRole("DOCTOR");
+                form.setValue("role", "DOCTOR");
+              }}
+              className={`flex-1 rounded-xl py-2.5 transition-all flex items-center justify-center gap-2 ${
+                role === "DOCTOR"
+                  ? "bg-white text-slate-900 shadow-xs font-extrabold border border-amber-300"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Stethoscope className="size-4 text-amber-600" /> Doctor Account
+            </button>
+          </div>
 
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+          {error ? <ErrorState error={error} title="Could not create account" /> : null}
+
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
           <div className="space-y-1.5">
             <Label htmlFor="fullName">
               {role === "DOCTOR" ? "Full Name (e.g. Dr. Rajesh Sharma)" : "Full Name"} <span className="text-destructive font-bold">*</span>
@@ -395,13 +404,14 @@ export function RegisterPage() {
           </Button>
         </form>
 
-        <p className="mt-4 text-sm text-muted-foreground text-center">
+        <p className="mt-4 text-xs font-semibold text-slate-600 text-center">
           Already registered?{" "}
-          <Link to="/login" className="font-medium text-primary underline-offset-4 hover:underline">
+          <Link to="/login" className="font-extrabold text-amber-700 hover:underline">
             Sign in
           </Link>
         </p>
       </div>
     </div>
+  </div>
   );
 }
