@@ -420,6 +420,64 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* THEIR WORDS, NOT OURS TESTIMONIALS SECTION */}
+      <section className="bg-[#FAF8F5] py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-8 lg:grid-cols-12 items-center">
+            <div className="lg:col-span-5 space-y-4">
+              <span className="text-xs font-extrabold uppercase tracking-widest text-amber-700 bg-amber-100 px-3.5 py-1 rounded-full">
+                Patient Testimonials
+              </span>
+              <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl">
+                Their Words, Not Ours.
+              </h2>
+              <p className="text-sm text-slate-600 leading-relaxed">
+                Read how MediSlot simplified doctor consultations, live OPD queue tracking, and medical record vault sharing for patients across clinics.
+              </p>
+              <div className="flex items-center gap-2 pt-2">
+                <span className="text-sm font-extrabold text-slate-900">4.9 / 5.0</span>
+                <div className="flex text-amber-500">
+                  <Star className="size-4 fill-amber-500" />
+                  <Star className="size-4 fill-amber-500" />
+                  <Star className="size-4 fill-amber-500" />
+                  <Star className="size-4 fill-amber-500" />
+                  <Star className="size-4 fill-amber-500" />
+                </div>
+                <span className="text-xs font-medium text-slate-500">(1,200+ Reviews)</span>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-amber-200/80 bg-white p-6 shadow-xs space-y-3">
+                <p className="text-xs text-slate-700 leading-relaxed italic">
+                  "Booking an appointment with Dr. Rajesh was so smooth. I got my OPD Token #4 instantly and didn't have to wait in clinic queues!"
+                </p>
+                <div className="pt-2 border-t flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-extrabold text-slate-900">Aditi Sharma</p>
+                    <p className="text-[10px] font-semibold text-amber-700">General Medicine Patient</p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Verified</span>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-teal-200/80 bg-white p-6 shadow-xs space-y-3">
+                <p className="text-xs text-slate-700 leading-relaxed italic">
+                  "The Digital Health Vault feature is amazing. I attached my blood report directly during slot booking, and the doctor had it open before I entered!"
+                </p>
+                <div className="pt-2 border-t flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-extrabold text-slate-900">Karan Verma</p>
+                    <p className="text-[10px] font-semibold text-teal-700">Cardiology Consultation</p>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Verified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* PRICING & CONSULTATION OPTIONS */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center">

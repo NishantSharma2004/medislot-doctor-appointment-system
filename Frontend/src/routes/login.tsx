@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Loader2, Stethoscope, User, Eye, EyeOff } from "lucide-react";
+import { Loader2, Stethoscope, User, Eye, EyeOff, Sparkles, KeyRound } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,9 +26,9 @@ export const Route = createFileRoute("/login")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — MediSlot" },
+      { title: "Sign in — MediSlot Healthcare" },
       { name: "description", content: "Sign in to manage your MediSlot clinic appointments." },
-      { property: "og:title", content: "Sign in — MediSlot" },
+      { property: "og:title", content: "Sign in — MediSlot Healthcare" },
       { property: "og:description", content: "Sign in to manage your clinic appointments." },
     ],
   }),
@@ -106,126 +106,133 @@ function LoginPage() {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col px-4 py-10">
-      <BackButton className="mb-4 self-start" />
-      <h1 className="text-2xl font-bold tracking-tight">
-        {roleTab === "DOCTOR" ? "Doctor Sign In" : "Patient Sign In"}
-      </h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {roleTab === "DOCTOR"
-          ? "Access your doctor dashboard, publish availability and review patients."
-          : "Access your booked appointments, prescriptions and health records."}
-      </p>
-
-      <div className="surface-panel mt-6 p-6 space-y-5">
-        {/* Role Switcher Tabs */}
-        <div className="flex rounded-lg bg-muted p-1 text-xs font-semibold">
-          <button
-            type="button"
-            onClick={() => setRoleTab("PATIENT")}
-            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
-              roleTab === "PATIENT"
-                ? "bg-background text-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <User className="size-4 text-primary" /> Patient Sign In
-          </button>
-          <button
-            type="button"
-            onClick={() => setRoleTab("DOCTOR")}
-            className={`flex-1 rounded-md py-2.5 transition-all flex items-center justify-center gap-2 ${
-              roleTab === "DOCTOR"
-                ? "bg-background text-foreground shadow-xs"
-                : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Stethoscope className="size-4 text-primary" /> Doctor Sign In
-          </button>
+    <div className="min-h-screen bg-[#FAF8F5] py-12 px-4 flex flex-col justify-center items-center font-sans">
+      <div className="w-full max-w-md">
+        <BackButton className="mb-6 self-start" />
+        
+        <div className="text-center space-y-2 mb-6">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+            <Sparkles className="size-3 text-amber-600" /> Welcome To MediSlot
+          </span>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            {roleTab === "DOCTOR" ? "Doctor Sign In" : "Patient Sign In"}
+          </h1>
+          <p className="text-xs text-slate-600">
+            {roleTab === "DOCTOR"
+              ? "Access your doctor desk, publish slots and review patient records."
+              : "Access your booked appointments, prescriptions and health vault."}
+          </p>
         </div>
 
-        {error ? (
-          <ErrorState error={error} title="Could not sign in" onRetry={() => onSubmit(form.getValues())} />
-        ) : null}
-
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
-          <div className="space-y-1.5">
-            <Label htmlFor="email">
-              Email Address <span className="text-destructive font-bold">*</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder={roleTab === "DOCTOR" ? "doctor@medislot.test" : "patient@medislot.test"}
-              autoComplete="email"
-              aria-invalid={Boolean(form.formState.errors.email)}
-              className={form.formState.errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
-              {...form.register("email")}
-            />
-            {form.formState.errors.email ? (
-              <p className="text-xs font-semibold text-destructive">{form.formState.errors.email.message}</p>
-            ) : null}
+        <div className="rounded-3xl border border-amber-200/80 bg-white p-8 shadow-xs space-y-6">
+          {/* Role Switcher Tabs */}
+          <div className="flex rounded-2xl bg-amber-50 p-1 text-xs font-bold border border-amber-200/60">
+            <button
+              type="button"
+              onClick={() => setRoleTab("PATIENT")}
+              className={`flex-1 rounded-xl py-2.5 transition-all flex items-center justify-center gap-2 ${
+                roleTab === "PATIENT"
+                  ? "bg-white text-slate-900 shadow-xs font-extrabold border border-amber-300"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <User className="size-4 text-amber-600" /> Patient Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => setRoleTab("DOCTOR")}
+              className={`flex-1 rounded-xl py-2.5 transition-all flex items-center justify-center gap-2 ${
+                roleTab === "DOCTOR"
+                  ? "bg-white text-slate-900 shadow-xs font-extrabold border border-amber-300"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Stethoscope className="size-4 text-amber-600" /> Doctor Sign In
+            </button>
           </div>
 
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="password">
-                Password <span className="text-destructive font-bold">*</span>
+          {error ? (
+            <ErrorState error={error} title="Could not sign in" onRetry={() => onSubmit(form.getValues())} />
+          ) : null}
+
+          <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)} noValidate>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-bold text-slate-700">
+                Email Address <span className="text-rose-600 font-bold">*</span>
               </Label>
-              <Link
-                to="/forgot-password"
-                search={{ email: form.watch("email") || undefined }}
-                className="text-xs font-medium text-primary hover:underline"
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <div className="relative">
               <Input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                aria-invalid={Boolean(form.formState.errors.password)}
-                className={`pr-10 ${form.formState.errors.password ? "border-destructive focus-visible:ring-destructive" : ""}`}
-                {...form.register("password")}
+                id="email"
+                type="email"
+                placeholder={roleTab === "DOCTOR" ? "doctor@medislot.test" : "patient@medislot.test"}
+                autoComplete="email"
+                aria-invalid={Boolean(form.formState.errors.email)}
+                className={`h-11 rounded-xl border-slate-200 text-xs font-medium ${form.formState.errors.email ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
+                {...form.register("email")}
               />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none p-1 rounded-md transition-colors"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                title={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
+              {form.formState.errors.email ? (
+                <p className="text-xs font-bold text-rose-600">{form.formState.errors.email.message}</p>
+              ) : null}
             </div>
-            {form.formState.errors.password ? (
-              <p className="text-xs font-semibold text-destructive">{form.formState.errors.password.message}</p>
-            ) : null}
+
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="text-xs font-bold text-slate-700">
+                  Password <span className="text-rose-600 font-bold">*</span>
+                </Label>
+                <Link
+                  to="/forgot-password"
+                  search={{ email: form.watch("email") || undefined }}
+                  className="text-xs font-bold text-amber-700 hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  aria-invalid={Boolean(form.formState.errors.password)}
+                  className={`h-11 rounded-xl pr-10 border-slate-200 text-xs font-medium ${form.formState.errors.password ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
+                  {...form.register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                </button>
+              </div>
+              {form.formState.errors.password ? (
+                <p className="text-xs font-bold text-rose-600">{form.formState.errors.password.message}</p>
+              ) : null}
+            </div>
+
+            <Button type="submit" className="w-full h-11 rounded-2xl bg-amber-600 text-white font-extrabold hover:bg-amber-700 shadow-sm" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
+              Sign in as {roleTab === "DOCTOR" ? "Doctor" : "Patient"}
+            </Button>
+          </form>
+
+          <div className="border-t pt-4 text-center space-y-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full h-9 rounded-xl text-xs font-bold text-slate-600 border-slate-300 hover:bg-slate-100"
+              onClick={() => fillDemoCredentials(roleTab === "DOCTOR" ? "DOCTOR" : "PATIENT")}
+            >
+              <KeyRound className="size-3.5 mr-1 text-amber-600" /> Fill Demo {roleTab === "DOCTOR" ? "Doctor" : "Patient"} Credentials
+            </Button>
+
+            <p className="text-xs font-medium text-slate-600">
+              Don't have an account?{" "}
+              <Link to="/register" className="font-extrabold text-amber-700 hover:underline">
+                Create an account
+              </Link>
+            </p>
           </div>
-
-          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? <Loader2 className="size-4 animate-spin mr-2" /> : null}
-            Sign in as {roleTab === "DOCTOR" ? "Doctor" : "Patient"}
-          </Button>
-        </form>
-
-        <div className="border-t pt-4 text-center space-y-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full text-xs text-muted-foreground"
-            onClick={() => fillDemoCredentials(roleTab === "DOCTOR" ? "DOCTOR" : "PATIENT")}
-          >
-            Fill Demo {roleTab === "DOCTOR" ? "Doctor" : "Patient"} Credentials
-          </Button>
-
-          <p className="text-xs text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/register" className="font-medium text-primary underline-offset-4 hover:underline">
-              Create an account
-            </Link>
-          </p>
         </div>
       </div>
     </div>
