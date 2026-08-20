@@ -95,12 +95,15 @@ function LoginPage() {
     }
   }
 
-  const fillDemoCredentials = (role: "PATIENT" | "DOCTOR") => {
+  const fillDemoCredentials = (role: "PATIENT" | "DOCTOR" | "ADMIN") => {
     if (role === "PATIENT") {
       form.setValue("email", "patient@medislot.test");
       form.setValue("password", "Password123!");
-    } else {
+    } else if (role === "DOCTOR") {
       form.setValue("email", "doctor@medislot.test");
+      form.setValue("password", "Password123!");
+    } else {
+      form.setValue("email", "admin@medislot.test");
       form.setValue("password", "Password123!");
     }
   };
@@ -216,15 +219,25 @@ function LoginPage() {
             </Button>
           </form>
 
-          <div className="border-t pt-4 text-center space-y-3">
-            <Button
-              variant="outline"
-              size="sm"
-              className="w-full h-9 rounded-xl text-xs font-bold text-slate-600 border-slate-300 hover:bg-slate-100"
-              onClick={() => fillDemoCredentials(roleTab === "DOCTOR" ? "DOCTOR" : "PATIENT")}
-            >
-              <KeyRound className="size-3.5 mr-1 text-amber-600" /> Fill Demo {roleTab === "DOCTOR" ? "Doctor" : "Patient"} Credentials
-            </Button>
+          <div className="border-t pt-4 text-center space-y-2">
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 rounded-xl text-[11px] font-bold text-slate-600 border-slate-300 hover:bg-slate-100"
+                onClick={() => fillDemoCredentials(roleTab === "DOCTOR" ? "DOCTOR" : "PATIENT")}
+              >
+                <KeyRound className="size-3.5 mr-1 text-amber-600" /> Demo {roleTab === "DOCTOR" ? "Doctor" : "Patient"}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 rounded-xl text-[11px] font-bold text-amber-900 border-amber-300 bg-amber-50 hover:bg-amber-100"
+                onClick={() => fillDemoCredentials("ADMIN")}
+              >
+                <KeyRound className="size-3.5 mr-1 text-amber-700" /> Demo Admin
+              </Button>
+            </div>
 
             <p className="text-xs font-medium text-slate-600">
               Don't have an account?{" "}
