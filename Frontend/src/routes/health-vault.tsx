@@ -246,40 +246,41 @@ function HealthVaultPage() {
   };
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <BackButton />
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <BackButton />
 
-      {/* Hero Vault Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-950 via-slate-900 to-teal-950 text-white p-6 sm:p-8 shadow-xl border border-emerald-800/30">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-400/30 backdrop-blur-md px-3 py-1 text-xs">
-                <FolderLock className="size-3.5 mr-1" /> EHR Confidential Records
-              </Badge>
-              <Badge variant="outline" className="text-teal-200 border-teal-500/30 text-xs">
-                <ShieldCheck className="size-3 mr-1" /> HIPAA Privacy Standard
-              </Badge>
+        {/* Hero Vault Header Banner */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFFDF9] via-[#FAF6EE] to-[#FAF8F5] p-6 sm:p-8 shadow-xs border border-amber-200">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+                  <FolderLock className="size-3.5 text-amber-600" /> EHR Confidential Health Vault
+                </span>
+                <span className="text-xs font-bold text-teal-800 bg-teal-100 px-2.5 py-0.5 rounded-full border border-teal-200">
+                  AES-256 Encrypted
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+                Digital Health Records Vault
+              </h1>
+              <p className="text-slate-600 text-xs sm:text-sm max-w-xl font-medium">
+                Store blood lab reports, imaging scans, and prescriptions securely. Selectively share documents with your consulting doctor during slot booking.
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Digital Health Records Locker 📂
-            </h1>
-            <p className="text-emerald-100/80 text-sm max-w-xl">
-              Store all your lab reports, prescriptions, X-rays, and discharge summaries in one encrypted vault. Share explicitly with doctors during consultations.
-            </p>
-          </div>
 
-          <Button
-            onClick={() => {
-              resetUploadForm();
-              setIsUploadModalOpen(true);
-            }}
-            className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-950/60 text-sm py-6 px-6 rounded-xl"
-          >
-            <Plus className="size-5" /> Upload Document to Vault
-          </Button>
+            <Button
+              onClick={() => {
+                resetUploadForm();
+                setIsUploadModalOpen(true);
+              }}
+              className="h-11 rounded-2xl bg-amber-600 text-white font-extrabold hover:bg-amber-700 shadow-xs gap-2 shrink-0 px-5"
+            >
+              <Plus className="size-4" /> Upload Document
+            </Button>
+          </div>
         </div>
-      </div>
 
       {/* Search & Category Filter Section */}
       <div className="space-y-4">
@@ -667,5 +668,6 @@ function HealthVaultPage() {
         </div>
       ) : null}
     </div>
+  </div>
   );
 }

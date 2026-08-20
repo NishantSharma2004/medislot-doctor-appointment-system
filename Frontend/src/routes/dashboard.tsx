@@ -184,39 +184,40 @@ function DashboardPage() {
   const missedPct = totalCount > 0 ? Math.round((missedOrExpiredAppts.length / totalCount) * 100) : 0;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <BackButton />
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <BackButton />
 
-      {/* Hero Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-teal-900 via-emerald-800 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-teal-700/30">
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Badge className="bg-teal-500/20 text-teal-200 border-teal-400/30 backdrop-blur-md px-3 py-1 text-xs">
-                <ShieldCheck className="size-3.5 mr-1" /> Patient Command Center
-              </Badge>
+        {/* Hero Welcome Banner */}
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFFDF9] via-[#FAF6EE] to-[#FAF8F5] p-6 sm:p-8 shadow-xs border border-amber-200">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+                  <ShieldCheck className="size-3.5 text-amber-600" /> Patient Command Center
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+                Welcome back, {user?.fullName}! 👋
+              </h1>
+              <p className="text-slate-600 text-xs sm:text-sm max-w-xl font-medium">
+                Track your upcoming clinic visits, manage appointment schedules, and explore verified medical specialists.
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-              Welcome back, {user?.fullName}! 👋
-            </h1>
-            <p className="text-teal-100/80 text-sm max-w-xl">
-              Track your upcoming clinic visits, manage appointment schedules, and explore verified medical specialists.
-            </p>
-          </div>
 
-          {/* Quick Profile Pill */}
-          <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-xl p-4 text-xs space-y-2 shrink-0">
-            <div className="flex items-center gap-2">
-              <User className="size-4 text-teal-300" />
-              <span className="font-semibold">{user?.email}</span>
-            </div>
-            <div className="flex items-center justify-between text-teal-100/70 pt-1 border-t border-white/10 gap-4">
-              <span>Role: <strong className="text-white">{user?.role}</strong></span>
-              <span>Phone: <strong className="text-white">{user?.phone || "N/A"}</strong></span>
+            {/* Quick Profile Pill */}
+            <div className="bg-white p-4 rounded-2xl border border-amber-200 text-xs space-y-2 shrink-0 shadow-xs">
+              <div className="flex items-center gap-2 font-bold text-slate-900">
+                <User className="size-4 text-amber-600" />
+                <span>{user?.email}</span>
+              </div>
+              <div className="flex items-center justify-between text-slate-600 pt-1.5 border-t border-slate-100 gap-4">
+                <span>Role: <strong className="text-amber-900">{user?.role}</strong></span>
+                <span>Phone: <strong className="text-slate-900">{user?.phone || "N/A"}</strong></span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
       {/* 4 Interactive Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -620,6 +621,7 @@ function DashboardPage() {
         </div>
       ) : null}
     </div>
+  </div>
   );
 }
 
