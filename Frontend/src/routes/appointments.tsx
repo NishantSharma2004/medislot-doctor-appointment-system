@@ -167,7 +167,7 @@ function MyAppointmentsPage() {
         {(() => {
           const todayStr = new Date().toISOString().split("T")[0];
           const todayAppt = appointmentsPage.content.find(
-            (a) => a.date === todayStr && (a.status === "PENDING" || a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
+            (a) => a.date === todayStr && (a.status === "CONFIRMED" || a.status === "IN_CONSULTATION")
           );
 
           if (!todayAppt) return null;
@@ -339,7 +339,11 @@ function MyAppointmentsPage() {
                                   : "bg-destructive/10 text-destructive border border-destructive/20"
                         }`}
                       >
-                        {effStatus === "EXPIRED" ? "EXPIRED (NO RESPONSE)" : effStatus}
+                        {effStatus === "EXPIRED"
+                          ? "EXPIRED (NO RESPONSE)"
+                          : effStatus === "PENDING"
+                            ? "PENDING DOCTOR APPROVAL"
+                            : effStatus}
                       </span>
 
                       {(effStatus === "PENDING" || effStatus === "CONFIRMED" || effStatus === "IN_CONSULTATION") ? (

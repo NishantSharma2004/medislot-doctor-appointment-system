@@ -104,7 +104,8 @@ public class PaymentService {
         appointment.setPaymentMode("ONLINE_RAZORPAY");
         appointment.setPaymentStatus("PAID");
         appointment.setRazorpayPaymentId(request.razorpayPaymentId());
-        appointment.setStatus(AppointmentStatus.CONFIRMED);
+        appointment.setStatus(AppointmentStatus.PENDING);
+        appointment.setDoctorActionStatus("PENDING_APPROVAL");
         appointmentRepository.save(appointment);
 
         // Clear patient accumulated dues upon payment completion

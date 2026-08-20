@@ -213,6 +213,15 @@ public class AppointmentService {
         AppointmentStatus oldStatus = appointment.getStatus();
         appointment.setStatus(newStatus);
 
+        if (newStatus == AppointmentStatus.CONFIRMED) {
+            appointment.setDoctorActionStatus("ACCEPTED");
+        } else if (newStatus == AppointmentStatus.REJECTED) {
+            appointment.setDoctorActionStatus("REJECTED");
+            if ("PAID".equals(appointment.getPaymentStatus())) {
+                appointment.setPaymentStatus("REFUNDED");
+            }
+        }
+
         AvailabilitySlot slot = availabilitySlotRepository.findByIdForUpdate(appointment.getSlotId())
                 .orElseThrow(() -> new NotFoundException("Associated slot not found."));
 
