@@ -2,14 +2,21 @@ package com.medislot.admin.controller;
 
 import com.medislot.admin.dto.AdminDashboardDto;
 import com.medislot.admin.service.AdminService;
+import com.medislot.appointment.dto.AppointmentDto;
 import com.medislot.appointment.entity.Appointment;
+import com.medislot.appointment.service.AppointmentService;
 import com.medislot.audit.entity.AuditLog;
+import com.medislot.common.dto.PageResponse;
+import com.medislot.doctor.dto.DoctorDto;
 import com.medislot.doctor.entity.DoctorProfile;
+import com.medislot.doctor.service.DoctorService;
 import com.medislot.specialization.entity.Specialization;
+import com.medislot.user.dto.UserDto;
 import com.medislot.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,15 +33,53 @@ import java.util.UUID;
 public class AdminController {
 
     private final AdminService adminService;
+    private final DoctorService doctorService;
+    private final AppointmentService appointmentService;
 
-    public AdminController(AdminService adminService) {
+    public AdminController(
+            AdminService adminService,
+            DoctorService doctorService,
+            AppointmentService appointmentService
+    ) {
         this.adminService = adminService;
+        this.doctorService = doctorService;
+        this.appointmentService = appointmentService;
     }
 
     @GetMapping("/analytics")
     @Operation(summary = "Get admin dashboard aggregate statistics")
     public ResponseEntity<AdminDashboardDto> getDashboardStats() {
         return ResponseEntity.ok(adminService.getDashboardStats());
+    }
+
+    @GetMapping("/doctors")
+    @Operation(summary = "View all system doctors with pagination")
+    public ResponseEntity<PageResponse<DoctorDto>> getAllDoctors(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(Math.max(0, page), Math.min(Math.max(1, size), 50));
+        Page<DoctorProfile> doctorPage = adminService.getAllDoctors(pageable);
+        Page<DoctorDto> dtoPage = doctorPage.map(doctorService::mapToDto);
+        return ResponseEntity.ok(PageResponse.from(dtoPage));
+    }
+
+    @GetMapping("/patients")
+    @Operation(summary = "View all registered patient accounts with pagination")
+    public ResponseEntity<PageResponse<UserDto>> getAllPatients(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(Math.max(0, page), Math.min(Math.max(1, size), 50));
+        Page<User> patientPage = adminService.getAllPatients(pageable);
+        Page<UserDto> dtoPage = patientPage.map(u -> new UserDto(
+                u.getId().toString(),
+                u.getFullName(),
+                u.getEmail(),
+                u.getPhone(),
+                u.getRole()
+        ));
+        return ResponseEntity.ok(PageResponse.from(dtoPage));
     }
 
     @PatchMapping("/doctors/{id}/status")
@@ -83,8 +128,14 @@ public class AdminController {
 
     @GetMapping("/appointments")
     @Operation(summary = "View all clinic appointments with pagination")
-    public ResponseEntity<Page<Appointment>> getAllAppointments(Pageable pageable) {
-        return ResponseEntity.ok(adminService.getAllAppointments(pageable));
+    public ResponseEntity<PageResponse<AppointmentDto>> getAllAppointments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        Pageable pageable = PageRequest.of(Math.max(0, page), Math.min(Math.max(1, size), 50));
+        Page<Appointment> apptPage = adminService.getAllAppointments(pageable);
+        Page<AppointmentDto> dtoPage = apptPage.map(appointmentService::mapToDto);
+        return ResponseEntity.ok(PageResponse.from(dtoPage));
     }
 
     @GetMapping("/audit-logs")

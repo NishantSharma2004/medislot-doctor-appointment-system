@@ -168,6 +168,16 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
+    public Page<DoctorProfile> getAllDoctors(Pageable pageable) {
+        return doctorProfileRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<User> getAllPatients(Pageable pageable) {
+        return userRepository.findByRole(Role.PATIENT, pageable);
+    }
+
+    @Transactional(readOnly = true)
     public Page<Appointment> getAllAppointments(Pageable pageable) {
         return appointmentRepository.findAll(pageable);
     }
