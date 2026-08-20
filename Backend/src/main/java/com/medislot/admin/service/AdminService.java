@@ -40,6 +40,8 @@ public class AdminService {
     private final AiProviderUsageLogRepository aiProviderUsageLogRepository;
     private final NotificationService notificationService;
     private final AuditLogService auditLogService;
+    private final com.medislot.doctor.service.DoctorService doctorService;
+    private final com.medislot.appointment.service.AppointmentService appointmentService;
 
     public AdminService(
             UserRepository userRepository,
@@ -48,7 +50,9 @@ public class AdminService {
             SpecializationRepository specializationRepository,
             AiProviderUsageLogRepository aiProviderUsageLogRepository,
             NotificationService notificationService,
-            AuditLogService auditLogService
+            AuditLogService auditLogService,
+            com.medislot.doctor.service.DoctorService doctorService,
+            com.medislot.appointment.service.AppointmentService appointmentService
     ) {
         this.userRepository = userRepository;
         this.doctorProfileRepository = doctorProfileRepository;
@@ -57,6 +61,8 @@ public class AdminService {
         this.aiProviderUsageLogRepository = aiProviderUsageLogRepository;
         this.notificationService = notificationService;
         this.auditLogService = auditLogService;
+        this.doctorService = doctorService;
+        this.appointmentService = appointmentService;
     }
 
     @Transactional(readOnly = true)
@@ -168,18 +174,30 @@ public class AdminService {
     }
 
     @Transactional(readOnly = true)
-    public Page<DoctorProfile> getAllDoctors(Pageable pageable) {
-        return doctorProfileRepository.findAll(pageable);
+    public com.medislot.common.dto.PageResponse<com.medislot.doctor.dto.DoctorDto> getAllDoctors(Pageable pageable) {
+        Page<DoctorProfile> doctorPage = doctorProfileRepository.findAll(pageable);
+        Page<com.medislot.doctor.dto.DoctorDto> dtoPage = doctorPage.map(doctorService::mapToDto);
+        return com.medislot.common.dto.PageResponse.from(dtoPage);
     }
 
     @Transactional(readOnly = true)
-    public Page<User> getAllPatients(Pageable pageable) {
-        return userRepository.findByRole(Role.PATIENT, pageable);
+    public com.medislot.common.dto.PageResponse<com.medislot.user.dto.UserDto> getAllPatients(Pageable pageable) {
+        Page<User> patientPage = userRepository.findByRole(Role.PATIENT, pageable);
+        Page<com.medislot.user.dto.UserDto> dtoPage = patientPage.map(u -> new com.medislot.user.dto.UserDto(
+                u.getId().toString(),
+                u.getFullName(),
+                u.getEmail(),
+                u.getPhone(),
+                u.getRole()
+        ));
+        return com.medislot.common.dto.PageResponse.from(dtoPage);
     }
 
     @Transactional(readOnly = true)
-    public Page<Appointment> getAllAppointments(Pageable pageable) {
-        return appointmentRepository.findAll(pageable);
+    public com.medislot.common.dto.PageResponse<com.medislot.appointment.dto.AppointmentDto> getAllAppointments(Pageable pageable) {
+        Page<Appointment> apptPage = appointmentRepository.findAll(pageable);
+        Page<com.medislot.appointment.dto.AppointmentDto> dtoPage = apptPage.map(appointmentService::mapToDto);
+        return com.medislot.common.dto.PageResponse.from(dtoPage);
     }
 
     @Transactional(readOnly = true)
