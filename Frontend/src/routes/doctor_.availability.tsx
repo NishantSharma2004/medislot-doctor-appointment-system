@@ -147,9 +147,22 @@ function DoctorAvailabilityPage() {
   };
 
   return (
-    <PageShell title="Manage Availability" description="Publish open consultation slots for patient booking.">
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="surface-panel p-6 space-y-4 md:col-span-1">
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="space-y-3">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+            ⏰ Slot Scheduling & Publishing Desk
+          </span>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Manage Availability
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+            Publish open consultation slots and OPD queue time windows for patient booking.
+          </p>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="rounded-3xl border border-amber-200/80 bg-white p-6 space-y-4 md:col-span-1 shadow-xs">
           <div className="space-y-2">
             <h2 className="text-lg font-bold">Quick Slot Publisher</h2>
             <p className="text-xs text-muted-foreground">Instantly seed 8 slots (9:00 AM - 5:00 PM) for patients.</p>
@@ -275,6 +288,7 @@ function DoctorAvailabilityPage() {
           )}
         </div>
       </div>
-    </PageShell>
+    </div>
+  </div>
   );
 }

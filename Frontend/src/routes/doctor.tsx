@@ -414,28 +414,25 @@ function DoctorDeskPage() {
     });
 
   return (
-    <PageShell
-      title={`${formatDoctorDisplayName(user?.fullName)}'s Desk`}
-      description="Personalized Doctor Workspace — Manage patient consultations, inspect health profiles, and issue digital prescriptions."
-    >
-      <div className="space-y-6">
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Personalized Doctor Profile Hero Banner */}
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-950 via-emerald-900 to-slate-900 text-white p-6 sm:p-8 shadow-xl border border-emerald-800/40">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#FFFDF9] via-[#FAF6EE] to-[#FAF8F5] p-6 sm:p-8 shadow-xs border border-amber-200">
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-start gap-4 sm:gap-5">
               <div className="relative flex-shrink-0">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/20 backdrop-blur-md border border-emerald-400/30 flex items-center justify-center text-emerald-300 shadow-inner">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 shadow-xs">
                   <Stethoscope className="size-8 sm:size-10" />
                 </div>
-                <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-slate-900 flex items-center justify-center text-[10px] text-black font-bold">
+                <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center text-[10px] text-white font-bold">
                   ✓
                 </span>
               </div>
 
               <div className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
-                    <Sparkles className="size-3" /> Official Doctor Account
+                  <span className="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                    <Sparkles className="size-3 text-amber-600" /> Official Doctor Desk
                   </span>
                   {docProfile?.specialization ? (
                     <Badge variant="outline" className="border-teal-400/40 text-teal-200 text-xs">
@@ -933,7 +930,6 @@ function DoctorDeskPage() {
             </div>
           )}
         </div>
-      </div>
 
       {/* Patient Full Profile Inspection Modal */}
       {inspectedPatient ? (
@@ -1368,6 +1364,7 @@ function DoctorDeskPage() {
           </div>
         </div>
       ) : null}
-    </PageShell>
+    </div>
+  </div>
   );
 }
