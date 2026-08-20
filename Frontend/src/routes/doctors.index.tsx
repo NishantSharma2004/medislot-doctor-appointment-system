@@ -1,12 +1,11 @@
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { SearchX, SlidersHorizontal, Zap, Sparkles } from "lucide-react";
+import { SearchX, SlidersHorizontal, Zap, Sparkles, Search, MapPin, Stethoscope, Filter, Star, Clock, CheckCircle2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { DoctorCardSkeletonGrid } from "@/components/common/Loading";
 import { EmptyState, ErrorState } from "@/components/common/ErrorState";
 import { PaginationControls } from "@/components/common/PaginationControls";
 import { DoctorCard } from "@/components/doctors/DoctorCard";
-import { PageShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -54,13 +53,13 @@ export const Route = createFileRoute("/doctors/")({
   }),
   head: () => ({
     meta: [
-      { title: "Find a doctor — MediSlot" },
+      { title: "Find a doctor — MediSlot Specialist Directory" },
       {
         name: "description",
         content:
           "Search clinic doctors by specialization, city and consultation fee, then open their published availability.",
       },
-      { property: "og:title", content: "Find a doctor — MediSlot" },
+      { property: "og:title", content: "Find a doctor — MediSlot Specialist Directory" },
       { property: "og:description", content: "Search clinic doctors and open their availability." },
     ],
   }),
@@ -114,14 +113,6 @@ function DoctorSearchPage() {
     return trie;
   }, [result?.content]);
 
-  const invertedIndexEngine = useMemo(() => {
-    const engine = new InvertedIndexEngine();
-    if (result?.content) {
-      engine.buildIndexes(result.content);
-    }
-    return engine;
-  }, [result?.content]);
-
   // --- DSA Step 2: Instant O(K) Trie Prefix Execution ---
   const trieResult = useMemo(() => {
     return trieEngine.searchPrefix(queryInput);
@@ -165,198 +156,234 @@ function DoctorSearchPage() {
   }
 
   return (
-    <PageShell
-      title="Find a doctor"
-      description="Filter by specialization, city and consultation fee to see published availability."
-    >
-      <div className="grid gap-6 lg:grid-cols-[18rem_minmax(0,1fr)]">
-        <aside className="surface-panel h-fit space-y-5 p-5" aria-label="Filters">
-          <div className="flex items-center gap-2">
-            <SlidersHorizontal className="size-4 text-primary" aria-hidden="true" />
-            <h2 className="text-sm font-semibold">Filters</h2>
-          </div>
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      {/* HEADER BANNER */}
+      <section className="bg-gradient-to-b from-[#FFFDF9] to-[#FAF6EE] border-b border-amber-200/60 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-amber-900 shadow-xs">
+            <Sparkles className="size-3.5 text-amber-600" /> MediSlot Specialist Network
+          </span>
+          <h1 className="mt-4 text-3xl font-extrabold text-slate-900 sm:text-4xl">
+            Find The Right Doctor For Your Health Journey
+          </h1>
+          <p className="mt-2 text-sm text-slate-600 max-w-2xl">
+            Filter by medical specialization, city, consultation fee, and open time slots to book instant clinic appointments.
+          </p>
+        </div>
+      </section>
 
-          <form
-            className="space-y-1.5 relative"
-            onSubmit={(event) => {
-              event.preventDefault();
-              updateSearch({ query: queryInput.trim() || undefined });
-            }}
-          >
-            <div className="flex items-center justify-between">
-              <Label htmlFor="doctor-query">Search by name or clinic</Label>
-              {queryInput.trim().length > 0 ? (
-                <Badge variant="outline" className="text-[10px] font-mono bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/30 gap-1 px-1.5 py-0">
-                  <Zap className="size-3 text-amber-500 fill-amber-500" /> Trie: {trieResult.searchTimeMs} ms
-                </Badge>
+      {/* MAIN CONTAINER */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="grid gap-8 lg:grid-cols-[19rem_minmax(0,1fr)]">
+          {/* SIDEBAR FILTERS PANEL */}
+          <aside className="rounded-3xl border border-amber-200/80 bg-white p-6 shadow-xs h-fit space-y-6">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div className="flex items-center gap-2">
+                <SlidersHorizontal className="size-4 text-amber-700" />
+                <h2 className="text-sm font-extrabold text-slate-900">Search Filters</h2>
+              </div>
+              {(search.query || search.specialization || search.city || search.maxFee || search.availability) ? (
+                <button type="button" onClick={clearFilters} className="text-[11px] font-bold text-amber-700 hover:underline">
+                  Reset All
+                </button>
               ) : null}
             </div>
 
-            <div className="flex gap-2">
-              <Input
-                id="doctor-query"
-                value={queryInput}
-                onChange={(event) => setQueryInput(event.target.value)}
-                placeholder="e.g. Ananya, Delhi, General"
-              />
-              <Button type="submit" variant="secondary">
-                Go
-              </Button>
+            {/* QUERY INPUT WITH TRIE AUTOCOMPLETE */}
+            <form
+              className="space-y-2 relative"
+              onSubmit={(event) => {
+                event.preventDefault();
+                updateSearch({ query: queryInput.trim() || undefined });
+              }}
+            >
+              <div className="flex items-center justify-between">
+                <Label htmlFor="doctor-query" className="text-xs font-bold text-slate-700">
+                  Doctor Name or Keyword
+                </Label>
+                {queryInput.trim().length > 0 ? (
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Zap className="size-3 text-amber-600 fill-amber-600" /> Trie: {trieResult.searchTimeMs} ms
+                  </span>
+                ) : null}
+              </div>
+
+              <div className="flex gap-2">
+                <Input
+                  id="doctor-query"
+                  value={queryInput}
+                  onChange={(event) => setQueryInput(event.target.value)}
+                  placeholder="e.g. Rajesh, Delhi, Cardiology"
+                  className="h-10 text-xs font-medium rounded-xl border-slate-200"
+                />
+                <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold">
+                  Go
+                </Button>
+              </div>
+
+              {/* Live Trie Autocomplete Dropdown */}
+              {queryInput.trim().length > 0 && trieResult.matchedCount > 0 ? (
+                <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-amber-200 rounded-2xl shadow-xl p-2 space-y-1">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 px-2 pb-1 border-b">
+                    <span className="flex items-center gap-1">
+                      <Sparkles className="size-3 text-amber-600" /> Trie Suggestions ({trieResult.matchedCount})
+                    </span>
+                    <span className="text-[10px] text-teal-700 font-bold">O(K) Speed</span>
+                  </div>
+                  <div className="max-h-40 overflow-y-auto space-y-1 pt-1">
+                    {(result?.content ?? [])
+                      .filter((d) => trieResult.matchingDoctorIds.includes(d.id))
+                      .slice(0, 4)
+                      .map((doctor) => (
+                        <button
+                          key={doctor.id}
+                          type="button"
+                          className="w-full text-left px-2 py-1.5 rounded-xl hover:bg-amber-50 transition-colors flex items-center justify-between text-xs group"
+                          onClick={() => {
+                            setQueryInput(doctor.fullName);
+                            updateSearch({ query: doctor.fullName });
+                          }}
+                        >
+                          <span className="font-bold text-slate-900 group-hover:text-amber-700">
+                            {doctor.fullName}
+                          </span>
+                          <span className="text-[10px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded-full">
+                            {doctor.specialization}
+                          </span>
+                        </button>
+                      ))}
+                  </div>
+                </div>
+              ) : null}
+            </form>
+
+            {/* SPECIALIZATION SELECT */}
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-specialization" className="text-xs font-bold text-slate-700">Specialization</Label>
+              <Select
+                value={search.specialization ?? ANY}
+                onValueChange={(value) =>
+                  updateSearch({ specialization: value === ANY ? undefined : value })
+                }
+              >
+                <SelectTrigger id="filter-specialization" className="h-10 rounded-xl text-xs font-semibold border-slate-200">
+                  <SelectValue placeholder="Any specialization" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ANY}>Any specialization</SelectItem>
+                  {specializations.map((item) => (
+                    <SelectItem key={item.id} value={item.name} className="text-xs">
+                      {item.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* --- Live Trie Autocomplete Dropdown --- */}
-            {queryInput.trim().length > 0 && trieResult.matchedCount > 0 ? (
-              <div className="absolute z-20 top-full left-0 right-0 mt-1 bg-card border rounded-xl shadow-lg p-2 space-y-1 backdrop-blur-md">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-muted-foreground px-2 pb-1 border-b">
-                  <span className="flex items-center gap-1">
-                    <Sparkles className="size-3 text-teal-500" /> Trie Prefix Suggestions ({trieResult.matchedCount})
-                  </span>
-                  <span className="font-mono text-[10px] text-teal-600 dark:text-teal-400">O(K) Complexity</span>
-                </div>
-                <div className="max-h-40 overflow-y-auto space-y-1 pt-1">
-                  {(result?.content ?? [])
-                    .filter((d) => trieResult.matchingDoctorIds.includes(d.id))
-                    .slice(0, 4)
-                    .map((doctor) => (
-                      <button
-                        key={doctor.id}
-                        type="button"
-                        className="w-full text-left px-2 py-1.5 rounded-md hover:bg-teal-500/10 transition-colors flex items-center justify-between text-xs group"
-                        onClick={() => {
-                          setQueryInput(doctor.fullName);
-                          updateSearch({ query: doctor.fullName });
-                        }}
-                      >
-                        <span className="font-semibold text-foreground group-hover:text-teal-600 transition-colors">
-                          {doctor.fullName}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                          {doctor.specialization}
-                        </span>
-                      </button>
-                    ))}
-                </div>
-              </div>
-            ) : null}
-          </form>
+            {/* CITY SELECT */}
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-city" className="text-xs font-bold text-slate-700">Location City</Label>
+              <Select
+                value={search.city ?? ANY}
+                onValueChange={(value) => updateSearch({ city: value === ANY ? undefined : value })}
+              >
+                <SelectTrigger id="filter-city" className="h-10 rounded-xl text-xs font-semibold border-slate-200">
+                  <SelectValue placeholder="Any location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ANY}>Any location</SelectItem>
+                  {cities.map((city) => (
+                    <SelectItem key={city} value={city} className="text-xs">
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="filter-specialization">Specialization</Label>
-            <Select
-              value={search.specialization ?? ANY}
-              onValueChange={(value) =>
-                updateSearch({ specialization: value === ANY ? undefined : value })
-              }
-            >
-              <SelectTrigger id="filter-specialization">
-                <SelectValue placeholder="Any specialization" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ANY}>Any specialization</SelectItem>
-                {specializations.map((item) => (
-                  <SelectItem key={item.id} value={item.name}>
-                    {item.name}
+            {/* AVAILABILITY SELECT */}
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-availability" className="text-xs font-bold text-slate-700">Slot Availability</Label>
+              <Select
+                value={search.availability ?? ANY}
+                onValueChange={(value) =>
+                  updateSearch({ availability: value === ANY ? undefined : value })
+                }
+              >
+                <SelectTrigger id="filter-availability" className="h-10 rounded-xl text-xs font-semibold border-slate-200">
+                  <SelectValue placeholder="Any availability" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ANY}>Any availability</SelectItem>
+                  <SelectItem value="AVAILABLE" className="text-xs font-bold text-emerald-700">
+                    🟢 Open Slots Available Only
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-1.5">
-            <Label htmlFor="filter-city">Location</Label>
-            <Select
-              value={search.city ?? ANY}
-              onValueChange={(value) => updateSearch({ city: value === ANY ? undefined : value })}
-            >
-              <SelectTrigger id="filter-city">
-                <SelectValue placeholder="Any location" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ANY}>Any location</SelectItem>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-1.5">
-            <Label htmlFor="filter-availability">Slot Availability</Label>
-            <Select
-              value={search.availability ?? ANY}
-              onValueChange={(value) =>
-                updateSearch({ availability: value === ANY ? undefined : value })
-              }
-            >
-              <SelectTrigger id="filter-availability">
-                <SelectValue placeholder="Any availability" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value={ANY}>Any availability</SelectItem>
-                <SelectItem value="AVAILABLE">🟢 Open Slots Available Only</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="filter-fee">Maximum consultation fee: ₹{feeDraft}</Label>
-            <Slider
-              id="filter-fee"
-              min={300}
-              max={MAX_FEE}
-              step={50}
-              value={[feeDraft]}
-              onValueChange={([value]) => setFeeDraft(value)}
-              onValueCommit={([value]) =>
-                updateSearch({ maxFee: value >= MAX_FEE ? undefined : value })
-              }
-              aria-label="Maximum consultation fee"
-            />
-          </div>
-
-          <Button variant="outline" className="w-full" onClick={clearFilters}>
-            Clear filters
-          </Button>
-        </aside>
-
-        <section aria-label="Doctor results" className="space-y-5">
-          {doctorsQuery.isPending ? <DoctorCardSkeletonGrid /> : null}
-
-          {error ? <ErrorState error={error} onRetry={() => doctorsQuery.refetch()} /> : null}
-
-          {result && displayDoctors.length === 0 ? (
-            <EmptyState
-              icon={<SearchX className="size-6" aria-hidden="true" />}
-              title="No doctors match these filters"
-              description="Try widening the consultation fee range, setting availability to Any, or clearing filters."
-              action={
-                <Button variant="outline" onClick={clearFilters}>
-                  Clear filters
-                </Button>
-              }
-            />
-          ) : null}
-
-          {result && displayDoctors.length > 0 ? (
-            <>
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {displayDoctors.map((doctor) => (
-                  <DoctorCard key={doctor.id} doctor={doctor} />
-                ))}
+            {/* FEE SLIDER */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                <span>Max Fee</span>
+                <span className="text-amber-700 font-extrabold bg-amber-100 px-2 py-0.5 rounded-md">₹{feeDraft}</span>
               </div>
-              <PaginationControls
-                page={result.page}
-                totalPages={result.totalPages}
-                totalElements={displayDoctors.length}
-                label="doctors"
-                onPageChange={(next) => updateSearch({ page: next }, false)}
+              <Slider
+                id="filter-fee"
+                min={300}
+                max={MAX_FEE}
+                step={50}
+                value={[feeDraft]}
+                onValueChange={([value]) => setFeeDraft(value)}
+                onValueCommit={([value]) =>
+                  updateSearch({ maxFee: value >= MAX_FEE ? undefined : value })
+                }
               />
-            </>
-          ) : null}
-        </section>
+            </div>
+
+            <Button variant="outline" className="w-full rounded-xl border-slate-300 font-bold text-slate-700 hover:bg-slate-100" onClick={clearFilters}>
+              Clear Filters
+            </Button>
+          </aside>
+
+          {/* DOCTOR RESULTS GRID */}
+          <section aria-label="Doctor results" className="space-y-6">
+            {doctorsQuery.isPending ? <DoctorCardSkeletonGrid /> : null}
+
+            {error ? <ErrorState error={error} onRetry={() => doctorsQuery.refetch()} /> : null}
+
+            {result && displayDoctors.length === 0 ? (
+              <EmptyState
+                icon={<SearchX className="size-8 text-amber-600" aria-hidden="true" />}
+                title="No doctors match these filters"
+                description="Try widening the consultation fee range, setting location to Any, or clearing filters."
+                action={
+                  <Button variant="outline" className="rounded-xl border-amber-300 text-amber-900 font-bold" onClick={clearFilters}>
+                    Clear Filters
+                  </Button>
+                }
+              />
+            ) : null}
+
+            {result && displayDoctors.length > 0 ? (
+              <>
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {displayDoctors.map((doctor) => (
+                    <DoctorCard key={doctor.id} doctor={doctor} />
+                  ))}
+                </div>
+                <PaginationControls
+                  page={result.page}
+                  totalPages={result.totalPages}
+                  totalElements={displayDoctors.length}
+                  label="doctors"
+                  onPageChange={(next) => updateSearch({ page: next }, false)}
+                />
+              </>
+            ) : null}
+          </section>
+        </div>
       </div>
-    </PageShell>
+    </div>
   );
 }

@@ -1,7 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { Activity, AlertTriangle, ArrowRight, Brain, CalendarClock, CheckCircle2, ChevronRight, Heart, ShieldAlert, Sparkles, Stethoscope, Pill } from "lucide-react";
+import { Activity, AlertTriangle, ArrowRight, Brain, CalendarClock, CheckCircle2, ChevronRight, Heart, ShieldAlert, Sparkles, Stethoscope, Pill, Plus, X } from "lucide-react";
 import { useState } from "react";
-import { PageShell } from "@/components/layout/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,60 +66,60 @@ function HealthRiskCalculatorPage() {
   };
 
   return (
-    <PageShell
-      title="🤖 AI/ML Health Risk Predictor"
-      description="Clinically grounded AI predictive model trained on PIMA Diabetes & Framingham Heart Study benchmarks."
-    >
-      <div className="space-y-8 max-w-6xl mx-auto pb-12">
-        {/* Hero Header Banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-teal-950 via-slate-900 to-emerald-950 text-white p-6 sm:p-10 shadow-2xl border border-emerald-800/40">
-          <div className="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      {/* HEADER HERO BANNER */}
+      <section className="bg-gradient-to-b from-[#FFFDF9] via-[#FAF6EE] to-[#FAF8F5] border-b border-amber-200/60 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div className="space-y-3 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold uppercase tracking-wider">
-                <Brain className="size-3.5" /> High-Accuracy Clinical ML Model
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold uppercase tracking-wider">
+                <Brain className="size-3.5 text-amber-600" /> High-Accuracy Clinical ML Model
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Predict Diabetes & Heart Disease Risk in Seconds
               </h1>
-              <p className="text-sm sm:text-base text-emerald-100/80 leading-relaxed font-medium">
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
                 Enter your Fasting/PP Glucose, Blood Pressure, and Body Vitals below to run our ensemble machine learning risk assessment.
               </p>
             </div>
 
-            <div className="flex items-center gap-4 bg-white/5 backdrop-blur-md p-4 rounded-2xl border border-white/10 shrink-0">
-              <div className="size-12 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-300 font-black text-xl shadow-inner">
+            <div className="flex items-center gap-4 bg-white/90 p-4 rounded-3xl border border-amber-200 shadow-xs shrink-0">
+              <div className="size-14 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-800 font-black text-2xl">
                 95%
               </div>
               <div>
-                <p className="text-xs text-emerald-200 font-semibold">Trained Confidence</p>
-                <p className="text-xs text-muted-foreground text-emerald-100/70">PIMA & Framingham Guidelines</p>
+                <p className="text-xs text-slate-900 font-bold">Trained Confidence</p>
+                <p className="text-xs text-slate-500">PIMA & Framingham Guidelines</p>
               </div>
             </div>
           </div>
         </div>
+      </section>
 
+      {/* MAIN CONTAINER */}
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Vitals Input Panel */}
-          <div className="lg:col-span-6 surface-panel p-6 sm:p-8 rounded-3xl space-y-6 border border-border/80 shadow-xl bg-card">
+          <div className="lg:col-span-6 rounded-3xl border border-amber-200/80 bg-white p-6 sm:p-8 space-y-6 shadow-xs">
             <div className="flex items-center justify-between border-b pb-4">
               <div>
-                <h2 className="text-lg font-bold text-foreground flex items-center gap-2">
-                  <Activity className="size-5 text-emerald-500" /> Enter Patient Vitals & Health Data
+                <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                  <Activity className="size-5 text-amber-600" /> Enter Patient Vitals & Health Data
                 </h2>
-                <p className="text-xs text-muted-foreground">Adjust sliders or type values to evaluate risk.</p>
+                <p className="text-xs text-slate-500">Adjust sliders or type values to evaluate risk.</p>
               </div>
-              <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/30">
+              <span className="text-[11px] font-bold bg-amber-100 text-amber-900 px-2.5 py-1 rounded-full border border-amber-200">
                 Step 1 of 2
-              </Badge>
+              </span>
             </div>
 
             {/* Fasting Glucose */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <Label htmlFor="fasting" className="flex items-center gap-1.5 text-foreground">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                <Label htmlFor="fasting" className="flex items-center gap-1.5">
                   🩸 Fasting Blood Glucose (mg/dL)
                 </Label>
-                <span className="font-mono text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                <span className="font-mono text-sm font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md">
                   {fastingGlucose} mg/dL
                 </span>
               </div>
@@ -133,7 +132,7 @@ function HealthRiskCalculatorPage() {
                 onValueChange={(val) => setFastingGlucose(val[0])}
                 className="py-2"
               />
-              <div className="flex justify-between text-[10px] text-muted-foreground">
+              <div className="flex justify-between text-[10px] text-slate-500 font-medium">
                 <span>70 (Normal)</span>
                 <span>100 (Pre-Diabetes)</span>
                 <span>126+ (High Risk)</span>
@@ -142,11 +141,11 @@ function HealthRiskCalculatorPage() {
 
             {/* Post Meal PP Glucose */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center text-xs font-semibold">
-                <Label htmlFor="pp" className="flex items-center gap-1.5 text-foreground">
+              <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                <Label htmlFor="pp" className="flex items-center gap-1.5">
                   🍰 Post-Meal (PP) Glucose (mg/dL)
                 </Label>
-                <span className="font-mono text-sm font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">
+                <span className="font-mono text-sm font-extrabold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-md">
                   {ppGlucose} mg/dL
                 </span>
               </div>
@@ -164,30 +163,30 @@ function HealthRiskCalculatorPage() {
             {/* Systolic & Diastolic BP Grid */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-semibold">
-                  <Label htmlFor="sys" className="text-foreground">💓 Systolic BP (mmHg)</Label>
-                  <span className="font-mono text-xs font-bold text-primary">{systolicBp}</span>
+                <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                  <Label htmlFor="sys">💓 Systolic BP (mmHg)</Label>
+                  <span className="font-mono text-xs font-bold text-amber-700">{systolicBp}</span>
                 </div>
                 <Input
                   id="sys"
                   type="number"
                   value={systolicBp}
                   onChange={(e) => setSystolicBp(Number(e.target.value))}
-                  className="h-10 text-xs font-bold font-mono"
+                  className="h-10 text-xs font-bold font-mono rounded-xl border-slate-200"
                 />
               </div>
 
               <div className="space-y-2">
-                <div className="flex justify-between items-center text-xs font-semibold">
-                  <Label htmlFor="dia" className="text-foreground">💓 Diastolic BP (mmHg)</Label>
-                  <span className="font-mono text-xs font-bold text-primary">{diastolicBp}</span>
+                <div className="flex justify-between items-center text-xs font-bold text-slate-700">
+                  <Label htmlFor="dia">💓 Diastolic BP (mmHg)</Label>
+                  <span className="font-mono text-xs font-bold text-amber-700">{diastolicBp}</span>
                 </div>
                 <Input
                   id="dia"
                   type="number"
                   value={diastolicBp}
                   onChange={(e) => setDiastolicBp(Number(e.target.value))}
-                  className="h-10 text-xs font-bold font-mono"
+                  className="h-10 text-xs font-bold font-mono rounded-xl border-slate-200"
                 />
               </div>
             </div>
@@ -195,269 +194,163 @@ function HealthRiskCalculatorPage() {
             {/* Age & BMI Grid */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="age" className="text-xs font-semibold text-foreground">🎂 Patient Age (Years)</Label>
+                <Label htmlFor="age" className="text-xs font-bold text-slate-700">🎂 Patient Age (Years)</Label>
                 <Input
                   id="age"
                   type="number"
                   value={age}
                   onChange={(e) => setAge(Number(e.target.value))}
-                  className="h-10 text-xs font-bold font-mono"
+                  className="h-10 text-xs font-bold font-mono rounded-xl border-slate-200"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="bmi" className="text-xs font-semibold text-foreground">⚖️ Body Mass Index (BMI)</Label>
+                <Label htmlFor="bmi" className="text-xs font-bold text-slate-700">⚖️ Body Mass Index (BMI)</Label>
                 <Input
                   id="bmi"
                   type="number"
                   step="0.1"
                   value={bmi}
                   onChange={(e) => setBmi(Number(e.target.value))}
-                  className="h-10 text-xs font-bold font-mono"
+                  className="h-10 text-xs font-bold font-mono rounded-xl border-slate-200"
                 />
               </div>
             </div>
 
-            {/* Current Medications */}
+            {/* Medications List */}
             <div className="space-y-2 pt-2 border-t">
-              <Label className="text-xs font-semibold text-foreground flex items-center gap-1.5">
-                <Pill className="size-3.5 text-primary" /> Active Medications (Side-Effect & Interaction Check)
+              <Label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <Pill className="size-4 text-amber-600" /> Current Medications (Optional)
               </Label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="Type drug name (e.g. Steroids, Decongestants)..."
                   value={medInput}
                   onChange={(e) => setMedInput(e.target.value)}
+                  placeholder="e.g. Metformin, Amlodipine"
+                  className="h-10 text-xs rounded-xl border-slate-200"
                   onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), handleAddMed())}
-                  className="h-9 text-xs"
                 />
-                <Button type="button" size="sm" variant="outline" onClick={handleAddMed} className="h-9 text-xs font-semibold">
-                  Add
+                <Button type="button" onClick={handleAddMed} size="sm" className="h-10 rounded-xl bg-amber-600 text-white font-bold hover:bg-amber-700">
+                  <Plus className="size-4" /> Add
                 </Button>
               </div>
-
-              {medications.length > 0 ? (
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {medications.map((m) => (
-                    <Badge key={m} variant="secondary" className="text-[11px] gap-1 px-2 py-0.5">
-                      {m}
-                      <button type="button" onClick={() => handleRemoveMed(m)} className="hover:text-destructive text-muted-foreground ml-1">✕</button>
-                    </Badge>
-                  ))}
-                </div>
-              ) : null}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {medications.map((m) => (
+                  <span key={m} className="inline-flex items-center gap-1 text-[11px] font-bold bg-amber-100 text-amber-900 px-2.5 py-0.5 rounded-full">
+                    {m}
+                    <button type="button" onClick={() => handleRemoveMed(m)} className="hover:text-rose-700">
+                      <X className="size-3" />
+                    </button>
+                  </span>
+                ))}
+              </div>
             </div>
 
             <Button
+              type="button"
               onClick={handleAnalyze}
               disabled={loading}
-              className="w-full h-12 text-sm font-bold gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white shadow-lg cursor-pointer transition-all"
+              className="w-full h-12 rounded-2xl bg-amber-600 text-white font-extrabold hover:bg-amber-700 text-base shadow-md"
             >
-              {loading ? (
-                <span>Analyzing ML Parameters...</span>
-              ) : (
-                <>
-                  <Sparkles className="size-4" /> Run ML Health Risk Analysis <ArrowRight className="size-4" />
-                </>
-              )}
+              {loading ? "Running ML Risk Prediction..." : "⚡ Run Clinical ML Risk Analysis"}
             </Button>
           </div>
 
-          {/* Right Column: Interactive ML Prediction Results */}
-          <div className="lg:col-span-6 space-y-6">
-            {result ? (
-              <div className="surface-panel p-6 sm:p-8 rounded-3xl space-y-6 border border-emerald-500/30 shadow-2xl bg-card animate-in fade-in slide-in-from-bottom-4 duration-300">
-                {/* Result Header & Gauge Score */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-5">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-black text-foreground">Health Risk Analysis Report</h3>
-                      <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold border-emerald-500/30">
-                        ✓ {result.modelConfidence}% Confidence
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-0.5">ML Ensemble Risk Classification Result</p>
-                  </div>
+          {/* Right Column: AI Analysis Result Display */}
+          <div className="lg:col-span-6 rounded-3xl border border-amber-200/80 bg-white p-6 sm:p-8 space-y-6 shadow-xs h-fit">
+            <div className="flex items-center justify-between border-b pb-4">
+              <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
+                <Brain className="size-5 text-amber-600" /> AI Risk Assessment Report
+              </h2>
+              <span className="text-[11px] font-bold bg-teal-100 text-teal-900 px-2.5 py-1 rounded-full border border-teal-200">
+                Step 2 of 2
+              </span>
+            </div>
 
-                  {/* Visual Speedometer Risk Score */}
-                  <div className={cn(
-                    "flex items-center gap-3 p-3 rounded-2xl border shadow-inner self-start sm:self-auto",
-                    result.riskColor === "GREEN" && "bg-emerald-500/10 border-emerald-500/40 text-emerald-600 dark:text-emerald-400",
-                    result.riskColor === "AMBER" && "bg-amber-500/10 border-amber-500/40 text-amber-600 dark:text-amber-400",
-                    result.riskColor === "RED" && "bg-destructive/10 border-destructive/40 text-destructive",
-                    result.riskColor === "PURPLE" && "bg-purple-500/10 border-purple-500/40 text-purple-600 dark:text-purple-400",
-                  )}>
-                    <div className="text-center px-2">
-                      <span className="text-3xl font-black font-mono leading-none">{result.overallRiskScore}</span>
-                      <span className="text-[10px] block font-bold text-muted-foreground">/100 RISK</span>
-                    </div>
-                    <div className="border-l pl-3">
-                      <Badge className={cn(
-                        "text-xs font-black uppercase tracking-wider px-2 py-0.5",
-                        result.riskColor === "GREEN" && "bg-emerald-600 text-white",
-                        result.riskColor === "AMBER" && "bg-amber-600 text-white",
-                        result.riskColor === "RED" && "bg-destructive text-white",
-                        result.riskColor === "PURPLE" && "bg-purple-600 text-white",
-                      )}>
-                        {result.riskCategory} RISK
-                      </Badge>
-                    </div>
-                  </div>
+            {!result && !loading ? (
+              <div className="text-center py-16 space-y-4">
+                <div className="size-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mx-auto">
+                  <Activity className="size-8" />
                 </div>
-
-                {/* Diabetes & Cardiology Breakdown Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Diabetes Card */}
-                  <div className="p-4 rounded-2xl bg-muted/40 border border-border/60 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                        🩸 Diabetes ML Risk
-                      </span>
-                      <Badge variant="outline" className={cn(
-                        "text-[10px] font-bold",
-                        result.diabetesRisk.status === "NORMAL" && "text-emerald-600 border-emerald-500/30",
-                        result.diabetesRisk.status === "ELEVATED" && "text-amber-600 border-amber-500/30",
-                        result.diabetesRisk.status === "HIGH" && "text-destructive border-destructive/30",
-                      )}>
-                        {result.diabetesRisk.probability}% Risk
-                      </Badge>
-                    </div>
-                    <p className="text-sm font-black text-foreground">{result.diabetesRisk.level}</p>
-                    <p className="text-xs text-muted-foreground leading-snug">{result.diabetesRisk.summary}</p>
-                  </div>
-
-                  {/* Cardiology Card */}
-                  <div className="p-4 rounded-2xl bg-muted/40 border border-border/60 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                        💓 Cardiology ML Risk
-                      </span>
-                      <Badge variant="outline" className={cn(
-                        "text-[10px] font-bold",
-                        result.cardiologyRisk.status === "NORMAL" && "text-emerald-600 border-emerald-500/30",
-                        result.cardiologyRisk.status === "ELEVATED" && "text-amber-600 border-amber-500/30",
-                        (result.cardiologyRisk.status === "HIGH" || result.cardiologyRisk.status === "CRISIS") && "text-destructive border-destructive/30",
-                      )}>
-                        {result.cardiologyRisk.probability}% Risk
-                      </Badge>
-                    </div>
-                    <p className="text-sm font-black text-foreground">{result.cardiologyRisk.stage}</p>
-                    <p className="text-xs text-muted-foreground leading-snug">{result.cardiologyRisk.summary}</p>
-                  </div>
-                </div>
-
-                {/* Medication Safety Alerts */}
-                {result.medicationWarnings.length > 0 ? (
-                  <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-300 space-y-2">
-                    <div className="flex items-center gap-2 font-bold text-xs">
-                      <AlertTriangle className="size-4 text-amber-600" /> Drug-Condition Interaction Alerts:
-                    </div>
-                    <ul className="text-xs space-y-1 pl-4 list-disc text-muted-foreground">
-                      {result.medicationWarnings.map((w) => (
-                        <li key={w}>{w}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-
-                {/* Lifestyle Advice Tabs (English & Hindi) */}
-                <div className="space-y-2 pt-2">
-                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider">💡 Personalized Clinical Lifestyle Plan</h4>
-                  <Tabs defaultValue="english" className="w-full">
-                    <TabsList className="grid w-full grid-cols-2 h-9">
-                      <TabsTrigger value="english" className="text-xs font-semibold">English Guidelines</TabsTrigger>
-                      <TabsTrigger value="hindi" className="text-xs font-semibold">हिंदी मार्गदर्शन</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="english" className="p-3 bg-muted/30 rounded-xl space-y-1.5 text-xs text-muted-foreground">
-                      {result.lifestyleAdviceEnglish.map((item) => (
-                        <div key={item} className="flex items-start gap-2">
-                          <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </TabsContent>
-                    <TabsContent value="hindi" className="p-3 bg-muted/30 rounded-xl space-y-1.5 text-xs text-muted-foreground font-medium">
-                      {result.lifestyleAdviceHindi.map((item) => (
-                        <div key={item} className="flex items-start gap-2">
-                          <CheckCircle2 className="size-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </TabsContent>
-                  </Tabs>
-                </div>
-
-                {/* Direct 1-Click Specialist Doctor Booking Card */}
-                {result.recommendedDoctor ? (
-                  <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950 via-teal-900 to-slate-900 text-white space-y-3 shadow-xl border border-emerald-700/40">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-300 flex items-center gap-1.5">
-                        <Stethoscope className="size-3.5" /> Recommended Specialist Doctor
-                      </span>
-                      <Badge variant="outline" className={cn(
-                        "text-[10px]",
-                        result.recommendedDoctor.reason?.includes("Currently no open slots available")
-                          ? "border-amber-400/40 text-amber-300 bg-amber-500/10"
-                          : "border-emerald-400/40 text-emerald-200 bg-emerald-500/10"
-                      )}>
-                        {result.recommendedDoctor.reason?.includes("Currently no open slots available") ? "No Slots Open" : "Slots Available ✓"}
-                      </Badge>
-                    </div>
-                    <div>
-                      <h4 className="text-base font-black text-white">{result.recommendedDoctor.doctorName}</h4>
-                      <p className="text-xs text-emerald-100/80">{result.recommendedDoctor.specialization} · {result.recommendedDoctor.qualifications}</p>
-                      <p className="text-xs text-emerald-300 font-semibold mt-0.5">Consultation Fee: ₹{result.recommendedDoctor.consultationFee}</p>
-
-                      {/* Live Slot Status Warning/Success */}
-                      {result.recommendedDoctor.reason?.includes("Currently no open slots available") ? (
-                        <div className="mt-2 p-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-xs font-semibold text-amber-200 flex items-center gap-1.5">
-                          <AlertTriangle className="size-4 text-amber-400 shrink-0" />
-                          <span>Currently no open consultation slots available for online booking. Please check back later or check other active specialists.</span>
-                        </div>
-                      ) : (
-                        <div className="mt-2 p-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-xs font-semibold text-emerald-200 flex items-center gap-1.5">
-                          <CheckCircle2 className="size-4 text-emerald-400 shrink-0" />
-                          <span>Open consultation slots available today! Click below to confirm appointment.</span>
-                        </div>
-                      )}
-                    </div>
-                    <Button
-                      onClick={() => navigate({ to: "/doctors/$doctorId", params: { doctorId: result.recommendedDoctor!.doctorId } })}
-                      className={cn(
-                        "w-full h-10 text-xs font-bold gap-2 text-black shadow-md cursor-pointer transition-all",
-                        result.recommendedDoctor.reason?.includes("Currently no open slots available")
-                          ? "bg-amber-400 hover:bg-amber-300"
-                          : "bg-emerald-500 hover:bg-emerald-400"
-                      )}
-                    >
-                      <CalendarClock className="size-4" />
-                      {result.recommendedDoctor.reason?.includes("Currently no open slots available")
-                        ? `View ${result.recommendedDoctor.doctorName}'s Profile & Slots`
-                        : `Book Appointment with ${result.recommendedDoctor.doctorName}`}
-                    </Button>
-                  </div>
-                ) : null}
-
-                <p className="text-[10px] text-muted-foreground text-center italic border-t pt-3">
-                  {result.clinicalDisclaimer}
+                <h3 className="text-base font-bold text-slate-900">No Risk Analysis Executed Yet</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Adjust patient vitals on the left panel and click 'Run Clinical ML Risk Analysis' to view predictions.
                 </p>
               </div>
-            ) : (
-              <div className="surface-panel p-10 rounded-3xl text-center space-y-4 border border-dashed border-border/80 bg-muted/10">
-                <div className="size-16 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center justify-center mx-auto shadow-inner">
-                  <Brain className="size-8 animate-pulse" />
-                </div>
-                <div className="space-y-1 max-w-sm mx-auto">
-                  <h3 className="text-base font-bold text-foreground">Ready for AI Risk Prediction</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Adjust your Fasting/PP Glucose, Blood Pressure, and Vitals on the left panel and click <b>"Run ML Health Risk Analysis"</b>.
+            ) : null}
+
+            {loading ? (
+              <div className="text-center py-16 space-y-4">
+                <Sparkles className="size-10 text-amber-600 animate-spin mx-auto" />
+                <p className="text-sm font-bold text-slate-900">Evaluating PIMA & Framingham Ensembles...</p>
+              </div>
+            ) : null}
+
+            {result ? (
+              <div className="space-y-6">
+                {/* Overall Risk Card */}
+                <div className={cn(
+                  "p-6 rounded-3xl border text-center space-y-2 shadow-xs",
+                  result.overallRiskCategory === "HIGH" && "bg-rose-50 border-rose-200 text-rose-900",
+                  result.overallRiskCategory === "MODERATE" && "bg-amber-50 border-amber-200 text-amber-900",
+                  result.overallRiskCategory === "LOW" && "bg-emerald-50 border-emerald-200 text-emerald-900",
+                )}>
+                  <span className="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-white/80 border shadow-xs">
+                    Overall Category: {result.overallRiskCategory} RISK
+                  </span>
+                  <div className="text-4xl font-black mt-2">
+                    {result.diabetesRiskPercentage}% <span className="text-base font-semibold text-slate-600">Diabetes Risk</span>
+                  </div>
+                  <p className="text-xs leading-relaxed font-medium max-w-md mx-auto pt-2">
+                    {result.clinicalSummary}
                   </p>
                 </div>
+
+                {/* Specific Risk Metrics Grid */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
+                    <p className="text-[11px] font-bold text-slate-500">Heart Disease Risk</p>
+                    <p className="text-2xl font-black text-slate-900">{result.heartDiseaseRiskPercentage}%</p>
+                    <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                      {result.heartDiseaseCategory}
+                    </span>
+                  </div>
+
+                  <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
+                    <p className="text-[11px] font-bold text-slate-500">Hypertension Category</p>
+                    <p className="text-sm font-extrabold text-slate-900 pt-1">{result.hypertensionCategory}</p>
+                    <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-full">
+                      BP Check Validated
+                    </span>
+                  </div>
+                </div>
+
+                {/* Action Recommendations */}
+                <div className="space-y-3 border-t pt-4">
+                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+                    💡 Clinical Action Plan & Next Steps
+                  </h3>
+                  <ul className="space-y-2 text-xs font-medium text-slate-700">
+                    {result.recommendations.map((rec, i) => (
+                      <li key={i} className="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/60">
+                        <CheckCircle2 className="size-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <Button
+                  onClick={() => navigate({ to: "/doctors" })}
+                  className="w-full h-12 rounded-2xl bg-slate-900 text-white font-bold hover:bg-slate-800 gap-2"
+                >
+                  <Stethoscope className="size-5" /> Book Consultation With Specialist Doctor ➔
+                </Button>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
-    </PageShell>
+    </div>
   );
 }
