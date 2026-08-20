@@ -72,89 +72,103 @@ function AdminDashboardPage() {
   }
 
   return (
-    <PageShell title="Admin Control Center" description="System administration, provider status and clinic overview.">
-      <div className="surface-panel p-6 space-y-6">
-        <div className="flex border-b gap-4">
-          <button
-            onClick={() => setActiveTab("doctors")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${
-              activeTab === "doctors" ? "border-primary text-primary" : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Doctors Directory
-          </button>
-          <button
-            onClick={() => setActiveTab("patients")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${
-              activeTab === "patients" ? "border-primary text-primary" : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Registered Patients
-          </button>
-          <button
-            onClick={() => setActiveTab("appointments")}
-            className={`pb-3 text-sm font-semibold border-b-2 transition-colors ${
-              activeTab === "appointments" ? "border-primary text-primary" : "border-transparent text-muted-foreground"
-            }`}
-          >
-            Clinic Appointments
-          </button>
+    <div className="min-h-screen bg-[#FAF8F5] text-slate-800 font-sans pb-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <div className="space-y-3">
+          <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
+            🛡️ System Administration Control Panel
+          </span>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            Admin Control Center
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+            Inspect all registered doctors, patient accounts, and clinic consultation records.
+          </p>
         </div>
 
-        {isLoading ? (
-          <InlineLoader label="Loading records" />
-        ) : error ? (
-          <ErrorState error={error} onRetry={loadData} />
-        ) : activeTab === "doctors" ? (
-          <div className="space-y-3">
-            {doctors.map((d) => (
-              <div key={d.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-semibold text-sm">{d.fullName}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {d.specialization} · {d.clinicName}, {d.city}
-                  </p>
-                </div>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-green-500/10 text-green-600">
-                  Active
-                </span>
-              </div>
-            ))}
+        <div className="rounded-3xl border border-amber-200/80 bg-white p-6 sm:p-8 space-y-6 shadow-xs">
+          <div className="flex border-b border-amber-200/60 gap-4">
+            <button
+              onClick={() => setActiveTab("doctors")}
+              className={`pb-3 text-xs sm:text-sm font-extrabold border-b-2 transition-all ${
+                activeTab === "doctors" ? "border-amber-600 text-amber-900" : "border-transparent text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              Doctors Directory
+            </button>
+            <button
+              onClick={() => setActiveTab("patients")}
+              className={`pb-3 text-xs sm:text-sm font-extrabold border-b-2 transition-all ${
+                activeTab === "patients" ? "border-amber-600 text-amber-900" : "border-transparent text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              Registered Patients
+            </button>
+            <button
+              onClick={() => setActiveTab("appointments")}
+              className={`pb-3 text-xs sm:text-sm font-extrabold border-b-2 transition-all ${
+                activeTab === "appointments" ? "border-amber-600 text-amber-900" : "border-transparent text-slate-500 hover:text-slate-900"
+              }`}
+            >
+              Clinic Appointments
+            </button>
           </div>
-        ) : activeTab === "patients" ? (
-          <div className="space-y-3">
-            {patients.map((p) => (
-              <div key={p.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
-                  <p className="font-semibold text-sm">{p.fullName}</p>
-                  <p className="text-xs text-muted-foreground">{p.email} | {p.phone || "No phone"}</p>
+
+          {isLoading ? (
+            <InlineLoader label="Loading records" />
+          ) : error ? (
+            <ErrorState error={error} onRetry={loadData} />
+          ) : activeTab === "doctors" ? (
+            <div className="space-y-3">
+              {doctors.map((d) => (
+                <div key={d.id} className="flex items-center justify-between p-4 border border-slate-200/80 rounded-2xl bg-amber-50/40">
+                  <div>
+                    <p className="font-extrabold text-sm text-slate-900">{d.fullName}</p>
+                    <p className="text-xs text-slate-600 font-medium">
+                      {d.specialization} · {d.clinicName}, {d.city}
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-200">
+                    Active Doctor
+                  </span>
                 </div>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/10 text-primary">
-                  {p.role}
-                </span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {appointments.map((a) => (
-              <div key={a.id} className="flex items-center justify-between p-3 border rounded-lg text-sm">
-                <div>
-                  <p className="font-semibold">
-                    {a.patientName} with {a.doctorName}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {a.date} ({a.startTime} - {a.endTime})
-                  </p>
+              ))}
+            </div>
+          ) : activeTab === "patients" ? (
+            <div className="space-y-3">
+              {patients.map((p) => (
+                <div key={p.id} className="flex items-center justify-between p-4 border border-slate-200/80 rounded-2xl bg-[#FFFDF9]">
+                  <div>
+                    <p className="font-extrabold text-sm text-slate-900">{p.fullName}</p>
+                    <p className="text-xs text-slate-600 font-medium">{p.email} | {p.phone || "No phone"}</p>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200">
+                    {p.role}
+                  </span>
                 </div>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-muted text-muted-foreground">
-                  {a.status}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {appointments.map((a) => (
+                <div key={a.id} className="flex items-center justify-between p-4 border border-slate-200/80 rounded-2xl text-sm bg-white">
+                  <div>
+                    <p className="font-extrabold text-slate-900">
+                      {a.patientName} with {a.doctorName}
+                    </p>
+                    <p className="text-xs text-slate-600 font-medium">
+                      {a.date} ({a.startTime} - {a.endTime})
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-800 border border-slate-200">
+                    Status: {a.status}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </PageShell>
+    </div>
   );
 }
