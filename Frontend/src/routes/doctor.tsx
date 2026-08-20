@@ -435,39 +435,39 @@ function DoctorDeskPage() {
                     <Sparkles className="size-3 text-amber-600" /> Official Doctor Desk
                   </span>
                   {docProfile?.specialization ? (
-                    <Badge variant="outline" className="border-teal-400/40 text-teal-200 text-xs">
+                    <span className="text-xs font-extrabold border border-teal-300 bg-teal-50 text-teal-900 px-3 py-0.5 rounded-full">
                       {docProfile.specialization}
-                    </Badge>
+                    </span>
                   ) : null}
                 </div>
 
-                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
                   {formatDoctorDisplayName(user?.fullName)}
                 </h1>
 
-                <p className="text-xs sm:text-sm text-emerald-100/80 font-medium flex flex-wrap items-center gap-x-3 gap-y-1">
+                <p className="text-xs sm:text-sm text-slate-700 font-bold flex flex-wrap items-center gap-x-3 gap-y-1">
                   {docProfile?.qualifications ? <span>{docProfile.qualifications}</span> : null}
                   {docProfile?.yearsOfExperience ? <span>• {docProfile.yearsOfExperience} Years Experience</span> : null}
                   {docProfile?.clinicName ? (
-                    <span className="flex items-center gap-1">
-                      • <Building2 className="size-3.5 text-emerald-400" /> {docProfile.clinicName}, {docProfile.city}
+                    <span className="flex items-center gap-1 text-slate-800">
+                      • <Building2 className="size-3.5 text-amber-700" /> {docProfile.clinicName}, {docProfile.city}
                     </span>
                   ) : null}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-300">
+                <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-700 font-medium">
                   {docProfile?.consultationFee ? (
-                    <span className="flex items-center gap-1 font-semibold text-emerald-300">
-                      <Banknote className="size-3.5" /> Consultation Fee: ₹{docProfile.consultationFee}
+                    <span className="flex items-center gap-1 font-black text-amber-900 bg-amber-100 px-2 py-0.5 rounded-md border border-amber-200">
+                      <Banknote className="size-3.5 text-amber-700" /> Fee: ₹{docProfile.consultationFee}
                     </span>
                   ) : null}
                   {docProfile?.registrationNumber ? (
-                    <span className="flex items-center gap-1 text-slate-300">
-                      <ShieldCheck className="size-3.5 text-emerald-400" /> Reg No: {docProfile.registrationNumber}
+                    <span className="flex items-center gap-1 text-slate-700 font-bold">
+                      <ShieldCheck className="size-3.5 text-teal-700" /> Reg No: {docProfile.registrationNumber}
                     </span>
                   ) : null}
-                  <span className="flex items-center gap-1 text-slate-300">
-                    <Mail className="size-3.5 text-emerald-400" /> {user?.email}
+                  <span className="flex items-center gap-1 text-slate-700 font-bold">
+                    <Mail className="size-3.5 text-amber-700" /> {user?.email}
                   </span>
                 </div>
               </div>
@@ -477,7 +477,7 @@ function DoctorDeskPage() {
             <div className="flex flex-wrap md:flex-col gap-2.5 shrink-0">
               <Button
                 onClick={() => navigate({ to: "/doctor/availability" })}
-                className="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold gap-2 shadow-lg shadow-emerald-950/50 text-xs sm:text-sm"
+                className="bg-amber-600 hover:bg-amber-700 text-white font-extrabold gap-2 shadow-xs text-xs sm:text-sm rounded-xl h-10 px-4"
               >
                 <Calendar className="size-4" /> Manage Availability Slots
               </Button>
@@ -485,9 +485,9 @@ function DoctorDeskPage() {
                 variant="outline"
                 onClick={handleRefreshWorkspace}
                 disabled={isRefreshing}
-                className="bg-white/10 hover:bg-white/20 text-white border-white/20 text-xs sm:text-sm gap-2"
+                className="bg-white hover:bg-amber-50 text-slate-900 border-amber-300 font-extrabold text-xs sm:text-sm gap-2 rounded-xl h-10 px-4 shadow-xs"
               >
-                <RefreshCw className={`size-3.5 ${isRefreshing ? "animate-spin" : ""}`} />
+                <RefreshCw className={`size-3.5 text-amber-600 ${isRefreshing ? "animate-spin" : ""}`} />
                 {isRefreshing ? "Refreshing..." : "Refresh Workspace"}
               </Button>
             </div>
