@@ -12,6 +12,7 @@ secret:
     - "**/*.log"
     - ".env.example"
     - "Backend/.env.example"
+    - "docker-compose.yml"
 
   # Specific dummy/mock test credentials ignored for sandbox demo & local dev fallback
   ignored_matches:
