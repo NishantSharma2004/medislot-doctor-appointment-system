@@ -1,0 +1,19 @@
+# GitGuardian CLI (ggshield) Configuration for MediSlot Project
+version: 2
+
+# Secret scanning settings
+secret:
+  # Files and paths to exclude from secret scanning
+  ignored_paths:
+    - "**/node_modules/**"
+    - "**/.output/**"
+    - "**/target/**"
+    - "**/.git/**"
+    - "**/*.log"
+
+  # Specific dummy/mock test credentials ignored for sandbox demo mode
+  ignored_matches:
+    - name: Demo Test Password Hash
+      match: "$2a$10$X76oPu8pgkbvngIdnKJ9TuBExXHFYm9M54AuQPmQLe8IGbtWydo4u"
+    - name: Test Signature String
+      match: "test_sig_"

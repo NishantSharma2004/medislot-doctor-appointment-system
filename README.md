@@ -123,6 +123,15 @@ npm run dev
 
 ---
 
+## 🛡️ Security & DevSecOps (GitGuardian Secret Protection)
+
+MediSlot incorporates **automated secret detection and vulnerability scanning** throughout the software development lifecycle:
+* **Automated CI/CD Secret Scanning**: GitHub Actions workflow (`.github/workflows/gitguardian.yml`) automatically runs `ggshield` scans on every `push` and `pull_request` to block API key leaks.
+* **Local Pre-commit Scanning**: Configured via `.gitguardian.yaml` to prevent accidental commits of `.env` credentials, private keys, and OAuth tokens.
+* **Zero Secret Leak Guarantee**: Rules ignore mock demo hashes while actively protecting live production environment secrets.
+
+---
+
 ## ⚠️ Medical Disclaimer
 
 The MediSlot Clinic AI Assistant provides administrative information regarding clinic hours, appointment booking policies, and visit preparation based on official clinic documents. It **does not diagnose medical conditions, recommend treatments, or prescribe medications**. Emergency medical queries trigger immediate instructions to call emergency services.
