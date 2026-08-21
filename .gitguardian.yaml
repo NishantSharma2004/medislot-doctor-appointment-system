@@ -10,10 +10,16 @@ secret:
     - "**/target/**"
     - "**/.git/**"
     - "**/*.log"
+    - ".env.example"
+    - "Backend/.env.example"
 
-  # Specific dummy/mock test credentials ignored for sandbox demo mode
+  # Specific dummy/mock test credentials ignored for sandbox demo & local dev fallback
   ignored_matches:
     - name: Demo Test Password Hash
       match: "$2a$10$X76oPu8pgkbvngIdnKJ9TuBExXHFYm9M54AuQPmQLe8IGbtWydo4u"
+    - name: Default Local JWT Fallback Secret Key
+      match: "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970"
+    - name: Default Local Postgres Development Password
+      match: "postgres"
     - name: Test Signature String
       match: "test_sig_"
