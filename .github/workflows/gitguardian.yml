@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
 
       - name: GitGuardian Scan (ggshield)
-        uses: GitGuardian/ggshield-action@v1.30.0
+        uses: GitGuardian/ggshield-action@v1.5.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
