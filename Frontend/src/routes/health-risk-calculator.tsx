@@ -286,68 +286,80 @@ function HealthRiskCalculatorPage() {
               </div>
             ) : null}
 
-            {result ? (
-              <div className="space-y-6">
-                {/* Overall Risk Card */}
-                <div className={cn(
-                  "p-6 rounded-3xl border text-center space-y-2 shadow-xs",
-                  result.overallRiskCategory === "HIGH" && "bg-rose-50 border-rose-200 text-rose-900",
-                  result.overallRiskCategory === "MODERATE" && "bg-amber-50 border-amber-200 text-amber-900",
-                  result.overallRiskCategory === "LOW" && "bg-emerald-50 border-emerald-200 text-emerald-900",
-                )}>
-                  <span className="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-white/80 border shadow-xs">
-                    Overall Category: {result.overallRiskCategory} RISK
-                  </span>
-                  <div className="text-4xl font-black mt-2">
-                    {result.diabetesRiskPercentage}% <span className="text-base font-semibold text-slate-600">Diabetes Risk</span>
-                  </div>
-                  <p className="text-xs leading-relaxed font-medium max-w-md mx-auto pt-2">
-                    {result.clinicalSummary}
-                  </p>
-                </div>
+            {result ? (() => {
+              const category = (result as any).overallRiskCategory || result.riskCategory || "LOW";
+              const diabetesPercent = (result as any).diabetesRiskPercentage ?? result.diabetesRisk?.probability ?? 0;
+              const summary = (result as any).clinicalSummary || result.diabetesRisk?.summary || result.clinicalDisclaimer || "";
+              const heartPercent = (result as any).heartDiseaseRiskPercentage ?? result.cardiologyRisk?.probability ?? 0;
+              const heartCategory = (result as any).heartDiseaseCategory || result.cardiologyRisk?.stage || "Normal";
+              const hypertensionCategory = (result as any).hypertensionCategory || result.cardiologyRisk?.status || "Normal";
+              const recommendations: string[] = (result as any).recommendations || result.lifestyleAdviceEnglish || [];
 
-                {/* Specific Risk Metrics Grid */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
-                    <p className="text-[11px] font-bold text-slate-500">Heart Disease Risk</p>
-                    <p className="text-2xl font-black text-slate-900">{result.heartDiseaseRiskPercentage}%</p>
-                    <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
-                      {result.heartDiseaseCategory}
+              return (
+                <div className="space-y-6">
+                  {/* Overall Risk Card */}
+                  <div className={cn(
+                    "p-6 rounded-3xl border text-center space-y-2 shadow-xs",
+                    (category === "HIGH" || category === "CRITICAL") && "bg-rose-50 border-rose-200 text-rose-900",
+                    category === "MODERATE" && "bg-amber-50 border-amber-200 text-amber-900",
+                    category === "LOW" && "bg-emerald-50 border-emerald-200 text-emerald-900",
+                  )}>
+                    <span className="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-white/80 border shadow-xs">
+                      Overall Category: {category} RISK
                     </span>
+                    <div className="text-4xl font-black mt-2">
+                      {diabetesPercent}% <span className="text-base font-semibold text-slate-600">Diabetes Risk</span>
+                    </div>
+                    <p className="text-xs leading-relaxed font-medium max-w-md mx-auto pt-2">
+                      {summary}
+                    </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
-                    <p className="text-[11px] font-bold text-slate-500">Hypertension Category</p>
-                    <p className="text-sm font-extrabold text-slate-900 pt-1">{result.hypertensionCategory}</p>
-                    <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-full">
-                      BP Check Validated
-                    </span>
+                  {/* Specific Risk Metrics Grid */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
+                      <p className="text-[11px] font-bold text-slate-500">Heart Disease Risk</p>
+                      <p className="text-2xl font-black text-slate-900">{heartPercent}%</p>
+                      <span className="text-[10px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
+                        {heartCategory}
+                      </span>
+                    </div>
+
+                    <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50 text-center space-y-1">
+                      <p className="text-[11px] font-bold text-slate-500">Hypertension Category</p>
+                      <p className="text-sm font-extrabold text-slate-900 pt-1">{hypertensionCategory}</p>
+                      <span className="text-[10px] font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded-full">
+                        BP Check Validated
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Action Recommendations */}
-                <div className="space-y-3 border-t pt-4">
-                  <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
-                    💡 Clinical Action Plan & Next Steps
-                  </h3>
-                  <ul className="space-y-2 text-xs font-medium text-slate-700">
-                    {result.recommendations.map((rec, i) => (
-                      <li key={i} className="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/60">
-                        <CheckCircle2 className="size-4 text-emerald-600 shrink-0 mt-0.5" />
-                        <span>{rec}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                  {/* Action Recommendations */}
+                  {recommendations && recommendations.length > 0 ? (
+                    <div className="space-y-3 border-t pt-4">
+                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-700">
+                        💡 Clinical Action Plan & Next Steps
+                      </h3>
+                      <ul className="space-y-2 text-xs font-medium text-slate-700">
+                        {recommendations.map((rec, i) => (
+                          <li key={i} className="flex items-start gap-2 bg-amber-50/60 p-2.5 rounded-xl border border-amber-200/60">
+                            <CheckCircle2 className="size-4 text-emerald-600 shrink-0 mt-0.5" />
+                            <span>{rec}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
 
-                <Button
-                  onClick={() => navigate({ to: "/doctors" })}
-                  className="w-full h-12 rounded-2xl bg-slate-900 text-white font-bold hover:bg-slate-800 gap-2"
-                >
-                  <Stethoscope className="size-5" /> Book Consultation With Specialist Doctor ➔
-                </Button>
-              </div>
-            ) : null}
+                  <Button
+                    onClick={() => navigate({ to: "/doctors" })}
+                    className="w-full h-12 rounded-2xl bg-slate-900 text-white font-bold hover:bg-slate-800 gap-2"
+                  >
+                    <Stethoscope className="size-5" /> Book Consultation With Specialist Doctor ➔
+                  </Button>
+                </div>
+              );
+            })() : null}
           </div>
         </div>
       </div>
