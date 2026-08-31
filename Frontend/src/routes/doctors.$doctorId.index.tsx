@@ -386,48 +386,17 @@ function DoctorProfilePage() {
                   </div>
                 ) : null}
 
-                {/* Payment Method Selector */}
+                {/* Payment Method Selector (Online Razorpay Only) */}
                 <div className="space-y-2">
-                  <label className="text-xs font-bold text-foreground">Payment Method Choice *</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMode("ONLINE_RAZORPAY")}
-                      className={`p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition-all ${
-                        paymentMode === "ONLINE_RAZORPAY"
-                          ? "border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm"
-                          : "border-border/80 hover:bg-muted/50 text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <CreditCard className="size-4 text-emerald-500" />
-                        <span>Pay Online (Razorpay / UPI)</span>
-                      </div>
-                      <Badge className="bg-emerald-600 text-white text-[9px] px-1.5">Fast & Secure</Badge>
-                    </button>
-
-                    <button
-                      type="button"
-                      disabled={user?.isCashBookingSuspended}
-                      onClick={() => setPaymentMode("PAY_AT_CLINIC")}
-                      className={`p-3 rounded-xl border flex items-center justify-between text-xs font-bold transition-all ${
-                        user?.isCashBookingSuspended
-                          ? "opacity-50 cursor-not-allowed border-border/50 text-muted-foreground"
-                          : paymentMode === "PAY_AT_CLINIC"
-                          ? "border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 shadow-sm"
-                          : "border-border/80 hover:bg-muted/50 text-muted-foreground"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Banknote className="size-4 text-teal-500" />
-                        <span>Pay Cash at Clinic</span>
-                      </div>
-                      {user?.isCashBookingSuspended ? (
-                        <Badge variant="destructive" className="text-[9px] px-1.5">Suspended</Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-[9px] px-1.5">On Visit</Badge>
-                      )}
-                    </button>
+                  <label className="text-xs font-bold text-slate-800">Payment Method *</label>
+                  <div className="p-3.5 rounded-xl border border-emerald-500/60 bg-emerald-500/10 text-slate-900 flex items-center justify-between text-xs font-bold shadow-xs">
+                    <div className="flex items-center gap-2.5">
+                      <CreditCard className="size-4 text-emerald-600" />
+                      <span>Online Razorpay / UPI Payment Required</span>
+                    </div>
+                    <Badge className="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5">
+                      🔒 100% Secure Online
+                    </Badge>
                   </div>
                 </div>
 
@@ -569,7 +538,7 @@ function DoctorProfilePage() {
                     "Booking appointment..."
                   ) : (
                     <>
-                      <CheckCircle2 className="size-4" /> Proceed to {paymentMode === "ONLINE_RAZORPAY" ? "Online Payment" : "Cash Booking"} ({formatFee((doctor.consultationFee || 500) + (user?.totalAccumulatedDues || 0))})
+                      <CheckCircle2 className="size-4" /> Proceed to Online Payment ({formatFee((doctor.consultationFee || 500) + (user?.totalAccumulatedDues || 0))})
                     </>
                   )}
                 </Button>

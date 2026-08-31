@@ -873,7 +873,7 @@ function DoctorDeskPage() {
                         ) : null}
 
                         <Badge variant="secondary" className="text-xs font-semibold px-2 py-0.5 border border-border">
-                          💳 {appt.paymentMode === "ONLINE_RAZORPAY" ? "ONLINE RAZORPAY" : "PAY AT CLINIC"} ({appt.paymentStatus || "PENDING"})
+                          💳 ONLINE RAZORPAY ({appt.paymentStatus || "COMPLETED"})
                         </Badge>
 
                         <Badge

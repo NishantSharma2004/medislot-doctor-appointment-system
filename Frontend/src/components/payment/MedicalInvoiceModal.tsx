@@ -61,7 +61,7 @@ export function MedicalInvoiceModal({ isOpen, onClose, appointment }: MedicalInv
           <div>
             <span className="text-muted-foreground block text-[11px]">Payment Mode</span>
             <Badge variant="outline" className="text-[10px] font-bold border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-1.5 mt-0.5">
-              {appointment.paymentMode === "ONLINE_RAZORPAY" ? "ONLINE RAZORPAY / UPI" : "CASH AT CLINIC"}
+              ONLINE RAZORPAY / UPI
             </Badge>
           </div>
           <div>
