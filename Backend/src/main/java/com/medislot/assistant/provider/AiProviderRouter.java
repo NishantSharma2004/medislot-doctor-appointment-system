@@ -68,17 +68,17 @@ public class AiProviderRouter {
         String contextualResponse;
 
         if (userMsg.contains("skin") || userMsg.contains("allergy") || userMsg.contains("redness") || userMsg.contains("rash") || userMsg.contains("dermatol")) {
-            contextualResponse = "For skin care concerns such as allergies, rashes, or redness, consulting a **Dermatology Specialist** is recommended. Avoid scratching or applying unverified creams. You can book an appointment with our skin specialist below.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For skin care concerns such as allergies, rashes, or redness, consulting a **Dermatology & Skin Specialist** is recommended. Avoid scratching or applying unverified creams. You can book an appointment with our specialist below.";
         } else if (userMsg.contains("heart") || userMsg.contains("chest") || userMsg.contains("bp") || userMsg.contains("cardio")) {
-            contextualResponse = "For cardiac symptoms or blood pressure concerns, a **Cardiology Specialist** is recommended. If experiencing severe chest tightness, please seek emergency care immediately.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For cardiac symptoms or blood pressure concerns, a **Cardiology Specialist** is recommended. If experiencing severe chest tightness, please seek emergency care immediately.";
         } else if (userMsg.contains("eye") || userMsg.contains("vision") || userMsg.contains("sight")) {
-            contextualResponse = "For eye care, redness, or vision changes, an **Ophthalmology Specialist** is recommended.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For eye care, redness, or vision changes, an **Ophthalmology Specialist** is recommended.";
         } else if (userMsg.contains("headache") || userMsg.contains("nerve") || userMsg.contains("neuro") || userMsg.contains("brain")) {
-            contextualResponse = "For persistent headaches, numbness, or nerve concerns, a **Neurology Specialist** is recommended.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For persistent headaches, numbness, or nerve concerns, a **Neurology & Stress Specialist** is recommended.";
         } else if (userMsg.contains("bone") || userMsg.contains("joint") || userMsg.contains("fracture") || userMsg.contains("ortho")) {
-            contextualResponse = "For joint pain, bone injuries, or orthopedic evaluation, an **Orthopedics Specialist** is recommended.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For joint pain, bone injuries, or evaluation, an **Orthopedics Specialist** is recommended.";
         } else {
-            contextualResponse = "MediSlot has top specialists available in General Medicine, Cardiology, Ophthalmology, Neurology, Dermatology, and Orthopedics. Please specify your symptoms or preferred clinic location to assist with booking.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. Top specialists & therapists are available across Anxiety, Depression, CBT, Couples Therapy, and General Medicine. Please specify your symptoms to assist with booking.";
         }
 
         AiGenerationResult fallbackResult = AiGenerationResult.success(
