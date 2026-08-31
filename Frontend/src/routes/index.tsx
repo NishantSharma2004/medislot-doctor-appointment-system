@@ -22,6 +22,7 @@ import {
   Users,
   Search,
   Activity,
+  Smile,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
