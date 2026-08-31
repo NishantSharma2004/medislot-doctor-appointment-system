@@ -15,6 +15,9 @@ function fakeToken(user: UserDto) {
 }
 
 const demoAccounts: Record<string, UserDto> = {
+  "patient@durrmi.test": mockPatient,
+  "doctor@durrmi.test": mockDoctorUser,
+  "admin@durrmi.test": mockAdminUser,
   "patient@medislot.test": mockPatient,
   "doctor@medislot.test": mockDoctorUser,
   "admin@medislot.test": mockAdminUser,

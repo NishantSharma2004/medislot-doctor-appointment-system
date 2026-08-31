@@ -166,7 +166,7 @@ function LoginPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder={roleTab === "DOCTOR" ? "doctor@medislot.test" : "patient@medislot.test"}
+                placeholder={roleTab === "DOCTOR" ? "doctor@durrmi.test" : "patient@durrmi.test"}
                 autoComplete="email"
                 aria-invalid={Boolean(form.formState.errors.email)}
                 className={`h-11 rounded-xl border-slate-200 text-xs font-medium ${form.formState.errors.email ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}

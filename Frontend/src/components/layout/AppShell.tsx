@@ -128,13 +128,13 @@ export function AppHeader() {
   return (
     <>
       {/* Demo Sandbox Quick Switch Bar */}
-      {user?.email === "patient@medislot.test" ? (
+      {user?.email === "patient@durrmi.test" || user?.email === "patient@medislot.test" ? (
         <div className="bg-emerald-600 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
           <span>🧪 Demo Sandbox Active: Logged in as Demo Patient (Riya Sharma). Bookings route directly to Dr. Rajesh Sharma.</span>
           <button
             type="button"
             onClick={async () => {
-              await login({ email: "doctor@medislot.test", password: "Password123!" });
+              await login({ email: "doctor@durrmi.test", password: "Password123!" });
               navigate({ to: "/doctor", replace: true });
             }}
             className="underline hover:text-emerald-100 font-bold bg-white/20 px-2.5 py-0.5 rounded text-[11px] transition-colors cursor-pointer"
@@ -144,13 +144,13 @@ export function AppHeader() {
         </div>
       ) : null}
 
-      {user?.email === "doctor@medislot.test" ? (
+      {user?.email === "doctor@durrmi.test" || user?.email === "doctor@medislot.test" ? (
         <div className="bg-teal-700 text-white text-xs font-semibold py-1.5 px-4 text-center flex flex-wrap items-center justify-center gap-2 shadow-inner z-50 relative">
           <span>🧪 Demo Sandbox Active: Logged in as Demo Doctor (Dr. Rajesh Sharma). Inspect lab reports & issue prescriptions.</span>
           <button
             type="button"
             onClick={async () => {
-              await login({ email: "patient@medislot.test", password: "Password123!" });
+              await login({ email: "patient@durrmi.test", password: "Password123!" });
               navigate({ to: "/dashboard", replace: true });
             }}
             className="underline hover:text-teal-100 font-bold bg-white/20 px-2.5 py-0.5 rounded text-[11px] transition-colors cursor-pointer"

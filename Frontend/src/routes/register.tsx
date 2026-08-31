@@ -213,7 +213,7 @@ export function RegisterPage() {
               <Input
                 id="email"
                 type="email"
-                placeholder="user@medislot.test"
+                placeholder="user@durrmi.test"
                 className={form.formState.errors.email ? "border-destructive focus-visible:ring-destructive" : ""}
                 {...form.register("email")}
               />
