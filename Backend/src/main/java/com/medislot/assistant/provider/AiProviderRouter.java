@@ -63,10 +63,28 @@ public class AiProviderRouter {
 
         // 3. Both providers failed -> Resilient Safe Medical Grounding Fallback
         log.warn("Both Groq and Gemini AI providers unavailable for request {}. Triggering resilient medical grounding fallback.", requestId);
+
+        String userMsg = request.userPrompt() != null ? request.userPrompt().toLowerCase() : "";
+        String contextualResponse;
+
+        if (userMsg.contains("skin") || userMsg.contains("allergy") || userMsg.contains("redness") || userMsg.contains("rash") || userMsg.contains("dermatol")) {
+            contextualResponse = "For skin care concerns such as allergies, rashes, or redness, consulting a **Dermatology Specialist** is recommended. Avoid scratching or applying unverified creams. You can book an appointment with our skin specialist below.";
+        } else if (userMsg.contains("heart") || userMsg.contains("chest") || userMsg.contains("bp") || userMsg.contains("cardio")) {
+            contextualResponse = "For cardiac symptoms or blood pressure concerns, a **Cardiology Specialist** is recommended. If experiencing severe chest tightness, please seek emergency care immediately.";
+        } else if (userMsg.contains("eye") || userMsg.contains("vision") || userMsg.contains("sight")) {
+            contextualResponse = "For eye care, redness, or vision changes, an **Ophthalmology Specialist** is recommended.";
+        } else if (userMsg.contains("headache") || userMsg.contains("nerve") || userMsg.contains("neuro") || userMsg.contains("brain")) {
+            contextualResponse = "For persistent headaches, numbness, or nerve concerns, a **Neurology Specialist** is recommended.";
+        } else if (userMsg.contains("bone") || userMsg.contains("joint") || userMsg.contains("fracture") || userMsg.contains("ortho")) {
+            contextualResponse = "For joint pain, bone injuries, or orthopedic evaluation, an **Orthopedics Specialist** is recommended.";
+        } else {
+            contextualResponse = "MediSlot has top specialists available in General Medicine, Cardiology, Ophthalmology, Neurology, Dermatology, and Orthopedics. Please specify your symptoms or preferred clinic location to assist with booking.";
+        }
+
         AiGenerationResult fallbackResult = AiGenerationResult.success(
                 AiProvider.GROQ,
                 "resilience4j-offline-v1",
-                "I am currently operating in offline clinical assistant mode. MediSlot has top specialists available in General Medicine, Cardiology, Ophthalmology, Neurology, Dermatology, and Orthopedics across major cities. Please tell me your symptom or city to book an appointment with our doctors.",
+                contextualResponse,
                 200,
                 0L,
                 0,
