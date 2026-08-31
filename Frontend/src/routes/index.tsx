@@ -374,7 +374,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* WHY CHOOSE MEDISLOT OVERLAPPING STACKED CARDS SECTION */}
+      {/* WHY CHOOSE MEDISLOT CORNER-OVERLAPPING CARDS SECTION */}
       <section className="bg-[#FDEBB2]/90 border-t border-b border-amber-300/60 py-20 overflow-hidden relative">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
@@ -385,17 +385,16 @@ function LandingPage() {
           </p>
         </div>
 
-        {/* STACKED OVERLAPPING CARDS CONTAINER */}
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-12 relative min-h-[580px] flex flex-col items-center">
+        {/* CORNER-OVERLAPPING CARDS CONTAINER */}
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-12 relative flex flex-col items-center">
           {/* Card 1: Top Right Warm Gold/Yellow */}
-          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#F7D479] border border-amber-700/20 rounded-[32px] p-6 sm:p-8 shadow-xl shadow-amber-950/10 transform sm:translate-x-12 hover:scale-[1.02] transition-transform duration-300 z-10">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-              {/* Illustrated Doctor Graphic Avatar */}
-              <div className="size-24 rounded-full bg-[#E5B551] flex items-center justify-center text-4xl shrink-0 shadow-inner">
+          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#F7D479] border border-amber-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-amber-950/10 transform sm:translate-x-20 hover:scale-[1.02] transition-all duration-300 z-10">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="size-20 rounded-full bg-[#E5B551] flex items-center justify-center text-3xl shrink-0 shadow-inner">
                 👩‍⚕️
               </div>
-              <div className="text-left space-y-2">
-                <h3 className="text-xl font-black text-[#5C4105] leading-snug">
+              <div className="text-left space-y-1.5">
+                <h3 className="text-lg font-black text-[#5C4105] leading-snug">
                   Vetted Experts, Not A Directory
                 </h3>
                 <p className="text-xs sm:text-sm font-medium text-[#73540F] leading-relaxed">
@@ -405,14 +404,14 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* Card 2: Middle Left Pastel Blue (Overlapping) */}
-          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#A4D4FF] border border-blue-600/20 rounded-[32px] p-6 sm:p-8 shadow-2xl shadow-blue-950/15 transform -mt-10 sm:-mt-16 sm:-translate-x-16 hover:scale-[1.02] transition-transform duration-300 z-20">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-              <div className="size-24 rounded-full bg-[#7BBDF7] flex items-center justify-center text-4xl shrink-0 shadow-inner">
+          {/* Card 2: Middle Left Pastel Blue (Corner Overlap Only) */}
+          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#A4D4FF] border border-blue-600/30 rounded-[28px] p-6 sm:p-7 shadow-xl shadow-blue-950/10 transform -mt-4 sm:-mt-6 sm:-translate-x-24 hover:scale-[1.02] transition-all duration-300 z-20">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="size-20 rounded-full bg-[#7BBDF7] flex items-center justify-center text-3xl shrink-0 shadow-inner">
                 🩺
               </div>
-              <div className="text-left space-y-2">
-                <h3 className="text-xl font-black text-[#104778] leading-snug">
+              <div className="text-left space-y-1.5">
+                <h3 className="text-lg font-black text-[#104778] leading-snug">
                   Matched To Your Actual Problem
                 </h3>
                 <p className="text-xs sm:text-sm font-medium text-[#1E5D96] leading-relaxed">
@@ -422,34 +421,40 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* Card 3: Bottom Right Soft Coral / Warm Peach (Overlapping) */}
-          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#F7C6A3] border border-orange-700/20 rounded-[32px] p-6 sm:p-8 shadow-xl shadow-orange-950/10 transform -mt-10 sm:-mt-16 sm:translate-x-14 hover:scale-[1.02] transition-transform duration-300 z-30">
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
-              <div className="text-left space-y-2 order-2 sm:order-1">
-                <h3 className="text-xl font-black text-[#612A0A] leading-snug">
+          {/* Card 3: Bottom Right Soft Coral / Warm Peach (Corner Overlap Only) */}
+          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#F7C6A3] border border-orange-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-orange-950/10 transform -mt-4 sm:-mt-6 sm:translate-x-24 hover:scale-[1.02] transition-all duration-300 z-30">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+              <div className="text-left space-y-1.5 order-2 sm:order-1">
+                <h3 className="text-lg font-black text-[#612A0A] leading-snug">
                   Clear Pricing, No Surprises
                 </h3>
                 <p className="text-xs sm:text-sm font-medium text-[#7D3B14] leading-relaxed">
                   See rates upfront and know exactly what a session costs before you book — no hidden fees, no awkward billing conversations.
                 </p>
               </div>
-              <div className="size-24 rounded-full bg-[#E5AA80] flex items-center justify-center text-4xl shrink-0 shadow-inner order-1 sm:order-2">
+              <div className="size-20 rounded-full bg-[#E5AA80] flex items-center justify-center text-3xl shrink-0 shadow-inner order-1 sm:order-2">
                 👨‍⚕️
               </div>
             </div>
           </div>
 
-          {/* Bottom Pill Action Button */}
-          <div className="mt-12 z-40">
-            <Button asChild size="lg" className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40">
-              <Link to="/doctors">Know more about us ➔</Link>
+          {/* Bottom Pill Action Button -> Smooth Scroll to User Reviews */}
+          <div className="mt-10 z-40">
+            <Button
+              size="lg"
+              className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40 cursor-pointer"
+              onClick={() => {
+                document.getElementById("patient-reviews")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              Know more about us ➔
             </Button>
           </div>
         </div>
       </section>
 
       {/* THEIR WORDS, NOT OURS TESTIMONIALS SECTION */}
-      <section className="bg-[#FAF8F5] py-16">
+      <section id="patient-reviews" className="bg-[#FAF8F5] py-16 scroll-mt-10">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-12 items-center">
             <div className="lg:col-span-5 space-y-4">
