@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DurrmiLogo, DurrmiLogoIcon } from "@/components/common/DurrmiLogo";
 import {
@@ -13,18 +14,15 @@ import {
   CheckCircle2,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   HeartHandshake,
   ChevronDown,
   Clock,
   Award,
   Users,
   Search,
-  Activity,
-  Smile,
-  ShieldAlert,
   Zap,
 } from "lucide-react";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { mockSpecializations, mockDoctors } from "@/lib/api/mock-data";
@@ -149,6 +147,14 @@ function LandingPage() {
   const isAdmin = user?.role === "ADMIN";
 
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollCards = (direction: "left" | "right") => {
+    if (cardsContainerRef.current) {
+      const scrollAmount = direction === "left" ? -330 : 330;
+      cardsContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FAF8F3] text-slate-800 font-sans selection:bg-amber-200">
@@ -416,38 +422,136 @@ function LandingPage() {
       </section>
 
       {/* 5. SPECIALIZATIONS CAROUSEL ("Whatever You're Carrying, There's Someone Who Gets It.") */}
-      <section className="bg-[#FAF6EE] py-20 border-t border-b border-amber-200/60">
+      <section className="bg-[#FAF7EF] py-20 border-t border-b border-amber-200/50 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-12 gap-8 items-center">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
             
             {/* Left Header Box */}
-            <div className="lg:col-span-5 space-y-5">
-              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
+            <div className="lg:max-w-md space-y-6 shrink-0">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-[1.18]">
                 Whatever You're Carrying, There's Someone Who Gets It.
               </h2>
-              <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed">
-                From cardiology and skin allergy to routine checkups and pediatric care — find a verified specialist who understands your health journey.
+              <p className="text-sm font-semibold text-slate-600 leading-relaxed">
+                From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
               </p>
-              <Button asChild size="lg" className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs">
-                <Link to="/doctors">Explore Specialisations</Link>
+              <Button asChild size="lg" className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-all">
+                <Link to="/doctors">Explore Specialisation</Link>
               </Button>
             </div>
 
-            {/* Right Cards Carousel Grid */}
-            <div className="lg:col-span-7 grid gap-6 sm:grid-cols-2">
-              {CONCERNS.slice(0, 4).map((c) => (
-                <div key={c.name} className="relative rounded-3xl border border-amber-300/70 bg-[#FEF9EE] p-6 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
-                  <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
-                  <div className="space-y-3 pt-2">
-                    <h3 className="text-lg font-extrabold text-slate-900">{c.name}</h3>
-                    <div className="h-0.5 w-full bg-slate-200" />
-                    <p className="text-xs text-slate-600 leading-relaxed">{c.desc}</p>
+            {/* Right Cards Carousel Track with Top Arrows */}
+            <div className="w-full lg:max-w-3xl space-y-4 min-w-0">
+              {/* Top Slider Navigation Controls */}
+              <div className="flex items-center justify-end gap-3 pr-2">
+                <button
+                  type="button"
+                  onClick={() => scrollCards("left")}
+                  aria-label="Previous specialisations"
+                  className="size-10 rounded-full border border-slate-400/80 bg-white flex items-center justify-center text-slate-800 hover:bg-amber-50 hover:border-amber-400 transition-all shadow-xs cursor-pointer"
+                >
+                  <ArrowLeft className="size-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollCards("right")}
+                  aria-label="Next specialisations"
+                  className="size-10 rounded-full border border-slate-400/80 bg-white flex items-center justify-center text-slate-800 hover:bg-amber-50 hover:border-amber-400 transition-all shadow-xs cursor-pointer"
+                >
+                  <ArrowRight className="size-4" />
+                </button>
+              </div>
+
+              {/* Horizontal Scroll Cards Container */}
+              <div
+                ref={cardsContainerRef}
+                className="flex gap-5 overflow-x-auto scrollbar-none py-2 px-1 snap-x scroll-smooth"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {/* Card 1: Depression */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF9EA] to-[#FFEEC4] border border-amber-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#FFBE0B] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Depression</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                      From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+                    </p>
                   </div>
-                  <div className="mt-8 flex justify-end">
-                    <span className="text-3xl opacity-80">🌼</span>
-                  </div>
+                  {/* Yellow Starburst Flower SVG */}
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-80 pointer-events-none">
+                    <path fill="#FDE68A" d="M100 10 L112 68 L170 30 L132 88 L190 100 L132 112 L170 170 L112 132 L100 190 L88 132 L30 170 L68 112 L10 100 L68 88 L30 30 L88 68 Z" />
+                    <path fill="#FCD34D" d="M100 35 C110 70 130 85 165 100 C130 115 110 130 100 165 C90 130 70 115 35 100 C70 85 90 70 100 35 Z" opacity="0.75" />
+                  </svg>
                 </div>
-              ))}
+
+                {/* Card 2: Anxiety */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0F8FF] to-[#D5E9FF] border border-blue-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#7BBDF7] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Anxiety</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                      From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+                    </p>
+                  </div>
+                  {/* Sky Blue Flower Petals SVG */}
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-85 pointer-events-none">
+                    <path fill="#BAE6FD" d="M100 15 C115 55 145 55 160 100 C145 145 115 145 100 185 C85 145 55 145 40 100 C55 55 85 55 100 15 Z" />
+                    <path fill="#7DD3FC" d="M100 35 L118 78 L165 55 L135 98 L180 100 L135 102 L165 145 L118 122 L100 165 L82 122 L35 145 L65 102 L20 100 L65 98 L35 55 L82 78 Z" opacity="0.65" />
+                  </svg>
+                </div>
+
+                {/* Card 3: Couples Therapy */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF5ED] to-[#FFE2CD] border border-orange-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#FF9F43] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Couples Therapy</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                      From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+                    </p>
+                  </div>
+                  {/* Warm Orange 4-Point Star SVG */}
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-6 size-44 opacity-85 pointer-events-none">
+                    <path fill="#FED7AA" d="M100 0 C105 70 130 95 200 100 C130 105 105 130 100 200 C95 130 70 105 0 100 C70 95 95 70 100 0 Z" />
+                    <path fill="#FDBA74" d="M100 30 C103 75 125 90 170 100 C125 110 103 125 100 170 C97 125 75 110 30 100 C75 90 97 75 100 30 Z" opacity="0.6" />
+                  </svg>
+                </div>
+
+                {/* Card 4: Burnout & Stress */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#C7F9D9] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#2ECC71] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Burnout & Stress</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                      From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+                    </p>
+                  </div>
+                  {/* Mint Green Flower SVG */}
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
+                    <path fill="#A7F3D0" d="M100 10 C120 60 160 60 190 100 C160 140 120 140 100 190 C80 140 40 140 10 100 C40 60 80 60 100 10 Z" />
+                    <path fill="#6EE7B7" d="M100 40 C115 75 140 75 160 100 C140 125 115 125 100 160 C85 125 60 125 40 100 C60 75 85 75 100 40 Z" opacity="0.6" />
+                  </svg>
+                </div>
+
+                {/* Card 5: Trauma & Healing */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F9F5FF] to-[#E5CEFF] border border-purple-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#A55EEA] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Trauma & Healing</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                      From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+                    </p>
+                  </div>
+                  {/* Lavender Purple Starburst SVG */}
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
+                    <path fill="#DDD6FE" d="M100 10 C105 70 130 80 190 100 C130 120 105 130 100 190 C95 130 70 120 10 100 C70 80 95 70 100 10 Z" />
+                    <path fill="#C4B5FD" d="M100 40 C104 78 120 88 160 100 C120 112 104 122 100 160 C96 122 80 112 40 100 C80 88 96 78 100 40 Z" opacity="0.6" />
+                  </svg>
+                </div>
+              </div>
             </div>
 
           </div>
