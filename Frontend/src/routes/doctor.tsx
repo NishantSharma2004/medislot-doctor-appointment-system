@@ -845,6 +845,26 @@ function DoctorDeskPage() {
                         </Button>
                       </>
                     ) : null}
+                    {(appt.status === "CONFIRMED" || appt.status === "IN_CONSULTATION") ? (
+                      <>
+                        <Button
+                          size="sm"
+                          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs gap-1"
+                          onClick={() => handleUpdateStatus(appt.id, "COMPLETED")}
+                        >
+                          <CheckCircle2 className="size-3.5" /> Complete ✅
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="border-amber-500/40 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 font-bold text-xs gap-1"
+                          onClick={() => handleUpdateStatus(appt.id, "MISSED")}
+                        >
+                          <Clock className="size-3.5" /> Mark Missed ⏭️
+                        </Button>
+                      </>
+                    ) : null}
+
                     <Button
                       size="sm"
                       variant="outline"

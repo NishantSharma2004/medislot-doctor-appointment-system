@@ -61,6 +61,15 @@ public class OpdQueueService {
         Instant dayStart = targetDate.atStartOfDay(ZoneOffset.UTC).toInstant();
         Instant dayEnd = targetDate.plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
 
+        // Auto-complete any past-date leftover IN_CONSULTATION appointments so they don't remain stuck across days
+        List<Appointment> staleAppointments = appointmentRepository.findStaleInConsultationAppointments(doctorId, dayStart);
+        if (!staleAppointments.isEmpty()) {
+            for (Appointment stale : staleAppointments) {
+                stale.setStatus(AppointmentStatus.COMPLETED);
+                appointmentRepository.save(stale);
+            }
+        }
+
         List<Appointment> rawQueue = appointmentRepository.findTodayOpdQueue(doctorId, dayStart, dayEnd);
 
         List<AppointmentDto> enrichedQueue = new ArrayList<>();

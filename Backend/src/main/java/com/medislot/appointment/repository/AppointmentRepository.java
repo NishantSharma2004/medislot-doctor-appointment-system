@@ -190,4 +190,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, UUID> 
             @Param("dayEnd") Instant dayEnd,
             @Param("targetSlotStartAt") Instant targetSlotStartAt
     );
+
+    @Query("""
+            SELECT a FROM Appointment a
+            WHERE a.doctor.userId = :doctorId
+              AND a.status = 'IN_CONSULTATION'
+              AND a.slotStartAt < :dayStart
+            """)
+    java.util.List<Appointment> findStaleInConsultationAppointments(
+            @Param("doctorId") UUID doctorId,
+            @Param("dayStart") Instant dayStart
+    );
 }
