@@ -48,7 +48,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {doctor.fullName.toLowerCase().includes("rakesh") || doctor.id === "e6d0d7aa-2279-4e3b-898f-5a4c49a3f3b2" ? (
               <Badge variant="default" className="rounded-full bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 shadow-sm">
-                🧪 Official Demo Doctor
+                🧪 Official Demo Therapist
               </Badge>
             ) : null}
             <Badge variant="secondary" className="rounded-full">
@@ -57,12 +57,12 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
             {hasSlots ? (
               <Badge variant="outline" className="rounded-full border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 font-medium">
                 <span className="mr-1 inline-block size-2 rounded-full bg-emerald-500 animate-pulse" />
-                {openSlots.length} Open Slot{openSlots.length === 1 ? "" : "s"}
+                {openSlots.length} Open Session{openSlots.length === 1 ? "" : "s"}
               </Badge>
             ) : (
               <Badge variant="outline" className="rounded-full border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-400 font-medium">
                 <CalendarX className="mr-1 size-3 text-amber-500 inline" />
-                No Open Slots
+                No Open Sessions
               </Badge>
             )}
           </div>
@@ -73,7 +73,7 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
         <div className="flex min-w-0 items-center gap-2">
           <BriefcaseMedical className="size-4 shrink-0" aria-hidden="true" />
           <dt className="sr-only">Experience</dt>
-          <dd className="truncate">{doctor.yearsOfExperience} years of practice</dd>
+          <dd className="truncate">{doctor.yearsOfExperience} years of therapy practice</dd>
         </div>
         <div className="flex min-w-0 items-center gap-2">
           <MapPin className="size-4 shrink-0" aria-hidden="true" />
@@ -89,9 +89,9 @@ export function DoctorCard({ doctor }: { doctor: DoctorDto }) {
         </div>
         <div className="flex min-w-0 items-center gap-2">
           <Banknote className="size-4 shrink-0" aria-hidden="true" />
-          <dt className="sr-only">Consultation fee</dt>
+          <dt className="sr-only">Session fee</dt>
           <dd className="truncate font-medium text-foreground">
-            {formatFee(doctor.consultationFee)} consultation fee
+            {formatFee(doctor.consultationFee)} therapy session fee
           </dd>
         </div>
       </dl>

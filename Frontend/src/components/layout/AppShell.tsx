@@ -165,32 +165,32 @@ export function AppHeader() {
               <DropdownMenuTrigger className="hover:text-amber-800 transition-colors flex items-center gap-1 cursor-pointer outline-none font-extrabold">
                 Services <ChevronDown className="size-3.5 text-amber-700" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-64 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
+              <DropdownMenuContent align="center" className="w-68 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
                 <DropdownMenuLabel className="text-[11px] font-black uppercase text-amber-900 tracking-wider px-2.5 py-1.5">
-                  Clinical Specialisations
+                  Therapy & Wellness Services
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-amber-100" />
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "General Medicine" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🩺 General Medicine
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Anxiety & Stress Therapy" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🧠 Anxiety & Panic Therapy
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Dermatology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  ✨ Dermatology & Skin Care
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Depression & Mood Care" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🌿 Depression & Mood Care
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Cardiology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🫀 Cardiology & Heart Health
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Couples & Relationship Counselling" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  💑 Couples & Relationship Therapy
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Neurology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🧠 Neurology & Headache
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Burnout & Career Stress" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  💼 Burnout & Work Stress
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Ophthalmology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  👁️ Ophthalmology & Eye Care
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Trauma & Emotional Healing" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🧘 Trauma & Emotional Healing
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Orthopaedics" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🦴 Orthopaedics & Joint Care
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Child & Teen Psychology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  👦 Child & Adolescent Therapy
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-amber-100" />
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-100/70 hover:bg-amber-200">
-                  🔍 Explore All Specialisations ➔
+                  🔍 Meet All Licensed Therapists ➔
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

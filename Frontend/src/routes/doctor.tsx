@@ -432,7 +432,7 @@ function DoctorDeskPage() {
               <div className="space-y-1.5">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
-                    <Sparkles className="size-3 text-amber-600" /> Official Doctor Desk
+                    <Sparkles className="size-3 text-amber-600" /> Official Therapist Practice Desk
                   </span>
                   {docProfile?.specialization ? (
                     <span className="text-xs font-extrabold border border-teal-300 bg-teal-50 text-teal-900 px-3 py-0.5 rounded-full">

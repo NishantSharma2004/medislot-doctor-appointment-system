@@ -161,13 +161,13 @@ function DoctorSearchPage() {
       <section className="bg-gradient-to-b from-[#FFFDF9] to-[#FAF6EE] border-b border-amber-200/60 py-10 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-amber-900 shadow-xs">
-            <Sparkles className="size-3.5 text-amber-600" /> Durrmi Specialist Network
+            <Sparkles className="size-3.5 text-amber-600" /> Durrmi Verified Therapist Network
           </span>
           <h1 className="mt-4 text-3xl font-extrabold text-slate-900 sm:text-4xl">
-            Find The Right Doctor For Your Health Journey
+            Find The Right Therapist For Your Wellness Journey
           </h1>
           <p className="mt-2 text-sm text-slate-600 max-w-2xl">
-            Filter by medical specialization, city, consultation fee, and open time slots to book instant clinic appointments.
+            Filter by therapy focus area, city, session fee, and available slots to book confidential therapy sessions.
           </p>
         </div>
       </section>
@@ -180,7 +180,7 @@ function DoctorSearchPage() {
             <div className="flex items-center justify-between border-b pb-3">
               <div className="flex items-center gap-2">
                 <SlidersHorizontal className="size-4 text-amber-700" />
-                <h2 className="text-sm font-extrabold text-slate-900">Search Filters</h2>
+                <h2 className="text-sm font-extrabold text-slate-900">Therapist Filters</h2>
               </div>
               {(search.query || search.specialization || search.city || search.maxFee || search.availability) ? (
                 <button type="button" onClick={clearFilters} className="text-[11px] font-bold text-amber-700 hover:underline">
@@ -199,7 +199,7 @@ function DoctorSearchPage() {
             >
               <div className="flex items-center justify-between">
                 <Label htmlFor="doctor-query" className="text-xs font-bold text-slate-700">
-                  Doctor Name or Keyword
+                  Therapist Name or Focus Area
                 </Label>
                 {queryInput.trim().length > 0 ? (
                   <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
@@ -346,8 +346,8 @@ function DoctorSearchPage() {
             </Button>
           </aside>
 
-          {/* DOCTOR RESULTS GRID */}
-          <section aria-label="Doctor results" className="space-y-6">
+          {/* THERAPIST RESULTS GRID */}
+          <section aria-label="Therapist results" className="space-y-6">
             {doctorsQuery.isPending ? <DoctorCardSkeletonGrid /> : null}
 
             {error ? <ErrorState error={error} onRetry={() => doctorsQuery.refetch()} /> : null}
@@ -355,8 +355,8 @@ function DoctorSearchPage() {
             {result && displayDoctors.length === 0 ? (
               <EmptyState
                 icon={<SearchX className="size-8 text-amber-600" aria-hidden="true" />}
-                title="No doctors match these filters"
-                description="Try widening the consultation fee range, setting location to Any, or clearing filters."
+                title="No therapists match these filters"
+                description="Try widening the session fee range, setting location to Any, or clearing filters."
                 action={
                   <Button variant="outline" className="rounded-xl border-amber-300 text-amber-900 font-bold" onClick={clearFilters}>
                     Clear Filters

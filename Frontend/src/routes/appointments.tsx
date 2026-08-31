@@ -153,13 +153,13 @@ function MyAppointmentsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <div className="space-y-3">
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
-            📅 Consultation Schedules & OPD Queue
+            🧠 Therapy Session Schedules & Queue Tokens
           </span>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
-            My Appointments
+            My Therapy Sessions
           </h1>
           <p className="text-xs sm:text-sm text-slate-600 font-medium">
-            Manage your booked doctor consultations, OPD queue tokens, and digital prescriptions.
+            Manage your booked therapy sessions, consultation tokens, and downloadable wellness guidance plans.
           </p>
         </div>
         <div className="space-y-6">
