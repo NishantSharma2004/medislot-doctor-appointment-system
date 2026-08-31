@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { CalendarDays, LogOut, Menu, User } from "lucide-react";
+import { CalendarDays, ChevronDown, LogOut, Menu, User } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
 import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
@@ -159,9 +159,42 @@ export function AppHeader() {
           <nav aria-label="Main Navigation" className="hidden lg:flex items-center bg-white/90 border border-amber-300/60 rounded-full px-7 py-2 shadow-xs gap-6 text-xs font-extrabold text-slate-800">
             <Link to="/" className="hover:text-amber-800 transition-colors">Home</Link>
             <a href="#why-durrmi" onClick={(e) => handleScrollTo(e, "why-durrmi")} className="hover:text-amber-800 transition-colors cursor-pointer">About Us</a>
-            <Link to="/doctors" className="hover:text-amber-800 transition-colors flex items-center gap-1">
-              Services <span className="text-[10px]">▼</span>
-            </Link>
+            
+            {/* Interactive Services Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="hover:text-amber-800 transition-colors flex items-center gap-1 cursor-pointer outline-none font-extrabold">
+                Services <ChevronDown className="size-3.5 text-amber-700" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-64 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
+                <DropdownMenuLabel className="text-[11px] font-black uppercase text-amber-900 tracking-wider px-2.5 py-1.5">
+                  Clinical Specialisations
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-amber-100" />
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "General Medicine" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🩺 General Medicine
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Dermatology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  ✨ Dermatology & Skin Care
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Cardiology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🫀 Cardiology & Heart Health
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Neurology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🧠 Neurology & Headache
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Ophthalmology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  👁️ Ophthalmology & Eye Care
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Orthopaedics" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🦴 Orthopaedics & Joint Care
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-amber-100" />
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-100/70 hover:bg-amber-200">
+                  🔍 Explore All Specialisations ➔
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
             <Link to="/doctors" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
             <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")} className="hover:text-amber-800 transition-colors cursor-pointer">FAQ</a>
