@@ -374,48 +374,76 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* WHY CHOOSE MEDISLOT VALUE CARDS */}
-      <section className="bg-[#FAF6EE] border-t border-b border-amber-200/60 py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-extrabold text-slate-900 sm:text-4xl">
-              Why Choose MediSlot?
-            </h2>
-            <p className="mt-2 text-sm text-slate-600 max-w-xl mx-auto">
-              Built for speed, privacy, and transparent healthcare.
-            </p>
+      {/* WHY CHOOSE MEDISLOT OVERLAPPING STACKED CARDS SECTION */}
+      <section className="bg-[#FDEBB2]/90 border-t border-b border-amber-300/60 py-20 overflow-hidden relative">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+            Why Choose MediSlot
+          </h2>
+          <p className="text-sm font-semibold text-slate-700 max-w-md mx-auto">
+            Get expert medical care, on your terms.
+          </p>
+        </div>
+
+        {/* STACKED OVERLAPPING CARDS CONTAINER */}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-12 relative min-h-[580px] flex flex-col items-center">
+          {/* Card 1: Top Right Warm Gold/Yellow */}
+          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#F7D479] border border-amber-700/20 rounded-[32px] p-6 sm:p-8 shadow-xl shadow-amber-950/10 transform sm:translate-x-12 hover:scale-[1.02] transition-transform duration-300 z-10">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              {/* Illustrated Doctor Graphic Avatar */}
+              <div className="size-24 rounded-full bg-[#E5B551] flex items-center justify-center text-4xl shrink-0 shadow-inner">
+                👩‍⚕️
+              </div>
+              <div className="text-left space-y-2">
+                <h3 className="text-xl font-black text-[#5C4105] leading-snug">
+                  Vetted Experts, Not A Directory
+                </h3>
+                <p className="text-xs sm:text-sm font-medium text-[#73540F] leading-relaxed">
+                  Every doctor on MediSlot is screened for real credentials, registration numbers, and track record — so you're never guessing who's on the other end.
+                </p>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            <div className="rounded-3xl border border-amber-300/80 bg-[#FEF9EF] p-8 text-center shadow-xs">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-amber-200 text-amber-900">
-                <Award className="size-6" />
-              </span>
-              <h3 className="mt-6 text-lg font-bold text-slate-900">Vetted Experts, Not A Directory</h3>
-              <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                Every doctor on MediSlot is verified with authentic medical registration numbers and proven clinical credentials.
-              </p>
+          {/* Card 2: Middle Left Pastel Blue (Overlapping) */}
+          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#A4D4FF] border border-blue-600/20 rounded-[32px] p-6 sm:p-8 shadow-2xl shadow-blue-950/15 transform -mt-10 sm:-mt-16 sm:-translate-x-16 hover:scale-[1.02] transition-transform duration-300 z-20">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div className="size-24 rounded-full bg-[#7BBDF7] flex items-center justify-center text-4xl shrink-0 shadow-inner">
+                🩺
+              </div>
+              <div className="text-left space-y-2">
+                <h3 className="text-xl font-black text-[#104778] leading-snug">
+                  Matched To Your Actual Problem
+                </h3>
+                <p className="text-xs sm:text-sm font-medium text-[#1E5D96] leading-relaxed">
+                  Tell us what you're stuck on or your symptom concerns and we point you to the right specialist expertise, instead of leaving you to scroll through profiles.
+                </p>
+              </div>
             </div>
+          </div>
 
-            <div className="rounded-3xl border border-teal-300/80 bg-[#F0FDF4] p-8 text-center shadow-xs">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-teal-200 text-teal-900">
-                <HeartHandshake className="size-6" />
-              </span>
-              <h3 className="mt-6 text-lg font-bold text-slate-900">Matched To Your Actual Need</h3>
-              <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                Find the right doctor based on symptom concerns, city location, consultation fees, and open slot availability.
-              </p>
+          {/* Card 3: Bottom Right Soft Coral / Warm Peach (Overlapping) */}
+          <div className="w-full sm:w-[480px] md:w-[520px] bg-[#F7C6A3] border border-orange-700/20 rounded-[32px] p-6 sm:p-8 shadow-xl shadow-orange-950/10 transform -mt-10 sm:-mt-16 sm:translate-x-14 hover:scale-[1.02] transition-transform duration-300 z-30">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div className="text-left space-y-2 order-2 sm:order-1">
+                <h3 className="text-xl font-black text-[#612A0A] leading-snug">
+                  Clear Pricing, No Surprises
+                </h3>
+                <p className="text-xs sm:text-sm font-medium text-[#7D3B14] leading-relaxed">
+                  See rates upfront and know exactly what a session costs before you book — no hidden fees, no awkward billing conversations.
+                </p>
+              </div>
+              <div className="size-24 rounded-full bg-[#E5AA80] flex items-center justify-center text-4xl shrink-0 shadow-inner order-1 sm:order-2">
+                👨‍⚕️
+              </div>
             </div>
+          </div>
 
-            <div className="rounded-3xl border border-rose-300/80 bg-[#FFF1F2] p-8 text-center shadow-xs">
-              <span className="mx-auto grid size-12 place-items-center rounded-2xl bg-rose-200 text-rose-900">
-                <CheckCircle2 className="size-6" />
-              </span>
-              <h3 className="mt-6 text-lg font-bold text-slate-900">Clear Pricing, No Surprises</h3>
-              <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                Choose between Pay Online via Razorpay UPI/Cards or Pay Cash at Clinic with 0 hidden service fees.
-              </p>
-            </div>
+          {/* Bottom Pill Action Button */}
+          <div className="mt-12 z-40">
+            <Button asChild size="lg" className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40">
+              <Link to="/doctors">Know more about us ➔</Link>
+            </Button>
           </div>
         </div>
       </section>
