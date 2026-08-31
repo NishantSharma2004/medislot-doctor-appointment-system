@@ -213,7 +213,7 @@ function DoctorSearchPage() {
                   id="doctor-query"
                   value={queryInput}
                   onChange={(event) => setQueryInput(event.target.value)}
-                  placeholder="e.g. Rajesh, Delhi, Cardiology"
+                  placeholder="e.g. Rajesh, Delhi, Anxiety, CBT"
                   className="h-10 text-xs font-medium rounded-xl border-slate-200"
                 />
                 <Button type="submit" size="sm" className="h-10 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold">

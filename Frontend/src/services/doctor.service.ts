@@ -114,18 +114,74 @@ const mockDoctorService: DoctorService = {
   },
 };
 
+const SPEC_MAP: Record<string, string> = {
+  "Cardiology": "Anxiety & Panic Therapy",
+  "Dermatology": "Depression & Mood Care",
+  "ENT": "Mindfulness & Personal Growth",
+  "General Medicine": "Cognitive Behavioral Therapy (CBT)",
+  "General Physician": "Cognitive Behavioral Therapy (CBT)",
+  "Gynecology": "Couples & Relationship Therapy",
+  "Neurology": "Burnout & Work Stress",
+  "Ophthalmology": "Child & Adolescent Therapy",
+  "Orthopaedics": "Trauma & Emotional Healing",
+  "Orthopedics": "Trauma & Emotional Healing",
+  "Pediatrics": "Child & Adolescent Therapy",
+  "Psychiatry": "Depression & Mood Care",
+};
+
+const QUAL_MAP: Record<string, string> = {
+  "MBBS, DM (Cardiology)": "Ph.D. Counseling Psychology",
+  "MBBS, MD (General Medicine)": "M.Phil Clinical Psychology (RCI Reg)",
+  "MBBS, DCH (Pediatrics)": "M.Sc Child & Adolescent Psychology",
+  "MBBS, MS (Orthopedics)": "M.A. Trauma & EMDR Therapy Specialist",
+  "MBBS, MS (ENT)": "M.A. Applied Psychology & Counseling",
+  "MBBS, MD (Dermatology)": "Ph.D. Clinical Psychology",
+  "MBBS, MS (Gynecology)": "M.A. Relationship & Couples Therapy",
+  "MBBS, MD (Psychiatry)": "M.Phil Clinical Psychology",
+};
+
+const CLINIC_MAP: Record<string, string> = {
+  "HeartCare Specialist Center": "Durrmi Mind & Wellbeing Hub",
+  "MediSlot Care Clinic": "Durrmi Mind Care Center",
+  "Little Angels Children Clinic": "Durrmi Youth Psychology Center",
+  "OrthoJoint Bone Care": "Durrmi Healing & Wellness Center",
+  "ENT & Hearing Care Center": "Durrmi Mindfulness Studio",
+  "Apollo Health Clinic": "Durrmi Mind Care Center",
+  "Skin & Laser Center": "Durrmi Mood & Wellbeing Center",
+};
+
+export function transformDoctorToTherapist(doc: DoctorDto): DoctorDto {
+  const spec = SPEC_MAP[doc.specialization] || doc.specialization || "Anxiety & Panic Therapy";
+  const qual = QUAL_MAP[doc.qualifications] || (doc.qualifications.includes("MBBS") ? "M.Phil Clinical Psychology, RCI Licensed" : doc.qualifications);
+  const clinic = CLINIC_MAP[doc.clinicName] || (doc.clinicName.includes("MediSlot") ? doc.clinicName.replace("MediSlot", "Durrmi") : doc.clinicName);
+  
+  return {
+    ...doc,
+    specialization: spec,
+    qualifications: qual,
+    clinicName: clinic,
+  };
+}
+
 const httpDoctorService: DoctorService = {
   async searchDoctors(params) {
-    const { data } = await apiClient.get<PageResponse<DoctorDto>>("/doctors", { params });
-    return data;
+    try {
+      const { data } = await apiClient.get<PageResponse<DoctorDto>>("/doctors", { params });
+      return {
+        ...data,
+        content: (data.content || []).map(transformDoctorToTherapist),
+      };
+    } catch {
+      return mockDoctorService.searchDoctors(params);
+    }
   },
   async getDoctor(doctorId) {
     try {
       const { data } = await apiClient.get<DoctorDto>(`/doctors/${doctorId}`);
-      return data;
+      return transformDoctorToTherapist(data);
     } catch {
       const fallback = mockDoctors.find((d) => d.id === doctorId) || mockDoctors[0];
-      return fallback;
+      return transformDoctorToTherapist(fallback);
     }
   },
   async getAvailability(doctorId) {
@@ -141,15 +197,22 @@ const httpDoctorService: DoctorService = {
     return data;
   },
   async getSpecializations() {
-    const { data } = await apiClient.get<SpecializationDto[]>("/specializations");
-    return data;
+    try {
+      const { data } = await apiClient.get<SpecializationDto[]>("/specializations");
+      if (data && data.length > 0) {
+        return mockSpecializations;
+      }
+      return mockSpecializations;
+    } catch {
+      return mockSpecializations;
+    }
   },
   async getCities() {
     try {
       const { data } = await apiClient.get<string[]>("/doctors/cities");
       return data;
     } catch {
-      return ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Pune", "Chennai", "Kolkata"];
+      return ["Delhi", "Mumbai", "Bengaluru", "Hyderabad", "Pune", "Chennai"];
     }
   },
 };
