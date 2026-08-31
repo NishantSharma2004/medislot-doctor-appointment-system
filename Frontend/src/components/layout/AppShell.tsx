@@ -134,106 +134,112 @@ export function AppHeader() {
         </div>
       ) : null}
 
-      <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
-      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:flex sm:justify-between">
-        <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Durrmi home">
-          <DurrmiLogo size="sm" />
-        </Link>
+      <header className="sticky top-0 z-40 border-b border-amber-200/50 bg-[#FAF7EF]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+          
+          {/* Left Brand Logo */}
+          <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Durrmi home">
+            <DurrmiLogo size="sm" />
+          </Link>
 
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          {items.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
-                pathname === item.to && "bg-primary-soft text-accent-foreground",
-              )}
-            >
-              {item.label}
+          {/* Center Floating Pill Menu */}
+          <nav aria-label="Main Navigation" className="hidden lg:flex items-center bg-white/90 border border-amber-300/60 rounded-full px-7 py-2 shadow-xs gap-6 text-xs font-extrabold text-slate-800">
+            <Link to="/" className="hover:text-amber-800 transition-colors">Home</Link>
+            <a href="/#why-durrmi" className="hover:text-amber-800 transition-colors">About Us</a>
+            <Link to="/doctors" className="hover:text-amber-800 transition-colors flex items-center gap-1">
+              Services <span className="text-[10px]">▼</span>
             </Link>
-          ))}
-        </nav>
+            <a href="/#pricing" className="hover:text-amber-800 transition-colors">Pricing</a>
+            <Link to="/doctors" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
+            <a href="/#faq" className="hover:text-amber-800 transition-colors">FAQ</a>
+          </nav>
 
-        <div className="flex items-center justify-end gap-2">
-          {isAuthenticated && user ? (
-            <>
-              <NotificationBell />
-              <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <UserAvatar name={user.fullName} imageUrl={user.profileImageUrl} className="size-5" />
-                  <span className="hidden max-w-28 truncate sm:inline">{user.fullName}</span>
+          {/* Right Action Buttons (Login & Sign Up) */}
+          <div className="flex items-center justify-end gap-3">
+            {isAuthenticated && user ? (
+              <>
+                <NotificationBell />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="gap-2 rounded-full border-amber-300 bg-white font-bold text-slate-900">
+                      <UserAvatar name={user.fullName} imageUrl={user.profileImageUrl} className="size-5" />
+                      <span className="hidden max-w-28 truncate sm:inline">{user.fullName}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>
+                      <span className="block truncate font-bold">{user.fullName}</span>
+                      <span className="text-xs font-normal text-muted-foreground">{user.email}</span>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate({ to: homeRouteForRole(user.role) })}>
+                      <CalendarDays className="size-4" aria-hidden="true" /> Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
+                      <User className="size-4" aria-hidden="true" /> Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="size-4" aria-hidden="true" /> Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <div className="flex items-center gap-2.5">
+                <Button asChild size="sm" className="h-9 px-5 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs shadow-xs border border-amber-500/40">
+                  <Link to="/login">Login</Link>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <span className="block truncate">{user.email}</span>
-                  <span className="text-xs font-normal text-muted-foreground">{user.role}</span>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate({ to: homeRouteForRole(user.role) })}>
-                  <CalendarDays className="size-4" aria-hidden="true" /> Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/profile" })}>
-                  <User className="size-4" aria-hidden="true" /> Profile
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="size-4" aria-hidden="true" /> Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </>
-          ) : (
-            <div className="hidden items-center gap-2 sm:flex">
-              <Button asChild variant="ghost" size="sm">
-                <Link to="/login">Sign in</Link>
-              </Button>
-              <Button asChild size="sm">
-                <Link to="/register">Create account</Link>
-              </Button>
-            </div>
-          )}
+                <Button asChild variant="outline" size="sm" className="h-9 px-5 rounded-full border-slate-300 bg-white hover:bg-slate-50 text-slate-900 font-extrabold text-xs shadow-xs">
+                  <Link to="/register">Sign Up</Link>
+                </Button>
+              </div>
+            )}
 
-          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu">
-                <Menu className="size-4" aria-hidden="true" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-72">
-              <SheetTitle className="px-4 pt-4">Menu</SheetTitle>
-              <nav aria-label="Mobile" className="mt-4 flex flex-col gap-1 px-2 pb-6">
-                {items.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setMobileOpen(false)}
-                    className={cn(
-                      "rounded-md px-3 py-2.5 text-sm font-medium transition-colors hover:bg-accent",
-                      pathname === item.to ? "bg-primary-soft text-accent-foreground" : "text-foreground",
-                    )}
-                  >
-                    {item.label}
+            <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="lg:hidden rounded-full border-amber-300" aria-label="Open menu">
+                  <Menu className="size-4" aria-hidden="true" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-72 bg-[#FAF7EF]">
+                <SheetTitle className="px-4 pt-4 font-black text-slate-900">Menu</SheetTitle>
+                <nav aria-label="Mobile" className="mt-4 flex flex-col gap-1.5 px-2 pb-6">
+                  <Link to="/" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Home
                   </Link>
-                ))}
-                {!isAuthenticated ? (
-                  <div className="mt-3 flex flex-col gap-2 px-1">
-                    <Button asChild variant="outline" onClick={() => setMobileOpen(false)}>
-                      <Link to="/login">Sign in</Link>
-                    </Button>
-                    <Button asChild onClick={() => setMobileOpen(false)}>
-                      <Link to="/register">Create account</Link>
-                    </Button>
-                  </div>
-                ) : null}
-              </nav>
-            </SheetContent>
-          </Sheet>
+                  <a href="/#why-durrmi" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    About Us
+                  </a>
+                  <Link to="/doctors" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Services / Specialisations
+                  </Link>
+                  <a href="/#pricing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Pricing
+                  </a>
+                  <Link to="/doctors" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Meet Our Therapists
+                  </Link>
+                  <a href="/#faq" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    FAQ
+                  </a>
+                  {!isAuthenticated ? (
+                    <div className="mt-3 flex flex-col gap-2 px-1">
+                      <Button asChild className="rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs" onClick={() => setMobileOpen(false)}>
+                        <Link to="/login">Login</Link>
+                      </Button>
+                      <Button asChild variant="outline" className="rounded-full border-slate-300 bg-white font-extrabold text-xs" onClick={() => setMobileOpen(false)}>
+                        <Link to="/register">Sign Up</Link>
+                      </Button>
+                    </div>
+                  ) : null}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+
         </div>
-      </div>
-    </header>
+      </header>
     </>
   );
 }
