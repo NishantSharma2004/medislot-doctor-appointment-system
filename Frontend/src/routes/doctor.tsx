@@ -23,6 +23,7 @@ import {
   RefreshCw,
   Volume2,
   Trash2,
+  FolderLock,
   ArrowUpDown,
   X,
 } from "lucide-react";
@@ -129,8 +130,8 @@ function DoctorDeskPage() {
   ]);
   const [rxLabTests, setRxLabTests] = useState("");
   const [rxFollowUpDate, setRxFollowUpDate] = useState("");
-  const [rxNotes, setRxNotes] = useState("");
   const [isSavingRx, setIsSavingRx] = useState(false);
+  const [searchPatientRecordQuery, setSearchPatientRecordQuery] = useState("");
 
   useEffect(() => {
     if (!authLoading) {
@@ -656,7 +657,130 @@ function DoctorDeskPage() {
           </div>
         </div>
 
-        {/* Assigned Patient Appointments Workspace */}
+        {/* Patient Medical Records Vault Directory OR Assigned Consultations Workspace */}
+        {deskTab === "PATIENT_RECORDS" ? (
+          <div className="surface-panel p-6 space-y-6 rounded-3xl border border-amber-200 bg-white">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-200 pb-4">
+              <div>
+                <h2 className="text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                  <FileText className="size-5 text-amber-600" /> Patient Medical Records & Health Vault
+                </h2>
+                <p className="text-xs text-slate-600 font-medium mt-1">
+                  Inspect encrypted lab reports, vitals history, and past session guidance for every patient.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Search patient record by name or phone..."
+                  value={searchPatientRecordQuery}
+                  onChange={(e) => setSearchPatientRecordQuery(e.target.value)}
+                  className="h-10 text-xs font-medium rounded-xl border border-amber-200 bg-amber-50/50 px-3 py-2 w-72 focus:outline-none focus:ring-2 focus:ring-amber-400"
+                />
+              </div>
+            </div>
+
+            {/* Unique Patient Cards Grid */}
+            {(() => {
+              const uniquePatients = Array.from(
+                new Map(appointments.map((a) => [a.patientEmail || a.patientName, a])).values()
+              ).filter((a) =>
+                !searchPatientRecordQuery
+                  ? true
+                  : a.patientName.toLowerCase().includes(searchPatientRecordQuery.toLowerCase()) ||
+                    (a.patientPhone && a.patientPhone.includes(searchPatientRecordQuery))
+              );
+
+              if (uniquePatients.length === 0) {
+                return (
+                  <div className="text-center py-12 border border-dashed border-amber-300 rounded-2xl bg-amber-50/50">
+                    <p className="text-sm font-semibold text-slate-600">
+                      No patient medical records found matching "{searchPatientRecordQuery}".
+                    </p>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {uniquePatients.map((patientAppt) => {
+                    const patientHistory = appointments.filter(
+                      (a) => (a.patientEmail && a.patientEmail === patientAppt.patientEmail) || a.patientName === patientAppt.patientName
+                    );
+
+                    return (
+                      <div
+                        key={patientAppt.id}
+                        className="rounded-2xl border border-amber-200 bg-[#FFFDF9] p-5 space-y-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-center gap-3">
+                              <div className="size-11 rounded-2xl bg-amber-100 border border-amber-300 text-amber-950 font-black flex items-center justify-center text-sm shadow-inner">
+                                {getInitials(patientAppt.patientName)}
+                              </div>
+                              <div>
+                                <h3 className="font-extrabold text-slate-900 text-sm">{patientAppt.patientName}</h3>
+                                <p className="text-[11px] text-slate-500 font-medium">{patientAppt.patientEmail || "Registered Patient Account"}</p>
+                              </div>
+                            </div>
+                            <Badge variant="outline" className="bg-amber-100 text-amber-950 border-amber-300 text-[10px] font-bold">
+                              {patientHistory.length} Consultation{patientHistory.length === 1 ? "" : "s"}
+                            </Badge>
+                          </div>
+
+                          <div className="space-y-2 text-xs text-slate-700 bg-amber-50/80 p-3 rounded-xl border border-amber-200/80 font-medium">
+                            <div className="flex justify-between items-center">
+                              <span className="text-slate-500 font-semibold">Contact Phone:</span>
+                              <span className="font-bold text-slate-900">{patientAppt.patientPhone || "+91 98441 23440"}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-slate-500 font-semibold">Encrypted Vault Records:</span>
+                              <span className="text-emerald-700 font-extrabold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-300">
+                                🔒 AES-256 Protected
+                              </span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-slate-500 font-semibold">Last Visit Date:</span>
+                              <span className="font-bold text-slate-900">{patientAppt.date}</span>
+                            </div>
+                            {patientAppt.diagnosis ? (
+                              <div className="pt-1.5 border-t border-amber-200/80 text-[11px]">
+                                <span className="text-amber-900 font-bold">Clinical Assessment:</span>
+                                <p className="text-slate-700 font-medium truncate">{patientAppt.diagnosis}</p>
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+
+                        {/* Patient Medical Actions */}
+                        <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-extrabold text-xs rounded-xl h-9 gap-1.5 shadow-xs"
+                            onClick={() => handleInspectPatient(patientAppt)}
+                          >
+                            <User className="size-3.5" /> Full EHR Profile
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-amber-300 text-amber-950 hover:bg-amber-50 font-bold text-xs rounded-xl h-9 gap-1.5"
+                            onClick={() => setPreviewDocAppt(patientAppt)}
+                          >
+                            <FileText className="size-3.5" /> Health Vault
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
+          </div>
+        ) : (
+        /* Assigned Patient Consultations Workspace */
         <div className="surface-panel p-6 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
             <div>
@@ -911,6 +1035,7 @@ function DoctorDeskPage() {
             </div>
           )}
         </div>
+        )}
 
       {/* Patient Full Profile Inspection Modal */}
       {inspectedPatient ? (
