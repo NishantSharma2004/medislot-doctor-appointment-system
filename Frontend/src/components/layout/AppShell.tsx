@@ -1,8 +1,9 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { CalendarDays, LogOut, Menu, Stethoscope, User } from "lucide-react";
+import { CalendarDays, LogOut, Menu, User } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
 import { BackButton } from "@/components/common/BackButton";
 import { Button } from "@/components/ui/button";
+import { DurrmiLogo } from "@/components/common/DurrmiLogo";
 import { pingServer } from "@/lib/api/client";
 import {
   DropdownMenu,
@@ -136,10 +137,7 @@ export function AppHeader() {
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
       <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:flex sm:justify-between">
         <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Durrmi home">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-amber-500 text-slate-950 font-black">
-            <Stethoscope className="size-5" aria-hidden="true" />
-          </span>
-          <span className="truncate text-lg font-black tracking-tight text-foreground">Durrmi</span>
+          <DurrmiLogo size="sm" />
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">

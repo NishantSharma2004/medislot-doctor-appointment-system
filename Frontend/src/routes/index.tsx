@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { DurrmiLogo, DurrmiLogoIcon } from "@/components/common/DurrmiLogo";
 import {
   CalendarCheck,
   CalendarSearch,
@@ -848,9 +849,13 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* GIANT BOLD DURRMI TYPOGRAPHY AT BOTTOM */}
-          <div className="pt-8 text-center overflow-hidden">
-            <h1 className="text-7xl font-black tracking-tighter text-[#3D2311] sm:text-9xl lg:text-[13rem] leading-none select-none uppercase font-mono">
+          {/* GIANT BOLD DURRMI TYPOGRAPHY AT BOTTOM WITH LOGO ICON */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 overflow-hidden">
+            <DurrmiLogoIcon className="size-20 sm:size-32 lg:size-44 text-[#3D2311] shrink-0" />
+            <h1
+              className="text-6xl font-black tracking-[0.2em] text-[#3D2311] sm:text-8xl lg:text-[11rem] leading-none select-none uppercase"
+              style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', system-ui, sans-serif", fontWeight: 900 }}
+            >
               DURRMI
             </h1>
           </div>
