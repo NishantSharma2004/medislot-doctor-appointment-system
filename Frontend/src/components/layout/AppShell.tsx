@@ -112,6 +112,19 @@ export function AppHeader() {
     }
   };
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (window.location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      navigate({ to: "/" }).then(() => {
+        setTimeout(() => {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 100);
+      });
+    }
+  };
+
   return (
     <>
       {/* Demo Sandbox Quick Switch Bar */}
@@ -151,13 +164,13 @@ export function AppHeader() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           
           {/* Left Brand Logo */}
-          <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Durrmi home">
+          <a href="/" onClick={handleHomeClick} className="flex min-w-0 items-center gap-2 cursor-pointer" aria-label="Durrmi home">
             <DurrmiLogo size="sm" />
-          </Link>
+          </a>
 
           {/* Center Floating Pill Menu */}
           <nav aria-label="Main Navigation" className="hidden lg:flex items-center bg-white/90 border border-amber-300/60 rounded-full px-7 py-2 shadow-xs gap-6 text-xs font-extrabold text-slate-800">
-            <Link to="/" className="hover:text-amber-800 transition-colors">Home</Link>
+            <a href="/" onClick={handleHomeClick} className="hover:text-amber-800 transition-colors cursor-pointer">Home</a>
             <a href="#why-durrmi" onClick={(e) => handleScrollTo(e, "why-durrmi")} className="hover:text-amber-800 transition-colors cursor-pointer">About Us</a>
             
             {/* Interactive Services Dropdown */}
