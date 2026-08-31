@@ -680,51 +680,181 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 10. GIANT TYPOGRAPHY FOOTER */}
-      <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t border-slate-800">
+      {/* 10. CTA BANNER ("Your First Session Is On Us.") */}
+      <section className="bg-[#FAF6EE] py-20 border-t border-amber-200/60 relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 pb-12 border-b border-slate-800">
-            <div>
-              <div className="flex items-center gap-2 text-white font-extrabold text-xl">
-                <Stethoscope className="size-6 text-amber-500" /> MediSlot
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+            
+            {/* Left Sitting Illustration Card */}
+            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
+              <div className="relative p-6 rounded-full bg-[#FCE8BD] border border-amber-300/60 shadow-lg transform -rotate-2 hover:rotate-0 transition-transform">
+                <span className="text-8xl">🛋️</span>
               </div>
-              <p className="mt-3 text-xs text-slate-400 leading-relaxed">
-                Enterprise doctor appointment booking, live OPD queue tokens & encrypted health vault locker.
+            </div>
+
+            {/* Center Content */}
+            <div className="mx-auto max-w-2xl text-center space-y-6">
+              {/* Trust Avatar Stack */}
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex -space-x-2">
+                  <div className="size-8 rounded-full border-2 border-white bg-amber-200 grid place-items-center text-xs font-bold">👨‍💼</div>
+                  <div className="size-8 rounded-full border-2 border-white bg-teal-200 grid place-items-center text-xs font-bold">👩‍⚕️</div>
+                  <div className="size-8 rounded-full border-2 border-white bg-rose-200 grid place-items-center text-xs font-bold">👨‍⚕️</div>
+                  <div className="size-8 rounded-full border-2 border-white bg-purple-200 grid place-items-center text-xs font-bold">👩‍💻</div>
+                </div>
+                <span className="text-xs font-bold text-slate-500">
+                  Trusted by over <span className="text-slate-900 font-black">1000+ customers</span>
+                </span>
+              </div>
+
+              {/* Big Headline */}
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-none">
+                Your First Session Is On Us.
+              </h2>
+
+              {/* Subtitle */}
+              <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-md mx-auto">
+                Book a free session and see if it feels right — no commitment, no cost.
               </p>
+
+              {/* Yellow Pill Button */}
+              <div className="pt-2">
+                <Button asChild size="lg" className="h-12 px-9 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40">
+                  <Link to="/doctors">Book a free session</Link>
+                </Button>
+              </div>
             </div>
+
+            {/* Right Sitting Doctor Card */}
+            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
+              <div className="relative p-6 rounded-full bg-[#D4E8FC] border border-blue-300/60 shadow-lg transform rotate-2 hover:rotate-0 transition-transform">
+                <span className="text-8xl">📋</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 11. DURRMI-STYLE WARM PASTEL FOOTER */}
+      <footer className="bg-[#FAF8F3] pt-6 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl bg-[#FCE6A6] border border-amber-400/60 rounded-[36px] sm:rounded-[48px] p-8 sm:p-12 shadow-xl shadow-amber-950/5 relative overflow-hidden">
+          
+          {/* 8 Columns Navigation Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-6 text-left">
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">Patient Tools</h4>
-              <ul className="mt-3 space-y-2 text-xs">
-                <li><Link to="/doctors" className="hover:text-white">Find Doctors</Link></li>
-                <li><Link to="/appointments" className="hover:text-white">My Appointments</Link></li>
-                <li><Link to="/health-vault" className="hover:text-white">Digital Health Vault</Link></li>
-                <li><Link to="/health-risk-calculator" className="hover:text-white">AI Health Calculator</Link></li>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Home</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
+                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">Doctor Portal</h4>
-              <ul className="mt-3 space-y-2 text-xs">
-                <li><Link to="/doctor" className="hover:text-white">Doctor Desk Workspace</Link></li>
-                <li><Link to="/doctor/availability" className="hover:text-white">Manage Availability Slots</Link></li>
-                <li><Link to="/register" search={{ role: "DOCTOR" }} className="hover:text-white">Join As Doctor</Link></li>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">About Us</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
               </ul>
             </div>
+
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">Contact & Support</h4>
-              <p className="mt-3 text-xs text-slate-400">Support Email: support@medislot.test</p>
-              <p className="mt-1 text-xs text-slate-400">Clinic Helpline: +91 98441 23440</p>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Pricing</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
+                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Specialisations</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/doctors" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Therapists</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/doctors" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Contact Us</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
+                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Resources</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Legal</h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
+                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
+                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+              </ul>
             </div>
           </div>
 
-          {/* GIANT LOGO BANNER */}
-          <div className="pt-10 text-center">
-            <h1 className="text-6xl font-black tracking-widest text-slate-800 sm:text-8xl lg:text-9xl select-none opacity-80">
+          {/* Divider */}
+          <div className="border-t border-[#4A2D13]/15 my-8" />
+
+          {/* Sub-Footer Row with Social Icons */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-semibold text-[#5A381B]">
+            <p>*MediSlot connects patients with verified specialist doctors for seamless clinic scheduling and health vault privacy.</p>
+            <div className="flex items-center gap-4 text-[#3D250F]">
+              <a href="#" className="hover:opacity-80 transition-opacity">📘 Facebook</a>
+              <a href="#" className="hover:opacity-80 transition-opacity">𝕏 Twitter</a>
+              <a href="#" className="hover:opacity-80 transition-opacity">📸 Instagram</a>
+            </div>
+          </div>
+
+          {/* GIANT BOLD MEDISLOT TYPOGRAPHY AT BOTTOM */}
+          <div className="pt-8 text-center overflow-hidden">
+            <h1 className="text-7xl font-black tracking-tighter text-[#3D2311] sm:text-9xl lg:text-[13rem] leading-none select-none uppercase font-mono">
               MEDISLOT
             </h1>
-            <p className="mt-4 text-[11px] text-slate-500">
-              © {new Date().getFullYear()} MediSlot Healthcare System. All rights reserved. Built with React & Spring Boot.
-            </p>
           </div>
+
         </div>
       </footer>
     </div>
