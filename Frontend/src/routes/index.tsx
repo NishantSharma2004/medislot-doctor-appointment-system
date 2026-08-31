@@ -336,11 +336,11 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE MEDISLOT CORNER-OVERLAPPING CARDS SECTION */}
-      <section className="bg-[#FDEBB2]/90 py-20 overflow-hidden relative">
+      {/* 4. WHY CHOOSE DURRMI CORNER-OVERLAPPING CARDS SECTION */}
+      <section id="why-durrmi" className="bg-[#FDEBB2]/90 py-20 overflow-hidden relative scroll-mt-24">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
-            Why Choose MediSlot
+            Why Choose Durrmi
           </h2>
           <p className="text-sm font-semibold text-slate-700 max-w-md mx-auto">
             Get expert medical care, on your terms.

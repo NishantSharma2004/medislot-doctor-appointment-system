@@ -99,6 +99,19 @@ export function AppHeader() {
     navigate({ to: "/login", replace: true });
   }
 
+  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    if (window.location.pathname !== "/") {
+      navigate({ to: "/" }).then(() => {
+        setTimeout(() => {
+          document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+        }, 150);
+      });
+    } else {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <>
       {/* Demo Sandbox Quick Switch Bar */}
@@ -145,13 +158,13 @@ export function AppHeader() {
           {/* Center Floating Pill Menu */}
           <nav aria-label="Main Navigation" className="hidden lg:flex items-center bg-white/90 border border-amber-300/60 rounded-full px-7 py-2 shadow-xs gap-6 text-xs font-extrabold text-slate-800">
             <Link to="/" className="hover:text-amber-800 transition-colors">Home</Link>
-            <a href="/#why-durrmi" className="hover:text-amber-800 transition-colors">About Us</a>
+            <a href="#why-durrmi" onClick={(e) => handleScrollTo(e, "why-durrmi")} className="hover:text-amber-800 transition-colors cursor-pointer">About Us</a>
             <Link to="/doctors" className="hover:text-amber-800 transition-colors flex items-center gap-1">
               Services <span className="text-[10px]">▼</span>
             </Link>
-            <a href="/#pricing" className="hover:text-amber-800 transition-colors">Pricing</a>
+            <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
             <Link to="/doctors" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
-            <a href="/#faq" className="hover:text-amber-800 transition-colors">FAQ</a>
+            <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")} className="hover:text-amber-800 transition-colors cursor-pointer">FAQ</a>
           </nav>
 
           {/* Right Action Buttons (Login & Sign Up) */}
