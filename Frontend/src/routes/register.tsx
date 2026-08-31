@@ -61,12 +61,12 @@ export const Route = createFileRoute("/register")({
   }),
   head: () => ({
     meta: [
-      { title: "Create an account — MediSlot" },
+      { title: "Create an account — Durrmi" },
       {
         name: "description",
-        content: "Register as a patient or doctor on MediSlot.",
+        content: "Register as a patient or doctor on Durrmi.",
       },
-      { property: "og:title", content: "Create an account — MediSlot" },
+      { property: "og:title", content: "Create an account — Durrmi" },
       { property: "og:description", content: "Register to access clinic appointment tools." },
     ],
   }),
@@ -112,7 +112,7 @@ export function RegisterPage() {
       qualifications: "MBBS, MD",
       yearsOfExperience: 5,
       consultationFee: 500,
-      clinicName: "MediSlot Health Center",
+      clinicName: "Durrmi Health Center",
       city: "Delhi",
       registrationNumber: "",
     },
@@ -123,20 +123,8 @@ export function RegisterPage() {
     setIsSubmitting(true);
     setError(null);
     try {
-      await registerAccount({
-        fullName: values.fullName,
-        email: values.email,
-        phone: values.phone,
-        password: values.password,
-        role: role,
-        specializationName: role === "DOCTOR" ? values.specializationName : undefined,
-        qualifications: role === "DOCTOR" ? values.qualifications : undefined,
-        yearsOfExperience: role === "DOCTOR" ? values.yearsOfExperience : undefined,
-        consultationFee: role === "DOCTOR" ? values.consultationFee : undefined,
-        clinicName: role === "DOCTOR" ? values.clinicName : undefined,
-        city: role === "DOCTOR" ? values.city : undefined,
-        registrationNumber: role === "DOCTOR" ? values.registrationNumber : undefined,
-      } as any);
+      const fullPhone = `${countryCode}${phoneDigits}`;
+      await registerAccount({ ...values, phone: fullPhone, role });
 
       toast.success(`${role === "DOCTOR" ? "Doctor" : "Patient"} account created successfully.`);
       navigate({ to: role === "DOCTOR" ? "/doctor/availability" : "/dashboard", replace: true });
@@ -156,13 +144,13 @@ export function RegisterPage() {
         
         <div className="text-center space-y-2 mb-6">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
-            ✨ Get Started With MediSlot
+            ✨ Get Started With Durrmi
           </span>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
             Create Your Account
           </h1>
           <p className="text-xs text-slate-600">
-            Choose account type below to get started with MediSlot healthcare network.
+            Choose account type below to get started with Durrmi healthcare network.
           </p>
         </div>
 

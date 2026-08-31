@@ -19,8 +19,8 @@ export const Route = createFileRoute("/forgot-password")({
   }),
   head: () => ({
     meta: [
-      { title: "Forgot Password — MediSlot" },
-      { name: "description", content: "Request password reset link for your MediSlot account." },
+      { title: "Forgot Password — Durrmi" },
+      { name: "description", content: "Request password reset link for your Durrmi account." },
     ],
   }),
   component: ForgotPasswordPage,
@@ -202,7 +202,7 @@ function ForgotPasswordPage() {
                     <span>⚠️</span> No Account Found for "{email}"
                   </p>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    This email address is not registered in MediSlot (or had a typo during sign up). Please create an account to get started.
+                    This email address is not registered in Durrmi (or had a typo during sign up). Please create an account to get started.
                   </p>
                   <Button asChild size="sm" className="w-full mt-1">
                     <Link to="/register">Create Account Now</Link>

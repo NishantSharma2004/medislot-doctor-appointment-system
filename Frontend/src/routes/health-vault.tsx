@@ -39,7 +39,7 @@ import type { ApiError } from "@/lib/api/types";
 export const Route = createFileRoute("/health-vault")({
   head: () => ({
     meta: [
-      { title: "Health Records Vault — MediSlot" },
+      { title: "Health Records Vault — Durrmi" },
       { name: "description", content: "Store, organize, and securely share your medical reports and EHR records." },
     ],
   }),

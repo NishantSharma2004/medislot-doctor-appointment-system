@@ -26,9 +26,9 @@ export const Route = createFileRoute("/login")({
   }),
   head: () => ({
     meta: [
-      { title: "Sign in — MediSlot Healthcare" },
-      { name: "description", content: "Sign in to manage your MediSlot clinic appointments." },
-      { property: "og:title", content: "Sign in — MediSlot Healthcare" },
+      { title: "Sign in — Durrmi Healthcare" },
+      { name: "description", content: "Sign in to manage your Durrmi clinic appointments." },
+      { property: "og:title", content: "Sign in — Durrmi Healthcare" },
       { property: "og:description", content: "Sign in to manage your clinic appointments." },
     ],
   }),
@@ -97,13 +97,13 @@ function LoginPage() {
 
   const fillDemoCredentials = (role: "PATIENT" | "DOCTOR" | "ADMIN") => {
     if (role === "PATIENT") {
-      form.setValue("email", "patient@medislot.test");
+      form.setValue("email", "patient@durrmi.test");
       form.setValue("password", "Password123!");
     } else if (role === "DOCTOR") {
-      form.setValue("email", "doctor@medislot.test");
+      form.setValue("email", "doctor@durrmi.test");
       form.setValue("password", "Password123!");
     } else {
-      form.setValue("email", "admin@medislot.test");
+      form.setValue("email", "admin@durrmi.test");
       form.setValue("password", "Password123!");
     }
   };
@@ -115,7 +115,7 @@ function LoginPage() {
         
         <div className="text-center space-y-2 mb-6">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-extrabold border border-amber-300">
-            <Sparkles className="size-3 text-amber-600" /> Welcome To MediSlot
+            <Sparkles className="size-3 text-amber-600" /> Welcome To Durrmi
           </span>
           <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
             {roleTab === "DOCTOR" ? "Doctor Sign In" : "Patient Sign In"}

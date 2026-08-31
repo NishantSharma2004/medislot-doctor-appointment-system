@@ -40,7 +40,7 @@ import type { ApiError, AppointmentDto, AvailabilitySlotDto, HealthVitalDto, Pag
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Patient Dashboard — MediSlot" },
+      { title: "Patient Dashboard — Durrmi" },
       { name: "description", content: "Interactive health command center, upcoming appointments, and clinic shortcuts." },
     ],
   }),
@@ -473,7 +473,7 @@ function DashboardPage() {
             <h3 className="font-bold text-sm text-foreground flex items-center gap-2">
               <PhoneCall className="size-4 text-amber-600" /> Clinic Emergency Help
             </h3>
-            <p className="text-xs text-muted-foreground">Contact MediSlot Helpline (24x7)</p>
+            <p className="text-xs text-muted-foreground">Contact Durrmi Helpline (24x7)</p>
           </div>
           <Badge variant="outline" className="text-xs">24/7 Active</Badge>
         </div>

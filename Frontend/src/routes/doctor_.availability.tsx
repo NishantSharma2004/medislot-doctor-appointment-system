@@ -15,7 +15,7 @@ import type { ApiError, AvailabilitySlotDto } from "@/lib/api/types";
 export const Route = createFileRoute("/doctor_/availability")({
   head: () => ({
     meta: [
-      { title: "Manage Availability — MediSlot" },
+      { title: "Manage Availability — Durrmi" },
       { name: "description", content: "Create and publish doctor availability slots." },
     ],
   }),

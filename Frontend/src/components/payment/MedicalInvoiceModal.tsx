@@ -33,7 +33,7 @@ export function MedicalInvoiceModal({ isOpen, onClose, appointment }: MedicalInv
               🏥
             </div>
             <div>
-              <h3 className="font-black text-xl text-foreground">MediSlot Medical GST Invoice</h3>
+              <h3 className="font-black text-xl text-foreground">Durrmi Medical GST Invoice</h3>
               <p className="text-xs text-muted-foreground">Official Healthcare Consultation & Dues Receipt</p>
             </div>
           </div>
@@ -89,48 +89,8 @@ export function MedicalInvoiceModal({ isOpen, onClose, appointment }: MedicalInv
             </span>
             <h4 className="font-bold text-sm text-foreground">Dr. {appointment.doctorName}</h4>
             <p className="text-xs text-muted-foreground">Specialization: {appointment.specialization}</p>
-            <p className="text-xs text-muted-foreground">MediSlot Verified Clinic</p>
+            <p className="text-xs text-muted-foreground">Durrmi Verified Clinic</p>
           </div>
-        </div>
-
-        {/* Itemized Table */}
-        <div className="border border-border rounded-xl overflow-hidden text-xs">
-          <table className="w-full text-left border-collapse">
-            <thead className="bg-muted/70 text-foreground font-bold border-b border-border">
-              <tr>
-                <th className="p-3">Description</th>
-                <th className="p-3 text-right">Amount (INR)</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/60 text-muted-foreground">
-              <tr>
-                <td className="p-3 font-medium text-foreground">
-                  Doctor Consultation Fee ({appointment.doctorName})
-                </td>
-                <td className="p-3 text-right font-semibold text-foreground">₹{baseFee.toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td className="p-3">
-                  Medical Service Tax & GST (18%)
-                </td>
-                <td className="p-3 text-right font-semibold text-foreground">₹{gstTax.toFixed(2)}</td>
-              </tr>
-              {dues > 0 ? (
-                <tr className="bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold">
-                  <td className="p-3">
-                    ⚠️ Previous Missed Consultation Dues (50% No-Show Penalty)
-                  </td>
-                  <td className="p-3 text-right">+ ₹{dues.toFixed(2)}</td>
-                </tr>
-              ) : null}
-            </tbody>
-            <tfoot className="bg-emerald-500/10 font-black text-sm text-emerald-600 dark:text-emerald-400 border-t border-emerald-500/30">
-              <tr>
-                <td className="p-3">Total Amount Paid</td>
-                <td className="p-3 text-right text-base">₹{grandTotal.toFixed(2)}</td>
-              </tr>
-            </tfoot>
-          </table>
         </div>
 
         {/* Footnote */}
@@ -138,7 +98,7 @@ export function MedicalInvoiceModal({ isOpen, onClose, appointment }: MedicalInv
           <span className="flex items-center gap-1">
             <ShieldCheck className="size-3.5 text-emerald-500" /> Authorized Medical Receipt for Health Insurance Claims
           </span>
-          <span>Thank you for choosing MediSlot Clinic</span>
+          <span>Thank you for choosing Durrmi Clinic</span>
         </div>
       </div>
     </div>

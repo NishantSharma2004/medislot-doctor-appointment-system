@@ -53,13 +53,13 @@ export const Route = createFileRoute("/doctors/")({
   }),
   head: () => ({
     meta: [
-      { title: "Find a doctor — MediSlot Specialist Directory" },
+      { title: "Find a doctor — Durrmi Specialist Directory" },
       {
         name: "description",
         content:
-          "Search clinic doctors by specialization, city and consultation fee, then open their published availability.",
+          "Search doctors by specialization, city, consultation fee, or rating and book clinic appointment slots.",
       },
-      { property: "og:title", content: "Find a doctor — MediSlot Specialist Directory" },
+      { property: "og:title", content: "Find a doctor — Durrmi Specialist Directory" },
       { property: "og:description", content: "Search clinic doctors and open their availability." },
     ],
   }),
@@ -161,7 +161,7 @@ function DoctorSearchPage() {
       <section className="bg-gradient-to-b from-[#FFFDF9] to-[#FAF6EE] border-b border-amber-200/60 py-10 px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-300 bg-amber-50 px-3.5 py-1 text-xs font-extrabold uppercase tracking-wider text-amber-900 shadow-xs">
-            <Sparkles className="size-3.5 text-amber-600" /> MediSlot Specialist Network
+            <Sparkles className="size-3.5 text-amber-600" /> Durrmi Specialist Network
           </span>
           <h1 className="mt-4 text-3xl font-extrabold text-slate-900 sm:text-4xl">
             Find The Right Doctor For Your Health Journey

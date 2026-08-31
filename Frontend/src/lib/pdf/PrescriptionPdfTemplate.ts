@@ -15,8 +15,8 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
     ? ((data as PrescriptionDto).doctorRegistrationNumber || "REG-MED-101")
     : "REG-MED-101";
   const clinicName = isPrescriptionDto
-    ? ((data as PrescriptionDto).clinicName || "MediSlot Clinic")
-    : "MediSlot Clinic";
+    ? ((data as PrescriptionDto).clinicName || "Durrmi Clinic")
+    : "Durrmi Clinic";
 
   const patientName = data.patientName;
   const rxNumber = isPrescriptionDto
@@ -223,7 +223,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
     <div class="header">
       <div class="brand">
         <div>
-          <div class="brand-title">MediSlot</div>
+          <div class="brand-title">Durrmi</div>
           <div class="brand-subtitle">Smart Digital Healthcare Platform</div>
         </div>
       </div>
@@ -306,7 +306,7 @@ export function generatePrescriptionPdf(data: AppointmentDto | PrescriptionDto) 
 
     <div class="footer">
       <div style="font-size: 11px; color: #94a3b8;">
-        Generated electronically via MediSlot Clinic Portal.<br/>
+        Generated electronically via Durrmi Clinic Portal.<br/>
         Valid for official pharmacy fulfillment.
       </div>
       <div class="stamp-box">

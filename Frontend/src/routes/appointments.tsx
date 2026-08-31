@@ -23,8 +23,8 @@ import type { ApiError, AppointmentDto, AppointmentStatus, AvailabilitySlotDto, 
 export const Route = createFileRoute("/appointments")({
   head: () => ({
     meta: [
-      { title: "My Appointments — MediSlot" },
-      { name: "description", content: "View and manage your appointments on MediSlot." },
+      { title: "My Appointments — Durrmi" },
+      { name: "description", content: "View and manage your appointments on Durrmi." },
     ],
   }),
   component: MyAppointmentsPage,

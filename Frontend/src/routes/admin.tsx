@@ -12,7 +12,7 @@ import type { ApiError, AppointmentDto, DoctorDto, UserDto } from "@/lib/api/typ
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Admin Operations — MediSlot" },
+      { title: "Admin Operations — Durrmi" },
       { name: "description", content: "Clinic metrics, doctor management and audit controls." },
     ],
   }),

@@ -26,12 +26,12 @@ import { MedicalInvoiceModal } from "@/components/payment/MedicalInvoiceModal";
 export const Route = createFileRoute("/doctors/$doctorId/")({
   head: () => ({
     meta: [
-      { title: "Doctor profile — MediSlot" },
+      { title: "Doctor profile — Durrmi" },
       {
         name: "description",
-        content: "Review a doctor's qualifications, clinic, languages and consultation fee before booking.",
+        content: "View doctor qualifications, consultation fees, and available clinic slots.",
       },
-      { property: "og:title", content: "Doctor profile — MediSlot" },
+      { property: "og:title", content: "Doctor profile — Durrmi" },
       { property: "og:description", content: "Review doctor details before booking an appointment." },
     ],
   }),

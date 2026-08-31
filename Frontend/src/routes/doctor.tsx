@@ -50,7 +50,7 @@ import type { ApiError, AppointmentDto, AppointmentStatus, DoctorDto, HealthVita
 export const Route = createFileRoute("/doctor")({
   head: () => ({
     meta: [
-      { title: "Doctor Desk — MediSlot" },
+      { title: "Doctor Desk — Durrmi" },
       { name: "description", content: "Doctor workspace, patient profile inspection, and appointment management." },
     ],
   }),
