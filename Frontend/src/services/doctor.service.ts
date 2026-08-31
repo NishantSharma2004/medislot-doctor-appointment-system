@@ -163,13 +163,65 @@ export function transformDoctorToTherapist(doc: DoctorDto): DoctorDto {
   };
 }
 
+const REVERSE_SPEC_MAP: Record<string, string> = {
+  "Anxiety & Panic Therapy": "Cardiology",
+  "Anxiety & Stress Therapy": "Cardiology",
+  "Depression & Mood Care": "Dermatology",
+  "Mindfulness & Personal Growth": "ENT",
+  "Cognitive Behavioral Therapy (CBT)": "General Medicine",
+  "Couples & Relationship Therapy": "Gynecology",
+  "Burnout & Work Stress": "Neurology",
+  "Burnout & Career Stress": "Neurology",
+  "Child & Adolescent Therapy": "Pediatrics",
+  "Child & Teen Psychology": "Pediatrics",
+  "Trauma & Emotional Healing": "Orthopaedics",
+};
+
 const httpDoctorService: DoctorService = {
   async searchDoctors(params) {
     try {
-      const { data } = await apiClient.get<PageResponse<DoctorDto>>("/doctors", { params });
+      const apiParams: Record<string, any> = { ...params };
+      if (params.specialization && REVERSE_SPEC_MAP[params.specialization]) {
+        apiParams.specialization = REVERSE_SPEC_MAP[params.specialization];
+      }
+
+      const { data } = await apiClient.get<PageResponse<DoctorDto>>("/doctors", { params: apiParams });
+      const transformedList = (data.content || []).map(transformDoctorToTherapist);
+
+      // If backend filtered list matches, return it
+      if (transformedList.length > 0) {
+        return {
+          ...data,
+          content: transformedList,
+        };
+      }
+
+      // If backend returned empty list due to SQL mismatch, fetch all doctors & filter client-side
+      const { data: allData } = await apiClient.get<PageResponse<DoctorDto>>("/doctors", {
+        params: { ...params, specialization: undefined, page: 0, size: 50 },
+      });
+      const allTransformed = (allData.content || []).map(transformDoctorToTherapist);
+      
+      const filtered = allTransformed.filter((doc) => {
+        if (params.specialization && doc.specialization !== params.specialization && !doc.specialization.includes(params.specialization)) {
+          return false;
+        }
+        if (params.city && doc.city !== params.city) return false;
+        if (params.maxFee !== undefined && doc.consultationFee > params.maxFee) return false;
+        if (params.query) {
+          const q = params.query.trim().toLowerCase();
+          if (!`${doc.fullName} ${doc.specialization} ${doc.clinicName} ${doc.qualifications}`.toLowerCase().includes(q))
+            return false;
+        }
+        return true;
+      });
+
       return {
-        ...data,
-        content: (data.content || []).map(transformDoctorToTherapist),
+        content: filtered.slice((params.page || 0) * (params.size || 6), (params.page || 0) * (params.size || 6) + (params.size || 6)),
+        page: params.page || 0,
+        size: params.size || 6,
+        totalElements: filtered.length,
+        totalPages: Math.max(1, Math.ceil(filtered.length / (params.size || 6))),
       };
     } catch {
       return mockDoctorService.searchDoctors(params);
