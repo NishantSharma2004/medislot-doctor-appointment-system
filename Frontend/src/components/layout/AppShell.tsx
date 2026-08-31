@@ -135,11 +135,11 @@ export function AppHeader() {
 
       <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur">
       <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-4 py-3 sm:flex sm:justify-between">
-        <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="MediSlot home">
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground">
+        <Link to="/" className="flex min-w-0 items-center gap-2" aria-label="Durrmi home">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-amber-500 text-slate-950 font-black">
             <Stethoscope className="size-5" aria-hidden="true" />
           </span>
-          <span className="truncate text-lg font-bold tracking-tight">MediSlot</span>
+          <span className="truncate text-lg font-black tracking-tight text-foreground">Durrmi</span>
         </Link>
 
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">

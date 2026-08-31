@@ -31,17 +31,17 @@ import { mockSpecializations, mockDoctors } from "@/lib/api/mock-data";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "MediSlot — Your Journey To Wellness Starts Here" },
+      { title: "Durrmi — Your Journey To Wellness Starts Here" },
       {
         name: "description",
         content:
-          "Search doctors by specialization, city and consultation fee, book clinic appointments, and manage your digital health vault records with MediSlot.",
+          "Search doctors by specialization, city and consultation fee, book clinic appointments, and manage your digital health vault records with Durrmi.",
       },
-      { property: "og:title", content: "MediSlot — Your Journey To Wellness Starts Here" },
+      { property: "og:title", content: "Durrmi — Your Journey To Wellness Starts Here" },
       {
         property: "og:description",
         content:
-          "Search doctors by specialization, city and consultation fee, book clinic appointments, and manage your digital health vault records with MediSlot.",
+          "Search doctors by specialization, city and consultation fee, book clinic appointments, and manage your digital health vault records with Durrmi.",
       },
     ],
   }),
@@ -192,7 +192,7 @@ function LandingPage() {
                   ? "Review assigned patient appointments, inspect shared health vault records, record prescription notes, and publish consultation slots."
                   : isAdmin
                   ? "Monitor network analytics, manage doctor profiles, inspect security audit logs, and administer clinic documents."
-                  : "MediSlot connects patients, verified specialist doctors, and clinics in one seamless scheduling workspace — search availability, confirm bookings, and keep your health vault in sync."}
+                  : "Durrmi connects patients, verified specialist doctors, and clinics in one seamless scheduling workspace — search availability, confirm bookings, and keep your health vault in sync."}
               </p>
 
               {/* Action Buttons */}
@@ -359,7 +359,7 @@ function LandingPage() {
                   Vetted Experts, Not A Directory
                 </h3>
                 <p className="text-xs sm:text-sm font-medium text-[#73540F] leading-relaxed">
-                  Every doctor on MediSlot is screened for real credentials, registration numbers, and track record — so you're never guessing who's on the other end.
+                  Every doctor on Durrmi is screened for real credentials, registration numbers, and track record — so you're never guessing who's on the other end.
                 </p>
               </div>
             </div>
@@ -453,11 +453,11 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 6. THE PEOPLE BEHIND MEDISLOT (Specialist Showcase) */}
+      {/* 6. THE PEOPLE BEHIND DURRMI (Specialist Showcase) */}
       <section className="bg-[#FAF8F3] py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            The People Behind MediSlot
+            The People Behind Durrmi
           </h2>
           <p className="mt-2 text-sm font-semibold text-slate-600 max-w-lg mx-auto">
             Real doctors, real credentials, real conversations — no algorithms deciding who you talk to.
@@ -472,7 +472,7 @@ function LandingPage() {
                 </h3>
                 <div className="h-0.5 w-full bg-amber-700/20" />
                 <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  Every doctor on MediSlot has completed verified clinical training with proven hospital experience.
+                  Every doctor on Durrmi has completed verified clinical training with proven hospital experience.
                 </p>
               </div>
               <div className="pt-10 flex justify-end">
@@ -524,7 +524,7 @@ function LandingPage() {
                 Their Words, Not Ours.
               </h2>
               <p className="text-sm font-medium text-slate-600 leading-relaxed">
-                Read how MediSlot simplified doctor consultations, live OPD queue tracking, and medical record vault sharing for patients across clinics.
+                Read how Durrmi simplified doctor consultations, live OPD queue tracking, and medical record vault sharing for patients across clinics.
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <span className="text-sm font-extrabold text-slate-900">4.9 / 5.0</span>
@@ -571,7 +571,7 @@ function LandingPage() {
       </section>
 
       {/* 8. PRICING & CONSULTATION OPTIONS (Durrmi Style) */}
-      <section className="bg-[#FAF8F3] py-20">
+      <section id="pricing" className="bg-[#FAF8F3] py-20 scroll-mt-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Two Ways To Get Support
@@ -603,7 +603,7 @@ function LandingPage() {
             </div>
 
             {/* Card 2: Package Pricing */}
-            <div className="rounded-3xl border-2 border-blue-400 bg-white p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
+            <div className="rounded-3xl border-2 border-blue-400 bg-[#FAF8F3] p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#7BBDF7]" />
               <div className="space-y-4 pt-2">
                 <h3 className="text-xl font-black text-slate-900">Package Pricing</h3>
@@ -633,7 +633,7 @@ function LandingPage() {
       </section>
 
       {/* 9. FAQ ACCORDION SECTION (Durrmi Style) */}
-      <section className="bg-[#FAF6EE] py-20 border-t border-amber-200/60">
+      <section id="faq" className="bg-[#FAF6EE] py-20 border-t border-amber-200/60 scroll-mt-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-12 gap-10">
             
@@ -648,7 +648,7 @@ function LandingPage() {
                   Need help choosing a doctor or setting up your digital health vault? Our clinic support team is here to assist.
                 </p>
                 <Button asChild size="sm" className="h-9 px-6 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider">
-                  <a href="mailto:support@medislot.test">Contact us</a>
+                  <a href="mailto:support@durrmi.test">Contact us</a>
                 </Button>
               </div>
             </div>
@@ -748,7 +748,7 @@ function LandingPage() {
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
                 <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
@@ -771,7 +771,7 @@ function LandingPage() {
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
                 <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
@@ -784,7 +784,7 @@ function LandingPage() {
                 <li><Link to="/doctors" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
               </ul>
             </div>
 
@@ -804,7 +804,7 @@ function LandingPage() {
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
                 <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
@@ -827,7 +827,7 @@ function LandingPage() {
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why MediSlot</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
                 <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
@@ -840,7 +840,7 @@ function LandingPage() {
 
           {/* Sub-Footer Row with Social Icons */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-semibold text-[#5A381B]">
-            <p>*MediSlot connects patients with verified specialist doctors for seamless clinic scheduling and health vault privacy.</p>
+            <p>*Durrmi connects patients with verified specialist doctors for seamless clinic scheduling and health vault privacy.</p>
             <div className="flex items-center gap-4 text-[#3D250F]">
               <a href="#" className="hover:opacity-80 transition-opacity">📘 Facebook</a>
               <a href="#" className="hover:opacity-80 transition-opacity">𝕏 Twitter</a>
@@ -848,10 +848,10 @@ function LandingPage() {
             </div>
           </div>
 
-          {/* GIANT BOLD MEDISLOT TYPOGRAPHY AT BOTTOM */}
+          {/* GIANT BOLD DURRMI TYPOGRAPHY AT BOTTOM */}
           <div className="pt-8 text-center overflow-hidden">
             <h1 className="text-7xl font-black tracking-tighter text-[#3D2311] sm:text-9xl lg:text-[13rem] leading-none select-none uppercase font-mono">
-              MEDISLOT
+              DURRMI
             </h1>
           </div>
 
