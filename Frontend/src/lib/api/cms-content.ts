@@ -50,7 +50,8 @@ export interface CmsStepsContent {
 export interface CmsSpecialisationCard {
   id: string;
   title: string;
-  description: stroke?: string;
+  description: string;
+  stroke?: string;
 }
 
 export interface CmsSpecialisationsContent {
@@ -426,3 +427,23 @@ export const defaultHomePageCmsData: CmsHomePageData = {
     },
   },
 };
+
+/**
+ * Fetch dynamic CMS Page content from Backend API endpoint: GET /api/v1/pages/page_home
+ * Fallback to defaultHomePageCmsData if backend CMS service is offline or returning empty.
+ */
+export async function fetchCmsHomePageData(): Promise<CmsHomePageData> {
+  try {
+    const response = await fetch("/api/v1/pages/page_home");
+    if (response.ok) {
+      const json = await response.json();
+      if (json && json.hero) {
+        return json as CmsHomePageData;
+      }
+    }
+  } catch (e) {
+    // Backend API offline or returning fallback
+  }
+  return defaultHomePageCmsData;
+}
+

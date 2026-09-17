@@ -149,7 +149,10 @@ function LandingPage() {
   const isDoctor = user?.role === "DOCTOR";
   const isAdmin = user?.role === "ADMIN";
 
+  // Dynamic CMS Content State (Can be hydrated dynamically from GET /api/v1/pages/page_home)
+  const [cmsData] = useState(defaultHomePageCmsData);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [activeReviewIndex, setActiveReviewIndex] = useState(0);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
 
   const scrollCards = (direction: "left" | "right") => {
@@ -788,22 +791,59 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 7. PATIENT TESTIMONIALS SECTION */}
-      <section id="patient-reviews" className="bg-[#FAF6EE] py-20 border-t border-b border-amber-200/60 scroll-mt-10">
+      {/* 7. PATIENT TESTIMONIALS SECTION (Stacked Card Deck Layout matching Screenshot 1) */}
+      <section id="patient-reviews" className="bg-[#FAF6EE] py-20 border-t border-b border-amber-200/60 scroll-mt-10 overflow-hidden">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-12 items-center">
-            <div className="lg:col-span-5 space-y-4">
+          <div className="grid gap-12 lg:grid-cols-12 items-center">
+            
+            {/* Left Side: Overlapping Stacked Card Carousel Deck */}
+            <div className="lg:col-span-7 flex justify-center">
+              <div className="relative w-full max-w-lg h-[260px] sm:h-[280px]">
+                {/* Background Card 2 (Layered Behind) */}
+                <div className="absolute inset-0 rounded-[32px] border-2 border-amber-300/40 bg-[#FFF3D6] transform rotate-3 translate-x-4 translate-y-3 shadow-sm transition-transform duration-300" />
+                {/* Background Card 1 (Layered Behind) */}
+                <div className="absolute inset-0 rounded-[32px] border-2 border-orange-300/40 bg-[#FFE8D6] transform -rotate-2 -translate-x-3 translate-y-1 shadow-sm transition-transform duration-300" />
+
+                {/* Active Front Card */}
+                {cmsData.testimonials.testimonials.map((review, idx) => {
+                  if (idx !== activeReviewIndex) return null;
+                  return (
+                    <div
+                      key={review.id || idx}
+                      className="relative z-10 w-full h-full rounded-[32px] border-2 border-amber-300 bg-white p-7 sm:p-8 shadow-xl flex flex-col justify-between transition-all duration-300 animate-in fade-in zoom-in-95"
+                    >
+                      <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium italic">
+                        {review.quote}
+                      </p>
+                      <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-black text-slate-900">{review.author}</p>
+                          <p className="text-[11px] font-bold text-amber-700">{review.role}</p>
+                        </div>
+                        <span className="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                          Verified
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Right Side: Title, Subtitle, Rating & Interactive Swipe Buttons */}
+            <div className="lg:col-span-5 space-y-5 text-left">
               <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
-                "Voices of Durrmi."
+                {cmsData.testimonials.tag}
               </span>
-              <h2 className="text-3xl font-black text-slate-900 sm:text-4xl">
-                Customer review's part
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                Their Words, Not Ours.
               </h2>
-              <p className="text-sm font-medium text-slate-600 leading-relaxed">
-                Real words from people who walked this path and chose Durrmi to take the first step towards feeling better.
+              <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
+                {cmsData.testimonials.subtitle}
               </p>
-              <div className="flex items-center gap-2 pt-2">
-                <span className="text-sm font-extrabold text-slate-900">4.9 / 5.0</span>
+
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-sm font-black text-slate-900">{cmsData.testimonials.ratingScore}</span>
                 <div className="flex text-amber-500">
                   <Star className="size-4 fill-amber-500" />
                   <Star className="size-4 fill-amber-500" />
@@ -811,37 +851,38 @@ function LandingPage() {
                   <Star className="size-4 fill-amber-500" />
                   <Star className="size-4 fill-amber-500" />
                 </div>
-                <span className="text-xs font-medium text-slate-500">(1,200+ Reviews)</span>
+                <span className="text-xs font-semibold text-slate-500">{cmsData.testimonials.reviewCount}</span>
+              </div>
+
+              {/* Interactive Pill Buttons (← and →) */}
+              <div className="flex items-center gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveReviewIndex((prev) =>
+                      prev === 0 ? cmsData.testimonials.testimonials.length - 1 : prev - 1
+                    )
+                  }
+                  aria-label="Previous testimonial"
+                  className="size-11 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-xs cursor-pointer font-black text-lg"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveReviewIndex((prev) =>
+                      prev === cmsData.testimonials.testimonials.length - 1 ? 0 : prev + 1
+                    )
+                  }
+                  aria-label="Next testimonial"
+                  className="size-11 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-xs cursor-pointer font-black text-lg"
+                >
+                  →
+                </button>
               </div>
             </div>
 
-            <div className="lg:col-span-7 grid gap-4 sm:grid-cols-2">
-              <div className="rounded-3xl border border-amber-200/80 bg-white p-6 shadow-xs space-y-3">
-                <p className="text-xs text-slate-700 leading-relaxed italic">
-                  "Finding the right therapist felt overwhelming before Durrmi. The matching process made everything much easier and I finally felt comfortable talking to someone who understood what I was going through."
-                </p>
-                <div className="pt-2 border-t flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-extrabold text-slate-900">Aditi Sharma</p>
-                    <p className="text-[10px] font-semibold text-amber-700">Verified Client</p>
-                  </div>
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Verified</span>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-teal-200/80 bg-white p-6 shadow-xs space-y-3">
-                <p className="text-xs text-slate-700 leading-relaxed italic">
-                  "I really liked how simple the entire process was. I didn't have to scroll through endless profiles. I was connected with someone who actually matched what I needed."
-                </p>
-                <div className="pt-2 border-t flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-extrabold text-slate-900">Rahul Mehta</p>
-                    <p className="text-[10px] font-semibold text-teal-700">Verified Client</p>
-                  </div>
-                  <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md">Verified</span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
