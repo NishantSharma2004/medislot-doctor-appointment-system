@@ -585,43 +585,7 @@ function LandingPage() {
           </div>
         </div>
 
-        {/* FULL ABOUT US PHILOSOPHY BLOCK FROM DOCUMENT */}
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-16 bg-white/90 rounded-[32px] p-8 sm:p-10 border border-amber-300 shadow-md text-slate-800 space-y-6">
-          <div className="border-b border-amber-200 pb-4 text-center">
-            <span className="text-xs font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-full">
-              Our Inner Philosophy
-            </span>
-            <h3 className="text-2xl font-black text-slate-900 mt-2">
-              Choosing yourself & your mental health should always be the priority.
-            </h3>
-          </div>
 
-          <div className="grid md:grid-cols-2 gap-6 text-xs leading-relaxed font-medium text-slate-700">
-            <div className="space-y-4">
-              <p>
-                The word <strong className="text-slate-900 font-extrabold">Durrmi</strong> not only defines sensitive emotions, but it also represents safety and trust. We believe in working together. Individuality and abundance come together when you see your inner self, when you honour your own ideas, voice, emotions, and perspective; you naturally create from authenticity rather than comparison.
-              </p>
-              <p>
-                <strong className="text-amber-900 font-extrabold">Durr</strong> means power within an individual. <strong className="text-amber-900 font-extrabold">Mi</strong> represents bringing abundance. Our holistic Therapists work with you not just on your challenges, but also help you evolve into an empowered version of yourself.
-              </p>
-              <p className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-950 italic">
-                "At Durrmi, we don't believe in fixing you — because you're not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow."
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <p>
-                Limiting beliefs, pushing feelings, avoiding difficult situations, and not taking care of mental health — none of it brings peace. Vulnerability makes noise louder. <strong className="text-slate-900">"Our coach will help you find your inner self and awaken the deep potential in each of us."</strong>
-              </p>
-              <p>
-                Healing shouldn't feel like a duty that you have to do. Our approach is different — a space designed to help you slow down, reflect, and truly stabilise your emotions. <strong className="text-slate-900">"Well-being professionals will coach you to live life abundantly."</strong>
-              </p>
-              <p>
-                You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.
-              </p>
-            </div>
-          </div>
-        </div>
       </section>
 
       {/* 5. SPECIALIZATIONS CAROUSEL */}
