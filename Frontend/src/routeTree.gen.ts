@@ -18,6 +18,7 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as HealthRiskCalculatorRouteImport } from './routes/health-risk-calculator'
 import { Route as HealthVaultRouteImport } from './routes/health-vault'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -71,6 +72,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
+  '/pricing': typeof PricingRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/reset-password'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/reset-password'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
+    | '/pricing'
     | '/profile'
     | '/register'
     | '/reset-password'
@@ -229,6 +241,7 @@ export interface RootRouteChildren {
   HealthRiskCalculatorRoute: typeof HealthRiskCalculatorRoute
   HealthVaultRoute: typeof HealthVaultRoute
   LoginRoute: typeof LoginRoute
+  PricingRoute: typeof PricingRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -365,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   HealthRiskCalculatorRoute: HealthRiskCalculatorRoute,
   HealthVaultRoute: HealthVaultRoute,
   LoginRoute: LoginRoute,
+  PricingRoute: PricingRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,

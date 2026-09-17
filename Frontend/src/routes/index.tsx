@@ -967,7 +967,7 @@ function LandingPage() {
           {/* Yellow Pill Bottom Button */}
           <div className="mt-10 flex justify-center">
             <Button asChild size="lg" className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs tracking-wider shadow-md border border-amber-400">
-              <Link to="/doctors">Know more about our pricing ↗</Link>
+              <Link to="/pricing">Know more about our pricing ↗</Link>
             </Button>
           </div>
         </div>

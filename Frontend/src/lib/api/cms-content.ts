@@ -98,10 +98,48 @@ export interface CmsTestimonialsContent {
   testimonials: CmsTestimonialCard[];
 }
 
+export interface CmsPricingPlanCard {
+  id: string;
+  title: string;
+  description: string;
+  price: string;
+  subtext: string;
+  accentColor: "yellow" | "orange" | "blue" | "green";
+  features: string[];
+  ctaLabel: string;
+}
+
 export interface CmsPricingContent {
   tag: string;
   title: string;
   subtitle: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroCtaLabel?: string;
+  categories?: string[];
+  plansHeaderTitle?: string;
+  plansHeaderSubtitle?: string;
+  plansHeaderComment?: string;
+  planCards?: CmsPricingPlanCard[];
+  corporateBanner?: {
+    title: string;
+    badge: string;
+    description: string;
+    ctaLabel: string;
+  };
+  completeCareBundle?: {
+    title: string;
+    subtitle: string;
+    cards: Array<{
+      id: string;
+      title: string;
+      description: string;
+      price: string;
+      subtext: string;
+      features: string[];
+      ctaLabel: string;
+    }>;
+  };
   freeOfferTitle: string;
   freeOfferDescription: string;
   freeOfferBullets: string[];
@@ -343,6 +381,120 @@ export const defaultHomePageCmsData: CmsHomePageData = {
     tag: "WAYS TO GET SUPPORT",
     title: "Two Ways To Get Support",
     subtitle: "Book a single session when you need an answer, or a package when you need someone in your corner.",
+    heroTitle: "Care That Fits Where You Are",
+    heroSubtitle: "Whether you need a single session to talk something through, or ongoing support to work on something deeper — Durrmi has a path that fits your pace, your budget, and your needs.",
+    heroCtaLabel: "Find your plan ↗",
+    plansHeaderTitle: "Choose What Feels Best For You",
+    plansHeaderSubtitle: "Every journey looks different. That's why we've built a few simple ways to start.",
+    plansHeaderComment: "Start your journey with a few simple steps with our Experts.",
+    categories: [
+      "Relationship Recovery",
+      "Weekly Support",
+      "Anxiety Care",
+      "Stress Management Journey",
+      "Depression Support",
+      "Couples Therapy",
+    ],
+    planCards: [
+      {
+        id: "plan-1",
+        title: "Single Session",
+        description: "One focused session with a consultant.",
+        price: "₹1,200",
+        subtext: "per session",
+        accentColor: "yellow",
+        features: [
+          "Single session, no commitment",
+          "Rate shown upfront before booking",
+          "Pick the consultant and slot",
+        ],
+        ctaLabel: "Book a session",
+      },
+      {
+        id: "plan-2",
+        title: "1-Hour Session",
+        description: "One focused session with a consultant.",
+        price: "₹1,800",
+        subtext: "per session",
+        accentColor: "orange",
+        features: [
+          "Single session, no commitment",
+          "Rate shown upfront before booking",
+          "Pick the consultant and slot",
+        ],
+        ctaLabel: "Book a session",
+      },
+      {
+        id: "plan-3",
+        title: "5 Sessions Package",
+        description: "One focused session with a consultant.",
+        price: "₹5,000",
+        subtext: "per 5 session",
+        accentColor: "blue",
+        features: [
+          "Single session, no commitment",
+          "Rate shown upfront before booking",
+          "Pick the consultant and slot",
+        ],
+        ctaLabel: "Book a session",
+      },
+      {
+        id: "plan-4",
+        title: "Full-Time Therapists",
+        description: "One focused session with a consultant.",
+        price: "₹1,200",
+        subtext: "per session",
+        accentColor: "green",
+        features: [
+          "Single session, no commitment",
+          "Rate shown upfront before booking",
+          "Pick the consultant and slot",
+        ],
+        ctaLabel: "Book a session",
+      },
+    ],
+    corporateBanner: {
+      title: "Looking For A Corporate Plan:",
+      badge: "THE TOTAL CARE PLAN",
+      description: "Flexible mental health support for your whole organization. Customize packages for your team with dedicated care managers.",
+      ctaLabel: "Contact sales",
+    },
+    completeCareBundle: {
+      title: "The Complete Care Bundle",
+      subtitle: "Everything you need for a full course of support — at a better price.",
+      cards: [
+        {
+          id: "bundle-1",
+          title: "Monthly Package",
+          description: "One focused session with a consultant.",
+          price: "Starts At ₹12,000",
+          subtext: "per session",
+          features: [
+            "Single session, no commitment",
+            "Rate shown upfront before booking",
+            "Pick the consultant and slot",
+            "Dedicated progress tracker",
+            "Unlimited messaging support",
+          ],
+          ctaLabel: "Book a session",
+        },
+        {
+          id: "bundle-2",
+          title: "Monthly Package",
+          description: "One focused session with a consultant.",
+          price: "Starts At ₹15,000",
+          subtext: "per session",
+          features: [
+            "Single session, no commitment",
+            "Rate shown upfront before booking",
+            "Pick the consultant and slot",
+            "Priority therapist matching",
+            "Full mental wellness assessment",
+          ],
+          ctaLabel: "Book a session",
+        },
+      ],
+    },
     freeOfferTitle: "Book Free Session",
     freeOfferDescription: "We're sharing the best professional therapist sessions for free. Well-being shouldn't come with a price tag — book yours today and take the first step toward feeling better.",
     freeOfferBullets: [
