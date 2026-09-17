@@ -144,6 +144,68 @@ const CONCERNS = [
   },
 ];
 
+const TRUSTED_THERAPIST_AVATARS = [
+  { url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
+  { url: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-3" },
+  { url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80", offset: "translate-y-0" },
+  { url: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-5" },
+  { url: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
+  { url: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-2" },
+  { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-3" },
+];
+
+const SPECIALIST_CARDS = [
+  {
+    id: "sp-1",
+    name: "Aditi Sharma",
+    role: "Anxiety specialist",
+    category: "Anxiety Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-2",
+    name: "Dr. Ryan Vance",
+    role: "Anxiety specialist",
+    category: "Anxiety Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-3",
+    name: "Aditi Sharma",
+    role: "Anxiety specialist",
+    category: "Anxiety Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-4",
+    name: "Dr. Elena Rostova",
+    role: "Anxiety specialist",
+    category: "Anxiety Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-5",
+    name: "Dr. Michael Brown",
+    role: "Depression specialist",
+    category: "Depression Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-6",
+    name: "Dr. Emily Davis",
+    role: "Couple specialist",
+    category: "Couple Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=600&q=80",
+  },
+  {
+    id: "sp-7",
+    name: "Dr. Sarah Williams",
+    role: "Stress specialist",
+    category: "Stress Specialists",
+    imageUrl: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80",
+  },
+];
+
 function LandingPage() {
   const { isAuthenticated, user } = useAuth();
   const isDoctor = user?.role === "DOCTOR";
@@ -153,7 +215,9 @@ function LandingPage() {
   const [cmsData] = useState(defaultHomePageCmsData);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activeReviewIndex, setActiveReviewIndex] = useState(0);
+  const [activeSpecialistCategory, setActiveSpecialistCategory] = useState("Anxiety Specialists");
   const cardsContainerRef = useRef<HTMLDivElement>(null);
+  const specialistsTrackRef = useRef<HTMLDivElement>(null);
 
   const scrollCards = (direction: "left" | "right") => {
     if (cardsContainerRef.current) {
@@ -161,6 +225,17 @@ function LandingPage() {
       cardsContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
+
+  const scrollSpecialists = (direction: "left" | "right") => {
+    if (specialistsTrackRef.current) {
+      const scrollAmount = direction === "left" ? -340 : 340;
+      specialistsTrackRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const filteredSpecialistCards = SPECIALIST_CARDS.filter(
+    (item) => item.category === activeSpecialistCategory || activeSpecialistCategory === "Anxiety Specialists"
+  );
 
   return (
     <div className="min-h-screen bg-[#FAF8F3] text-slate-800 font-sans selection:bg-amber-200">
@@ -685,109 +760,152 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 6. THE PEOPLE BEHIND DURRMI */}
-      <section className="bg-[#FAF8F3] py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <span className="text-xs font-black uppercase tracking-widest text-amber-900 bg-amber-100 px-3.5 py-1 rounded-full border border-amber-300">
-            THE PEOPLE BEHIND DURRMI
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight pt-2">
-            "Meet the caring team that makes it all happen."
-          </h2>
-          <p className="text-sm font-extrabold text-amber-950 max-w-lg mx-auto">
-            Real talk, Real credentials, and no algorithms.
-          </p>
-          <p className="text-xs font-bold text-slate-600 italic">
-            ~Therapist says healing starts with real conversations.
-          </p>
+      {/* 6. THE PEOPLE BEHIND DURRMI / THERAPIST SHOWCASE (Matching Images 1 & 2) */}
+      <section className="bg-[#FAF8F3] py-20 border-t border-amber-200/50">
+        
+        {/* Part 1: Top Staggered Gallery & Trusted Header (Image 1) */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
+          
+          {/* Staggered Avatar Gallery Track */}
+          <div className="flex justify-center items-center gap-3 sm:gap-4 overflow-hidden py-4 max-w-5xl mx-auto">
+            {TRUSTED_THERAPIST_AVATARS.map((item, idx) => (
+              <div
+                key={idx}
+                className={`size-16 sm:size-24 lg:size-28 rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white shadow-md shrink-0 transition-transform duration-300 hover:scale-110 ${item.offset}`}
+              >
+                <img
+                  src={item.url}
+                  alt={`World Class Therapist ${idx + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            ))}
+          </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {/* Therapist 1: Dr. Sarah Williams */}
-            <div className="rounded-3xl border border-amber-300/80 bg-[#FDEBB2] p-6 text-left shadow-xs flex flex-col justify-between relative overflow-hidden">
-              <div className="space-y-3">
-                <span className="bg-amber-200 text-amber-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-amber-400">
-                  Understanding You
-                </span>
-                <h3 className="text-xl font-black text-slate-900 leading-tight pt-2">
-                  Dr. Sarah Williams
-                </h3>
-                <p className="text-[11px] font-bold text-amber-900 uppercase tracking-wider">Clinical Psychologist</p>
-                <div className="h-0.5 w-full bg-amber-700/20" />
-                <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  Personalised support designed around your unique journey, needs, and goals.
-                </p>
-              </div>
-              <div className="pt-6 flex justify-end">
-                <span className="text-5xl">🌸</span>
-              </div>
+          {/* Trusted Header & Comment */}
+          <div className="space-y-3 max-w-3xl mx-auto pt-4 relative">
+            <span className="text-xs font-black uppercase tracking-widest text-slate-500">
+              Trusted By
+            </span>
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
+              World Class Therapists
+            </h2>
+
+            {/* Comment Badge Overlay */}
+            <div className="inline-block bg-sky-500 text-white text-xs font-bold px-4 py-2 rounded-2xl shadow-md border border-sky-400">
+              💬 Surbhi Rathore: We partner only with world-class therapists.
             </div>
 
-            {/* Therapist 2: Dr. Michael Brown */}
-            <div className="rounded-3xl border border-blue-300/80 bg-[#D5E9FF] p-6 text-left shadow-xs flex flex-col justify-between relative overflow-hidden">
-              <div className="space-y-3">
-                <span className="bg-blue-200 text-blue-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-blue-400">
-                  A Safe Space
-                </span>
-                <h3 className="text-xl font-black text-slate-900 leading-tight pt-2">
-                  Dr. Michael Brown
-                </h3>
-                <p className="text-[11px] font-bold text-blue-900 uppercase tracking-wider">Senior Therapist</p>
-                <div className="h-0.5 w-full bg-blue-700/20" />
-                <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  Helping you feel heard, understood, and supported at every step.
-                </p>
-              </div>
-              <div className="pt-6 flex justify-end">
-                <span className="text-5xl">🌿</span>
-              </div>
+            <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-xl mx-auto pt-2">
+              We partner only with world-class, licensed therapists to provide dedicated, compassionate mental health care for your unique journey.
+            </p>
+
+            <div className="pt-3">
+              <Button
+                asChild
+                size="lg"
+                className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md border border-amber-400"
+              >
+                <Link to="/doctors">Book a free session ↗</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Part 2: Our Specialists Team Carousel (Image 2) */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pt-24 space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              Our Specialists Team
+            </h2>
+            <div className="inline-block bg-slate-900 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full shadow-xs">
+              ✦ "Meet the Specialists Behind Every Solution"
+            </div>
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-md mx-auto pt-1">
+              Every journey looks different. That's why we've built a few simple ways to start.
+            </p>
+          </div>
+
+          {/* Specialist Filter Pills */}
+          <div className="flex flex-wrap justify-center gap-2 max-w-3xl mx-auto pt-2">
+            {["Anxiety Specialists", "Depression Specialists", "Couple Specialists", "Stress Specialists"].map((spec) => {
+              const isActive = activeSpecialistCategory === spec;
+              return (
+                <button
+                  key={spec}
+                  type="button"
+                  onClick={() => setActiveSpecialistCategory(spec)}
+                  className={`px-5 py-2.5 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs ${
+                    isActive
+                      ? "bg-[#FFBE0B] text-slate-950 border-2 border-amber-400 scale-105"
+                      : "bg-white text-slate-700 border border-slate-200 hover:bg-amber-50 hover:text-slate-900"
+                  }`}
+                >
+                  {spec}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Specialist Full-Photo Cards Track */}
+          <div className="relative pt-6">
+            <div
+              ref={specialistsTrackRef}
+              className="flex gap-6 overflow-x-auto scrollbar-none py-4 px-2 snap-x scroll-smooth max-w-6xl mx-auto"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {filteredSpecialistCards.map((therapist) => (
+                <div
+                  key={therapist.id}
+                  className="w-[260px] sm:w-[300px] h-[360px] sm:h-[400px] rounded-[28px] overflow-hidden relative shadow-md shrink-0 snap-start transition-all hover:scale-[1.02] bg-slate-100 border border-slate-200"
+                >
+                  <img
+                    src={therapist.imageUrl}
+                    alt={therapist.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+
+                  {/* Overlapping Yellow Name & Role Badge (Bottom Left) */}
+                  <div className="absolute bottom-0 left-0 bg-[#FCE6A6] text-slate-950 px-5 py-3 rounded-tr-2xl rounded-bl-2xl border-t border-r border-amber-300 shadow-md text-left z-10">
+                    <p className="text-sm sm:text-base font-black text-slate-900 leading-tight">
+                      {therapist.name}
+                    </p>
+                    <p className="text-[11px] font-bold text-amber-900 leading-tight mt-0.5">
+                      {therapist.role}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Therapist 3: Dr. Emily Davis */}
-            <div className="rounded-3xl border border-emerald-300/80 bg-[#C7F9D9] p-6 text-left shadow-xs flex flex-col justify-between relative overflow-hidden">
-              <div className="space-y-3">
-                <span className="bg-emerald-200 text-emerald-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-emerald-400">
-                  Your Journey Matters
-                </span>
-                <h3 className="text-xl font-black text-slate-900 leading-tight pt-2">
-                  Dr. Emily Davis
-                </h3>
-                <p className="text-[11px] font-bold text-emerald-900 uppercase tracking-wider">Counselling Psychologist</p>
-                <div className="h-0.5 w-full bg-emerald-700/20" />
-                <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  Thoughtful guidance to help you move forward with confidence.
-                </p>
-              </div>
-              <div className="pt-6 flex justify-end">
-                <span className="text-5xl">🌱</span>
-              </div>
-            </div>
+            {/* Carousel Arrow Controls & Dots */}
+            <div className="flex items-center justify-center gap-4 pt-6">
+              <button
+                type="button"
+                onClick={() => scrollSpecialists("left")}
+                aria-label="Previous specialists"
+                className="size-11 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-xs cursor-pointer font-black text-lg"
+              >
+                ←
+              </button>
 
-            {/* Therapist 4: Dr. James Wilson */}
-            <div className="rounded-3xl border border-orange-300/80 bg-[#FFE2CD] p-6 text-left shadow-xs flex flex-col justify-between relative overflow-hidden">
-              <div className="space-y-3">
-                <span className="bg-orange-200 text-orange-950 text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider border border-orange-400">
-                  Support That Fits
-                </span>
-                <h3 className="text-xl font-black text-slate-900 leading-tight pt-2">
-                  Dr. James Wilson
-                </h3>
-                <p className="text-[11px] font-bold text-orange-900 uppercase tracking-wider">Wellness Specialist</p>
-                <div className="h-0.5 w-full bg-orange-700/20" />
-                <p className="text-xs font-medium text-slate-700 leading-relaxed">
-                  Care and guidance tailored to your individual goals and lifestyle.
-                </p>
+              <div className="flex items-center gap-1.5 text-slate-400">
+                <span className="size-2 rounded-full bg-slate-900" />
+                <span className="size-2 rounded-full bg-slate-400" />
+                <span className="size-2 rounded-full bg-slate-400" />
               </div>
-              <div className="pt-6 flex justify-end">
-                <span className="text-5xl">☀️</span>
-              </div>
+
+              <button
+                type="button"
+                onClick={() => scrollSpecialists("right")}
+                aria-label="Next specialists"
+                className="size-11 rounded-full border-2 border-slate-900 bg-white flex items-center justify-center text-slate-900 hover:bg-slate-900 hover:text-white transition-all shadow-xs cursor-pointer font-black text-lg"
+              >
+                →
+              </button>
             </div>
           </div>
 
-          <div className="mt-10">
-            <Button asChild size="lg" className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md">
-              <Link to="/doctors">Meet the experts ➔</Link>
-            </Button>
-          </div>
         </div>
       </section>
 
