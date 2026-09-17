@@ -369,41 +369,47 @@ function LandingPage() {
           </p>
 
           <div className="mt-16 grid gap-10 md:grid-cols-3 relative items-start">
-            {/* Step 1 */}
-            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-amber-200 shadow-xs">
-              <div className="mx-auto size-14 rounded-full bg-[#FFBE0B] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
-                01
+            {/* Step 1: Yellow 12-point star icon */}
+            <div className="space-y-4 text-center group">
+              <div className="mx-auto size-16 flex items-center justify-center text-amber-500 group-hover:scale-110 transition-transform">
+                <svg viewBox="0 0 100 100" className="size-14 drop-shadow-sm">
+                  <path fill="#FFBE0B" d="M50 0 L58 32 L90 10 L70 40 L100 50 L70 60 L90 90 L58 68 L50 100 L42 68 L10 90 L30 60 L0 50 L30 40 L10 10 L42 32 Z" />
+                </svg>
               </div>
-              <h3 className="text-lg font-black text-slate-900">
+              <h3 className="text-xl font-extrabold text-slate-900">
                 Talk at Your Own Pace.
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+              <p className="text-xs text-slate-700 leading-relaxed font-medium max-w-xs mx-auto">
                 Tell us what you're facing. Share as much or as little as you're ready to. There's no pressure to have the right words, whenever you're ready. <span className="font-bold text-amber-900">"YOUR WELLNESS AIM"</span> Connect with our licensed online therapist. Get Matched With The Right Therapist.
               </p>
             </div>
 
-            {/* Step 2 */}
-            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-blue-200 shadow-xs md:mt-6">
-              <div className="mx-auto size-14 rounded-full bg-[#7BBDF7] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
-                02
+            {/* Step 2: Light blue plus icon */}
+            <div className="space-y-4 text-center group md:mt-8">
+              <div className="mx-auto size-16 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                <svg viewBox="0 0 100 100" className="size-14 drop-shadow-sm">
+                  <path fill="#7BBDF7" d="M35 0 H65 V35 H100 V65 H65 V100 H35 V65 H0 V35 H35 Z" rx="10" />
+                </svg>
               </div>
-              <h3 className="text-lg font-black text-slate-900">
+              <h3 className="text-xl font-extrabold text-slate-900">
                 Get matched to the right expert.
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+              <p className="text-xs text-slate-700 leading-relaxed font-medium max-w-xs mx-auto">
                 We handpick a professional suited to your actual problem, not a random name from a list. <span className="font-bold text-blue-950">"Find support that touches your soul – not just words."</span> Matched to your actual problem, not generic advice. Book your sessions now. Our professionals are available to provide you with emotional support.
               </p>
             </div>
 
-            {/* Step 3 */}
-            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-orange-200 shadow-xs">
-              <div className="mx-auto size-14 rounded-full bg-[#F7A072] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
-                03
+            {/* Step 3: Orange 6-point star icon */}
+            <div className="space-y-4 text-center group">
+              <div className="mx-auto size-16 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                <svg viewBox="0 0 100 100" className="size-14 drop-shadow-sm">
+                  <path fill="#F7A072" d="M50 0 L63 35 L100 50 L63 65 L50 100 L37 65 L0 50 L37 35 Z" />
+                </svg>
               </div>
-              <h3 className="text-lg font-black text-slate-900">
+              <h3 className="text-xl font-extrabold text-slate-900">
                 Switch Anytime, No Awkwardness.
               </h3>
-              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+              <p className="text-xs text-slate-700 leading-relaxed font-medium max-w-xs mx-auto">
                 Connect with your expert. <span className="font-bold text-orange-950">"Durrmi asks you to come back to yourself."</span> If the fit isn't right, change therapists whenever you need to — finding the right person matters more than sticking with the first match. Select a convenient time and session format. Remember, sometimes, it starts with a small, meaningful step.
               </p>
             </div>
