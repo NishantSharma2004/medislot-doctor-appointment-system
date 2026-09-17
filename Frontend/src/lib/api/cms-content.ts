@@ -341,8 +341,8 @@ export const defaultHomePageCmsData: CmsHomePageData = {
   },
   pricing: {
     tag: "WAYS TO GET SUPPORT",
-    title: "Clarity in a session, consistency in a package.",
-    subtitle: "Meet your Expert - Free. A Single Conversation. Need consistency — Begin a package.",
+    title: "Two Ways To Get Support",
+    subtitle: "Book a single session when you need an answer, or a package when you need someone in your corner.",
     freeOfferTitle: "Book Free Session",
     freeOfferDescription: "We're sharing the best professional therapist sessions for free. Well-being shouldn't come with a price tag — book yours today and take the first step toward feeling better.",
     freeOfferBullets: [
@@ -357,31 +357,31 @@ export const defaultHomePageCmsData: CmsHomePageData = {
       buttonType: "PRIMARY",
     },
     preConsultation: {
-      title: "Pre-consultation",
-      description: "A single conversation will help you find clarity. With one session, a friendlier rate, and assurance from our experts.",
+      title: "Pre-Consultation",
+      description: "One focused session with a consultant. Pay only for the time you book",
       price: "₹999",
-      subtext: "Per session. Set by each consultant.",
+      subtext: "per session · set by each consultant",
       features: [
-        "Single session, no commitments",
-        "Clear upfront rates",
-        "Pick slot & consultant",
+        "Single session, no commitment",
+        "Rate shown upfront before booking",
+        "Pick the consultant and slot",
       ],
       cta: {
         id: "cta_pre_consultation",
-        label: "Book a Pre-consultation",
+        label: "Book a Consultancy",
         url: "/doctors",
         buttonType: "SECONDARY",
       },
     },
     packagePricing: {
       title: "Package Pricing",
-      description: "Ongoing support with the same consultant, at a friendlier rate with assurance from our experts.",
+      description: "Bundle multiple sessions with the same consultant at a lower effective rates",
       price: "₹1,299",
-      subtext: "Per package. Scales with sessions.",
+      subtext: "per package · scales with sessions included",
       features: [
         "Multi-session bundle, better rate",
-        "Consultancy with one consultant",
-        "Flexible scheduling sessions",
+        "Continuity with one consultant",
+        "Flexible scheduling across sessions",
       ],
       cta: {
         id: "cta_package_pricing",

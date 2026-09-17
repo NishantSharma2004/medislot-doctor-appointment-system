@@ -887,89 +887,88 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 8. PRICING & WAYS TO GET SUPPORT */}
+      {/* 8. PRICING & WAYS TO GET SUPPORT (Exact Match to Screenshots 1 & 2) */}
       <section id="pricing" className="bg-[#FAF8F3] py-20 scroll-mt-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
-            WAYS TO GET SUPPORT
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight pt-2">
-            Clarity in a session, consistency in a package.
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+            Two Ways To Get Support
           </h2>
-          <p className="text-sm font-semibold text-slate-700 max-w-lg mx-auto">
-            Meet your Expert - Free. A Single Conversation. Need consistency — Begin a package.
+          <p className="text-sm font-semibold text-slate-700 max-w-xl mx-auto">
+            Book a single session when you need an answer, or a package when you need someone in your corner.
           </p>
 
-          {/* FREE SESSION HIGHLIGHT BANNER CARD */}
-          <div className="mt-8 bg-gradient-to-r from-[#FFF3D6] via-[#FCE6A6] to-[#FFE8A3] border-2 border-amber-400 rounded-3xl p-6 sm:p-8 text-left shadow-md flex flex-col md:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
-            <div className="space-y-2">
-              <span className="bg-amber-950 text-amber-100 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                Special Offer
-              </span>
-              <h3 className="text-2xl font-black text-slate-900">Book Free Session</h3>
-              <p className="text-xs font-medium text-slate-800 max-w-xl leading-relaxed">
-                We're sharing the best professional therapist sessions for free. Well-being shouldn't come with a price tag — book yours today and take the first step toward feeling better.
-              </p>
-              <ul className="flex flex-wrap gap-4 text-xs font-extrabold text-amber-950 pt-2">
-                <li>✦ Choose your session for free.</li>
-                <li>✦ Register for free.</li>
-                <li>✦ Take your first step.</li>
-              </ul>
-            </div>
-            <Button asChild size="lg" className="h-12 px-8 rounded-full bg-slate-950 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shrink-0 shadow-lg">
-              <Link to="/doctors">Book Free Session ➔</Link>
-            </Button>
-          </div>
-
           {/* TWO PRICING CARDS */}
-          <div className="mt-12 grid gap-8 md:grid-cols-2 max-w-3xl mx-auto">
+          <div className="mt-12 grid gap-8 md:grid-cols-2 max-w-4xl mx-auto items-stretch">
             {/* Card 1: Pre-Consultation */}
-            <div className="rounded-3xl border-2 border-amber-400 bg-white p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
+            <div className="rounded-[28px] border-2 border-amber-400 bg-white p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2.5 bg-[#FFBE0B]" />
               <div className="space-y-4 pt-2">
-                <h3 className="text-2xl font-black text-slate-900">Pre-consultation</h3>
-                <p className="text-xs font-medium text-slate-700">
-                  A single conversation will help you find clarity. With one session, a friendlier rate, and assurance from our experts.
+                <h3 className="text-2xl font-black text-slate-900">Pre-Consultation</h3>
+                <p className="text-xs font-medium text-slate-700 leading-relaxed">
+                  One focused session with a consultant. Pay only for the time you book
                 </p>
                 <div className="pt-2">
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Starts At</p>
-                  <p className="text-4xl font-black text-slate-900">₹999</p>
-                  <p className="text-[11px] font-medium text-slate-500">Per session. Set by each consultant.</p>
+                  <p className="text-3xl sm:text-4xl font-black text-slate-900">Starts At ₹999</p>
+                  <p className="text-[11px] font-medium text-slate-500 mt-1">per session · set by each consultant</p>
                 </div>
-                <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-2 border-t">
-                  <li className="flex items-center gap-2">✅ Single session, no commitments</li>
-                  <li className="flex items-center gap-2">✅ Clear upfront rates</li>
-                  <li className="flex items-center gap-2">✅ Pick slot & consultant</li>
+                <ul className="space-y-3 text-xs font-semibold text-slate-700 pt-4 border-t border-slate-100">
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Single session, no commitment</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Rate shown upfront before booking</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Pick the consultant and slot</span>
+                  </li>
                 </ul>
               </div>
-              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-black hover:bg-slate-100 text-xs uppercase">
-                <Link to="/doctors">Book a Pre-consultation</Link>
+              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-2 border-slate-900 bg-white text-slate-900 font-extrabold hover:bg-slate-100 text-xs tracking-tight h-12 w-full">
+                <Link to="/doctors">Book a Consultancy</Link>
               </Button>
             </div>
 
             {/* Card 2: Package Pricing */}
-            <div className="rounded-3xl border-2 border-blue-400 bg-[#FAF8F3] p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#7BBDF7]" />
+            <div className="rounded-[28px] border-2 border-[#7BBDF7] bg-white p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2.5 bg-[#7BBDF7]" />
               <div className="space-y-4 pt-2">
                 <h3 className="text-2xl font-black text-slate-900">Package Pricing</h3>
-                <p className="text-xs font-medium text-slate-700">
-                  Ongoing support with the same consultant, at a friendlier rate with assurance from our experts.
+                <p className="text-xs font-medium text-slate-700 leading-relaxed">
+                  Bundle multiple sessions with the same consultant at a lower effective rates
                 </p>
                 <div className="pt-2">
-                  <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Starts At</p>
-                  <p className="text-4xl font-black text-slate-900">₹1,299</p>
-                  <p className="text-[11px] font-medium text-slate-500">Per package. Scales with sessions.</p>
+                  <p className="text-3xl sm:text-4xl font-black text-slate-900">Starts At ₹1,299</p>
+                  <p className="text-[11px] font-medium text-slate-500 mt-1">per package · scales with sessions included</p>
                 </div>
-                <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-2 border-t">
-                  <li className="flex items-center gap-2">✅ Multi-session bundle, better rate</li>
-                  <li className="flex items-center gap-2">✅ Consultancy with one consultant</li>
-                  <li className="flex items-center gap-2">✅ Flexible scheduling sessions</li>
+                <ul className="space-y-3 text-xs font-semibold text-slate-700 pt-4 border-t border-slate-100">
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Multi-session bundle, better rate</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Continuity with one consultant</span>
+                  </li>
+                  <li className="flex items-center gap-2.5">
+                    <span className="size-5 rounded-md bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-xs">✓</span>
+                    <span>Flexible scheduling across sessions</span>
+                  </li>
                 </ul>
               </div>
-              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-black hover:bg-slate-100 text-xs uppercase">
+              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-2 border-slate-900 bg-white text-slate-900 font-extrabold hover:bg-slate-100 text-xs tracking-tight h-12 w-full">
                 <Link to="/doctors">Explore Packages</Link>
               </Button>
             </div>
+          </div>
+
+          {/* Yellow Pill Bottom Button */}
+          <div className="mt-10 flex justify-center">
+            <Button asChild size="lg" className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs tracking-wider shadow-md border border-amber-400">
+              <Link to="/doctors">Know more about our pricing ↗</Link>
+            </Button>
           </div>
         </div>
       </section>
