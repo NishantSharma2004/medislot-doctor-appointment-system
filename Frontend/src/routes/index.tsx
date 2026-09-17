@@ -174,33 +174,24 @@ function LandingPage() {
 
             {/* Main Center Content */}
             <div className="mx-auto max-w-2xl text-center space-y-6">
-              {/* Top Pill Tag */}
-              <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/80 bg-amber-100/80 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-amber-950 shadow-2xs">
-                <Sparkles className="size-3.5 text-amber-700" />
-                {isDoctor
-                  ? `Doctor Portal Active • ${user?.fullName}`
-                  : isAdmin
-                  ? "Clinic Network Administration"
-                  : "Your Journey To Wellness Starts Here"}
-              </span>
-
+              
               {/* Headline */}
-              <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-6xl leading-[1.12]">
+              <h1 className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl leading-[1.12]">
                 {isDoctor ? (
                   <>Welcome back to Doctor Desk, <span className="text-amber-700">{user?.fullName}</span></>
                 ) : isAdmin ? (
                   <>MediSlot Clinic <span className="text-teal-700">Administration Portal</span></>
                 ) : (
-                  <>Your Journey To <span className="text-slate-900 underline decoration-amber-400 decoration-wavy underline-offset-8">Wellness</span> Starts Here</>
+                  <>Your Journey To Wellness Starts Here</>
                 )}
               </h1>
 
               {/* Subtitle */}
-              <div className="mx-auto max-w-2xl text-center space-y-2">
-                <p className="text-sm font-bold text-amber-900 bg-amber-100/90 inline-block px-4 py-1 rounded-full border border-amber-300/60 shadow-2xs">
+              <div className="mx-auto max-w-xl text-center space-y-2">
+                <p className="text-sm font-bold text-slate-800 italic">
                   "The most important connection is the one within." — Prioritise your journey to wellness.
                 </p>
-                <p className="mx-auto max-w-xl text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
                   {isDoctor
                     ? "Review assigned patient appointments, inspect shared health vault records, record prescription notes, and publish consultation slots."
                     : isAdmin
@@ -232,10 +223,12 @@ function LandingPage() {
                   </Button>
                 ) : (
                   <>
-                    <Button asChild size="lg" className="h-12 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] px-8 font-black text-slate-950 text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/30">
-                      <Link to="/doctors">Reserve Your Free Session</Link>
+                    <Button asChild size="lg" className="h-12 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] px-8 font-black text-slate-950 text-xs shadow-md hover:shadow-lg transition-all border border-amber-500/30 gap-1.5">
+                      <Link to="/doctors">
+                        Reserve Your Free Session <span className="text-base leading-none">↗</span>
+                      </Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline" className="h-12 rounded-full border-slate-400/80 bg-white/80 px-7 font-bold text-slate-800 hover:bg-slate-100 text-xs uppercase">
+                    <Button asChild size="lg" variant="outline" className="h-12 rounded-full border-slate-400/80 bg-white/80 px-7 font-bold text-slate-800 hover:bg-slate-100 text-xs shadow-xs">
                       <a href="#why-durrmi">Explore Our Expertise</a>
                     </Button>
                   </>
@@ -243,15 +236,15 @@ function LandingPage() {
               </div>
 
               {/* Trust Avatar Stack Badge */}
-              <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <div className="pt-2 flex flex-col items-center justify-center gap-2">
                 <div className="flex -space-x-2">
                   <div className="size-8 rounded-full border-2 border-white bg-amber-200 grid place-items-center text-xs font-bold">👨‍💼</div>
                   <div className="size-8 rounded-full border-2 border-white bg-teal-200 grid place-items-center text-xs font-bold">👩‍⚕️</div>
                   <div className="size-8 rounded-full border-2 border-white bg-rose-200 grid place-items-center text-xs font-bold">👨‍⚕️</div>
                   <div className="size-8 rounded-full border-2 border-white bg-purple-200 grid place-items-center text-xs font-bold">👩‍💻</div>
                 </div>
-                <span className="text-xs font-bold text-slate-700">
-                  Trusted by over <span className="text-slate-950 font-extrabold">1000+ customers</span> — <span className="text-amber-800 italic">"Take the first trusted step & find yourself."</span>
+                <span className="text-xs font-semibold text-slate-500">
+                  Trusted by over <span className="text-slate-900 font-extrabold">1000+ customers</span>
                 </span>
               </div>
             </div>
