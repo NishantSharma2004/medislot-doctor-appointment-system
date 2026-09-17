@@ -28,6 +28,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { mockSpecializations, mockDoctors } from "@/lib/api/mock-data";
+import { defaultHomePageCmsData } from "@/lib/api/cms-content";
 
 export const Route = createFileRoute("/")({
   head: () => ({
