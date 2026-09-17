@@ -165,38 +165,72 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             
-            {/* Left Doctor Illustration Card */}
-            <div className="hidden lg:flex shrink-0 w-64 items-center justify-center">
-              <div className="relative p-6 rounded-full bg-[#FCE8BD] border border-amber-300/60 shadow-lg shadow-amber-950/5 transform -rotate-3 hover:rotate-0 transition-transform">
-                <span className="text-8xl">👩‍⚕️</span>
-              </div>
+            {/* Left Female Therapist Character Illustration */}
+            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
+              <svg viewBox="0 0 240 280" className="w-full h-auto drop-shadow-md">
+                {/* Orange Beanbag Chair Background */}
+                <ellipse cx="100" cy="180" rx="80" ry="75" fill="#F89B29" />
+                <ellipse cx="100" cy="185" rx="72" ry="65" fill="#E88A1A" />
+                
+                {/* Hair (Dark) */}
+                <path d="M 90 60 C 70 60 65 95 65 110 C 65 125 75 130 80 130 C 85 130 90 120 90 110 Z" fill="#1A1A1A" />
+                <circle cx="100" cy="75" r="28" fill="#1A1A1A" />
+                
+                {/* Face & Neck */}
+                <path d="M 95 95 L 95 110 L 105 110 L 105 95 Z" fill="#E8A584" />
+                <circle cx="102" cy="78" r="18" fill="#F2B89D" />
+                <path d="M 108 72 C 112 76 112 82 108 86" stroke="#C97C5D" strokeWidth="2" strokeLinecap="round" fill="none" />
+                <circle cx="108" cy="80" r="2" fill="#1A1A1A" />
+                
+                {/* Green Shirt Torso */}
+                <path d="M 80 110 Q 100 105 125 110 L 140 170 Q 100 175 70 170 Z" fill="#386641" />
+                
+                {/* Arms & Clipboard */}
+                <path d="M 80 115 L 60 145 L 90 155 L 95 140 Z" fill="#386641" />
+                <path d="M 120 115 L 145 140 L 125 155 Z" fill="#386641" />
+                {/* Clipboard */}
+                <rect x="90" y="130" width="38" height="52" rx="4" fill="#FFFFFF" stroke="#D1D5DB" strokeWidth="2" transform="rotate(-12 109 156)" />
+                <rect x="100" y="126" width="18" height="8" rx="2" fill="#E63946" transform="rotate(-12 109 156)" />
+                <line x1="96" y1="144" x2="120" y2="144" stroke="#9CA3AF" strokeWidth="2" transform="rotate(-12 109 156)" />
+                <line x1="96" y1="152" x2="120" y2="152" stroke="#9CA3AF" strokeWidth="2" transform="rotate(-12 109 156)" />
+                <line x1="96" y1="160" x2="114" y2="160" stroke="#9CA3AF" strokeWidth="2" transform="rotate(-12 109 156)" />
+                {/* Hands */}
+                <circle cx="88" cy="154" r="6" fill="#F2B89D" />
+                <circle cx="130" cy="148" r="6" fill="#F2B89D" />
+
+                {/* Brown Trousers */}
+                <path d="M 70 170 Q 100 175 140 170 L 155 220 L 125 225 L 110 185 L 95 225 L 65 220 Z" fill="#9A5034" />
+                
+                {/* Yellow Shoes */}
+                <ellipse cx="60" cy="225" rx="14" ry="7" fill="#FFD166" />
+                <path d="M 50 220 Q 60 212 72 224 Z" fill="#FFC43D" />
+                <ellipse cx="160" cy="225" rx="14" ry="7" fill="#FFD166" />
+                <path d="M 150 220 Q 160 212 172 224 Z" fill="#FFC43D" />
+              </svg>
             </div>
 
             {/* Main Center Content */}
             <div className="mx-auto max-w-2xl text-center space-y-6">
               
               {/* Headline */}
-              <h1 className="text-4xl font-black tracking-tight text-slate-900 sm:text-5xl lg:text-6xl leading-[1.12]">
+              <h1 className="text-3xl font-black tracking-tight text-slate-900 sm:text-4xl lg:text-5xl leading-[1.2]">
                 {isDoctor ? (
                   <>Welcome back to Doctor Desk, <span className="text-amber-700">{user?.fullName}</span></>
                 ) : isAdmin ? (
                   <>MediSlot Clinic <span className="text-teal-700">Administration Portal</span></>
                 ) : (
-                  <>Your Journey To Wellness Starts Here</>
+                  <>"The most important connection is the one within." — Prioritise your journey to wellness.</>
                 )}
               </h1>
 
               {/* Subtitle */}
               <div className="mx-auto max-w-xl text-center space-y-2">
-                <p className="text-sm font-bold text-slate-800 italic">
-                  "The most important connection is the one within." — Prioritise your journey to wellness.
-                </p>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-semibold">
                   {isDoctor
                     ? "Review assigned patient appointments, inspect shared health vault records, record prescription notes, and publish consultation slots."
                     : isAdmin
                     ? "Monitor network analytics, manage doctor profiles, inspect security audit logs, and administer clinic documents."
-                    : "Durrmi means \"Power of Connecting yourself,\" and prioritising your mental health is our priority. Here, we do more than interact with you; we help you understand yourself. Judgment-free support."}
+                    : "Here, we do more than interact with you; we help you understand yourself. Our goal is to support you without judgment. Our advisors will be available to assist you throughout your journey."}
                 </p>
               </div>
 
@@ -249,11 +283,40 @@ function LandingPage() {
               </div>
             </div>
 
-            {/* Right Doctor Illustration Card */}
-            <div className="hidden lg:flex shrink-0 w-64 items-center justify-center">
-              <div className="relative p-6 rounded-full bg-[#D4E8FC] border border-blue-300/60 shadow-lg shadow-blue-950/5 transform rotate-3 hover:rotate-0 transition-transform">
-                <span className="text-8xl">🩺</span>
-              </div>
+            {/* Right Female Client Character Illustration */}
+            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
+              <svg viewBox="0 0 240 280" className="w-full h-auto drop-shadow-md">
+                {/* Orange Beanbag Chair Background */}
+                <ellipse cx="140" cy="180" rx="80" ry="75" fill="#F89B29" />
+                <ellipse cx="140" cy="185" rx="72" ry="65" fill="#E88A1A" />
+                
+                {/* Hair (Dark long hair) */}
+                <path d="M 130 55 C 105 55 100 95 100 135 C 100 145 110 150 115 150 Z" fill="#1A1A1A" />
+                <path d="M 150 55 C 175 55 180 95 180 135 C 180 145 170 150 165 150 Z" fill="#1A1A1A" />
+                <circle cx="140" cy="72" r="26" fill="#1A1A1A" />
+                
+                {/* Face & Neck */}
+                <path d="M 135 92 L 135 108 L 145 108 L 145 92 Z" fill="#E8A584" />
+                <circle cx="138" cy="76" r="17" fill="#F2B89D" />
+                <path d="M 132 72 C 128 76 128 82 132 86" stroke="#C97C5D" strokeWidth="2" strokeLinecap="round" fill="none" />
+                <circle cx="132" cy="78" r="2" fill="#1A1A1A" />
+                
+                {/* Yellow Top Torso */}
+                <path d="M 120 108 Q 140 104 160 108 L 172 165 Q 140 172 108 165 Z" fill="#F4A261" />
+                
+                {/* Folded Arms */}
+                <path d="M 120 112 Q 105 135 125 155 Q 155 155 160 135 Z" fill="#E76F51" />
+                <circle cx="140" cy="150" r="7" fill="#F2B89D" />
+
+                {/* Dark Green Trousers */}
+                <path d="M 108 165 Q 140 172 172 165 L 180 220 L 150 225 L 140 182 L 130 225 L 100 220 Z" fill="#2A9D8F" />
+                
+                {/* Brown Shoes */}
+                <ellipse cx="95" cy="225" rx="14" ry="7" fill="#7F4F24" />
+                <path d="M 85 220 Q 95 212 107 224 Z" fill="#58310E" />
+                <ellipse cx="185" cy="225" rx="14" ry="7" fill="#7F4F24" />
+                <path d="M 175 220 Q 185 212 197 224 Z" fill="#58310E" />
+              </svg>
             </div>
 
           </div>
