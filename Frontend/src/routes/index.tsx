@@ -1093,13 +1093,13 @@ function LandingPage() {
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
                 Questions? We've Got Answers.
               </h2>
-              <div className="rounded-3xl border-2 border-amber-400 bg-white p-6 shadow-xs space-y-4">
-                <h3 className="text-lg font-extrabold text-slate-900">Still Have Any Questions?</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+              <div className="rounded-[28px] border-2 border-amber-400 bg-white p-7 shadow-xs space-y-4">
+                <h3 className="text-2xl font-black text-slate-900">Still Have Any Questions?</h3>
+                <p className="text-xs text-slate-600 leading-relaxed font-medium">
                   Need help choosing a therapist or setting up your mental wellness plan? Our support team is here to assist.
                 </p>
-                <Button asChild size="sm" className="h-9 px-6 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider">
-                  <a href="mailto:support@durrmi.test">Contact us</a>
+                <Button asChild size="lg" className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-sm">
+                  <Link to="/contact">Contact us ↗</Link>
                 </Button>
               </div>
             </div>
