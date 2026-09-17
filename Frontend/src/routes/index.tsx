@@ -407,33 +407,40 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 2. TRUSTED METRICS BAR (Durrmi Style Stat Cards) */}
-      <section className="bg-[#FAF8F3] py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <p className="text-xs font-black uppercase tracking-widest text-amber-800 bg-amber-100/90 inline-block px-3.5 py-1 rounded-full border border-amber-300/50">
-            Trusted By People Who Took The First Step
+      {/* 2. TRUSTED METRICS BAR (Matching Uploaded Design) */}
+      <section className="bg-[#FAF8F3] py-16 border-b border-amber-200/40">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-center space-y-8">
+          <p className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+            Trusted by people who took the first step.
           </p>
-          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
-            "Take the first trusted step & find yourself."
-          </h2>
 
-          <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 pt-6">
-            <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Card 1 */}
+            <div className="rounded-[28px] border border-amber-200/80 bg-gradient-to-b from-white via-[#FFFDF8] to-[#FFF8E7] p-8 text-left shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B] rounded-t-[28px]" />
               <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">96%</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Client Success Rate</p>
+              <p className="mt-3 text-xs font-semibold text-slate-700">Client Success Rate</p>
             </div>
 
-            <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
-              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">10+</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Years of combined experience</p>
-            </div>
-
-            <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
+            {/* Card 2 */}
+            <div className="rounded-[28px] border border-amber-200/80 bg-gradient-to-b from-white via-[#FFFDF8] to-[#FFF8E7] p-8 text-left shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B] rounded-t-[28px]" />
               <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">100+</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Lives Transformed</p>
+              <p className="mt-3 text-xs font-semibold text-slate-700">Happy Clients</p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="rounded-[28px] border border-amber-200/80 bg-gradient-to-b from-white via-[#FFFDF8] to-[#FFF8E7] p-8 text-left shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B] rounded-t-[28px]" />
+              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">10+</p>
+              <p className="mt-3 text-xs font-semibold text-slate-700">Years Experience</p>
+            </div>
+
+            {/* Card 4 */}
+            <div className="rounded-[28px] border border-amber-200/80 bg-gradient-to-b from-white via-[#FFFDF8] to-[#FFF8E7] p-8 text-left shadow-sm relative overflow-hidden transition-all hover:-translate-y-1 hover:shadow-md">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B] rounded-t-[28px]" />
+              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">50+</p>
+              <p className="mt-3 text-xs font-semibold text-slate-700">Expert Consultants</p>
             </div>
           </div>
         </div>
