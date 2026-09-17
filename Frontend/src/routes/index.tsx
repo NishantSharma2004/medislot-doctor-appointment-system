@@ -1177,50 +1177,142 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 10. CTA BANNER ("TRY DURRMI FREE") */}
-      <section className="bg-[#FAF6EE] py-20 border-t border-amber-200/60 relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      {/* 10. CTA BANNER ("Your First Session Is On Us" matching Screenshot 1) */}
+      <section className="bg-gradient-to-b from-[#FFFDF8] via-[#FAF6ED] to-[#FAF8F3] py-20 border-t border-amber-200/60 relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             
-            {/* Left Sitting Illustration Card */}
-            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
-              <div className="relative p-6 rounded-full bg-[#FCE8BD] border border-amber-300/60 shadow-lg transform -rotate-2 hover:rotate-0 transition-transform">
-                <span className="text-8xl">🛋️</span>
-              </div>
+            {/* Left Vector Illustration: Two People Sitting Together on Beanbag Chair */}
+            <div className="hidden lg:flex shrink-0 w-80 items-center justify-center">
+              <svg viewBox="0 0 280 280" className="w-full h-auto drop-shadow-md">
+                {/* Large Orange Beanbag Chair Background */}
+                <ellipse cx="140" cy="190" rx="120" ry="80" fill="#F89B29" />
+                <ellipse cx="140" cy="195" rx="110" ry="70" fill="#E88A1A" />
+
+                {/* --- Left Person: Man in Brown Vest & Green Trousers --- */}
+                <path d="M 60 70 C 45 70 40 95 40 105 C 40 115 50 120 55 120 Z" fill="#1A1A1A" />
+                <circle cx="65" cy="78" r="20" fill="#1A1A1A" />
+                <path d="M 60 92 L 60 106 L 70 106 L 70 92 Z" fill="#E8A584" />
+                <circle cx="68" cy="80" r="14" fill="#F2B89D" />
+                <path d="M 45 106 Q 65 102 85 106 L 95 160 Q 65 165 35 160 Z" fill="#9A5034" />
+                <path d="M 58 106 L 65 160 L 75 160 L 68 106 Z" fill="#FFD166" />
+                <path d="M 35 160 Q 65 165 95 160 L 105 215 L 75 220 L 65 178 L 55 220 L 25 215 Z" fill="#386641" />
+                <ellipse cx="20" cy="220" rx="12" ry="6" fill="#E63946" />
+                <ellipse cx="80" cy="223" rx="12" ry="6" fill="#E63946" />
+
+                {/* --- Right Person: Woman in Red Sweater & Yellow Trousers --- */}
+                <path d="M 130 65 C 110 65 105 100 105 130 C 105 140 115 145 120 145 Z" fill="#1A1A1A" />
+                <circle cx="135" cy="75" r="22" fill="#1A1A1A" />
+                <path d="M 130 92 L 130 106 L 140 106 L 140 92 Z" fill="#E8A584" />
+                <circle cx="132" cy="78" r="15" fill="#F2B89D" />
+                <path d="M 115 106 Q 135 102 155 106 L 165 160 Q 135 165 105 160 Z" fill="#C94A29" />
+                <path d="M 105 160 Q 135 165 165 160 L 175 215 L 145 220 L 135 178 L 125 220 L 95 215 Z" fill="#FFC43D" />
+                <ellipse cx="90" cy="220" rx="12" ry="6" fill="#E63946" />
+                <ellipse cx="150" cy="223" rx="12" ry="6" fill="#E63946" />
+              </svg>
             </div>
 
-            {/* Center Content */}
-            <div className="mx-auto max-w-2xl text-center space-y-6">
-              <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
-                (Your First Session Is On Us)
-              </span>
+            {/* Center Content Column */}
+            <div className="mx-auto max-w-2xl text-center space-y-5">
+              
+              {/* Avatar Stack + Customer Count */}
+              <div className="flex flex-col items-center justify-center gap-2">
+                <div className="flex -space-x-2.5 overflow-hidden items-center justify-center">
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 1"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 2"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 3"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 4"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 5"
+                  />
+                </div>
+                <span className="text-xs sm:text-sm font-bold text-slate-700 tracking-tight">
+                  Trusted by over 1000+ customers
+                </span>
+              </div>
 
-              {/* Big Headline */}
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-none pt-2">
-                TRY DURRMI FREE
+              {/* Main Headline */}
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] pt-1">
+                Your First Session<br />Is On Us.
               </h2>
 
               {/* Subtitle */}
-              <p className="text-sm font-bold text-amber-950 max-w-md mx-auto">
-                Our aim is to support you, with our no cost & no commitment.
-              </p>
-              <p className="text-xs font-extrabold text-slate-700 max-w-lg mx-auto bg-amber-100/80 p-3 rounded-2xl border border-amber-300/60">
-                "Your First Self-care shouldn't cost you. Book a free session with us, with no cost & no commitments."
+              <p className="text-sm sm:text-base font-semibold text-slate-600 max-w-lg mx-auto leading-relaxed">
+                Book a free session and see if it feels right — no commitment, no cost.
               </p>
 
               {/* Yellow Pill Button */}
-              <div className="pt-2">
-                <Button asChild size="lg" className="h-12 px-9 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40">
+              <div className="pt-3">
+                <Button
+                  asChild
+                  size="lg"
+                  className="h-12 px-9 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40"
+                >
                   <Link to="/doctors">Book a free session</Link>
                 </Button>
               </div>
             </div>
 
-            {/* Right Sitting Doctor Card */}
-            <div className="hidden lg:flex shrink-0 w-72 items-center justify-center">
-              <div className="relative p-6 rounded-full bg-[#D4E8FC] border border-blue-300/60 shadow-lg transform rotate-2 hover:rotate-0 transition-transform">
-                <span className="text-8xl">📋</span>
-              </div>
+            {/* Right Vector Illustration: Female Therapist in Green Jacket & Yellow Trousers in Beanbag */}
+            <div className="hidden lg:flex shrink-0 w-80 items-center justify-center">
+              <svg viewBox="0 0 240 280" className="w-full h-auto drop-shadow-md">
+                {/* Orange Beanbag Chair Background */}
+                <ellipse cx="120" cy="180" rx="90" ry="75" fill="#F89B29" />
+                <ellipse cx="120" cy="185" rx="80" ry="65" fill="#E88A1A" />
+                
+                {/* Hair (Dark) */}
+                <path d="M 110 60 C 90 60 85 95 85 110 C 85 125 95 130 100 130 C 105 130 110 120 110 110 Z" fill="#1A1A1A" />
+                <circle cx="120" cy="75" r="28" fill="#1A1A1A" />
+                
+                {/* Face & Neck */}
+                <path d="M 115 95 L 115 110 L 125 110 L 125 95 Z" fill="#E8A584" />
+                <circle cx="122" cy="78" r="18" fill="#F2B89D" />
+                <path d="M 128 72 C 132 76 132 82 128 86" stroke="#C97C5D" strokeWidth="2" strokeLinecap="round" fill="none" />
+                <circle cx="128" cy="80" r="2" fill="#1A1A1A" />
+                
+                {/* Green Shirt/Jacket Torso */}
+                <path d="M 100 110 Q 120 105 145 110 L 160 170 Q 120 175 90 170 Z" fill="#386641" />
+                
+                {/* Arms & Clipboard */}
+                <path d="M 100 115 L 80 145 L 110 155 L 115 140 Z" fill="#386641" />
+                <path d="M 140 115 L 165 140 L 145 155 Z" fill="#386641" />
+                {/* Clipboard */}
+                <rect x="70" y="130" width="42" height="56" rx="4" fill="#A0522D" stroke="#7A3C1E" strokeWidth="2" transform="rotate(-15 90 156)" />
+                <rect x="82" y="126" width="18" height="8" rx="2" fill="#D1D5DB" transform="rotate(-15 90 156)" />
+                <line x1="78" y1="144" x2="104" y2="144" stroke="#FFFFFF" strokeWidth="2" transform="rotate(-15 90 156)" />
+                <line x1="78" y1="152" x2="104" y2="152" stroke="#FFFFFF" strokeWidth="2" transform="rotate(-15 90 156)" />
+                <line x1="78" y1="160" x2="98" y2="160" stroke="#FFFFFF" strokeWidth="2" transform="rotate(-15 90 156)" />
+                {/* Hands */}
+                <circle cx="108" cy="154" r="6" fill="#F2B89D" />
+                <circle cx="150" cy="148" r="6" fill="#F2B89D" />
+
+                {/* Yellow Trousers */}
+                <path d="M 90 170 Q 120 175 160 170 L 175 220 L 145 225 L 130 185 L 115 225 L 85 220 Z" fill="#FFC43D" />
+                
+                {/* Green Shoes */}
+                <ellipse cx="80" cy="225" rx="14" ry="7" fill="#386641" />
+                <path d="M 70 220 Q 80 212 92 224 Z" fill="#2D5234" />
+                <ellipse cx="180" cy="225" rx="14" ry="7" fill="#386641" />
+                <path d="M 170 220 Q 180 212 192 224 Z" fill="#2D5234" />
+              </svg>
             </div>
 
           </div>
