@@ -298,7 +298,12 @@ function LandingPage() {
                 ) : isAdmin ? (
                   <>MediSlot Clinic <span className="text-teal-700">Administration Portal</span></>
                 ) : (
-                  <>"The most important connection is the one within." — Prioritise your journey to wellness.</>
+                  <>
+                    <span className="block font-black">"The most important connection is the one within."</span>
+                    <span className="block mt-2 font-extrabold text-amber-950">
+                      — Prioritise your journey to wellness.
+                    </span>
+                  </>
                 )}
               </h1>
 
