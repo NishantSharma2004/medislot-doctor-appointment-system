@@ -567,10 +567,10 @@ export const defaultHomePageCmsData: CmsHomePageData = {
     ],
   },
   footerCta: {
-    tag: "(Your First Session Is On Us)",
-    title: "TRY DURRMI FREE",
-    subtitle: "Our aim is to support you, with our no cost & no commitment.",
-    highlightText: `"Your First Self-care shouldn't cost you. Book a free session with us, with no cost & no commitments."`,
+    tag: "Trusted by over 1000+ customers",
+    title: "Your First Session Is On Us.",
+    subtitle: "Book a free session and see if it feels right — no commitment, no cost.",
+    highlightText: `"Book a free session and see if it feels right — no commitment, no cost."`,
     cta: {
       id: "cta_footer_free",
       label: "Book a free session",
