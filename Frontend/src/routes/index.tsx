@@ -196,13 +196,18 @@ function LandingPage() {
               </h1>
 
               {/* Subtitle */}
-              <p className="mx-auto max-w-xl text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-                {isDoctor
-                  ? "Review assigned patient appointments, inspect shared health vault records, record prescription notes, and publish consultation slots."
-                  : isAdmin
-                  ? "Monitor network analytics, manage doctor profiles, inspect security audit logs, and administer clinic documents."
-                  : "Find the right therapist for what you're going through and take the first step towards better mental wellbeing."}
-              </p>
+              <div className="mx-auto max-w-2xl text-center space-y-2">
+                <p className="text-sm font-bold text-amber-900 bg-amber-100/90 inline-block px-4 py-1 rounded-full border border-amber-300/60 shadow-2xs">
+                  "The most important connection is the one within." — Prioritise your journey to wellness.
+                </p>
+                <p className="mx-auto max-w-xl text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                  {isDoctor
+                    ? "Review assigned patient appointments, inspect shared health vault records, record prescription notes, and publish consultation slots."
+                    : isAdmin
+                    ? "Monitor network analytics, manage doctor profiles, inspect security audit logs, and administer clinic documents."
+                    : "Durrmi means \"Power of Connecting yourself,\" and prioritising your mental health is our priority. Here, we do more than interact with you; we help you understand yourself. Judgment-free support."}
+                </p>
+              </div>
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -228,10 +233,10 @@ function LandingPage() {
                 ) : (
                   <>
                     <Button asChild size="lg" className="h-12 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] px-8 font-black text-slate-950 text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/30">
-                      <Link to="/doctors">Book a free session</Link>
+                      <Link to="/doctors">Reserve Your Free Session</Link>
                     </Button>
                     <Button asChild size="lg" variant="outline" className="h-12 rounded-full border-slate-400/80 bg-white/80 px-7 font-bold text-slate-800 hover:bg-slate-100 text-xs uppercase">
-                      <Link to="/doctors">Explore Specialisations</Link>
+                      <a href="#why-durrmi">Explore Our Expertise</a>
                     </Button>
                   </>
                 )}
@@ -245,8 +250,8 @@ function LandingPage() {
                   <div className="size-8 rounded-full border-2 border-white bg-rose-200 grid place-items-center text-xs font-bold">👨‍⚕️</div>
                   <div className="size-8 rounded-full border-2 border-white bg-purple-200 grid place-items-center text-xs font-bold">👩‍💻</div>
                 </div>
-                <span className="text-xs font-bold text-slate-600">
-                  Trusted by over <span className="text-slate-900 font-extrabold">100+ customers</span>
+                <span className="text-xs font-bold text-slate-700">
+                  Trusted by over <span className="text-slate-950 font-extrabold">1000+ customers</span> — <span className="text-amber-800 italic">"Take the first trusted step & find yourself."</span>
                 </span>
               </div>
             </div>
@@ -262,14 +267,17 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 2. TRUSTED METRICS BAR (Durrmi Style 4 Stat Cards) */}
+      {/* 2. TRUSTED METRICS BAR (Durrmi Style Stat Cards) */}
       <section className="bg-[#FAF8F3] py-16">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-8">
-          <h2 className="text-lg sm:text-xl font-bold tracking-tight text-slate-800">
-            Trusted by people who took the first step.
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
+          <p className="text-xs font-black uppercase tracking-widest text-amber-800 bg-amber-100/90 inline-block px-3.5 py-1 rounded-full border border-amber-300/50">
+            Trusted By People Who Took The First Step
+          </p>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">
+            "Take the first trusted step & find yourself."
           </h2>
 
-          <div className="grid gap-6 grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-3 pt-6">
             <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
               <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">96%</p>
@@ -278,153 +286,187 @@ function LandingPage() {
 
             <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
-              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">100+</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Happy Clients</p>
-            </div>
-
-            <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
-              <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
               <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">10+</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Years Experience</p>
+              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Years of combined experience</p>
             </div>
 
             <div className="rounded-3xl border border-amber-200/80 bg-white p-6 text-center shadow-xs relative overflow-hidden transition-transform hover:-translate-y-1">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
-              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">0+</p>
-              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Expert Consultants</p>
+              <p className="text-4xl sm:text-5xl font-black tracking-tight text-slate-900">100+</p>
+              <p className="mt-3 text-xs font-bold text-slate-600 uppercase tracking-wider">Lives Transformed</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* 3. 3-STEP PROCESS SECTION */}
-      <section className="bg-[#FAF6EE] py-20 border-t border-b border-amber-200/60">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
+      <section id="how-it-works" className="bg-[#FAF6EE] py-20 border-t border-b border-amber-200/60 scroll-mt-10">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
             Getting Started Shouldn't Be The Hardest Part.
           </h2>
-          <p className="mt-2 text-sm font-semibold text-slate-600 max-w-md mx-auto">
-            Three simple steps between you and someone who understands.
+          <p className="text-base font-extrabold text-amber-900">
+            Start your self-care journey — it's never too late.
+          </p>
+          <p className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+            3 Simple steps to connect with your well-being.
           </p>
 
           <div className="mt-16 grid gap-10 md:grid-cols-3 relative items-start">
             {/* Step 1 */}
-            <div className="space-y-4 text-center group">
-              <div className="mx-auto size-16 rounded-full bg-[#FFBE0B] text-slate-950 flex items-center justify-center text-2xl font-black shadow-md group-hover:scale-110 transition-transform">
+            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-amber-200 shadow-xs">
+              <div className="mx-auto size-14 rounded-full bg-[#FFBE0B] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
                 01
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900">
-                Tell us what you're going through
+              <h3 className="text-lg font-black text-slate-900">
+                Talk at Your Own Pace.
               </h3>
-              <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto">
-                A short, guided questionnaire — not a form, more like a conversation — about what's bringing you to therapy, your preferences, and what kind of support you're looking for.
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                Tell us what you're facing. Share as much or as little as you're ready to. There's no pressure to have the right words, whenever you're ready. <span className="font-bold text-amber-900">"YOUR WELLNESS AIM"</span> Connect with our licensed online therapist. Get Matched With The Right Therapist.
               </p>
             </div>
 
             {/* Step 2 */}
-            <div className="space-y-4 text-center group md:mt-12">
-              <div className="mx-auto size-16 rounded-full bg-[#7BBDF7] text-slate-950 flex items-center justify-center text-2xl font-black shadow-md group-hover:scale-110 transition-transform">
+            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-blue-200 shadow-xs md:mt-6">
+              <div className="mx-auto size-14 rounded-full bg-[#7BBDF7] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
                 02
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900">
-                Get Matched With The Right Therapist
+              <h3 className="text-lg font-black text-slate-900">
+                Get matched to the right expert.
               </h3>
-              <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto">
-                Based on your responses, we recommend therapists who specialise in your specific concern, not just whoever's next in line.
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                We handpick a professional suited to your actual problem, not a random name from a list. <span className="font-bold text-blue-950">"Find support that touches your soul – not just words."</span> Matched to your actual problem, not generic advice. Book your sessions now. Our professionals are available to provide you with emotional support.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="space-y-4 text-center group">
-              <div className="mx-auto size-16 rounded-full bg-[#F7A072] text-slate-950 flex items-center justify-center text-2xl font-black shadow-md group-hover:scale-110 transition-transform">
+            <div className="space-y-4 text-center group bg-white p-6 rounded-3xl border border-orange-200 shadow-xs">
+              <div className="mx-auto size-14 rounded-full bg-[#F7A072] text-slate-950 flex items-center justify-center text-xl font-black shadow-md group-hover:scale-110 transition-transform">
                 03
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900">
-                Book Your First Session
+              <h3 className="text-lg font-black text-slate-900">
+                Switch Anytime, No Awkwardness.
               </h3>
-              <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto">
-                Choose a time that works for you — video, audio, or in-person, whatever feels most comfortable to start with.
+              <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                Connect with your expert. <span className="font-bold text-orange-950">"Durrmi asks you to come back to yourself."</span> If the fit isn't right, change therapists whenever you need to — finding the right person matters more than sticking with the first match. Select a convenient time and session format. Remember, sometimes, it starts with a small, meaningful step.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 4. WHY CHOOSE DURRMI CORNER-OVERLAPPING CARDS SECTION */}
-      <section id="why-durrmi" className="bg-[#FDEBB2]/90 py-20 overflow-hidden relative scroll-mt-24">
+      {/* 4. WHY CHOOSE DURRMI & ABOUT US PHILOSOPHY */}
+      <section id="why-durrmi" className="bg-[#FDEBB2]/90 py-20 overflow-hidden relative scroll-mt-20">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
-            Why Choose Durrmi
+          <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
+            WHY DURRMI — ABOUT US
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 pt-2">
+            "Durrmi" means "Find Your Way Within."
           </h2>
-          <p className="text-sm font-semibold text-slate-700 max-w-md mx-auto">
-            Get expert support, on your terms.
+          <p className="text-sm sm:text-base font-extrabold text-[#5C4105] max-w-2xl mx-auto leading-relaxed">
+            The right therapist for you — who pushes you to stabilise your awareness.
           </p>
         </div>
 
         {/* CORNER-OVERLAPPING CARDS CONTAINER */}
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 mt-12 relative flex flex-col items-center">
           {/* Card 1 */}
-          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#F7D479] border border-amber-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-amber-950/10 transform sm:translate-x-20 hover:scale-[1.02] transition-all duration-300 z-10">
+          <div className="w-full sm:w-[500px] bg-[#F7D479] border border-amber-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-amber-950/10 transform sm:translate-x-16 hover:scale-[1.02] transition-all duration-300 z-10">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-              <div className="size-20 rounded-full bg-[#E5B551] flex items-center justify-center text-3xl shrink-0 shadow-inner">
+              <div className="size-16 rounded-full bg-[#E5B551] flex items-center justify-center text-3xl shrink-0 shadow-inner">
                 👩‍⚕️
               </div>
               <div className="text-left space-y-1.5">
                 <h3 className="text-lg font-black text-[#5C4105] leading-snug">
-                  Vetted experts, not a directory
+                  Vetted Expert, Not A Directory
                 </h3>
-                <p className="text-xs sm:text-sm font-medium text-[#73540F] leading-relaxed">
-                  Every consultant on Durrmi is screened for real credentials and track record — so you're never guessing who's on the other end.
+                <p className="text-xs font-bold text-amber-950 italic">
+                  "Skip the search. Talk to a trusted expert right now."
+                </p>
+                <p className="text-xs font-medium text-[#73540F] leading-relaxed">
+                  At Durrmi, we have chosen experts for your emotions and well-being. Real support, not a directory. We personally interview, test and verify the professionals.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Card 2 */}
-          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#A4D4FF] border border-blue-600/30 rounded-[28px] p-6 sm:p-7 shadow-xl shadow-blue-950/10 transform -mt-4 sm:-mt-6 sm:-translate-x-24 hover:scale-[1.02] transition-all duration-300 z-20">
+          <div className="w-full sm:w-[500px] bg-[#A4D4FF] border border-blue-600/30 rounded-[28px] p-6 sm:p-7 shadow-xl shadow-blue-950/10 transform -mt-4 sm:-mt-6 sm:-translate-x-16 hover:scale-[1.02] transition-all duration-300 z-20">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-              <div className="size-20 rounded-full bg-[#7BBDF7] flex items-center justify-center text-3xl shrink-0 shadow-inner">
+              <div className="size-16 rounded-full bg-[#7BBDF7] flex items-center justify-center text-3xl shrink-0 shadow-inner">
                 🩺
               </div>
               <div className="text-left space-y-1.5">
                 <h3 className="text-lg font-black text-[#104778] leading-snug">
                   Matched To Your Actual Problem
                 </h3>
-                <p className="text-xs sm:text-sm font-medium text-[#1E5D96] leading-relaxed">
-                  Tell us what you're stuck on and we point you to the right expertise, instead of leaving you to scroll through profiles.
+                <p className="text-xs font-bold text-blue-950 italic">
+                  "The Right Therapist for What You're Actually Facing."
+                </p>
+                <p className="text-xs font-medium text-[#1E5D96] leading-relaxed">
+                  For a better approach, choose your experts based on what you're actually facing. You can match yourself to the professional who fits your challenge — real support for your emotions and well-being, as per your purpose.
                 </p>
               </div>
             </div>
           </div>
 
           {/* Card 3 */}
-          <div className="w-full sm:w-[460px] md:w-[480px] bg-[#F7C6A3] border border-orange-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-orange-950/10 transform -mt-4 sm:-mt-6 sm:translate-x-24 hover:scale-[1.02] transition-all duration-300 z-30">
+          <div className="w-full sm:w-[500px] bg-[#F7C6A3] border border-orange-700/30 rounded-[28px] p-6 sm:p-7 shadow-lg shadow-orange-950/10 transform -mt-4 sm:-mt-6 sm:translate-x-16 hover:scale-[1.02] transition-all duration-300 z-30">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
               <div className="text-left space-y-1.5 order-2 sm:order-1">
                 <h3 className="text-lg font-black text-[#612A0A] leading-snug">
-                  Clear Pricing, No Surprises
+                  Clear Pricing No Surprises
                 </h3>
-                <p className="text-xs sm:text-sm font-medium text-[#7D3B14] leading-relaxed">
-                  See rates upfront and know exactly what a session costs before you book — no hidden fees, no awkward billing conversations.
+                <p className="text-xs font-bold text-orange-950 italic">
+                  "Simple, Honest & Clear Pricing."
+                </p>
+                <p className="text-xs font-medium text-[#7D3B14] leading-relaxed">
+                  At Durrmi, you pay for what you see. The transparency of clear, upfront pricing with no hidden fees, no locked-in contracts, and no guessing games. Just honest access to the right expert for your emotions and well-being.
                 </p>
               </div>
-              <div className="size-20 rounded-full bg-[#E5AA80] flex items-center justify-center text-3xl shrink-0 shadow-inner order-1 sm:order-2">
+              <div className="size-16 rounded-full bg-[#E5AA80] flex items-center justify-center text-3xl shrink-0 shadow-inner order-1 sm:order-2">
                 👨‍⚕️
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Action */}
-          <div className="mt-10 z-40">
-            <Button
-              size="lg"
-              className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40 cursor-pointer"
-              onClick={() => {
-                document.getElementById("patient-reviews")?.scrollIntoView({ behavior: "smooth" });
-              }}
-            >
-              Know more about us ➔
-            </Button>
+        {/* FULL ABOUT US PHILOSOPHY BLOCK FROM DOCUMENT */}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 mt-16 bg-white/90 rounded-[32px] p-8 sm:p-10 border border-amber-300 shadow-md text-slate-800 space-y-6">
+          <div className="border-b border-amber-200 pb-4 text-center">
+            <span className="text-xs font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-full">
+              Our Inner Philosophy
+            </span>
+            <h3 className="text-2xl font-black text-slate-900 mt-2">
+              Choosing yourself & your mental health should always be the priority.
+            </h3>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 text-xs leading-relaxed font-medium text-slate-700">
+            <div className="space-y-4">
+              <p>
+                The word <strong className="text-slate-900 font-extrabold">Durrmi</strong> not only defines sensitive emotions, but it also represents safety and trust. We believe in working together. Individuality and abundance come together when you see your inner self, when you honour your own ideas, voice, emotions, and perspective; you naturally create from authenticity rather than comparison.
+              </p>
+              <p>
+                <strong className="text-amber-900 font-extrabold">Durr</strong> means power within an individual. <strong className="text-amber-900 font-extrabold">Mi</strong> represents bringing abundance. Our holistic Therapists work with you not just on your challenges, but also help you evolve into an empowered version of yourself.
+              </p>
+              <p className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-amber-950 italic">
+                "At Durrmi, we don't believe in fixing you — because you're not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow."
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <p>
+                Limiting beliefs, pushing feelings, avoiding difficult situations, and not taking care of mental health — none of it brings peace. Vulnerability makes noise louder. <strong className="text-slate-900">"Our coach will help you find your inner self and awaken the deep potential in each of us."</strong>
+              </p>
+              <p>
+                Healing shouldn't feel like a duty that you have to do. Our approach is different — a space designed to help you slow down, reflect, and truly stabilise your emotions. <strong className="text-slate-900">"Well-being professionals will coach you to live life abundantly."</strong>
+              </p>
+              <p>
+                You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -435,16 +477,24 @@ function LandingPage() {
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-10">
             
             {/* Left Header Box */}
-            <div className="lg:max-w-md space-y-6 shrink-0">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-[1.18]">
-                Whatever you're carrying, there's someone who gets it.
+            <div className="lg:max-w-md space-y-4 shrink-0">
+              <span className="text-[11px] font-black uppercase tracking-wider text-amber-900 bg-amber-100 px-3 py-1 rounded-full border border-amber-300">
+                SPECIALISATIONS & SERVICES
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-[1.18]">
+                Whatever You're Carrying, There's Someone Who Gets It.
               </h2>
-              <p className="text-sm font-semibold text-slate-600 leading-relaxed">
-                From anxiety and relationships to grief and burnout — find a therapist who specialises in what you're going through.
+              <p className="text-sm font-extrabold text-amber-900 italic">
+                "The real luxury? A peaceful mind & a life full of ease."
               </p>
-              <Button asChild size="lg" className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-all">
-                <Link to="/doctors">Explore Specialisations</Link>
-              </Button>
+              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                Talk about it; don't carry it; <span className="font-extrabold text-slate-900">"our experts truly understand."</span> Find a helping partner here for your anxiety, depression, loss, or grief that you want to share. You were never meant to carry it all alone.
+              </p>
+              <div className="pt-2">
+                <Button asChild size="lg" className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-all">
+                  <Link to="/doctors">Explore Specialisations</Link>
+                </Button>
+              </div>
             </div>
 
             {/* Right Cards Carousel Track */}
@@ -477,10 +527,10 @@ function LandingPage() {
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF9EA] to-[#FFEEC4] border border-amber-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
                   <div className="h-2.5 w-full bg-[#FFBE0B] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Individual Therapy</h3>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Individual therapy</h3>
                     <div className="h-[1px] w-full bg-slate-300/80" />
-                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                      One-on-one sessions designed to help you understand yourself, work through challenges, and build healthier ways of coping.
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      1 on 1 culturally inclusive, trauma-informed support for all the challenges and transitions in life to help you with meaningful personal growth.
                     </p>
                   </div>
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-80 pointer-events-none">
@@ -488,14 +538,14 @@ function LandingPage() {
                   </svg>
                 </div>
 
-                {/* Card 2: Couples Therapy */}
+                {/* Card 2: Couple & Family counselling */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0F8FF] to-[#D5E9FF] border border-blue-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
                   <div className="h-2.5 w-full bg-[#7BBDF7] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Couples Therapy</h3>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Couple & Family counselling</h3>
                     <div className="h-[1px] w-full bg-slate-300/80" />
-                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                      A safe and supportive space to improve communication, strengthen your relationship, and navigate challenges together.
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      Navigate conflicts, identify patterns and strengthen your relationship to a healthier version.
                     </p>
                   </div>
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-85 pointer-events-none">
@@ -503,14 +553,14 @@ function LandingPage() {
                   </svg>
                 </div>
 
-                {/* Card 3: Anxiety & Stress */}
+                {/* Card 3: Child and adolescent therapy */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF5ED] to-[#FFE2CD] border border-orange-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
                   <div className="h-2.5 w-full bg-[#FF9F43] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Anxiety & Stress</h3>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Child & adolescent therapy</h3>
                     <div className="h-[1px] w-full bg-slate-300/80" />
-                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                      Practical support to help you manage anxiety, reduce stress, and regain a sense of balance in your everyday life.
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      Find support for academic challenges, behavioural concerns, and emotional navigation through all your child's developmental stages.
                     </p>
                   </div>
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-6 size-44 opacity-85 pointer-events-none">
@@ -518,14 +568,14 @@ function LandingPage() {
                   </svg>
                 </div>
 
-                {/* Card 4: Depression Support */}
+                {/* Card 4: Geriatric Support */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#C7F9D9] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
                   <div className="h-2.5 w-full bg-[#2ECC71] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Depression Support</h3>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Geriatric Support</h3>
                     <div className="h-[1px] w-full bg-slate-300/80" />
-                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                      Compassionate guidance to help you understand difficult emotions and gradually move towards a healthier, more fulfilling life.
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      A respectful and compassionate space to process ageing, loss, and life transitions without feeling alone.
                     </p>
                   </div>
                   <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
@@ -533,18 +583,33 @@ function LandingPage() {
                   </svg>
                 </div>
 
-                {/* Card 5: Self Growth */}
+                {/* Card 5: Relationship / Connection */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F9F5FF] to-[#E5CEFF] border border-purple-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
                   <div className="h-2.5 w-full bg-[#A55EEA] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">Self Growth</h3>
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Relationship / Connection</h3>
                     <div className="h-[1px] w-full bg-slate-300/80" />
-                    <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                      Explore your thoughts, behaviours, and goals while developing greater confidence, awareness, and emotional resilience.
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      Unresolved emotions do not stay silent; it leaks through every conversation. Working together will help.
                     </p>
                   </div>
                   <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
                     <path fill="#DDD6FE" d="M100 10 C105 70 130 80 190 100 C130 120 105 130 100 190 C95 130 70 120 10 100 C70 80 95 70 100 10 Z" />
+                  </svg>
+                </div>
+
+                {/* Card 6: Addiction Support */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF1F2] to-[#FECDD3] border border-rose-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#E11D48] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Addiction Support</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      Addictions holding you back? <span className="font-extrabold text-rose-950">"We understand this deeply."</span> We do not dismiss these issues; instead, we listen and provide support.
+                    </p>
+                  </div>
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
+                    <path fill="#FECDD3" d="M100 10 L120 70 L180 80 L130 120 L150 180 L100 140 L50 180 L70 120 L20 80 L80 70 Z" />
                   </svg>
                 </div>
               </div>
@@ -554,14 +619,20 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 6. THE PEOPLE BEHIND DURRMI (Specialist Showcase matching JSON schema) */}
+      {/* 6. THE PEOPLE BEHIND DURRMI */}
       <section className="bg-[#FAF8F3] py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            The People Behind Durrmi
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
+          <span className="text-xs font-black uppercase tracking-widest text-amber-900 bg-amber-100 px-3.5 py-1 rounded-full border border-amber-300">
+            THE PEOPLE BEHIND DURRMI
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight pt-2">
+            "Meet the caring team that makes it all happen."
           </h2>
-          <p className="mt-2 text-sm font-semibold text-slate-600 max-w-lg mx-auto">
-            Real therapists, real credentials, real conversations — no algorithms deciding who you talk to.
+          <p className="text-sm font-extrabold text-amber-950 max-w-lg mx-auto">
+            Real talk, Real credentials, and no algorithms.
+          </p>
+          <p className="text-xs font-bold text-slate-600 italic">
+            ~Therapist says healing starts with real conversations.
           </p>
 
           <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -648,7 +719,7 @@ function LandingPage() {
 
           <div className="mt-10">
             <Button asChild size="lg" className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md">
-              <Link to="/doctors">Get to know Them ➔</Link>
+              <Link to="/doctors">Meet the experts ➔</Link>
             </Button>
           </div>
         </div>
@@ -659,14 +730,14 @@ function LandingPage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-12 items-center">
             <div className="lg:col-span-5 space-y-4">
-              <span className="text-xs font-extrabold uppercase tracking-widest text-amber-800 bg-amber-200/80 px-3.5 py-1 rounded-full">
-                Patient Testimonials
+              <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
+                "Voices of Durrmi."
               </span>
               <h2 className="text-3xl font-black text-slate-900 sm:text-4xl">
-                Their Words, Not Ours.
+                Customer review's part
               </h2>
               <p className="text-sm font-medium text-slate-600 leading-relaxed">
-                Real experiences from people who chose Durrmi to take the first step towards better mental wellbeing.
+                Real words from people who walked this path and chose Durrmi to take the first step towards feeling better.
               </p>
               <div className="flex items-center gap-2 pt-2">
                 <span className="text-sm font-extrabold text-slate-900">4.9 / 5.0</span>
@@ -712,36 +783,63 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 8. PRICING & CONSULTATION OPTIONS */}
+      {/* 8. PRICING & WAYS TO GET SUPPORT */}
       <section id="pricing" className="bg-[#FAF8F3] py-20 scroll-mt-10">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
-          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Two Ways To Get Support
+          <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
+            WAYS TO GET SUPPORT
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight pt-2">
+            Clarity in a session, consistency in a package.
           </h2>
-          <p className="text-sm font-semibold text-slate-600 max-w-md mx-auto">
-            Book a single session when you need an answer, or a package when you need someone in your corner.
+          <p className="text-sm font-semibold text-slate-700 max-w-lg mx-auto">
+            Meet your Expert - Free. A Single Conversation. Need consistency — Begin a package.
           </p>
 
+          {/* FREE SESSION HIGHLIGHT BANNER CARD */}
+          <div className="mt-8 bg-gradient-to-r from-[#FFF3D6] via-[#FCE6A6] to-[#FFE8A3] border-2 border-amber-400 rounded-3xl p-6 sm:p-8 text-left shadow-md flex flex-col md:flex-row items-center justify-between gap-6 max-w-4xl mx-auto">
+            <div className="space-y-2">
+              <span className="bg-amber-950 text-amber-100 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
+                Special Offer
+              </span>
+              <h3 className="text-2xl font-black text-slate-900">Book Free Session</h3>
+              <p className="text-xs font-medium text-slate-800 max-w-xl leading-relaxed">
+                We're sharing the best professional therapist sessions for free. Well-being shouldn't come with a price tag — book yours today and take the first step toward feeling better.
+              </p>
+              <ul className="flex flex-wrap gap-4 text-xs font-extrabold text-amber-950 pt-2">
+                <li>✦ Choose your session for free.</li>
+                <li>✦ Register for free.</li>
+                <li>✦ Take your first step.</li>
+              </ul>
+            </div>
+            <Button asChild size="lg" className="h-12 px-8 rounded-full bg-slate-950 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider shrink-0 shadow-lg">
+              <Link to="/doctors">Book Free Session ➔</Link>
+            </Button>
+          </div>
+
+          {/* TWO PRICING CARDS */}
           <div className="mt-12 grid gap-8 md:grid-cols-2 max-w-3xl mx-auto">
             {/* Card 1: Pre-Consultation */}
             <div className="rounded-3xl border-2 border-amber-400 bg-white p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#FFBE0B]" />
               <div className="space-y-4 pt-2">
-                <h3 className="text-xl font-black text-slate-900">Pre-Consultation</h3>
-                <p className="text-xs font-medium text-slate-600">One focused session with a consultant. Pay only for the time you book.</p>
+                <h3 className="text-2xl font-black text-slate-900">Pre-consultation</h3>
+                <p className="text-xs font-medium text-slate-700">
+                  A single conversation will help you find clarity. With one session, a friendlier rate, and assurance from our experts.
+                </p>
                 <div className="pt-2">
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Starts At</p>
-                  <p className="text-3xl font-black text-slate-900">₹999</p>
-                  <p className="text-[11px] font-medium text-slate-500">per session · set by each consultant</p>
+                  <p className="text-4xl font-black text-slate-900">₹999</p>
+                  <p className="text-[11px] font-medium text-slate-500">Per session. Set by each consultant.</p>
                 </div>
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-2 border-t">
-                  <li className="flex items-center gap-2">✅ Single session, no commitment</li>
-                  <li className="flex items-center gap-2">✅ Rate shown upfront before booking</li>
-                  <li className="flex items-center gap-2">✅ Pick the consultant and slot</li>
+                  <li className="flex items-center gap-2">✅ Single session, no commitments</li>
+                  <li className="flex items-center gap-2">✅ Clear upfront rates</li>
+                  <li className="flex items-center gap-2">✅ Pick slot & consultant</li>
                 </ul>
               </div>
-              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-bold hover:bg-slate-100 text-xs">
-                <Link to="/doctors">Book a Consultancy</Link>
+              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-black hover:bg-slate-100 text-xs uppercase">
+                <Link to="/doctors">Book a Pre-consultation</Link>
               </Button>
             </div>
 
@@ -749,20 +847,22 @@ function LandingPage() {
             <div className="rounded-3xl border-2 border-blue-400 bg-[#FAF8F3] p-8 shadow-xs flex flex-col justify-between text-left relative overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-2 bg-[#7BBDF7]" />
               <div className="space-y-4 pt-2">
-                <h3 className="text-xl font-black text-slate-900">Package Pricing</h3>
-                <p className="text-xs font-medium text-slate-600">Bundle multiple sessions with the same consultant at a lower effective rate.</p>
+                <h3 className="text-2xl font-black text-slate-900">Package Pricing</h3>
+                <p className="text-xs font-medium text-slate-700">
+                  Ongoing support with the same consultant, at a friendlier rate with assurance from our experts.
+                </p>
                 <div className="pt-2">
                   <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">Starts At</p>
-                  <p className="text-3xl font-black text-slate-900">₹1,299</p>
-                  <p className="text-[11px] font-medium text-slate-500">per package · scales with sessions included</p>
+                  <p className="text-4xl font-black text-slate-900">₹1,299</p>
+                  <p className="text-[11px] font-medium text-slate-500">Per package. Scales with sessions.</p>
                 </div>
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-2 border-t">
                   <li className="flex items-center gap-2">✅ Multi-session bundle, better rate</li>
-                  <li className="flex items-center gap-2">✅ Continuity with one consultant</li>
-                  <li className="flex items-center gap-2">✅ Flexible scheduling across sessions</li>
+                  <li className="flex items-center gap-2">✅ Consultancy with one consultant</li>
+                  <li className="flex items-center gap-2">✅ Flexible scheduling sessions</li>
                 </ul>
               </div>
-              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-bold hover:bg-slate-100 text-xs">
+              <Button asChild size="lg" variant="outline" className="mt-8 rounded-full border-slate-900 bg-white text-slate-900 font-black hover:bg-slate-100 text-xs uppercase">
                 <Link to="/doctors">Explore Packages</Link>
               </Button>
             </div>
@@ -852,7 +952,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 10. CTA BANNER ("Your First Session Is On Us.") */}
+      {/* 10. CTA BANNER ("TRY DURRMI FREE") */}
       <section className="bg-[#FAF6EE] py-20 border-t border-amber-200/60 relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
@@ -866,27 +966,21 @@ function LandingPage() {
 
             {/* Center Content */}
             <div className="mx-auto max-w-2xl text-center space-y-6">
-              {/* Trust Avatar Stack */}
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="size-8 rounded-full border-2 border-white bg-amber-200 grid place-items-center text-xs font-bold">👨‍💼</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-teal-200 grid place-items-center text-xs font-bold">👩‍⚕️</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-rose-200 grid place-items-center text-xs font-bold">👨‍⚕️</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-purple-200 grid place-items-center text-xs font-bold">👩‍💻</div>
-                </div>
-                <span className="text-xs font-bold text-slate-500">
-                  Trusted by over <span className="text-slate-900 font-black">1000+ customers</span>
-                </span>
-              </div>
+              <span className="text-xs font-black uppercase tracking-widest text-amber-950 bg-amber-200 px-4 py-1 rounded-full border border-amber-400">
+                (Your First Session Is On Us)
+              </span>
 
               {/* Big Headline */}
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-none">
-                Your First Session Is On Us.
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-none pt-2">
+                TRY DURRMI FREE
               </h2>
 
               {/* Subtitle */}
-              <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-md mx-auto">
-                Book a free session and see if it feels right — no commitment, no cost.
+              <p className="text-sm font-bold text-amber-950 max-w-md mx-auto">
+                Our aim is to support you, with our no cost & no commitment.
+              </p>
+              <p className="text-xs font-extrabold text-slate-700 max-w-lg mx-auto bg-amber-100/80 p-3 rounded-2xl border border-amber-300/60">
+                "Your First Self-care shouldn't cost you. Book a free session with us, with no cost & no commitments."
               </p>
 
               {/* Yellow Pill Button */}
