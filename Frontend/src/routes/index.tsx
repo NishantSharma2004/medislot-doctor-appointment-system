@@ -148,9 +148,9 @@ const TRUSTED_THERAPIST_AVATARS = [
   { url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
   { url: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-3" },
   { url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80", offset: "translate-y-0" },
-  { url: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-5" },
+  { url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-5" },
   { url: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
-  { url: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-2" },
+  { url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-2" },
   { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-3" },
 ];
 
@@ -782,22 +782,17 @@ function LandingPage() {
             ))}
           </div>
 
-          {/* Trusted Header & Comment */}
+          {/* Trusted Header */}
           <div className="space-y-3 max-w-3xl mx-auto pt-4 relative">
             <span className="text-xs font-black uppercase tracking-widest text-slate-500">
-              Trusted By
+              TRUSTED BY
             </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">
-              World Class Therapists
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+              We Partner Only With World-Class Therapists.
             </h2>
 
-            {/* Comment Badge Overlay */}
-            <div className="inline-block bg-sky-500 text-white text-xs font-bold px-4 py-2 rounded-2xl shadow-md border border-sky-400">
-              💬 Surbhi Rathore: We partner only with world-class therapists.
-            </div>
-
             <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-xl mx-auto pt-2">
-              We partner only with world-class, licensed therapists to provide dedicated, compassionate mental health care for your unique journey.
+              We partner only with world-class, licensed psychotherapists and clinical psychologists to provide dedicated, compassionate mental health care for your unique journey.
             </p>
 
             <div className="pt-3">
@@ -816,11 +811,8 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pt-24 space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Our Specialists Team
+              Meet the Specialists Behind Every Solution
             </h2>
-            <div className="inline-block bg-slate-900 text-amber-300 text-[11px] font-black px-3.5 py-1 rounded-full shadow-xs">
-              ✦ "Meet the Specialists Behind Every Solution"
-            </div>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-md mx-auto pt-1">
               Every journey looks different. That's why we've built a few simple ways to start.
             </p>
