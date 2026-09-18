@@ -81,21 +81,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Durrmi — Book Clinic Appointments Online" },
+      { title: "Durrmi — Your Journey To Wellness Starts Here" },
       {
         name: "description",
         content:
-          "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks.",
+          "Search therapists by specialization, consultation fee, book appointments, and manage your digital health journey with Durrmi.",
       },
-      { property: "og:title", content: "Durrmi — Book Clinic Appointments Online" },
+      { property: "og:title", content: "Durrmi — Your Journey To Wellness Starts Here" },
       {
         property: "og:description",
-        content: "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks.",
+        content: "Search therapists by specialization, consultation fee, book appointments, and manage your digital health journey with Durrmi.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Durrmi — Book Clinic Appointments Online" },
-      { name: "twitter:description", content: "Search doctors by specialization, city and consultation fee, then book, reschedule or cancel clinic appointments in a few clicks." },
+      { name: "twitter:title", content: "Durrmi — Your Journey To Wellness Starts Here" },
+      { name: "twitter:description", content: "Search therapists by specialization, consultation fee, book appointments, and manage your digital health journey with Durrmi." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1776b220-ef74-41da-83fc-5e4d06b45cde/id-preview-1e28322c--2086c847-52c5-4db2-be91-7e17c06b103c.lovable.app-1785398615692.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1776b220-ef74-41da-83fc-5e4d06b45cde/id-preview-1e28322c--2086c847-52c5-4db2-be91-7e17c06b103c.lovable.app-1785398615692.png" },
     ],

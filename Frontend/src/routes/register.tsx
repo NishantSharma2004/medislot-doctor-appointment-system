@@ -313,7 +313,7 @@ export function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="clinicName">Clinic Name</Label>
-                  <Input id="clinicName" placeholder="MediSlot Care Clinic" {...form.register("clinicName")} />
+                  <Input id="clinicName" placeholder="Durrmi Mind Care Center" {...form.register("clinicName")} />
                 </div>
               </div>
 

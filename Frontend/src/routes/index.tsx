@@ -296,7 +296,7 @@ function LandingPage() {
                 {isDoctor ? (
                   <>Welcome back to Doctor Desk, <span className="text-amber-700">{user?.fullName}</span></>
                 ) : isAdmin ? (
-                  <>MediSlot Clinic <span className="text-teal-700">Administration Portal</span></>
+                  <>Durrmi Wellness <span className="text-teal-700">Administration Portal</span></>
                 ) : (
                   <>
                     <span className="block font-black">"The most important connection is the one within."</span>

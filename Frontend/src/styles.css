@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * MediSlot design system — calm clinical palette.
+ * Durrmi design system — warm pastel & calm clinical palette.
  * Teal = trust/primary action, deep slate-navy = text/structure,
  * amber = pending, green = confirmed, red = cancelled.
  * All colors are oklch tokens. Never hardcode colors in components.

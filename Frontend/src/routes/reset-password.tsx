@@ -20,8 +20,8 @@ export const Route = createFileRoute("/reset-password")({
   }),
   head: () => ({
     meta: [
-      { title: "Reset Password — MediSlot" },
-      { name: "description", content: "Set a new password for your MediSlot account." },
+      { title: "Reset Password — Durrmi" },
+      { name: "description", content: "Set a new password for your Durrmi account." },
     ],
   }),
   component: ResetPasswordPage,

@@ -6,7 +6,7 @@ import { homeRouteForRole, useAuth } from "@/context/AuthContext";
 export const Route = createFileRoute("/unauthorized")({
   head: () => ({
     meta: [
-      { title: "Access Denied — MediSlot" },
+      { title: "Access Denied — Durrmi" },
       { name: "description", content: "You do not have permission to access this page." },
     ],
   }),

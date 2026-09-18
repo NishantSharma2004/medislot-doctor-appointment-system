@@ -309,7 +309,7 @@ export function AppFooter() {
   return (
     <footer className="mt-16 border-t border-border bg-surface">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-        <p>© {new Date().getFullYear()} MediSlot Clinic Appointment System</p>
+        <p>© {new Date().getFullYear()} Durrmi — Mind & Emotional Wellness Platform</p>
         <p>Appointment scheduling only. For emergencies, contact your local emergency service.</p>
       </div>
     </footer>

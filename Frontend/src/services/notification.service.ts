@@ -17,7 +17,7 @@ function loadFromStorage(userId?: string): NotificationDto[] {
         {
           id: `notif-welcome-${userId}`,
           userId,
-          title: "Welcome to MediSlot! 🎉",
+          title: "Welcome to Durrmi! 🎉",
           message: "Your account is active. Find top doctors, view available slots, and book your consultation anytime.",
           type: "SYSTEM",
           read: false,

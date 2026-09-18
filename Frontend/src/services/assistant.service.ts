@@ -276,12 +276,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🩺 **Doctor Details**: **Dr. Rajesh Sharma**\n\n" +
-          "**Dr. Rajesh Sharma** is a **General Physician & Primary Care Specialist** at MediSlot.\n\n" +
+          "**Dr. Rajesh Sharma** is a **General Physician & Primary Care Specialist** at Durrmi.\n\n" +
           "• **Specialization**: General Medicine & Primary Care\n" +
           "• **Qualifications**: MBBS, MD (General Medicine)\n" +
           "• **Consultation Fee**: ₹500\n" +
           "• **Key Services**: Primary body checkups, chronic health management (Blood Pressure & Diabetes monitoring), viral fever treatment, and specialist referrals.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Primary Care", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Primary Care", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -300,12 +300,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "👁️ **Doctor Details**: **Dr. Alok Banerjee**\n\n" +
-          "**Dr. Alok Banerjee** is an **Ophthalmology Specialist (Eye Care)** at MediSlot.\n\n" +
+          "**Dr. Alok Banerjee** is an **Ophthalmology Specialist (Eye Care)** at Durrmi.\n\n" +
           "• **Specialization**: Ophthalmology (Eye Care)\n" +
           "• **Qualifications**: MBBS, MS (Ophthalmology)\n" +
           "• **Consultation Fee**: ₹700\n" +
           "• **Key Services**: Vision testing, eye infections, cataract consultations, and ocular health evaluations.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Ophthalmology", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Ophthalmology", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -324,12 +324,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🧠 **Doctor Details**: **Dr. Kavita Verma**\n\n" +
-          "**Dr. Kavita Verma** is a **Neurology Specialist (Brain & Nerves)** at MediSlot.\n\n" +
+          "**Dr. Kavita Verma** is a **Neurology Specialist (Brain & Nerves)** at Durrmi.\n\n" +
           "• **Specialization**: Neurology (Brain & Nerves)\n" +
           "• **Qualifications**: MBBS, DM (Neurology)\n" +
           "• **Consultation Fee**: ₹1300\n" +
           "• **Key Services**: Migraine management, nerve disorders, numbness, and neurological evaluations.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Neurology", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Neurology", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -348,12 +348,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🩺 **Doctor Details**: **Dr. Vikram Shetty**\n\n" +
-          "**Dr. Vikram Shetty** is a **Cardiology Specialist (Heart Care)** at MediSlot.\n\n" +
+          "**Dr. Vikram Shetty** is a **Cardiology Specialist (Heart Care)** at Durrmi.\n\n" +
           "• **Specialization**: Cardiology (Heart Care)\n" +
           "• **Qualifications**: MBBS, DM (Cardiology)\n" +
           "• **Consultation Fee**: ₹1200\n" +
           "• **Key Services**: Cardiac reviews, ECG interpretation, hypertension, and heart health evaluations.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Cardiology", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Cardiology", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -372,12 +372,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🧴 **Doctor Details**: **Dr. Meera Krishnan**\n\n" +
-          "**Dr. Meera Krishnan** is a **Dermatology Specialist (Skin & Hair)** at MediSlot.\n\n" +
+          "**Dr. Meera Krishnan** is a **Dermatology Specialist (Skin & Hair)** at Durrmi.\n\n" +
           "• **Specialization**: Dermatology (Skin & Hair)\n" +
           "• **Qualifications**: MBBS, MD (Dermatology)\n" +
           "• **Consultation Fee**: ₹750\n" +
           "• **Key Services**: Skin allergy, acne treatments, hair fall care, and nail disorder management.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Dermatology", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Dermatology", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -396,12 +396,12 @@ const mockAssistantService: AssistantService = {
       return delay({
         answer:
           "🦴 **Doctor Details**: **Dr. Sneha Kulkarni**\n\n" +
-          "**Dr. Sneha Kulkarni** is an **Orthopaedics Specialist (Bone & Joint)** at MediSlot.\n\n" +
+          "**Dr. Sneha Kulkarni** is an **Orthopaedics Specialist (Bone & Joint)** at Durrmi.\n\n" +
           "• **Specialization**: Orthopaedics (Bone & Joint)\n" +
           "• **Qualifications**: MBBS, MS (Orthopaedics)\n" +
           "• **Consultation Fee**: ₹900\n" +
           "• **Key Services**: Joint mobility, backache & spine care, fracture follow-ups, and knee pain treatment.",
-        sources: [{ title: "MediSlot Doctor Directory", section: "Orthopaedics", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Doctor Directory", section: "Orthopaedics", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
         doctorMatch: {
@@ -638,7 +638,7 @@ const mockAssistantService: AssistantService = {
     ) {
       return delay({
         answer:
-          "👋 **Namaste! Main MediSlot AI Health Assistant hoon.**\n\n" +
+          "👋 **Namaste! Main Durrmi AI Health Assistant hoon.**\n\n" +
           "Main aapke medical symptoms samajhkar sahi Doctor match kar sakta hoon, Blood Test Reports analyze kar sakta hoon, aur Direct Booking me help kar sakta hoon.\n\n" +
           "💡 *Try asking me*:\n" +
           "• *'Mujhe headache aur eye pain hai, kis doctor ko dikhau?'*\n" +
@@ -676,10 +676,10 @@ const mockAssistantService: AssistantService = {
     if (!isMedicalQuery) {
       return delay({
         answer:
-          `ℹ️ **MediSlot Portal Information**:\n\n` +
+          `ℹ️ **Durrmi Portal Information**:\n\n` +
           `To search for doctors, book appointments, or view clinic information, you can use the **Find a Doctor** tab or search filters by specialization and city.\n\n` +
           `If you are experiencing any health symptoms or need medical guidance, please describe your symptom (e.g. *'I have a headache'* or *'chest pain'*) and I will recommend the appropriate specialist.`,
-        sources: [{ title: "MediSlot Help & Navigation Guide", section: "Portal Services", evidenceStrength: "STRONG" }],
+        sources: [{ title: "Durrmi Help & Navigation Guide", section: "Portal Services", evidenceStrength: "STRONG" }],
         sufficientEvidence: true,
         disclaimer: ASSISTANT_DISCLAIMER,
       });

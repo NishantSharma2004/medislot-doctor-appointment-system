@@ -16,7 +16,7 @@ import { getInitials } from "@/lib/utils";
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
-      { title: "My Profile — MediSlot" },
+      { title: "My Profile — Durrmi" },
       { name: "description", content: "Manage your personal profile, address, and contact details." },
     ],
   }),
