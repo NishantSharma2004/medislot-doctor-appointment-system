@@ -71,7 +71,7 @@ export function PricingPage() {
                   size="lg"
                   className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md border border-amber-400"
                 >
-                  <a href="#plans">{cmsPricing.heroCtaLabel || "Find your plan ↗"}</a>
+                  <a href="#plans">{cmsPricing.heroCtaLabel || "Find your plan"}</a>
                 </Button>
               </div>
             </div>
@@ -140,46 +140,104 @@ export function PricingPage() {
         </div>
       </section>
 
-      {/* 2. CHOOSE WHAT FEELS BEST FOR YOU (Images 2 & 3) */}
-      <section id="plans" className="py-20 scroll-mt-10">
+      {/* 2. CHOOSE WHAT FEELS BEST FOR YOU (Matching Image 1) */}
+      <section id="plans" className="py-16 sm:py-20 scroll-mt-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <div className="inline-block relative">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+          <div className="space-y-3">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
               {cmsPricing.plansHeaderTitle || "Choose What Feels Best For You"}
             </h2>
-            <span className="hidden sm:inline-block absolute -top-4 -right-12 bg-slate-900 text-amber-300 text-[10px] font-black px-2.5 py-1 rounded-full shadow-xs">
-              Calculate cost
-            </span>
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
+              {cmsPricing.plansHeaderSubtitle ||
+                "Every journey looks different. That's why we've built a few simple ways to start."}
+            </p>
           </div>
 
-          <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-lg mx-auto">
-            {cmsPricing.plansHeaderSubtitle ||
-              "Every journey looks different. That's why we've built a few simple ways to start."}
-          </p>
+          {/* FILTER PILLS (3 Multi-Row Category Cloud matching Image 1) */}
+          <div className="pt-6 space-y-2.5 max-w-5xl mx-auto">
+            {/* Row 1 */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              {[
+                "Relationship Recovery",
+                "Weekly Support",
+                "Anxiety Care",
+                "Stress Management Journey",
+                "Depression Support",
+                "Couples Therapy",
+              ].map((cat, idx) => {
+                const isActive = cat === activeCategory;
+                return (
+                  <button
+                    key={`row1-${idx}-${cat}`}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                      isActive
+                        ? "bg-[#FCE6A6] text-slate-950 border-2 border-amber-400 scale-105 shadow-sm"
+                        : "bg-white text-slate-700 border border-slate-200/90 hover:bg-amber-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
 
-          <p className="text-xs font-bold text-amber-900 italic">
-            "{cmsPricing.plansHeaderComment || "Start your journey with a few simple steps with our Experts."}"
-          </p>
+            {/* Row 2 */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              {[
+                "Stress Management Journey",
+                "Weekly Support",
+                "Depression Support",
+                "Couples Therapy",
+                "Anxiety Care",
+                "Relationship Recovery",
+              ].map((cat, idx) => {
+                const isActive = cat === activeCategory;
+                return (
+                  <button
+                    key={`row2-${idx}-${cat}`}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                      isActive
+                        ? "bg-[#FCE6A6] text-slate-950 border-2 border-amber-400 scale-105 shadow-sm"
+                        : "bg-white text-slate-700 border border-slate-200/90 hover:bg-amber-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
 
-          {/* FILTER PILLS (Category Tabs) */}
-          <div className="pt-6 flex flex-wrap justify-center gap-2 max-w-4xl mx-auto">
-            {categories.map((cat) => {
-              const isActive = cat === activeCategory;
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-5 py-2.5 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs ${
-                    isActive
-                      ? "bg-[#FCE6A6] text-slate-950 border-2 border-amber-400 scale-105"
-                      : "bg-white text-slate-700 border border-slate-200 hover:bg-amber-50 hover:text-slate-900"
-                  }`}
-                >
-                  {cat}
-                </button>
-              );
-            })}
+            {/* Row 3 */}
+            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5">
+              {[
+                "Depression Support",
+                "Anxiety Care",
+                "Stress Management Journey",
+                "Couples Therapy",
+                "Weekly Support",
+                "Relationship Recovery",
+              ].map((cat, idx) => {
+                const isActive = cat === activeCategory;
+                return (
+                  <button
+                    key={`row3-${idx}-${cat}`}
+                    type="button"
+                    onClick={() => setActiveCategory(cat)}
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs font-black transition-all cursor-pointer shadow-xs whitespace-nowrap ${
+                      isActive
+                        ? "bg-[#FCE6A6] text-slate-950 border-2 border-amber-400 scale-105 shadow-sm"
+                        : "bg-white text-slate-700 border border-slate-200/90 hover:bg-amber-50 hover:text-slate-900"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* 4 PLAN CARDS GRID */}
@@ -325,16 +383,13 @@ export function PricingPage() {
         </div>
       </section>
 
-      {/* 3. CORPORATE PLAN BANNER (Image 4) */}
-      <section className="py-10">
+      {/* 3. CORPORATE PLAN BANNER (Matching Image 1) */}
+      <section className="py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[32px] border border-amber-200/80 bg-white p-8 sm:p-10 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+          <div className="rounded-[32px] border border-slate-200/90 bg-white p-8 sm:p-10 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
             <div className="space-y-2 text-left">
-              <span className="bg-slate-900 text-amber-300 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                {cmsPricing.corporateBanner?.badge || "THE TOTAL CARE PLAN"}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 pt-1">
-                {cmsPricing.corporateBanner?.title || "Looking For A Corporate Plan:"}
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                {cmsPricing.corporateBanner?.title ? cmsPricing.corporateBanner.title.replace(":", "?") : "Looking For A Corporate Plan?"}
               </h2>
               <p className="text-xs sm:text-sm font-medium text-slate-600 max-w-xl leading-relaxed">
                 {cmsPricing.corporateBanner?.description ||
@@ -344,9 +399,9 @@ export function PricingPage() {
             <Button
               asChild
               size="lg"
-              className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 shadow-md border border-amber-400"
+              className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 shadow-md border border-amber-400"
             >
-              <Link to="/doctors">{cmsPricing.corporateBanner?.ctaLabel || "Contact sales"}</Link>
+              <Link to="/doctors">Contact sales</Link>
             </Button>
           </div>
         </div>
