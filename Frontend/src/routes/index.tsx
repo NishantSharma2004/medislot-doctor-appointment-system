@@ -1216,10 +1216,10 @@ function LandingPage() {
           
           <div className="space-y-3 max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              How Your Free Session Works
+              Steps to breakdown your freebie sessions.
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Whether you consult with us or build with us — you'll be shaping how consultancy works for the next generation.
+              Thinking about consulting or building with us- well, we are here to shape your next-generation, in 4-steps era.
             </p>
           </div>
 
