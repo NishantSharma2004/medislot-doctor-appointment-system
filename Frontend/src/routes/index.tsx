@@ -599,11 +599,8 @@ function LandingPage() {
                 SPECIALISATIONS & SERVICES
               </span>
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight leading-[1.18]">
-                Whatever You're Carrying, There's Someone Who Gets It.
+                The real luxury? A peaceful mind & a life full of ease.
               </h2>
-              <p className="text-sm font-extrabold text-amber-900 italic">
-                "The real luxury? A peaceful mind & a life full of ease."
-              </p>
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
                 Talk about it; don't carry it; <span className="font-extrabold text-slate-900">"our experts truly understand."</span> Find a helping partner here for your anxiety, depression, loss, or grief that you want to share. You were never meant to carry it all alone.
               </p>
@@ -793,10 +790,10 @@ function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pt-24 space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Meet the Specialists Behind Every Solution
+              Meet the caring team that makes it all happen.
             </h2>
-            <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-md mx-auto pt-1">
-              Every journey looks different. That's why we've built a few simple ways to start.
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-lg mx-auto pt-1">
+              Real talk, Real credentials, and no algorithms. ~Therapist says healing starts with real conversations.
             </p>
           </div>
 
@@ -892,10 +889,10 @@ function LandingPage() {
               {/* Left Column: Heading, description, pills & button */}
               <div className="lg:col-span-7 space-y-6 text-left">
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
-                  Not Sure Where To Start? That's Okay.
+                  No clue where to start? Don't worry we are here.
                 </h2>
                 <p className="text-xs sm:text-sm font-semibold text-slate-900 max-w-lg leading-relaxed">
-                  You don't need to have it all figured out before reaching out. If you're not sure which category fits your situation — or if it's a mix of a few — we'll help you figure it out.
+                  Feeling stuck before you even begin? Totally normal- you don't need a perfect word or a whole plan. Just show up as you are, and we'll help you take the first step at a time.
                 </p>
 
                 {/* Category Pills */}
@@ -1229,63 +1226,63 @@ function LandingPage() {
           {/* Stepped Cards Grid with curved dotted connector accents */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
             
-            {/* Step 1: Book A Slot */}
+            {/* Step 1: Lock in your slot */}
             <div className="rounded-[28px] border border-amber-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
               <div className="h-3 w-full bg-[#FDE68A] absolute top-0 left-0 right-0" />
               <span className="inline-block text-2xl font-black text-amber-500 pt-1">
                 01
               </span>
               <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Book A Slot
+                Lock in your slot
               </h3>
               <div className="h-[1px] w-full bg-slate-200" />
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                Choose a time that works for you, in just a couple of clicks.
+                pick your time and lock it down, no hesitation.
               </p>
             </div>
 
-            {/* Step 2: Get Matched */}
+            {/* Step 2: Vibe-check your match */}
             <div className="rounded-[28px] border border-sky-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
               <div className="h-3 w-full bg-[#93C5FD] absolute top-0 left-0 right-0" />
               <span className="inline-block text-2xl font-black text-sky-500 pt-1">
                 02
               </span>
               <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Get Matched
+                Vibe-check your match
               </h3>
               <div className="h-[1px] w-full bg-slate-200" />
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                Choose a time that works for you, in just a couple of clicks.
+                Meet your guide and make sure the energy is 100%.
               </p>
             </div>
 
-            {/* Step 3: Take Session */}
+            {/* Step 3: Hop on the session */}
             <div className="rounded-[28px] border border-orange-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
               <div className="h-3 w-full bg-[#FED7AA] absolute top-0 left-0 right-0" />
               <span className="inline-block text-2xl font-black text-orange-500 pt-1">
                 03
               </span>
               <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Take Session
+                Hop on the session
               </h3>
               <div className="h-[1px] w-full bg-slate-200" />
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                Choose a time that works for you, in just a couple of clicks.
+                show up, tap in & let’s get to work.
               </p>
             </div>
 
-            {/* Step 4: Get Clarity */}
+            {/* Step 4: Secure the clarity */}
             <div className="rounded-[28px] border border-indigo-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
               <div className="h-3 w-full bg-[#C7D2FE] absolute top-0 left-0 right-0" />
               <span className="inline-block text-2xl font-black text-indigo-500 pt-1">
                 04
               </span>
               <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Get Clarity
+                Secure the clarity
               </h3>
               <div className="h-[1px] w-full bg-slate-200" />
               <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                Choose a time that works for you, in just a couple of clicks.
+                walk away with zero confusion and a total vision.
               </p>
             </div>
 

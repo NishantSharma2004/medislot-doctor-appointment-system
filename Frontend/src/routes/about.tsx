@@ -30,13 +30,12 @@ export function AboutPage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-            Trusted<br />
-            Consultancy, Built<br />
-            For Real People
+            Trusted where it counts-<br />
+            with real people.
           </h1>
 
           <p className="text-xs sm:text-sm md:text-base font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
-            Durrmi connects you with verified consultants — so getting the right guidance is simple, transparent, and always within reach.
+            Durrmi links you with verified experts- making the right support clear, honest and easy to reach.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -72,10 +71,10 @@ export function AboutPage() {
                     Why We Started Durrmi
                   </h2>
                   <p className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
-                    Durrmi began with a simple frustration: finding the right professional to consult shouldn't feel like guesswork. Too often, people spend hours scrolling through disconnected directories, wondering who is truly qualified, or putting off support because the process feels intimidating.
+                    Durrmi begins because finding the right people help shouldn’t feel harder. Too many people struggle in silence - unsure who to trust, tired of generic advice, and let down by support that never really fit. We saw people give up not because help didn’t exist, but because the right help was too hard to find.
                   </p>
                   <p className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
-                    We built Durrmi to change that — creating a single, trusted place where anyone can find verified, empathetic guidance with total clarity on pricing, approach, and fit.
+                    So we built Durrmi; a place where you’re matched with verified professionals who understand what you’re facing. No guesswork, no judgment- just real guidance that’s simple, transparent, and always within reach. And there’s nothing wrong with you -everything is possible when you have the right people beside you.
                   </p>
                 </div>
                 <div className="md:col-span-5 flex justify-center">
@@ -102,31 +101,13 @@ export function AboutPage() {
                   <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                     What We Stand For
                   </h2>
-                  <div className="space-y-3.5 text-xs sm:text-sm">
-                    <div>
-                      <h3 className="font-black text-slate-900">✦ Trust First</h3>
-                      <p className="font-medium text-slate-700 leading-relaxed">
-                        Verification isn't a checkbox for us — it's the foundation of everything we build.
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="font-black text-slate-900">✦ Transparency Always</h3>
-                      <p className="font-medium text-slate-700 leading-relaxed">
-                        Clear pricing, clear processes, no hidden terms — for consultants and clients alike.
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="font-black text-slate-900">✦ People Over Process</h3>
-                      <p className="font-medium text-slate-700 leading-relaxed">
-                        Technology should make things simpler, not colder. We design with empathy at the core.
-                      </p>
-                    </div>
-                    <div>
-                      <h3 className="font-black text-slate-900">✦ Continuous Growth</h3>
-                      <p className="font-medium text-slate-700 leading-relaxed">
-                        For our consultants, our team, and the people we serve — we're always improving.
-                      </p>
-                    </div>
+                  <div className="space-y-3 text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
+                    <p>
+                      At Durrmi, we stand for the belief that everyone deserves the right help- without the stigma, guesswork or barriers. We stand for trust. Every professional is verified, so the guidance you get is genuine, safe, and something you can rely on.
+                    </p>
+                    <p>
+                      We stand for possibility: with the right people beside you, everything is possible. Because looking after your mind should be as normal as looking after your body.
+                    </p>
                   </div>
                 </div>
               </div>

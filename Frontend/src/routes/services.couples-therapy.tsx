@@ -26,10 +26,10 @@ export function CouplesTherapyPage() {
             {/* Left Content */}
             <div className="md:col-span-7 space-y-6 text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
-                Struggling to Connect With Your Partner? We Can Help.
+                Relationship is cooked? Let's un-cook it!
               </h1>
               <p className="text-xs sm:text-sm md:text-base font-semibold text-slate-600 max-w-lg leading-relaxed">
-                Whether you're feeling disconnected or stuck in old patterns, our licensed therapists are here to guide you through it, together.
+                A good relationship isn't about never struggling or always being perfect; it’s about understanding each other. No judgment, no sides, just real support to help your relationships thrive
               </p>
               <div>
                 <Button
@@ -63,14 +63,14 @@ export function CouplesTherapyPage() {
             {/* Left Column: Understanding */}
             <div className="md:col-span-6 space-y-5 text-left">
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                Understanding Couples Therapy
+                Healing Era, unlocked- with support made for you.
               </h2>
               <div className="space-y-4 text-xs sm:text-sm font-medium text-slate-700 leading-relaxed">
                 <p>
-                  Every relationship faces challenges — communication breakdowns, recurring conflicts, trust issues, or simply growing apart. Couples therapy creates a safe, neutral space for partners to be heard, understand each other's needs, and work through challenges with guidance instead of guesswork.
+                  Every relationship hits a rough phase, and that's okay. Couple therapy is your safe space to actually get each other again. No sides, no blame, no judgment — just honest convos that turn tension into teamwork.
                 </p>
                 <p>
-                  Whether you're trying to resolve a specific conflict or strengthen your relationship long-term, our consultants help you navigate it together.
+                  Whether you're fixing the "we need to talk" energy or just want to grow stronger together, this is where your relationship glow-up begins. Less arguing, more understanding. Because real love deserves real support. Strong relationships don’t mean perfection; it takes promises, ups and downs, and difficult conversations. The strong ones ask for help. Couples therapy = your relationship glow-up starts here.
                 </p>
               </div>
             </div>
@@ -78,26 +78,26 @@ export function CouplesTherapyPage() {
             {/* Right Column: Common Signs Pills */}
             <div className="md:col-span-6 space-y-4 text-left">
               <h3 className="text-sm sm:text-base font-black text-slate-900 tracking-tight">
-                Common Signs This Service Can Help With:
+                Don't wait for the common sign to appear, Service for a safe space to help.
               </h3>
               <div className="space-y-2.5">
-                <div className="rounded-xl bg-[#FFF3D6] border border-amber-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-amber-950 shadow-xs">
-                  Frequent arguments or unresolved conflict
+                <div className="rounded-xl bg-[#FFF3D6] border border-amber-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-amber-950 shadow-xs leading-relaxed">
+                  Same fight, different day? We help you break the loop.
                 </div>
-                <div className="rounded-xl bg-[#FFE8D6] border border-orange-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-orange-950 shadow-xs">
-                  Communication that feels stuck
+                <div className="rounded-xl bg-[#FFE8D6] border border-orange-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-orange-950 shadow-xs leading-relaxed">
+                  When convos feel like talking to a wall, we help you both feel heard again. Real dialogue, zero shutdowns.
                 </div>
-                <div className="rounded-xl bg-[#E0F2FE] border border-sky-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-sky-950 shadow-xs">
-                  Trust issues or difficulty rebuilding after a breach
+                <div className="rounded-xl bg-[#E0F2FE] border border-sky-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-sky-950 shadow-xs leading-relaxed">
+                  Trust took a hit? We’ll help you rebuild it, piece by piece, at a pace that feels right for you.
                 </div>
-                <div className="rounded-xl bg-[#FFE4E6] border border-rose-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-rose-950 shadow-xs">
-                  Feeling disconnected or like roommates
+                <div className="rounded-xl bg-[#FFE4E6] border border-rose-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-rose-950 shadow-xs leading-relaxed">
+                  Piled-up thoughts and revisiting the past make you feel disconnected. Take a pause and connect with us, and we will help you connect again with each other.
                 </div>
-                <div className="rounded-xl bg-[#DCFCE7] border border-emerald-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-emerald-950 shadow-xs">
-                  Major life transitions putting stress on the relationship
+                <div className="rounded-xl bg-[#DCFCE7] border border-emerald-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-emerald-950 shadow-xs leading-relaxed">
+                  Big changes hitting hard? We help you navigate the chaos as a team, not opponents. Working life, personal life and love life need to be balanced, and that’s where the relationship starts to get difficult. We help you to make it balanced.
                 </div>
-                <div className="rounded-xl bg-[#EDE9FE] border border-purple-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-purple-950 shadow-xs">
-                  Wanting to strengthen the bond before a crisis
+                <div className="rounded-xl bg-[#EDE9FE] border border-purple-300/80 px-4 py-3 text-xs sm:text-sm font-bold text-purple-950 shadow-xs leading-relaxed">
+                  Therapy isn't just for when things break. Sometimes it's the flex that keeps you strong. Grow together, on purpose.
                 </div>
               </div>
             </div>
@@ -115,7 +115,7 @@ export function CouplesTherapyPage() {
               Getting Support Is Simple
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Whether you consult with us or build with us — you'll be shaping how consultancy works for the next generation.
+              Support without the wait. Support that feels simple & easy for bookings, sessions, conversations & the best plan for your well-being
             </p>
           </div>
 
@@ -131,7 +131,7 @@ export function CouplesTherapyPage() {
                 Choose Your Consultant
               </h3>
               <p className="text-xs font-medium text-slate-900 leading-relaxed">
-                Browse our verified consultants specializing in couple therapy.
+                We have all verified professionals, which makes it easy for you to choose the best therapist for you and your partner.
               </p>
             </div>
 
@@ -144,7 +144,7 @@ export function CouplesTherapyPage() {
                 Book A Session Together
               </h3>
               <p className="text-xs font-medium text-orange-50 leading-relaxed">
-                Pick a time that works for both of you, online or via app.
+                Sessions for both of you online or in the app. Working together works; join your session together from anywhere.
               </p>
             </div>
 
@@ -154,10 +154,10 @@ export function CouplesTherapyPage() {
                 03
               </span>
               <h3 className="text-lg font-black tracking-tight leading-snug">
-                Start The Conversation
+                Start the Conversation
               </h3>
               <p className="text-xs font-medium text-slate-900 leading-relaxed">
-                Share your perspectives in a safe, neutral space with guided support.
+                Share thoughts; a friendly vibe and guided support make life easy and calm. Conversations with the right people always guide.
               </p>
             </div>
 
@@ -167,10 +167,10 @@ export function CouplesTherapyPage() {
                 04
               </span>
               <h3 className="text-lg font-black tracking-tight leading-snug">
-                Build A Plan Together
+                Build a plan together
               </h3>
               <p className="text-xs font-medium text-emerald-50 leading-relaxed">
-                Work toward practical tools and stronger communication, at your own pace.
+                We help to make practical changes; building together makes the relationship strong & supportive. Relationships need growth too, and we are here for it.
               </p>
             </div>
 
@@ -196,10 +196,10 @@ export function CouplesTherapyPage() {
             {/* Content & CTA */}
             <div className="md:col-span-7 space-y-6 text-left">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                Consultants Specializing in Couples Support
+                Couple Therapy Specialist
               </h2>
               <p className="text-xs sm:text-sm font-medium text-slate-700 leading-relaxed">
-                Our experienced therapists specialize in supporting couples at every stage of their relationship and life stages. Whether you're working through conflict or navigating major life changes, you'll find compassionate listening and expertise here.
+                An Experienced Therapist gives the best support in every area of life. Different cultures, life phases, and family pressure. It’s your dating phase, married life or taking a turning point in life; life always gives you challenges and with a partner, everything becomes easy. Let’s learn and become abundant in life with our professionals.
               </p>
               <div>
                 <Button
