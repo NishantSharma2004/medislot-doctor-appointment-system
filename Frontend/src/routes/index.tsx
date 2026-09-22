@@ -732,6 +732,39 @@ function LandingPage() {
                     <path fill="#FECDD3" d="M100 10 L120 70 L180 80 L130 120 L150 180 L100 140 L50 180 L70 120 L20 80 L80 70 Z" />
                   </svg>
                 </div>
+
+                {/* Card 7: Coaching */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#DCFCE7] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#22C55E] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Coaching</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      You don’t need therapy but would like to work with a professional collaboratively to unlock your higher potential.
+                    </p>
+                  </div>
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-80 pointer-events-none">
+                    <polygon fill="#BBF7D0" points="100,10 120,70 185,75 135,120 155,185 100,145 45,185 65,120 15,75 80,70" />
+                  </svg>
+                </div>
+
+                {/* Card 8: Group Therapy */}
+                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#EEF2FF] to-[#E0E7FF] border border-indigo-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                  <div className="h-2.5 w-full bg-[#4338CA] rounded-t-[28px] absolute top-0 left-0 right-0" />
+                  <div className="space-y-3 pt-2 z-10">
+                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Group Therapy</h3>
+                    <div className="h-[1px] w-full bg-slate-300/80" />
+                    <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+                      Not alone in this. A support group that meets weekly to lift each other through similar challenges
+                    </p>
+                  </div>
+                  <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-75 pointer-events-none">
+                    <g transform="rotate(45 100 100)" fill="#C7D2FE">
+                      <rect x="75" y="10" width="50" height="180" rx="25" />
+                      <rect x="10" y="75" width="180" height="50" rx="25" />
+                    </g>
+                  </svg>
+                </div>
               </div>
             </div>
 

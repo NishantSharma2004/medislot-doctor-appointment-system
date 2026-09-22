@@ -302,6 +302,16 @@ export const defaultHomePageCmsData: CmsHomePageData = {
         title: "Addiction Support",
         description: `Addictions holding you back? "We understand this deeply." We do not dismiss these issues; instead, we listen and provide support.`,
       },
+      {
+        id: "sp-7",
+        title: "Coaching",
+        description: "You don’t need therapy but would like to work with a professional collaboratively to unlock your higher potential.",
+      },
+      {
+        id: "sp-8",
+        title: "Group Therapy",
+        description: "Not alone in this. A support group that meets weekly to lift each other through similar challenges",
+      },
     ],
   },
   therapists: {
