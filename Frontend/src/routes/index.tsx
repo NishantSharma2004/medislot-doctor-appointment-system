@@ -656,10 +656,16 @@ function LandingPage() {
                 </div>
 
                 {/* Card 2: Couple & Family counselling */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0F8FF] to-[#D5E9FF] border border-blue-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/couples-therapy"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0F8FF] to-[#D5E9FF] border border-blue-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#7BBDF7] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Couple & Family counselling</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-blue-900 transition-colors">Couple & Family counselling</h3>
+                      <span className="text-blue-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       Navigate conflicts, identify patterns and strengthen your relationship to a healthier version.
@@ -668,7 +674,7 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-85 pointer-events-none">
                     <path fill="#BAE6FD" d="M100 15 C115 55 145 55 160 100 C145 145 115 145 100 185 C85 145 55 145 40 100 C55 55 85 55 100 15 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 3: Child and adolescent therapy */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF5ED] to-[#FFE2CD] border border-orange-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
@@ -874,6 +880,72 @@ function LandingPage() {
             </div>
           </div>
 
+        </div>
+      </section>
+
+      {/* 6.5 NOT SURE WHERE TO START? THAT'S OKAY. (Matching Screenshot 1) */}
+      <section className="bg-[#FAF8F3] py-14 sm:py-20 border-b border-amber-200/50">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[36px] bg-[#FFBE0B] border-2 border-amber-500/40 p-8 sm:p-12 shadow-xl relative overflow-hidden">
+            <div className="grid lg:grid-cols-12 gap-8 items-center">
+              
+              {/* Left Column: Heading, description, pills & button */}
+              <div className="lg:col-span-7 space-y-6 text-left">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
+                  Not Sure Where To Start? That's Okay.
+                </h2>
+                <p className="text-xs sm:text-sm font-semibold text-slate-900 max-w-lg leading-relaxed">
+                  You don't need to have it all figured out before reaching out. If you're not sure which category fits your situation — or if it's a mix of a few — we'll help you figure it out.
+                </p>
+
+                {/* Category Pills */}
+                <div className="flex flex-wrap gap-2.5 pt-2">
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Relationship Recovery
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Weekly Support
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Anxiety Care
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Stress Management Journey
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Depression Support
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Couples Therapy
+                  </span>
+                  <span className="px-4 py-2 rounded-full bg-white/95 border border-amber-900/20 text-xs font-bold text-slate-900 shadow-xs">
+                    Monthly Support
+                  </span>
+                </div>
+
+                {/* Button */}
+                <div className="pt-2">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="h-12 px-8 rounded-full bg-white text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:bg-slate-100 hover:shadow-lg transition-all border border-slate-200"
+                  >
+                    <Link to="/doctors">Book a free session</Link>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Right Column: Friends image */}
+              <div className="lg:col-span-5 flex justify-center">
+                <img
+                  src="https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&w=800&q=80"
+                  alt="Friends celebrating and connecting happily"
+                  className="w-full h-72 sm:h-96 object-cover rounded-[28px] shadow-lg border-2 border-white/60"
+                />
+              </div>
+
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1141,6 +1213,87 @@ function LandingPage() {
         </div>
       </section>
 
+      {/* 9.5 HOW YOUR FREE SESSION WORKS (Matching Screenshot 4) */}
+      <section className="bg-[#FAF7EF] py-16 sm:py-24 border-t border-amber-200/50 overflow-hidden relative">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-12">
+          
+          <div className="space-y-3 max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+              How Your Free Session Works
+            </h2>
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
+              Whether you consult with us or build with us — you'll be shaping how consultancy works for the next generation.
+            </p>
+          </div>
+
+          {/* Stepped Cards Grid with curved dotted connector accents */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+            
+            {/* Step 1: Book A Slot */}
+            <div className="rounded-[28px] border border-amber-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
+              <div className="h-3 w-full bg-[#FDE68A] absolute top-0 left-0 right-0" />
+              <span className="inline-block text-2xl font-black text-amber-500 pt-1">
+                01
+              </span>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                Book A Slot
+              </h3>
+              <div className="h-[1px] w-full bg-slate-200" />
+              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                Choose a time that works for you, in just a couple of clicks.
+              </p>
+            </div>
+
+            {/* Step 2: Get Matched */}
+            <div className="rounded-[28px] border border-sky-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
+              <div className="h-3 w-full bg-[#93C5FD] absolute top-0 left-0 right-0" />
+              <span className="inline-block text-2xl font-black text-sky-500 pt-1">
+                02
+              </span>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                Get Matched
+              </h3>
+              <div className="h-[1px] w-full bg-slate-200" />
+              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                Choose a time that works for you, in just a couple of clicks.
+              </p>
+            </div>
+
+            {/* Step 3: Take Session */}
+            <div className="rounded-[28px] border border-orange-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
+              <div className="h-3 w-full bg-[#FED7AA] absolute top-0 left-0 right-0" />
+              <span className="inline-block text-2xl font-black text-orange-500 pt-1">
+                03
+              </span>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                Take Session
+              </h3>
+              <div className="h-[1px] w-full bg-slate-200" />
+              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                Choose a time that works for you, in just a couple of clicks.
+              </p>
+            </div>
+
+            {/* Step 4: Get Clarity */}
+            <div className="rounded-[28px] border border-indigo-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
+              <div className="h-3 w-full bg-[#C7D2FE] absolute top-0 left-0 right-0" />
+              <span className="inline-block text-2xl font-black text-indigo-500 pt-1">
+                04
+              </span>
+              <h3 className="text-xl font-black text-slate-900 tracking-tight">
+                Get Clarity
+              </h3>
+              <div className="h-[1px] w-full bg-slate-200" />
+              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
+                Choose a time that works for you, in just a couple of clicks.
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
       {/* 10. CTA BANNER ("Your First Session Is On Us" matching Screenshot 1) */}
       <section className="bg-gradient-to-b from-[#FFFDF8] via-[#FAF6ED] to-[#FAF8F3] py-20 border-t border-amber-200/60 relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
@@ -1303,35 +1456,41 @@ function LandingPage() {
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">About Us</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/about" className="hover:underline">About Us</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
+                <li><Link to="/about" className="hover:underline">Our Story & Mission</Link></li>
+                <li><Link to="/about" className="hover:underline">Meet Our Leadership</Link></li>
+                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Pricing</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/pricing" className="hover:underline">Pricing</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
-                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
-                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Pricing & Plans</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Pre-Consultation</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Package Pricing</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Corporate Care Plan</Link></li>
+                <li><Link to="/#pricing" className="hover:underline">Compare Tiers</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Specialisations</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/doctors" className="hover:underline">Specialisations</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/doctors" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
+                <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couples Therapy ↗</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Individual Therapy</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Anxiety & Stress</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Depression Support</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Child & Adolescent</Link></li>
               </ul>
             </div>
 

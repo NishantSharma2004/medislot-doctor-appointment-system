@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -26,11 +27,17 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as DoctorAvailabilityRouteImport } from './routes/doctor_.availability'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
+import { Route as ServicesCouplesTherapyRouteImport } from './routes/services.couples-therapy'
 import { Route as DoctorsDoctorIdIndexRouteImport } from './routes/doctors.$doctorId.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -113,6 +120,11 @@ const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
   path: '/doctors/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesCouplesTherapyRoute = ServicesCouplesTherapyRouteImport.update({
+  id: '/services/couples-therapy',
+  path: '/services/couples-therapy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorsDoctorIdIndexRoute = DoctorsDoctorIdIndexRouteImport.update({
   id: '/doctors/$doctorId/',
   path: '/doctors/$doctorId/',
@@ -121,6 +133,7 @@ const DoctorsDoctorIdIndexRoute = DoctorsDoctorIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
   '/contact': typeof ContactRoute
@@ -136,11 +149,13 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
+  '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
   '/contact': typeof ContactRoute
@@ -156,12 +171,14 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
+  '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/doctors': typeof DoctorsIndexRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
   '/contact': typeof ContactRoute
@@ -177,6 +194,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor_/availability': typeof DoctorAvailabilityRoute
+  '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
@@ -184,6 +202,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/admin'
     | '/appointments'
     | '/contact'
@@ -199,11 +218,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unauthorized'
     | '/doctor/availability'
+    | '/services/couples-therapy'
     | '/doctors/'
     | '/doctors/$doctorId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/admin'
     | '/appointments'
     | '/contact'
@@ -219,11 +240,13 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unauthorized'
     | '/doctor/availability'
+    | '/services/couples-therapy'
     | '/doctors'
     | '/doctors/$doctorId'
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/admin'
     | '/appointments'
     | '/contact'
@@ -239,12 +262,14 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/unauthorized'
     | '/doctor_/availability'
+    | '/services/couples-therapy'
     | '/doctors/'
     | '/doctors/$doctorId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppointmentsRoute: typeof AppointmentsRoute
   ContactRoute: typeof ContactRoute
@@ -260,6 +285,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   DoctorAvailabilityRoute: typeof DoctorAvailabilityRoute
+  ServicesCouplesTherapyRoute: typeof ServicesCouplesTherapyRoute
   DoctorsIndexRoute: typeof DoctorsIndexRoute
   DoctorsDoctorIdIndexRoute: typeof DoctorsDoctorIdIndexRoute
 }
@@ -271,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -385,6 +418,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/couples-therapy': {
+      id: '/services/couples-therapy'
+      path: '/services/couples-therapy'
+      fullPath: '/services/couples-therapy'
+      preLoaderRoute: typeof ServicesCouplesTherapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doctors/$doctorId/': {
       id: '/doctors/$doctorId/'
       path: '/doctors/$doctorId'
@@ -397,6 +437,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppointmentsRoute: AppointmentsRoute,
   ContactRoute: ContactRoute,
@@ -412,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   DoctorAvailabilityRoute: DoctorAvailabilityRoute,
+  ServicesCouplesTherapyRoute: ServicesCouplesTherapyRoute,
   DoctorsIndexRoute: DoctorsIndexRoute,
   DoctorsDoctorIdIndexRoute: DoctorsDoctorIdIndexRoute,
 }
