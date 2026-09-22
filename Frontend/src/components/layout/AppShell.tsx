@@ -213,6 +213,7 @@ export function AppHeader() {
 
             <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
             <Link to="/doctors" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
+            <Link to="/careers" className="hover:text-amber-800 transition-colors">Careers</Link>
             <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")} className="hover:text-amber-800 transition-colors cursor-pointer">FAQ</a>
           </nav>
 
@@ -281,6 +282,9 @@ export function AppHeader() {
                   </a>
                   <Link to="/doctors" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Meet Our Therapists
+                  </Link>
+                  <Link to="/careers" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Careers
                   </Link>
                   <a href="/#faq" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     FAQ

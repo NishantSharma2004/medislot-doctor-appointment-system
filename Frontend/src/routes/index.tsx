@@ -1492,6 +1492,7 @@ function LandingPage() {
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
                 <li><Link to="/about" className="hover:underline">Our Story & Mission</Link></li>
                 <li><Link to="/about" className="hover:underline">Meet Our Leadership</Link></li>
+                <li><Link to="/careers" className="hover:underline font-bold text-amber-950">Join Our Team / Careers ↗</Link></li>
                 <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
                 <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>

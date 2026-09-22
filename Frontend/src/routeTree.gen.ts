@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DoctorRouteImport } from './routes/doctor'
@@ -48,6 +49,11 @@ const AdminRoute = AdminRouteImport.update({
 const AppointmentsRoute = AppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
@@ -158,6 +165,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
@@ -205,6 +214,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/careers'
     | '/contact'
     | '/dashboard'
     | '/doctor'
@@ -227,6 +237,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/careers'
     | '/contact'
     | '/dashboard'
     | '/doctor'
@@ -249,6 +260,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/careers'
     | '/contact'
     | '/dashboard'
     | '/doctor'
@@ -272,6 +284,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppointmentsRoute: typeof AppointmentsRoute
+  CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   DoctorRoute: typeof DoctorRoute
@@ -318,6 +331,13 @@ declare module '@tanstack/react-router' {
       path: '/appointments'
       fullPath: '/appointments'
       preLoaderRoute: typeof AppointmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -440,6 +460,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppointmentsRoute: AppointmentsRoute,
+  CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   DoctorRoute: DoctorRoute,
