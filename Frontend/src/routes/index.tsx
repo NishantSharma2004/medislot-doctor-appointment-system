@@ -1365,12 +1365,12 @@ function LandingPage() {
 
               {/* Main Headline */}
               <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] pt-1">
-                Your First Session<br />Is On Us.
+                Completely free. Totally chill.<br />Massive Clarity.
               </h2>
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base font-semibold text-slate-600 max-w-lg mx-auto leading-relaxed">
-                Book a free session and see if it feels right — no commitment, no cost.
+                Meet your guide with zero awkwardness at Durrmi.
               </p>
 
               {/* Yellow Pill Button */}

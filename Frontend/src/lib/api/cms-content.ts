@@ -568,9 +568,9 @@ export const defaultHomePageCmsData: CmsHomePageData = {
   },
   footerCta: {
     tag: "Trusted by over 1000+ customers",
-    title: "Your First Session Is On Us.",
-    subtitle: "Book a free session and see if it feels right — no commitment, no cost.",
-    highlightText: `"Book a free session and see if it feels right — no commitment, no cost."`,
+    title: "Completely free. Totally chill. Massive Clarity.",
+    subtitle: "Meet your guide with zero awkwardness at Durrmi.",
+    highlightText: `"Meet your guide with zero awkwardness at Durrmi."`,
     cta: {
       id: "cta_footer_free",
       label: "Book a free session",
