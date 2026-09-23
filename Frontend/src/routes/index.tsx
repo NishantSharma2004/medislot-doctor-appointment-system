@@ -144,15 +144,6 @@ const CONCERNS = [
   },
 ];
 
-const TRUSTED_THERAPIST_AVATARS = [
-  { url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
-  { url: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-3" },
-  { url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=300&q=80", offset: "translate-y-0" },
-  { url: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-5" },
-  { url: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-2" },
-  { url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=300&q=80", offset: "-translate-y-2" },
-  { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80", offset: "translate-y-3" },
-];
 
 const SPECIALIST_CARDS = [
   {
@@ -775,52 +766,8 @@ function LandingPage() {
       {/* 6. THE PEOPLE BEHIND DURRMI / THERAPIST SHOWCASE (Matching Images 1 & 2) */}
       <section className="bg-[#FAF8F3] py-20 border-t border-amber-200/50">
         
-        {/* Part 1: Top Staggered Gallery & Trusted Header (Image 1) */}
+        {/* Our Specialists Team Carousel */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          
-          {/* Staggered Avatar Gallery Track */}
-          <div className="flex justify-center items-center gap-3 sm:gap-4 overflow-hidden py-4 max-w-5xl mx-auto">
-            {TRUSTED_THERAPIST_AVATARS.map((item, idx) => (
-              <div
-                key={idx}
-                className={`size-16 sm:size-24 lg:size-28 rounded-2xl sm:rounded-3xl overflow-hidden border-2 border-white shadow-md shrink-0 transition-transform duration-300 hover:scale-110 ${item.offset}`}
-              >
-                <img
-                  src={item.url}
-                  alt={`World Class Therapist ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Trusted Header */}
-          <div className="space-y-3 max-w-3xl mx-auto pt-4 relative">
-            <span className="text-xs font-black uppercase tracking-widest text-slate-500">
-              TRUSTED BY
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-              We Partner Only With World-Class Therapists.
-            </h2>
-
-            <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-xl mx-auto pt-2">
-              We partner only with world-class, licensed psychotherapists and clinical psychologists to provide dedicated, compassionate mental health care for your unique journey.
-            </p>
-
-            <div className="pt-3">
-              <Button
-                asChild
-                size="lg"
-                className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md border border-amber-400"
-              >
-                <Link to="/doctors">Book a free session ↗</Link>
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Part 2: Our Specialists Team Carousel (Image 2) */}
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center pt-24 space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
               Meet the caring team that makes it all happen.
