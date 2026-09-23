@@ -175,7 +175,40 @@ export function AppHeader() {
           {/* Center Floating Pill Menu */}
           <nav aria-label="Main Navigation" className="hidden lg:flex items-center bg-white/90 border border-amber-300/60 rounded-full px-7 py-2 shadow-xs gap-6 text-xs font-extrabold text-slate-800">
             <a href="/" onClick={handleHomeClick} className="hover:text-amber-800 transition-colors cursor-pointer">Home</a>
-            <a href="#why-durrmi" onClick={(e) => handleScrollTo(e, "why-durrmi")} className="hover:text-amber-800 transition-colors cursor-pointer">About Us</a>
+            {/* Interactive About Us Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger className="hover:text-amber-800 transition-colors flex items-center gap-1 cursor-pointer outline-none font-extrabold">
+                About Us <ChevronDown className="size-3.5 text-amber-700" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-68 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
+                <DropdownMenuLabel className="text-[11px] font-black uppercase text-amber-900 tracking-wider px-2.5 py-1.5">
+                  About Durrmi
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-amber-100" />
+                <DropdownMenuItem onClick={() => navigate({ to: "/about" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  📖 Our Story &amp; Mission
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/about" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  👥 Meet Our Leadership
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/careers" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  💼 Join Our Team / Careers ↗
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => handleScrollTo(e as any, "why-durrmi")} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  ✨ Why Durrmi
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/therapists" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🩺 Therapists
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => handleScrollTo(e as any, "faq")} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  ❓ FAQ
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className="bg-amber-100" />
+                <DropdownMenuItem onClick={() => navigate({ to: "/about" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-100/70 hover:bg-amber-200">
+                  🌟 Learn More About Us ➔
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             {/* Interactive Services Dropdown */}
             <DropdownMenu>
@@ -184,26 +217,26 @@ export function AppHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-68 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
                 <DropdownMenuLabel className="text-[11px] font-black uppercase text-amber-900 tracking-wider px-2.5 py-1.5">
-                  Therapy & Wellness Services
+                  Therapy &amp; Wellness Services
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-amber-100" />
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Anxiety & Stress Therapy" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🧠 Anxiety & Panic Therapy
+                  🧠 Anxiety &amp; Panic Therapy
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Depression & Mood Care" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🌿 Depression & Mood Care
+                  🌿 Depression &amp; Mood Care
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Couples & Relationship Counselling" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  💑 Couples & Relationship Therapy
+                  💑 Couples &amp; Relationship Therapy
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Burnout & Career Stress" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  💼 Burnout & Work Stress
+                  💼 Burnout &amp; Work Stress
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Trauma & Emotional Healing" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🧘 Trauma & Emotional Healing
+                  🧘 Trauma &amp; Emotional Healing
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Child & Teen Psychology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  👦 Child & Adolescent Therapy
+                  👦 Child &amp; Adolescent Therapy
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-amber-100" />
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-100/70 hover:bg-amber-200">
@@ -213,7 +246,7 @@ export function AppHeader() {
             </DropdownMenu>
 
             <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
-            <Link to="/doctors" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
+            <Link to="/therapists" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
             <Link to="/careers" className="hover:text-amber-800 transition-colors">Careers</Link>
             <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")} className="hover:text-amber-800 transition-colors cursor-pointer">FAQ</a>
           </nav>
@@ -272,17 +305,32 @@ export function AppHeader() {
                   <Link to="/" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Home
                   </Link>
-                  <a href="/#why-durrmi" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
-                    About Us
-                  </a>
+                  
+                  {/* About Us Sub-links */}
+                  <div className="rounded-xl bg-amber-50/70 p-2 space-y-0.5 border border-amber-200/50">
+                    <p className="px-2 py-0.5 text-[10px] font-black uppercase text-amber-900 tracking-wider">About Us</p>
+                    <Link to="/about" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      📖 Our Story &amp; Mission
+                    </Link>
+                    <Link to="/about" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      👥 Meet Our Leadership
+                    </Link>
+                    <Link to="/careers" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      💼 Join Our Team / Careers ↗
+                    </Link>
+                    <a href="/#why-durrmi" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      ✨ Why Durrmi
+                    </a>
+                  </div>
+
+                  <Link to="/therapists" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Meet Our Therapists
+                  </Link>
                   <Link to="/doctors" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Services / Specialisations
                   </Link>
-                  <a href="/#pricing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                  <Link to="/pricing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Pricing
-                  </a>
-                  <Link to="/doctors" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
-                    Meet Our Therapists
                   </Link>
                   <Link to="/careers" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Careers
