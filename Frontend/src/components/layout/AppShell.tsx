@@ -59,6 +59,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About Us" },
   { to: "/therapists", label: "Meet Our Therapists", roles: ["PATIENT"] },
+  { to: "/resources", label: "Resources", roles: ["PATIENT"] },
   { to: "/doctors", label: "Find a doctor", roles: ["PATIENT"] },
   { to: "/pricing", label: "Pricing & Plans", roles: ["PATIENT"] },
   { to: "/contact", label: "Contact Us" },
@@ -241,6 +242,7 @@ export function AppHeader() {
 
             <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
             <Link to="/therapists" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
+            <Link to="/resources" className="hover:text-amber-800 transition-colors">Resources</Link>
             <Link to="/careers" className="hover:text-amber-800 transition-colors">Careers</Link>
             <a href="#faq" onClick={(e) => handleScrollTo(e, "faq")} className="hover:text-amber-800 transition-colors cursor-pointer">FAQ</a>
           </nav>
@@ -328,6 +330,9 @@ export function AppHeader() {
                   </Link>
                   <Link to="/pricing" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Pricing
+                  </Link>
+                  <Link to="/resources" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    Resources
                   </Link>
                   <Link to="/careers" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
                     Careers

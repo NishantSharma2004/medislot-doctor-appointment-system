@@ -26,6 +26,7 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as TherapistsRouteImport } from './routes/therapists'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as DoctorAvailabilityRouteImport } from './routes/doctor_.availability'
@@ -118,6 +119,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResourcesRoute = ResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TherapistsRoute = TherapistsRouteImport.update({
   id: '/therapists',
   path: '/therapists',
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/resources': typeof ResourcesRoute
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/resources': typeof ResourcesRoute
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/resources': typeof ResourcesRoute
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor_/availability': typeof DoctorAvailabilityRoute
@@ -245,6 +254,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/register'
     | '/reset-password'
+    | '/resources'
     | '/therapists'
     | '/unauthorized'
     | '/doctor/availability'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/register'
     | '/reset-password'
+    | '/resources'
     | '/therapists'
     | '/unauthorized'
     | '/doctor/availability'
@@ -295,6 +306,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/register'
     | '/reset-password'
+    | '/resources'
     | '/therapists'
     | '/unauthorized'
     | '/doctor_/availability'
@@ -321,6 +333,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ResourcesRoute: typeof ResourcesRoute
   TherapistsRoute: typeof TherapistsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   DoctorAvailabilityRoute: typeof DoctorAvailabilityRoute
@@ -450,6 +463,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/resources': {
+      id: '/resources'
+      path: '/resources'
+      fullPath: '/resources'
+      preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/therapists': {
       id: '/therapists'
       path: '/therapists'
@@ -513,6 +533,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ResourcesRoute: ResourcesRoute,
   TherapistsRoute: TherapistsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   DoctorAvailabilityRoute: DoctorAvailabilityRoute,
