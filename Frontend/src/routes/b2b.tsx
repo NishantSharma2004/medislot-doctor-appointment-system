@@ -34,7 +34,7 @@ export const Route = createFileRoute("/b2b")({
 const B2B_PROGRAMS = [
   {
     id: "prog-1",
-    title: "Sponsored One-To-One Support",
+    title: "100% Subsidised 1-on-1 Assistance",
     shortDesc: "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis moles",
     features: [
       "Facilitated group sessions led by licensed mental health professionals",
@@ -165,11 +165,11 @@ export function B2BPage() {
             {/* Left Hero Text Column */}
             <div className="lg:col-span-6 space-y-6 text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                Support For The People Who Build Your Company
+                Well-supported teams build better companies
               </h1>
 
               <p className="text-sm sm:text-base font-semibold text-slate-600 leading-relaxed max-w-xl">
-                Durrmi partners with organizations to bring expert coaching and group therapy directly to your teams — helping leaders think clearer and employees feel supported, together.
+                Your team shows up for your mission every day — Durrmi shows up for them. Real mental health support, no stigma, no judgment. Because when your people thrive, so does your company
               </p>
 
               <div className="pt-2">
@@ -206,10 +206,10 @@ export function B2BPage() {
           {/* Section Header */}
           <div className="text-center space-y-3">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Different Programs For All Your<br className="hidden sm:inline" /> Team Needs
+              One team, many needs — a program for each
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
-              Every journey looks different. That's why we've built a few simple ways to start.
+              Different people, Different needs-at durrmi few simple ways to start.
             </p>
           </div>
 
@@ -286,10 +286,10 @@ export function B2BPage() {
           {/* Section Header */}
           <div className="text-center space-y-3">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Getting Started Is Simple
+              Zero setup Stress
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
-              Whether you consult with us or build with us — you'll be shaping how consultancy works for the next generation.
+              A straightforward, hassle-free onboarding process designed—no complex instructions, steep learning curves, or unnecessary steps required
             </p>
           </div>
 
@@ -331,16 +331,16 @@ export function B2BPage() {
 
             <div className="space-y-10 sm:space-y-12 relative z-10">
               
-              {/* Card 01: Consult (Yellow) */}
+              {/* Card 01: Connect (Yellow) */}
               <div className="flex justify-start">
                 <div className="w-full sm:w-[380px] rounded-[24px] border-2 border-amber-300 bg-white overflow-hidden shadow-md">
                   <div className="h-4 bg-[#FFE58F]" />
                   <div className="p-6 text-left space-y-2">
                     <span className="text-2xl sm:text-3xl font-black text-[#FFBE0B]">01</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Consult</h3>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Connect</h3>
                     <div className="border-b border-slate-200 pt-1" />
                     <p className="text-xs sm:text-sm font-semibold text-slate-600 pt-2 leading-relaxed">
-                      Tell us about your team size, goals, and challenges.
+                      Spill the details on your team size, vibe, and main challenges
                     </p>
                   </div>
                 </div>
@@ -355,37 +355,37 @@ export function B2BPage() {
                     <h3 className="text-xl sm:text-2xl font-black text-slate-900">Customize</h3>
                     <div className="border-b border-slate-200 pt-1" />
                     <p className="text-xs sm:text-sm font-semibold text-slate-600 pt-2 leading-relaxed">
-                      We design a tailored 1-on-1 or group therapy program that fits your organization.
+                      We support and craft coaching specifically built for your organisation
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Card 03: Onboard (Orange) */}
+              {/* Card 03: Launch (Orange) */}
               <div className="flex justify-start">
                 <div className="w-full sm:w-[380px] rounded-[24px] border-2 border-orange-300 bg-white overflow-hidden shadow-md">
                   <div className="h-4 bg-[#FED7D7]" />
                   <div className="p-6 text-left space-y-2">
                     <span className="text-2xl sm:text-3xl font-black text-[#DD6B20]">03</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Onboard</h3>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Launch</h3>
                     <div className="border-b border-slate-200 pt-1" />
                     <p className="text-xs sm:text-sm font-semibold text-slate-600 pt-2 leading-relaxed">
-                      Employees and leaders are matched with licensed professionals and scheduled seamlessly.
+                      Seamlessly connect with our leader and employees with a certified specialist
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Card 04: Support, Ongoing (Purple) */}
+              {/* Card 04: Keep growing (Purple) */}
               <div className="flex justify-end">
                 <div className="w-full sm:w-[380px] rounded-[24px] border-2 border-purple-300 bg-white overflow-hidden shadow-md">
                   <div className="h-4 bg-[#7064CB]" />
                   <div className="p-6 text-left space-y-2">
                     <span className="text-2xl sm:text-3xl font-black text-[#7064CB]">04</span>
-                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Support, Ongoing</h3>
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900">Keep growing</h3>
                     <div className="border-b border-slate-200 pt-1" />
                     <p className="text-xs sm:text-sm font-semibold text-slate-600 pt-2 leading-relaxed">
-                      Sessions run on a recurring cadence, with check-ins to track impact and adjust as needed.
+                      Sessions that run with your progress and data check-ins as per your needs.
                     </p>
                   </div>
                 </div>
@@ -431,10 +431,10 @@ export function B2BPage() {
             {/* Center Content */}
             <div className="space-y-6 max-w-xl mx-auto">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
-                Your People Are Your Company. Take Care Of Both.
+                Your crew makes the company. Level up both.
               </h2>
               <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-                Investing in mental health isn't a perk anymore — it's infrastructure. Let's build a program that supports your leaders and your teams, together.
+                When you invest in your team's growth and well-being, you automatically boost your company's success—winning together at every stage.
               </p>
               <div>
                 <Button
@@ -442,7 +442,7 @@ export function B2BPage() {
                   size="lg"
                   className="h-12 px-9 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md border border-amber-400 cursor-pointer"
                 >
-                  Talk to us
+                  Connect with us
                 </Button>
               </div>
             </div>
