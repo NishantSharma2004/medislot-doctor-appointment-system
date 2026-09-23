@@ -180,19 +180,13 @@ export function AppHeader() {
               <DropdownMenuTrigger className="hover:text-amber-800 transition-colors flex items-center gap-1 cursor-pointer outline-none font-extrabold">
                 About Us <ChevronDown className="size-3.5 text-amber-700" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="center" className="w-68 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
+              <DropdownMenuContent align="center" className="w-64 p-2 bg-white rounded-2xl border border-amber-200 shadow-xl space-y-1 z-50">
                 <DropdownMenuLabel className="text-[11px] font-black uppercase text-amber-900 tracking-wider px-2.5 py-1.5">
                   About Durrmi
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-amber-100" />
-                <DropdownMenuItem onClick={() => navigate({ to: "/about" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  📖 Our Story &amp; Mission
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/about" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  👥 Meet Our Leadership
-                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/careers" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  💼 Join Our Team / Careers ↗
+                  💼 Join Our Team / Careers
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => handleScrollTo(e as any, "why-durrmi")} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
                   ✨ Why Durrmi
@@ -308,19 +302,22 @@ export function AppHeader() {
                   
                   {/* About Us Sub-links */}
                   <div className="rounded-xl bg-amber-50/70 p-2 space-y-0.5 border border-amber-200/50">
-                    <p className="px-2 py-0.5 text-[10px] font-black uppercase text-amber-900 tracking-wider">About Us</p>
-                    <Link to="/about" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
-                      📖 Our Story &amp; Mission
+                    <p className="px-2 py-0.5 text-[10px] font-black uppercase text-amber-900 tracking-wider">About Durrmi</p>
+                    <Link to="/careers" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      💼 Join Our Team / Careers
                     </Link>
-                    <Link to="/about" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
-                      👥 Meet Our Leadership
-                    </Link>
-                    <Link to="/careers" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
-                      💼 Join Our Team / Careers ↗
-                    </Link>
-                    <a href="/#why-durrmi" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                    <a href="/#why-durrmi" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-amber-100">
                       ✨ Why Durrmi
                     </a>
+                    <Link to="/therapists" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      🩺 Therapists
+                    </Link>
+                    <a href="/#faq" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1.5 text-xs font-bold text-slate-800 hover:bg-amber-100">
+                      ❓ FAQ
+                    </a>
+                    <Link to="/about" onClick={() => setMobileOpen(false)} className="block rounded-lg px-2.5 py-1.5 text-xs font-black text-amber-950 bg-amber-100/70 hover:bg-amber-200 mt-1">
+                      🌟 Learn More About Us ➔
+                    </Link>
                   </div>
 
                   <Link to="/therapists" onClick={() => setMobileOpen(false)} className="rounded-lg px-3 py-2 text-xs font-bold text-slate-800 hover:bg-amber-100">
