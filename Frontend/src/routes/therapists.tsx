@@ -249,10 +249,10 @@ export function TherapistsPage() {
           
           <div className="space-y-3 max-w-3xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Meet the caring team that makes it all happen.
+              Meet the Specialists Behind Every Solution
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
-              Real talk, Real credentials, and no algorithms. — Therapist says healing starts with real conversations.
+              A dedicated team of experts committed to solving your toughest challenges with precision, care, and proven experience.
             </p>
           </div>
 
@@ -347,10 +347,10 @@ export function TherapistsPage() {
           
           <div className="space-y-3 max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Our Core Team
+              The Minds Behind Durrmi
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Every journey looks different. That's why we've built a few simple ways to start.
+              The passionate experts shaping every step of your healing journey.
             </p>
           </div>
 
