@@ -76,8 +76,8 @@ export function CareersPage() {
             {/* Left Content */}
             <div className="lg:col-span-6 space-y-6 text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
-                Build The Future Of<br />
-                Therapy With Us.
+                Let's reshape how the<br />
+                world does therapy
               </h1>
               <p className="text-sm sm:text-base font-semibold text-slate-600 max-w-lg leading-relaxed">
                 Whether you're a professional looking to consult, or a builder who wants to join our team — there's a place for you at Durrmi.
@@ -116,10 +116,10 @@ export function CareersPage() {
           
           <div className="space-y-3 max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Why People Choose Durrmi
+              Let's reshape how the world does therapy
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Every journey looks different. That's why we've built a few simple ways to start.
+              Bring your consulting expertise or lock in as a builder on our team-Durrmi has a sport for you
             </p>
           </div>
 
@@ -140,7 +140,7 @@ export function CareersPage() {
                 </h3>
                 <div className="h-[1.5px] w-full bg-amber-400/80" />
                 <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
-                  Be part of making trusted consultancy more accessible.
+                  Purpose first.Build a consultancy that's trusted and accessible
                 </p>
               </div>
             </div>
@@ -170,7 +170,7 @@ export function CareersPage() {
                 </h3>
                 <div className="h-[1.5px] w-full bg-sky-300" />
                 <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
-                  Clear communication, open processes, and no hidden agendas — whether you're consulting or building.
+                  Real talk, always."- Clear, fair, and honest-no exceptions
                 </p>
               </div>
             </div>
@@ -189,7 +189,7 @@ export function CareersPage() {
                 </h3>
                 <div className="h-[1.5px] w-full bg-orange-300/90" />
                 <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
-                  Access to learning, mentorship, and opportunities to expand your role as Durrmi grows.
+                  Level up here." -Learn, grow and expand your role over time.
                 </p>
               </div>
             </div>
@@ -209,7 +209,7 @@ export function CareersPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 text-left border-b border-amber-200/50 pb-8">
             <div className="max-w-xl">
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-[1.15]">
-                A Simple, Secure Path To<br />Joining As A Consultant
+                No cap, joining as a<br />consultant is this simple
               </h2>
             </div>
             <div className="max-w-md">
@@ -231,7 +231,7 @@ export function CareersPage() {
                 Submit Your Application
               </h3>
               <p className="text-xs font-semibold text-slate-900 leading-relaxed">
-                Share your credentials, specialization, and experience.
+                Tell us about your background, expertise, and areas you specialize in
               </p>
             </div>
 
@@ -244,7 +244,7 @@ export function CareersPage() {
                 Document Verification
               </h3>
               <p className="text-xs font-medium text-orange-50 leading-relaxed">
-                We validate your qualifications, certifications, and licenses.
+                We confirm your qualifications, certifications and active licenses
               </p>
             </div>
 
@@ -257,7 +257,7 @@ export function CareersPage() {
                 Background & Compliance
               </h3>
               <p className="text-xs font-semibold text-slate-900 leading-relaxed">
-                Ensuring every professional meets our rigorous standards.
+                Thorough checks ensure every consultant meets our trusted standards.
               </p>
             </div>
 
@@ -270,7 +270,7 @@ export function CareersPage() {
                 Onboarding Call
               </h3>
               <p className="text-xs font-medium text-emerald-50 leading-relaxed">
-                A short conversational call to align on how Durrmi works.
+                A quick chat to walk through how Durrmi works and answer questions.
               </p>
             </div>
 
@@ -283,7 +283,7 @@ export function CareersPage() {
                 Go Live
               </h3>
               <p className="text-xs font-medium text-indigo-100 leading-relaxed">
-                Set your schedule and start consulting with real clients.
+                Set your schedule, open your profile, and begin consulting with clients
               </p>
             </div>
 
@@ -302,12 +302,12 @@ export function CareersPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 text-left">
             <div className="max-w-md">
               <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                Be Part Of Our Mission
+                Let's do this together
               </h2>
             </div>
             <div className="max-w-lg">
               <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-                We are looking for passionate people to join us on our mission, we value flat hierarchies, clear communications, and full ownership and responsibility.
+                Change doesn't happen solo. Team up with us and be part of a mission built for real people, real growth, real impact.
               </p>
             </div>
           </div>
@@ -575,10 +575,10 @@ export function CareersPage() {
           {/* Header */}
           <div className="space-y-3 text-center max-w-2xl mx-auto">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              Ready To Be Part Of Durrmi's Story?
+              Your Story Starts with Durrmi.
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Whether you consult with us or build with us — you'll be shaping how consultancy works for the next generation.
+              This is more than a service — it's a movement. Come grow with us and make your mark on the story.
             </p>
           </div>
 
