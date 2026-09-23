@@ -61,6 +61,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: "/therapists", label: "Meet Our Therapists", roles: ["PATIENT"] },
   { to: "/resources", label: "Resources", roles: ["PATIENT"] },
   { to: "/blogs", label: "Blogs", roles: ["PATIENT"] },
+  { to: "/b2b", label: "For Teams (B2B)", roles: ["PATIENT"] },
   { to: "/doctors", label: "Find a doctor", roles: ["PATIENT"] },
   { to: "/pricing", label: "Pricing & Plans", roles: ["PATIENT"] },
   { to: "/contact", label: "Contact Us" },
@@ -235,6 +236,9 @@ export function AppHeader() {
                   👦 Child &amp; Adolescent Therapy
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-amber-100" />
+                <DropdownMenuItem onClick={() => navigate({ to: "/b2b" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-50 hover:bg-amber-100">
+                  🏢 For Teams &amp; Organizations (B2B) ➔
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-100/70 hover:bg-amber-200">
                   🔍 Meet All Licensed Therapists ➔
                 </DropdownMenuItem>

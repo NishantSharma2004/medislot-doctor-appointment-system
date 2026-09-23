@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AppointmentsRouteImport } from './routes/appointments'
+import { Route as B2bRouteImport } from './routes/b2b'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
@@ -55,6 +56,11 @@ const AdminRoute = AdminRouteImport.update({
 const AppointmentsRoute = AppointmentsRouteImport.update({
   id: '/appointments',
   path: '/appointments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const B2bRoute = B2bRouteImport.update({
+  id: '/b2b',
+  path: '/b2b',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogRoute = BlogRouteImport.update({
@@ -178,6 +184,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/b2b': typeof B2bRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/b2b': typeof B2bRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
   '/appointments': typeof AppointmentsRoute
+  '/b2b': typeof B2bRoute
   '/blog': typeof BlogRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
@@ -268,6 +277,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/b2b'
     | '/blog'
     | '/careers'
     | '/contact'
@@ -297,6 +307,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/b2b'
     | '/blog'
     | '/careers'
     | '/contact'
@@ -326,6 +337,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/appointments'
+    | '/b2b'
     | '/blog'
     | '/careers'
     | '/contact'
@@ -356,6 +368,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
   AppointmentsRoute: typeof AppointmentsRoute
+  B2bRoute: typeof B2bRoute
   BlogRoute: typeof BlogRoute
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
@@ -409,6 +422,13 @@ declare module '@tanstack/react-router' {
       path: '/appointments'
       fullPath: '/appointments'
       preLoaderRoute: typeof AppointmentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/b2b': {
+      id: '/b2b'
+      path: '/b2b'
+      fullPath: '/b2b'
+      preLoaderRoute: typeof B2bRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog': {
@@ -580,6 +600,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
   AppointmentsRoute: AppointmentsRoute,
+  B2bRoute: B2bRoute,
   BlogRoute: BlogRoute,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,

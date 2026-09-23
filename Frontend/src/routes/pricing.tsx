@@ -401,7 +401,7 @@ export function PricingPage() {
               size="lg"
               className="h-11 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 shadow-md border border-amber-400"
             >
-              <Link to="/doctors">Contact sales</Link>
+              <Link to="/b2b">Contact sales</Link>
             </Button>
           </div>
         </div>
