@@ -32,12 +32,11 @@ export function FreeSessionPage() {
               </div>
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                Your First<br />
-                Session Is On Us.
+                First one's a freebie, no cap.
               </h1>
 
               <p className="text-sm sm:text-base md:text-lg font-semibold text-slate-600 leading-relaxed max-w-xl">
-                Talk to a verified Durrmi consultant for free — see for yourself why people trust us. Zero commitment.
+                Get a vibe, check for the best professional wellness companion-Durrmi cares for you and provides you with supportive vibes.
               </p>
 
               {/* Action Button */}
