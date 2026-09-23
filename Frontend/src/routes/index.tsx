@@ -1432,6 +1432,7 @@ function LandingPage() {
             <div>
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Resources</h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/blogs" className="hover:underline font-bold text-amber-900">Clinical Blogs &amp; Stories ↗</Link></li>
                 <li><Link to="/resources" className="hover:underline font-bold text-amber-900">Mental Health Library ↗</Link></li>
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>

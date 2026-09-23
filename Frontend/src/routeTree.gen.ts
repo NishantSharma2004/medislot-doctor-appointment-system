@@ -29,9 +29,11 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as TherapistsRouteImport } from './routes/therapists'
 import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
+import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as DoctorAvailabilityRouteImport } from './routes/doctor_.availability'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
 import { Route as ServicesCouplesTherapyRouteImport } from './routes/services.couples-therapy'
+import { Route as BlogsBlogIdIndexRouteImport } from './routes/blogs.$blogId.index'
 import { Route as DoctorsDoctorIdIndexRouteImport } from './routes/doctors.$doctorId.index'
 
 const IndexRoute = IndexRouteImport.update({
@@ -134,6 +136,11 @@ const UnauthorizedRoute = UnauthorizedRouteImport.update({
   path: '/unauthorized',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/blogs/',
+  path: '/blogs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DoctorAvailabilityRoute = DoctorAvailabilityRouteImport.update({
   id: '/doctor_/availability',
   path: '/doctor/availability',
@@ -147,6 +154,11 @@ const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
 const ServicesCouplesTherapyRoute = ServicesCouplesTherapyRouteImport.update({
   id: '/services/couples-therapy',
   path: '/services/couples-therapy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsBlogIdIndexRoute = BlogsBlogIdIndexRouteImport.update({
+  id: '/blogs/$blogId/',
+  path: '/blogs/$blogId/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DoctorsDoctorIdIndexRoute = DoctorsDoctorIdIndexRouteImport.update({
@@ -178,7 +190,9 @@ export interface FileRoutesByFullPath {
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
+  '/blogs/$blogId/': typeof BlogsBlogIdIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -204,7 +218,9 @@ export interface FileRoutesByTo {
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
+  '/blogs': typeof BlogsIndexRoute
   '/doctors': typeof DoctorsIndexRoute
+  '/blogs/$blogId': typeof BlogsBlogIdIndexRoute
   '/doctors/$doctorId': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRoutesById {
@@ -231,7 +247,9 @@ export interface FileRoutesById {
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor_/availability': typeof DoctorAvailabilityRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
+  '/blogs/': typeof BlogsIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
+  '/blogs/$blogId/': typeof BlogsBlogIdIndexRoute
   '/doctors/$doctorId/': typeof DoctorsDoctorIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -259,7 +277,9 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/doctor/availability'
     | '/services/couples-therapy'
+    | '/blogs/'
     | '/doctors/'
+    | '/blogs/$blogId/'
     | '/doctors/$doctorId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -285,7 +305,9 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/doctor/availability'
     | '/services/couples-therapy'
+    | '/blogs'
     | '/doctors'
+    | '/blogs/$blogId'
     | '/doctors/$doctorId'
   id:
     | '__root__'
@@ -311,7 +333,9 @@ export interface FileRouteTypes {
     | '/unauthorized'
     | '/doctor_/availability'
     | '/services/couples-therapy'
+    | '/blogs/'
     | '/doctors/'
+    | '/blogs/$blogId/'
     | '/doctors/$doctorId/'
   fileRoutesById: FileRoutesById
 }
@@ -338,7 +362,9 @@ export interface RootRouteChildren {
   UnauthorizedRoute: typeof UnauthorizedRoute
   DoctorAvailabilityRoute: typeof DoctorAvailabilityRoute
   ServicesCouplesTherapyRoute: typeof ServicesCouplesTherapyRoute
+  BlogsIndexRoute: typeof BlogsIndexRoute
   DoctorsIndexRoute: typeof DoctorsIndexRoute
+  BlogsBlogIdIndexRoute: typeof BlogsBlogIdIndexRoute
   DoctorsDoctorIdIndexRoute: typeof DoctorsDoctorIdIndexRoute
 }
 
@@ -484,6 +510,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnauthorizedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/blogs'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doctor_/availability': {
       id: '/doctor_/availability'
       path: '/doctor/availability'
@@ -503,6 +536,13 @@ declare module '@tanstack/react-router' {
       path: '/services/couples-therapy'
       fullPath: '/services/couples-therapy'
       preLoaderRoute: typeof ServicesCouplesTherapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs/$blogId/': {
+      id: '/blogs/$blogId/'
+      path: '/blogs/$blogId'
+      fullPath: '/blogs/$blogId/'
+      preLoaderRoute: typeof BlogsBlogIdIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doctors/$doctorId/': {
@@ -538,7 +578,9 @@ const rootRouteChildren: RootRouteChildren = {
   UnauthorizedRoute: UnauthorizedRoute,
   DoctorAvailabilityRoute: DoctorAvailabilityRoute,
   ServicesCouplesTherapyRoute: ServicesCouplesTherapyRoute,
+  BlogsIndexRoute: BlogsIndexRoute,
   DoctorsIndexRoute: DoctorsIndexRoute,
+  BlogsBlogIdIndexRoute: BlogsBlogIdIndexRoute,
   DoctorsDoctorIdIndexRoute: DoctorsDoctorIdIndexRoute,
 }
 export const routeTree = rootRouteImport
