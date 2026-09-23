@@ -59,11 +59,11 @@ export function PricingPage() {
             {/* Left Column: Text & CTA */}
             <div className="lg:col-span-6 space-y-6 text-left">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
-                {cmsPricing.heroTitle || "Care That Fits Where You Are"}
+                {cmsPricing.heroTitle || "Care that fits your well-being"}
               </h1>
               <p className="text-sm sm:text-base font-semibold text-slate-700 leading-relaxed max-w-xl">
                 {cmsPricing.heroSubtitle ||
-                  "Whether you need a single session to talk something through, or ongoing support to work on something deeper — Durrmi has a path that fits your pace, your budget, and your needs."}
+                  "Durrmi provides you with multiple sessions and a single session at your convenience. Talk to our therapists now. -Let us not compromise your well-being"}
               </p>
               <div className="pt-2">
                 <Button
@@ -71,7 +71,7 @@ export function PricingPage() {
                   size="lg"
                   className="h-12 px-8 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md border border-amber-400"
                 >
-                  <a href="#plans">{cmsPricing.heroCtaLabel || "Find your plan"}</a>
+                  <a href="#plans">{cmsPricing.heroCtaLabel || "FIND YOUR BEST PLAN"}</a>
                 </Button>
               </div>
             </div>
@@ -145,11 +145,11 @@ export function PricingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center space-y-4">
           <div className="space-y-3">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
-              {cmsPricing.plansHeaderTitle || "Choose What Feels Best For You"}
+              {cmsPricing.plansHeaderTitle || "Choose what your heart is ready for"}
             </h2>
             <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xl mx-auto leading-relaxed">
               {cmsPricing.plansHeaderSubtitle ||
-                "Every journey looks different. That's why we've built a few simple ways to start."}
+                "Start your journey with a few simple steps with our Experts"}
             </p>
           </div>
 
@@ -260,15 +260,15 @@ export function PricingPage() {
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-3 border-t border-slate-100">
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Single session, no commitment</span>
+                    <span>Know the price before you tap book</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Rate shown upfront before booking</span>
+                    <span>Handpick your consultant + the time that fits your life.</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FFBE0B] text-slate-950 flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Pick the consultant and slot</span>
+                    <span>One and done — no subscriptions, no commitment</span>
                   </li>
                 </ul>
               </div>
@@ -294,15 +294,15 @@ export function PricingPage() {
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-3 border-t border-slate-100">
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FF9F43] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Single session, no commitment</span>
+                    <span>Single sessions-no strings attached</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FF9F43] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Rate shown upfront before booking</span>
+                    <span>See the rates-before you book- no surprises.</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#FF9F43] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Pick the consultant and slot</span>
+                    <span>Choose your consultant & limit slot.</span>
                   </li>
                 </ul>
               </div>
@@ -328,15 +328,15 @@ export function PricingPage() {
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-3 border-t border-slate-100">
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Single session, no commitment</span>
+                    <span>Just one session, cancel-anytime energy</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Rate shown upfront before booking</span>
+                    <span>Full transparency: rate's on the table upfront</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#7BBDF7] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Pick the consultant and slot</span>
+                    <span>You're in control — choose who and when</span>
                   </li>
                 </ul>
               </div>
@@ -362,15 +362,15 @@ export function PricingPage() {
                 <ul className="space-y-2.5 text-xs font-semibold text-slate-700 pt-3 border-t border-slate-100">
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#2ECC71] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Single session, no commitment</span>
+                    <span>No rotating door — the same trusted face each time</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#2ECC71] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Rate shown upfront before booking</span>
+                    <span>All-in on your progress, full-time.</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="size-4.5 rounded bg-[#2ECC71] text-white flex items-center justify-center shrink-0 font-bold text-[10px]">✓</span>
-                    <span>Pick the consultant and slot</span>
+                    <span>Dedicated therapists, fully in your corner</span>
                   </li>
                 </ul>
               </div>
@@ -389,11 +389,11 @@ export function PricingPage() {
           <div className="rounded-[32px] border border-slate-200/90 bg-white p-8 sm:p-10 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
             <div className="space-y-2 text-left">
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                {cmsPricing.corporateBanner?.title ? cmsPricing.corporateBanner.title.replace(":", "?") : "Looking For A Corporate Plan?"}
+                {cmsPricing.corporateBanner?.title || "Let our care team take the initiative with full course support"}
               </h2>
               <p className="text-xs sm:text-sm font-medium text-slate-600 max-w-xl leading-relaxed">
                 {cmsPricing.corporateBanner?.description ||
-                  "Flexible mental health support for your whole organization. Customize packages for your team with dedicated care managers."}
+                  "One simple plan with complete care: this all-in-one bundle brings everything together."}
               </p>
             </div>
             <Button
@@ -411,11 +411,11 @@ export function PricingPage() {
       <section className="bg-[#FDEBB2]/90 py-20 mt-10 border-t border-amber-300">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-3">
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            {cmsPricing.completeCareBundle?.title || "The Complete Care Bundle"}
+            {cmsPricing.completeCareBundle?.title || "THE TOTAL CARE PLAN"}
           </h2>
           <p className="text-xs sm:text-sm font-semibold text-[#5C4105] max-w-md mx-auto">
             {cmsPricing.completeCareBundle?.subtitle ||
-              "Everything you need for a full course of support — at a better price."}
+              "It will be based on therapist, on the session & time."}
           </p>
 
           <div className="mt-12 grid gap-8 md:grid-cols-2 max-w-4xl mx-auto text-left">
