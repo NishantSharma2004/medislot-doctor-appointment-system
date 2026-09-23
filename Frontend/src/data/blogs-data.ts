@@ -27,11 +27,11 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: "1",
-    slug: "the-advice-we-give-anxious-people-that-doesnt-help",
-    title: "The Advice We Give Anxious People That Doesn't Help",
+    slug: "your-mind-isnt-a-responsibility-its-you",
+    title: "Your mind isn’t a responsibility. It’s you — let us help you carry it.",
     subtitle:
-      `If you've ever dealt with anxiety, chances are you've heard some version of this: "Just relax." "Don't overthink it." "It's all in your head." "Just breathe." And chances are, none of it actually helped.`,
-    categories: ["Anxiety Disorder", "Emotional Health"],
+      "Choosing yourself, your mental health, should always be a priority.",
+    categories: ["Emotional Health", "Self-Awareness", "Mindfulness"],
     date: "12-03-25",
     readTime: "5 mins",
     author: {
@@ -44,29 +44,26 @@ export const BLOG_POSTS: BlogPost[] = [
     midImageUrl:
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "At Durrmi, we don’t believe in fixing you — because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you.",
     content: {
       intro:
-        `If you've ever dealt with anxiety, chances are you've heard some version of this: "Just relax." "Don't overthink it." "It's all in your head." "Just breathe." And chances are, none of it actually helped.\n\nThat's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.\n\nLet's look at why some of the most common things people say don't land, and what actually tends to help.`,
+        "Choosing yourself, your mental health, should always be a priority.\n\nAt Durrmi, we don’t believe in fixing you — because you’re not broken. We believe in presence: someone who listens without reason; we match you right; we walk beside you. We help you grow.\n\nWe believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow. Embracing yourself should be your priority. We care, we reconnect, and we heal.\n\nYou don’t have to sit and meditate; our work is to make yourself aware. Seeking inner power is not always about controlling; it’s about stepping into abundance.",
       sections: [
         {
-          heading: "Blog Heading",
+          heading: "A Gentle Journey Back To Yourself",
           paragraphs: [
-            `If you've ever dealt with anxiety, chances are you've heard some version of this: "Just relax." "Don't overthink it." "It's all in your head." "Just breathe." And chances are, none of it actually helped.`,
-            `That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.`,
-            `Let's look at why some of the most common things people say don't land, and what actually tends to help.`,
+            "We spend so much of our lives searching for the answer somewhere out there. But the truth we often forget is quieter than that: everything you've been looking for already lives within you.",
+            "Not a destination, not a quick fix, but a gentle journey back to yourself — one honest step at a time. It's the practice of turning inward, understanding your thoughts, accepting your flaws, and finding stillness even in the middle of chaos. It's about discovering the truth of who you are, beneath the noise, beneath the expectations, beneath everything the world told you to be.",
           ],
           highlightQuote:
-            "Anxiety is a physiological alarm system, not a flaw in reasoning. You cannot argue someone out of fight-or-flight with logic alone.",
+            "Emotional safety comes first. Durrmi believes in the power of analyzing superpowers because the most important relationship you'll ever nurture is the one you have within.",
         },
         {
-          heading: "Blog Heading",
+          heading: "Strengthening Self-Awareness Beyond Limits",
           paragraphs: [
-            `If you've ever dealt with anxiety, chances are you've heard some version of this: "Just relax." "Don't overthink it." "It's all in your head." "Just breathe." And chances are, none of it actually helped.`,
-            `That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.`,
-            `Let's look at why some of the most common things people say don't land, and what actually tends to help.`,
-            `If you've ever dealt with anxiety, chances are you've heard some version of this: "Just relax." "Don't overthink it." "It's all in your head." "Just breathe." And chances are, none of it actually helped.`,
-            `That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.`,
+            "When you reconnect with that inner voice, you find a steadiness no one can take from you — your mindset, your honesty, your well-being, your capacity to stay kind to yourself.",
+            "We are not a Mental Health platform or a service provider; we are here to strengthen self-awareness.",
+            "Just like the sky has no limits, we believe that as human beings, limitations do not have to define us. False narratives, projecting insecurities, or repeating patterns. We help you to study yourself, so that you become unstoppable.",
           ],
         },
       ],

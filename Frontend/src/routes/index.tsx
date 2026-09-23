@@ -597,8 +597,37 @@ function LandingPage() {
               </p>
               <div className="pt-2">
                 <Button asChild size="lg" className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-all">
-                  <Link to="/doctors">Explore Specialisations</Link>
+                  <Link to="/doctors">Explore Our Expertise</Link>
                 </Button>
+              </div>
+
+              {/* Specialisations Expertise Badges */}
+              <div className="pt-3 flex flex-wrap gap-1.5 max-w-md">
+                {[
+                  "Relationships",
+                  "Trauma",
+                  "ADHD",
+                  "Lifestyle",
+                  "Depression and low mood",
+                  "Anxiety",
+                  "Sleep",
+                  "Work",
+                  "Loneliness",
+                  "Attention & Focus",
+                  "Career",
+                  "Stress & Burnout",
+                  "Substance & Focus",
+                  "Daily Functioning",
+                ].map((spec) => (
+                  <Link
+                    key={spec}
+                    to="/doctors"
+                    search={{ specialization: spec }}
+                    className="inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/95 border border-amber-300/80 text-amber-950 hover:bg-[#FFBE0B] hover:text-slate-950 transition-all shadow-2xs"
+                  >
+                    ● {spec}
+                  </Link>
+                ))}
               </div>
             </div>
 
@@ -1377,6 +1406,57 @@ function LandingPage() {
 
             <div>
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/doctors" className="hover:underline">Services</Link>
+              </h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/doctors" search={{ specialization: "Adult Therapy" }} className="hover:underline">Adult Therapy</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Children First" }} className="hover:underline">Children First Services</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Developmental care" }} className="hover:underline">Developmental care</Link></li>
+                <li><Link to="/resources" className="hover:underline">Self-care</Link></li>
+                <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couple therapy ↗</Link></li>
+                <li><Link to="/b2b" className="hover:underline">Community &amp; Peer support</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/doctors" className="hover:underline">Specialisations</Link>
+              </h4>
+              <ul className="space-y-1.5 text-[10.5px] font-medium text-[#6E4924]">
+                <li><Link to="/doctors" search={{ specialization: "Relationships" }} className="hover:underline">Relationships</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Trauma" }} className="hover:underline">Trauma</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "ADHD" }} className="hover:underline">ADHD</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Lifestyle" }} className="hover:underline">Lifestyle</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Depression and low mood" }} className="hover:underline">Depression &amp; low mood</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Anxiety" }} className="hover:underline">Anxiety</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Sleep" }} className="hover:underline">Sleep</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Work" }} className="hover:underline">Work</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Loneliness" }} className="hover:underline">Loneliness</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Attention & Focus" }} className="hover:underline">Attention &amp; Focus</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Career" }} className="hover:underline">Career</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Stress & Burnout" }} className="hover:underline">Stress &amp; Burnout</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Substance & Focus" }} className="hover:underline">Substance &amp; Focus</Link></li>
+                <li><Link to="/doctors" search={{ specialization: "Daily Functioning" }} className="hover:underline">Daily Functioning</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/therapists" className="hover:underline">Therapists</Link>
+              </h4>
+              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
+                <li><Link to="/therapists" className="hover:underline">Anxiety &amp; Stress Therapist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Depression Therapist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Relationship Therapist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Counselling Psychologist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Child &amp; Adolescent Therapist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Marriage &amp; Family Therapist</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Trauma Therapist</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
                 <Link to="/pricing" className="hover:underline">Pricing</Link>
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
@@ -1389,59 +1469,28 @@ function LandingPage() {
 
             <div>
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
-                <Link to="/doctors" className="hover:underline">Specialisations</Link>
-              </h4>
-              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couples Therapy ↗</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Individual Therapy</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Anxiety &amp; Stress</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Depression Support</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
-                <Link to="/therapists" className="hover:underline">Therapists</Link>
-              </h4>
-              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/therapists" className="hover:underline">Meet Our Specialists</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Book an Instant Slot</Link></li>
-                <li><Link to="/health-risk-calculator" className="hover:underline">AI Health Risk Calculator</Link></li>
-                <li><Link to="/free-session" className="hover:underline">Claim Free Consultation</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
-                <Link to="/contact" className="hover:underline">Contact Us</Link>
-              </h4>
-              <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/contact" className="hover:underline">Help &amp; Support Desk</Link></li>
-                <li><Link to="/contact" className="hover:underline">Book a Consult Call</Link></li>
-                <li><Link to="/b2b" className="hover:underline">Partner With Us</Link></li>
-                <li><Link to="/contact" className="hover:underline">Emergency Hotline Info</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
                 <Link to="/resources" className="hover:underline">Resources</Link>
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/b2b" className="hover:underline font-bold text-amber-900">For Teams (B2B) ↗</Link></li>
-                <li><Link to="/blogs" className="hover:underline font-bold text-amber-900">Clinical Blogs &amp; Stories ↗</Link></li>
-                <li><Link to="/resources" className="hover:underline font-bold text-amber-900">Mental Health Library ↗</Link></li>
-                <li><Link to="/health-vault" className="hover:underline font-bold text-amber-900">Health Vault Privacy ↗</Link></li>
+                <li><a href="#social" className="hover:underline">Social Media</a></li>
+                <li><Link to="/blogs" className="hover:underline font-bold text-amber-900">Blog ↗</Link></li>
+                <li><Link to="/resources" className="hover:underline">Vlogs</Link></li>
+                <li><Link to="/resources" className="hover:underline">Articles</Link></li>
+                <li><Link to="/resources" className="hover:underline">Educational content</Link></li>
+                <li><Link to="/b2b" className="hover:underline">Offline Marketing</Link></li>
+                <li><Link to="/resources" className="hover:underline">Specialisation-led content</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Legal</h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/contact" className="hover:underline">Privacy Policy</Link></li>
-                <li><Link to="/contact" className="hover:underline">Terms of Service</Link></li>
-                <li><Link to="/health-vault" className="hover:underline">HIPAA &amp; Data Security</Link></li>
-                <li><Link to="/pricing" className="hover:underline">Cancellation Policy</Link></li>
+                <li><Link to="/health-vault" className="hover:underline">Secured Privacy &amp; Data.</Link></li>
+                <li><Link to="/contact" className="hover:underline">Website &amp; Compliance Policies.</Link></li>
+                <li><Link to="/contact" className="hover:underline">Legal Consultation.</Link></li>
+                <li><Link to="/contact" className="hover:underline">Mental &amp; Health Disclaimer</Link></li>
+                <li><Link to="/contact" className="hover:underline">Client informed consent forms.</Link></li>
+                <li><Link to="/contact" className="hover:underline">Terms &amp; Services</Link></li>
               </ul>
             </div>
           </div>
