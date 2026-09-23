@@ -26,6 +26,11 @@ import {
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 import { useAuth } from "@/context/AuthContext";
 import { mockSpecializations, mockDoctors } from "@/lib/api/mock-data";
 import { defaultHomePageCmsData } from "@/lib/api/cms-content";
@@ -49,6 +54,23 @@ export const Route = createFileRoute("/")({
   }),
   component: LandingPage,
 });
+
+const SPECIALISATION_TAGS = [
+  "Relationships",
+  "Trauma",
+  "ADHD",
+  "Lifestyle",
+  "Depression and low mood",
+  "Anxiety",
+  "Sleep",
+  "Work",
+  "Loneliness",
+  "Attention & Focus",
+  "Career",
+  "Stress & Burnout",
+  "Substance & Focus",
+  "Daily Functioning",
+];
 
 const STEPS = [
   {
@@ -337,9 +359,58 @@ function LandingPage() {
                         Reserve Your Free Session <span className="text-base leading-none">↗</span>
                       </Link>
                     </Button>
-                    <Button asChild size="lg" variant="outline" className="h-12 rounded-full border-slate-400/80 bg-white/80 px-7 font-bold text-slate-800 hover:bg-slate-100 text-xs shadow-xs">
-                      <a href="#why-durrmi">Explore Our Expertise</a>
-                    </Button>
+                    <HoverCard openDelay={80} closeDelay={180}>
+                      <HoverCardTrigger asChild>
+                        <Button asChild size="lg" variant="outline" className="group h-12 rounded-full border-slate-400/80 bg-white/80 px-7 font-bold text-slate-800 hover:bg-slate-100 text-xs shadow-xs gap-1.5 cursor-pointer">
+                          <Link to="/doctors">
+                            <span>Explore Our Expertise</span>
+                            <ChevronDown className="size-3.5 text-slate-600 transition-transform duration-200 group-hover:rotate-180" />
+                          </Link>
+                        </Button>
+                      </HoverCardTrigger>
+                      <HoverCardContent
+                        align="center"
+                        side="bottom"
+                        sideOffset={10}
+                        className="w-[360px] sm:w-[460px] rounded-2xl border border-amber-300/80 bg-[#FFFDF9]/98 backdrop-blur-md p-4 shadow-2xl z-50 text-left"
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between border-b border-amber-200/80 pb-2">
+                            <div className="flex items-center gap-1.5 text-amber-950">
+                              <Sparkles className="size-3.5 text-amber-600" />
+                              <span className="text-[11px] font-black uppercase tracking-wider">
+                                Explore Specialisations
+                              </span>
+                            </div>
+                            <span className="text-[10px] font-bold text-slate-500">
+                              14 clinical areas
+                            </span>
+                          </div>
+                          <div className="flex flex-wrap gap-1.5 max-h-[300px] overflow-y-auto pr-1">
+                            {SPECIALISATION_TAGS.map((spec) => (
+                              <Link
+                                key={spec}
+                                to="/doctors"
+                                search={{ specialization: spec }}
+                                className="inline-flex items-center text-[10.5px] font-bold px-3 py-1 rounded-full bg-white border border-amber-300/80 text-amber-950 hover:bg-[#FFBE0B] hover:border-amber-500 hover:text-slate-950 transition-all shadow-2xs hover:scale-[1.02]"
+                              >
+                                <span className="mr-1 text-amber-500 font-black">●</span>
+                                {spec}
+                              </Link>
+                            ))}
+                          </div>
+                          <div className="pt-1.5 flex items-center justify-between text-[10px] text-slate-500 border-t border-amber-100">
+                            <span>Select a concern to find dedicated therapists</span>
+                            <Link
+                              to="/doctors"
+                              className="font-bold text-amber-900 hover:underline inline-flex items-center gap-0.5"
+                            >
+                              View all therapists <ArrowRight className="size-2.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
                   </>
                 )}
               </div>
@@ -596,38 +667,62 @@ function LandingPage() {
                 Talk about it; don't carry it; <span className="font-extrabold text-slate-900">"our experts truly understand."</span> Find a helping partner here for your anxiety, depression, loss, or grief that you want to share. You were never meant to carry it all alone.
               </p>
               <div className="pt-2">
-                <Button asChild size="lg" className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-xs transition-all">
-                  <Link to="/doctors">Explore Our Expertise</Link>
-                </Button>
-              </div>
-
-              {/* Specialisations Expertise Badges */}
-              <div className="pt-3 flex flex-wrap gap-1.5 max-w-md">
-                {[
-                  "Relationships",
-                  "Trauma",
-                  "ADHD",
-                  "Lifestyle",
-                  "Depression and low mood",
-                  "Anxiety",
-                  "Sleep",
-                  "Work",
-                  "Loneliness",
-                  "Attention & Focus",
-                  "Career",
-                  "Stress & Burnout",
-                  "Substance & Focus",
-                  "Daily Functioning",
-                ].map((spec) => (
-                  <Link
-                    key={spec}
-                    to="/doctors"
-                    search={{ specialization: spec }}
-                    className="inline-flex items-center text-[10px] font-bold px-2.5 py-1 rounded-full bg-white/95 border border-amber-300/80 text-amber-950 hover:bg-[#FFBE0B] hover:text-slate-950 transition-all shadow-2xs"
+                <HoverCard openDelay={80} closeDelay={180}>
+                  <HoverCardTrigger asChild>
+                    <Button
+                      asChild
+                      size="lg"
+                      className="group h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider shadow-sm transition-all inline-flex items-center gap-2 cursor-pointer"
+                    >
+                      <Link to="/doctors">
+                        <span>Explore Our Expertise</span>
+                        <ChevronDown className="size-3.5 text-slate-900 transition-transform duration-200 group-hover:rotate-180" />
+                      </Link>
+                    </Button>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    align="start"
+                    side="bottom"
+                    sideOffset={10}
+                    className="w-[360px] sm:w-[460px] rounded-2xl border border-amber-300/80 bg-[#FFFDF9]/98 backdrop-blur-md p-4 shadow-2xl z-50 text-left"
                   >
-                    ● {spec}
-                  </Link>
-                ))}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between border-b border-amber-200/80 pb-2">
+                        <div className="flex items-center gap-1.5 text-amber-950">
+                          <Sparkles className="size-3.5 text-amber-600" />
+                          <span className="text-[11px] font-black uppercase tracking-wider">
+                            Explore Specialisations
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-slate-500">
+                          14 clinical areas
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 max-h-[300px] overflow-y-auto pr-1">
+                        {SPECIALISATION_TAGS.map((spec) => (
+                          <Link
+                            key={spec}
+                            to="/doctors"
+                            search={{ specialization: spec }}
+                            className="inline-flex items-center text-[10.5px] font-bold px-3 py-1 rounded-full bg-white border border-amber-300/80 text-amber-950 hover:bg-[#FFBE0B] hover:border-amber-500 hover:text-slate-950 transition-all shadow-2xs hover:scale-[1.02]"
+                          >
+                            <span className="mr-1 text-amber-500 font-black">●</span>
+                            {spec}
+                          </Link>
+                        ))}
+                      </div>
+                      <div className="pt-1.5 flex items-center justify-between text-[10px] text-slate-500 border-t border-amber-100">
+                        <span>Select a concern to find dedicated therapists</span>
+                        <Link
+                          to="/doctors"
+                          className="font-bold text-amber-900 hover:underline inline-flex items-center gap-0.5"
+                        >
+                          View all therapists <ArrowRight className="size-2.5" />
+                        </Link>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </div>
 
