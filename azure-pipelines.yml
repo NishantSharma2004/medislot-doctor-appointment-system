@@ -41,7 +41,7 @@ stages:
           - script: |
               cd Frontend
               npm install
-              npm run build
+              NITRO_PRESET=node-server npm run build
             displayName: 'Install & Build Frontend'
             env:
               VITE_USE_MOCK_API: 'false'
@@ -77,8 +77,8 @@ stages:
                     echo "⚡ Building Frontend and Restarting PM2..."
                     cd Frontend
                     npm install
-                    npm run build
-                    pm2 restart durrmi-frontend || pm2 start npm --name "durrmi-frontend" -- run preview
+                    NITRO_PRESET=node-server npm run build
+                    PORT=4173 NITRO_PORT=4173 pm2 restart durrmi-frontend --update-env || PORT=4173 NITRO_PORT=4173 pm2 start .output/server/index.mjs --name "durrmi-frontend"
 
                     # 4. Update Backend (Docker Compose)
                     echo "🐳 Restarting Backend Docker..."
