@@ -1,19 +1,7 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Share2,
-  Calendar,
-  Clock,
-  Sparkles,
-  ChevronLeft,
-  ChevronRight,
-  HeartHandshake,
-} from "lucide-react";
-import { getBlogByIdOrSlug, getLatestBlogs, type BlogPost } from "@/data/blogs-data";
-import { toast } from "sonner";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getBlogByIdOrSlug, getLatestBlogs } from "@/data/blogs-data";
 
 export const Route = createFileRoute("/blogs/$blogId/")({
   head: () => ({
@@ -22,7 +10,7 @@ export const Route = createFileRoute("/blogs/$blogId/")({
       {
         name: "description",
         content:
-          "Why casual reassurance often backfires in high-anxiety situations, and evidence-based strategies from clinical psychologists that genuinely restore calm.",
+          "If you've ever dealt with anxiety, chances are you've heard some version of this: Just relax. Don't overthink it. It's all in your head. Just breathe. And chances are, none of it actually helped.",
       },
     ],
   }),
@@ -47,79 +35,51 @@ export function BlogDetailPage() {
     setCarouselIndex((prev) => Math.min(maxIndex, prev + 1));
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: post.subtitle || post.excerpt,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Article link copied to clipboard!");
-    }
-  };
-
   return (
     <div className="min-h-screen bg-[#FFFDF7] text-slate-800 font-sans selection:bg-amber-200">
       
-      {/* 1. ARTICLE HEADER (Matching Figma Blog Detail Page_v2.0) */}
-      <article className="pt-12 sm:pt-16 pb-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-6">
+      {/* Soft Ambient Warm Glow on margins matching Figma */}
+      <div className="fixed inset-y-0 left-0 w-32 bg-gradient-to-r from-amber-100/20 to-transparent pointer-events-none -z-10" />
+      <div className="fixed inset-y-0 right-0 w-32 bg-gradient-to-l from-amber-100/20 to-transparent pointer-events-none -z-10" />
+
+      {/* ARTICLE CONTAINER (Matching Figma Blog Detail Page_v2.0) */}
+      <article className="pt-10 sm:pt-14 pb-16">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-5">
           
-          {/* Back link */}
-          <div>
-            <Link
-              to="/blogs"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-amber-800 transition-colors"
-            >
-              <ArrowLeft className="size-3.5" /> Back to all blogs
-            </Link>
-          </div>
-
           {/* Category Pill Badges matching Figma: Category: [Anxiety Disorder] [Anxiety Disorder] */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-xs font-bold text-slate-500 mr-1">Category:</span>
-            {post.categories.map((cat, idx) => (
-              <span
-                key={idx}
-                className="px-3.5 py-1 rounded-full bg-[#FFE27D] text-slate-950 text-xs font-bold shadow-2xs"
-              >
-                {cat}
-              </span>
-            ))}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-slate-500 mr-1">Category:</span>
+            <span className="px-3.5 py-1 rounded-full border border-slate-300 bg-white text-slate-800 text-[11px] font-bold shadow-2xs">
+              Anxiety Disorder
+            </span>
+            <span className="px-3.5 py-1 rounded-full border border-slate-300 bg-white text-slate-800 text-[11px] font-bold shadow-2xs">
+              Anxiety Disorder
+            </span>
           </div>
 
-          {/* Article Title */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.18] pt-2">
-            {post.title}
+          {/* Article Title matching Figma */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.18] pt-1">
+            The Advice We Give Anxious People<br className="hidden sm:inline" /> That Doesn't Help
           </h1>
 
-          {/* Lead Subtitle */}
-          {post.subtitle && (
-            <p className="text-sm sm:text-base font-semibold text-slate-600 leading-relaxed">
-              {post.subtitle}
-            </p>
-          )}
+          {/* Lead Subtitle matching Figma */}
+          <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-3xl">
+            If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+          </p>
 
-          {/* Meta Date & Read Time matching Figma: Date: 12-03-25 Read: 5 mins */}
-          <div className="flex items-center justify-between py-2 text-xs font-bold text-slate-500 border-b border-slate-200/80">
-            <div className="flex items-center gap-6">
-              <span>Date: <strong className="text-slate-800">{post.date}</strong></span>
-              <span>Read: <strong className="text-slate-800">{post.readTime}</strong></span>
+          {/* Meta Date & Read Time matching Figma: Date: 12-03-25        Read: 5 mins */}
+          <div className="flex items-center gap-10 sm:gap-14 pt-2 text-xs font-medium text-slate-600">
+            <div>
+              Date: <span className="font-black text-slate-900 ml-1">12-03-25</span>
             </div>
-
-            <button
-              onClick={handleShare}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-amber-800 transition-colors cursor-pointer"
-            >
-              <Share2 className="size-3.5" /> Share
-            </button>
+            <div>
+              Read: <span className="font-black text-slate-900 ml-1">5 mins</span>
+            </div>
           </div>
 
           {/* Large Hero Image (Person with pillow on bed matching Figma) */}
           <div className="pt-4">
-            <div className="aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-md">
+            <div className="aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-sm">
               <img
                 src={post.heroImageUrl}
                 alt={post.title}
@@ -129,63 +89,77 @@ export function BlogDetailPage() {
             </div>
           </div>
 
-          {/* 2. ARTICLE BODY CONTENT (Matching Figma Image 2 & 3 text) */}
-          <div className="pt-8 space-y-8 text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
+          {/* ARTICLE BODY CONTENT (Exact match to Figma Image) */}
+          <div className="pt-6 space-y-6 text-slate-700 text-xs sm:text-sm leading-relaxed font-normal">
             
-            {/* Intro paragraph blocks */}
+            {/* Block 1 */}
             <div className="space-y-4">
-              {post.content.intro.split("\n\n").map((p, idx) => (
-                <p key={idx}>{p}</p>
-              ))}
+              <p>
+                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+              </p>
+              <p>
+                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
+              </p>
+              <p>
+                Let's look at why some of the most common things people say don't land, and what actually tends to help.
+              </p>
             </div>
 
-            {/* Dynamic Article Sections */}
-            {post.content.sections.map((section, sIdx) => (
-              <div key={sIdx} className="space-y-4 pt-4">
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                  {section.heading}
-                </h2>
+            {/* Subheading 1 */}
+            <div className="space-y-4 pt-2">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Blog Heading
+              </h2>
+              <p>
+                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+              </p>
+              <p>
+                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
+              </p>
+              <p>
+                Let's look at why some of the most common things people say don't land, and what actually tends to help.
+              </p>
+              <p>
+                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+              </p>
+              <p>
+                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
+              </p>
+            </div>
 
-                {/* Mid-Article Consultation Image on section 2 matching Figma */}
-                {sIdx === 1 && post.midImageUrl && (
-                  <div className="my-6 aspect-[16/8] sm:aspect-[16/7] w-full rounded-2xl overflow-hidden shadow-md">
-                    <img
-                      src={post.midImageUrl}
-                      alt="Therapist and client discussion"
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                )}
+            {/* Subheading 2 */}
+            <div className="space-y-4 pt-2">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Blog Heading
+              </h2>
 
-                {section.paragraphs.map((p, pIdx) => (
-                  <p key={pIdx}>{p}</p>
-                ))}
-
-                {section.highlightQuote && (
-                  <blockquote className="my-6 border-l-4 border-amber-400 pl-4 py-2 text-base sm:text-lg font-bold italic text-slate-900 bg-amber-50/60 rounded-r-xl">
-                    "{section.highlightQuote}"
-                  </blockquote>
-                )}
-              </div>
-            ))}
-
-            {/* In-Article Therapist Callout Banner */}
-            <div className="my-10 rounded-2xl border-2 border-amber-300 bg-amber-50/80 p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
-              <div className="space-y-1.5 text-left">
-                <div className="inline-flex items-center gap-1.5 text-xs font-black text-amber-900 uppercase tracking-wide">
-                  <HeartHandshake className="size-4 text-amber-600" /> Professional 1-on-1 Guidance
+              {/* Mid-Article Consultation Image matching Figma */}
+              {post.midImageUrl && (
+                <div className="my-5 aspect-[16/7] w-full rounded-2xl overflow-hidden shadow-sm">
+                  <img
+                    src={post.midImageUrl}
+                    alt="Therapist and client discussion"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
-                <h3 className="text-xl font-black text-slate-900">
-                  Ready to explore tools tailored to you?
-                </h3>
-                <p className="text-xs font-semibold text-slate-600 max-w-lg">
-                  Connect with licensed psychologists who validate your reality and guide you through evidence-based cognitive therapy.
-                </p>
-              </div>
-              <Button asChild size="lg" className="rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shrink-0 border border-amber-400">
-                <Link to="/doctors">Find a Therapist</Link>
-              </Button>
+              )}
+
+              <p>
+                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+              </p>
+              <p>
+                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
+              </p>
+              <p>
+                Let's look at why some of the most common things people say don't land, and what actually tends to help.
+              </p>
+              <p>
+                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
+              </p>
+              <p>
+                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
+              </p>
             </div>
 
           </div>
@@ -193,13 +167,13 @@ export function BlogDetailPage() {
         </div>
       </article>
 
-      {/* 3. LATEST BLOGS CAROUSEL (Matching Figma Image 3 Bottom Section) */}
-      <section className="bg-[#FFFDF9] py-16 border-t border-slate-200">
+      {/* LATEST BLOGS CAROUSEL SECTION (Matching Figma Image 3 Bottom Section) */}
+      <section className="bg-[#FFFDF9] py-14 border-t border-slate-200">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 space-y-8">
           
           {/* Header Row with Prev / Next Arrow Buttons */}
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
               Latest Blogs
             </h2>
 
@@ -208,7 +182,7 @@ export function BlogDetailPage() {
               <button
                 onClick={handlePrev}
                 disabled={carouselIndex === 0}
-                className="size-9 rounded-full border border-slate-300 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs"
+                className="size-8.5 rounded-full border border-slate-300 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-2xs"
                 aria-label="Previous blogs"
               >
                 <ChevronLeft className="size-4" />
@@ -216,7 +190,7 @@ export function BlogDetailPage() {
               <button
                 onClick={handleNext}
                 disabled={carouselIndex >= maxIndex}
-                className="size-9 rounded-full border border-slate-300 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-2xs"
+                className="size-8.5 rounded-full border border-slate-300 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all shadow-2xs"
                 aria-label="Next blogs"
               >
                 <ChevronRight className="size-4" />
@@ -224,7 +198,7 @@ export function BlogDetailPage() {
             </div>
           </div>
 
-          {/* 3 Related Cards in responsive grid */}
+          {/* 3 Related Cards in responsive grid matching Figma */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
             {latestBlogs.slice(carouselIndex, carouselIndex + cardsPerPage).map((item) => (
               <article
