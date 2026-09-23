@@ -245,7 +245,7 @@ export function AppHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <a href="#pricing" onClick={(e) => handleScrollTo(e, "pricing")} className="hover:text-amber-800 transition-colors cursor-pointer">Pricing</a>
+            <Link to="/pricing" className="hover:text-amber-800 transition-colors">Pricing</Link>
             <Link to="/therapists" className="hover:text-amber-800 transition-colors">Meet Our Therapists</Link>
             <Link to="/blogs" className="hover:text-amber-800 transition-colors">Blogs</Link>
             <Link to="/resources" className="hover:text-amber-800 transition-colors">Resources</Link>
