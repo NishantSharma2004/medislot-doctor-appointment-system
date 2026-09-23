@@ -908,6 +908,19 @@ function LandingPage() {
                 →
               </button>
             </div>
+
+            {/* Meet Our Full Therapist Team Link */}
+            <div className="pt-6">
+              <Button
+                asChild
+                variant="outline"
+                className="h-11 rounded-full border-2 border-slate-900 bg-white hover:bg-slate-900 hover:text-white px-8 font-black text-xs uppercase tracking-wider transition-all shadow-xs"
+              >
+                <Link to="/therapists">
+                  Meet Our Full Therapist Team →
+                </Link>
+              </Button>
+            </div>
           </div>
 
         </div>
