@@ -1357,12 +1357,9 @@ function LandingPage() {
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Home</h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
                 <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
                 <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
                 <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
-                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/#faq" className="hover:underline">Common FAQs</Link></li>
               </ul>
             </div>
 
@@ -1371,12 +1368,10 @@ function LandingPage() {
                 <Link to="/about" className="hover:underline">About Us</Link>
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/about" className="hover:underline">Our Story & Mission</Link></li>
+                <li><Link to="/about" className="hover:underline">Our Story &amp; Mission</Link></li>
                 <li><Link to="/about" className="hover:underline">Meet Our Leadership</Link></li>
                 <li><Link to="/careers" className="hover:underline font-bold text-amber-950">Join Our Team / Careers ↗</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/about" className="hover:underline">Learn More About Us ➔</Link></li>
               </ul>
             </div>
 
@@ -1385,11 +1380,10 @@ function LandingPage() {
                 <Link to="/pricing" className="hover:underline">Pricing</Link>
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/pricing" className="hover:underline">Pricing & Plans</Link></li>
-                <li><Link to="/pricing" className="hover:underline">Pre-Consultation</Link></li>
-                <li><Link to="/pricing" className="hover:underline">Package Pricing</Link></li>
-                <li><Link to="/pricing" className="hover:underline">Corporate Care Plan</Link></li>
-                <li><Link to="/#pricing" className="hover:underline">Compare Tiers</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Find Your Best Plan</Link></li>
+                <li><Link to="/free-session" className="hover:underline">Free Trial Assessment</Link></li>
+                <li><Link to="/b2b" className="hover:underline">Corporate Care Plans</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Compare Tiers &amp; Pricing</Link></li>
               </ul>
             </div>
 
@@ -1400,58 +1394,54 @@ function LandingPage() {
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
                 <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couples Therapy ↗</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Individual Therapy</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Anxiety & Stress</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Anxiety &amp; Stress</Link></li>
                 <li><Link to="/doctors" className="hover:underline">Depression Support</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Child & Adolescent</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Therapists</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/therapists" className="hover:underline">Therapists</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/doctors" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/therapists" className="hover:underline">Meet Our Specialists</Link></li>
+                <li><Link to="/doctors" className="hover:underline">Book an Instant Slot</Link></li>
+                <li><Link to="/health-risk-calculator" className="hover:underline">AI Health Risk Calculator</Link></li>
+                <li><Link to="/free-session" className="hover:underline">Claim Free Consultation</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Contact Us</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/contact" className="hover:underline">Contact Us</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
-                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
-                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/contact" className="hover:underline">Help &amp; Support Desk</Link></li>
+                <li><Link to="/contact" className="hover:underline">Book a Consult Call</Link></li>
+                <li><Link to="/b2b" className="hover:underline">Partner With Us</Link></li>
+                <li><Link to="/contact" className="hover:underline">Emergency Hotline Info</Link></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Resources</h4>
+              <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">
+                <Link to="/resources" className="hover:underline">Resources</Link>
+              </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/b2b" className="hover:underline font-bold text-amber-900">For Teams &amp; Companies (B2B) ↗</Link></li>
+                <li><Link to="/b2b" className="hover:underline font-bold text-amber-900">For Teams (B2B) ↗</Link></li>
                 <li><Link to="/blogs" className="hover:underline font-bold text-amber-900">Clinical Blogs &amp; Stories ↗</Link></li>
                 <li><Link to="/resources" className="hover:underline font-bold text-amber-900">Mental Health Library ↗</Link></li>
-                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/therapists" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/health-vault" className="hover:underline font-bold text-amber-900">Health Vault Privacy ↗</Link></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-extrabold text-sm text-[#3D250F] mb-3">Legal</h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/#how-it-works" className="hover:underline">How it Works</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Specialisations</Link></li>
-                <li><Link to="/doctors" className="hover:underline">Therapists</Link></li>
-                <li><Link to="/#why-durrmi" className="hover:underline">Why Durrmi</Link></li>
-                <li><Link to="/#patient-reviews" className="hover:underline">Testimonials</Link></li>
-                <li><Link to="/#pricing" className="hover:underline">Pricing</Link></li>
-                <li><Link to="/#faq" className="hover:underline">FAQ</Link></li>
+                <li><Link to="/contact" className="hover:underline">Privacy Policy</Link></li>
+                <li><Link to="/contact" className="hover:underline">Terms of Service</Link></li>
+                <li><Link to="/health-vault" className="hover:underline">HIPAA &amp; Data Security</Link></li>
+                <li><Link to="/pricing" className="hover:underline">Cancellation Policy</Link></li>
               </ul>
             </div>
           </div>
