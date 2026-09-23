@@ -40,7 +40,7 @@ stages:
 
           - script: |
               cd Frontend
-              npm ci
+              npm install
               npm run build
             displayName: 'Install & Build Frontend'
             env:
