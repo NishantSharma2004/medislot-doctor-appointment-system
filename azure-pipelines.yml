@@ -1,59 +1,94 @@
 trigger:
-- main
-
-pool:
-  vmImage: 'ubuntu-latest'
+  branches:
+    include:
+      - main
 
 stages:
+  # =======================================================
+  # STAGE 1: CI (Continuous Integration - Cloud Verification)
+  # =======================================================
+  - stage: CI_Build_And_Test
+    displayName: 'CI: Test & Build Code'
+    pool:
+      vmImage: 'ubuntu-latest'
+    jobs:
+      # 1. Backend Java 21 Tests
+      - job: Backend_Test
+        displayName: 'Backend Maven Test'
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '21'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
 
-# =========================
-# CI STAGE
-# =========================
-- stage: CI
-  displayName: 'Build and Test'
+          - task: Maven@3
+            displayName: 'Execute Maven Tests'
+            inputs:
+              mavenPomFile: 'Backend/pom.xml'
+              goals: 'clean test'
+              publishJUnitResults: true
 
-  jobs:
+      # 2. Frontend React 18 / Vite Build Check
+      - job: Frontend_Test
+        displayName: 'Frontend Vite Build Test'
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '20.x'
+            displayName: 'Install Node 20'
 
-  # -------------------------
-  # FRONTEND
-  # -------------------------
-  - job: Frontend
-    displayName: 'Frontend Build'
+          - script: |
+              cd Frontend
+              npm ci
+              npm run build
+            displayName: 'Install & Build Frontend'
+            env:
+              VITE_USE_MOCK_API: 'false'
 
-    steps:
-    - checkout: self
+  # =======================================================
+  # STAGE 2: CD (Continuous Deployment - Direct to your VM)
+  # =======================================================
+  - stage: Deploy_To_VM
+    displayName: 'CD: Deploy on Durrmi VM'
+    dependsOn: CI_Build_And_Test
+    condition: succeeded()
+    jobs:
+      - deployment: DeployApp
+        displayName: 'Update PM2 & Docker'
+        environment:
+          name: 'durrmi_production'
+          resourceType: VirtualMachine
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: |
+                    echo "🚀 Starting Automated Deployment on Durrmi VM..."
 
-    - task: NodeTool@0
-      displayName: 'Install Node.js 22'
-      inputs:
-        versionSpec: '22.x'
+                    # 1. Go to project directory
+                    cd /home/nishantsharma/Durmmi-website || cd ~/Durmmi-website
 
-    - script: |
-        cd Frontend
-        npm ci
-        npm run build
-      displayName: 'Install and Build Frontend'
+                    # 2. Pull latest changes
+                    echo "📥 Pulling latest code..."
+                    git pull azure main || git pull origin main
 
+                    # 3. Update Frontend (PM2)
+                    echo "⚡ Building Frontend and Restarting PM2..."
+                    cd Frontend
+                    npm install
+                    npm run build
+                    pm2 restart durrmi-frontend || pm2 start npm --name "durrmi-frontend" -- run preview
 
-  # -------------------------
-  # BACKEND
-  # -------------------------
-  - job: Backend
-    displayName: 'Backend Build and Test'
+                    # 4. Update Backend (Docker Compose)
+                    echo "🐳 Restarting Backend Docker..."
+                    cd ..
+                    docker compose down backend
+                    docker compose up -d --build backend
 
-    steps:
-    - checkout: self
+                    # 5. Reload Nginx
+                    echo "🔄 Reloading Nginx..."
+                    sudo nginx -t && sudo systemctl reload nginx
 
-    - task: JavaToolInstaller@0
-      displayName: 'Install Java 21'
-      inputs:
-        versionSpec: '21'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
-
-    - script: |
-        cd Backend
-        chmod +x mvnw
-        ./mvnw clean test
-        ./mvnw package -DskipTests
-      displayName: 'Build and Test Spring Boot Backend'
+                    echo "✅ Durrmi Full-Stack Deployment Done!"
+                  displayName: 'Deploy Frontend PM2 & Backend Docker'
