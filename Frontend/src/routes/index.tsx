@@ -342,7 +342,7 @@ function LandingPage() {
                 ) : (
                   <>
                     <Button asChild size="lg" className="h-12 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] px-8 font-black text-slate-950 text-xs shadow-md hover:shadow-lg transition-all border border-amber-500/30 gap-1.5">
-                      <Link to="/doctors">
+                      <Link to="/free-session">
                         Reserve Your Free Session <span className="text-base leading-none">↗</span>
                       </Link>
                     </Button>
@@ -1243,86 +1243,7 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* 9.5 HOW YOUR FREE SESSION WORKS (Matching Screenshot 4) */}
-      <section className="bg-[#FAF7EF] py-16 sm:py-24 border-t border-amber-200/50 overflow-hidden relative">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center space-y-12">
-          
-          <div className="space-y-3 max-w-2xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-              Steps to breakdown your freebie sessions.
-            </h2>
-            <p className="text-xs sm:text-sm font-semibold text-slate-600 leading-relaxed">
-              Thinking about consulting or building with us- well, we are here to shape your next-generation, in 4-steps era.
-            </p>
-          </div>
 
-          {/* Stepped Cards Grid with curved dotted connector accents */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-            
-            {/* Step 1: Lock in your slot */}
-            <div className="rounded-[28px] border border-amber-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
-              <div className="h-3 w-full bg-[#FDE68A] absolute top-0 left-0 right-0" />
-              <span className="inline-block text-2xl font-black text-amber-500 pt-1">
-                01
-              </span>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Lock in your slot
-              </h3>
-              <div className="h-[1px] w-full bg-slate-200" />
-              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                pick your time and lock it down, no hesitation.
-              </p>
-            </div>
-
-            {/* Step 2: Vibe-check your match */}
-            <div className="rounded-[28px] border border-sky-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
-              <div className="h-3 w-full bg-[#93C5FD] absolute top-0 left-0 right-0" />
-              <span className="inline-block text-2xl font-black text-sky-500 pt-1">
-                02
-              </span>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Vibe-check your match
-              </h3>
-              <div className="h-[1px] w-full bg-slate-200" />
-              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                Meet your guide and make sure the energy is 100%.
-              </p>
-            </div>
-
-            {/* Step 3: Hop on the session */}
-            <div className="rounded-[28px] border border-orange-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden">
-              <div className="h-3 w-full bg-[#FED7AA] absolute top-0 left-0 right-0" />
-              <span className="inline-block text-2xl font-black text-orange-500 pt-1">
-                03
-              </span>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Hop on the session
-              </h3>
-              <div className="h-[1px] w-full bg-slate-200" />
-              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                show up, tap in & let’s get to work.
-              </p>
-            </div>
-
-            {/* Step 4: Secure the clarity */}
-            <div className="rounded-[28px] border border-indigo-200 bg-white p-6 shadow-md text-left space-y-4 relative hover:-translate-y-1 transition-transform overflow-hidden lg:mt-6">
-              <div className="h-3 w-full bg-[#C7D2FE] absolute top-0 left-0 right-0" />
-              <span className="inline-block text-2xl font-black text-indigo-500 pt-1">
-                04
-              </span>
-              <h3 className="text-xl font-black text-slate-900 tracking-tight">
-                Secure the clarity
-              </h3>
-              <div className="h-[1px] w-full bg-slate-200" />
-              <p className="text-xs font-semibold text-slate-600 leading-relaxed">
-                walk away with zero confusion and a total vision.
-              </p>
-            </div>
-
-          </div>
-
-        </div>
-      </section>
 
       {/* 10. CTA BANNER ("Your First Session Is On Us" matching Screenshot 1) */}
       <section className="bg-gradient-to-b from-[#FFFDF8] via-[#FAF6ED] to-[#FAF8F3] py-20 border-t border-amber-200/60 relative overflow-hidden">
@@ -1413,7 +1334,7 @@ function LandingPage() {
                   size="lg"
                   className="h-12 px-9 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/40"
                 >
-                  <Link to="/doctors">Book a free session</Link>
+                  <Link to="/free-session">Book a free session</Link>
                 </Button>
               </div>
             </div>

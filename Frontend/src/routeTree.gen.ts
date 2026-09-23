@@ -18,6 +18,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as FreeSessionRouteImport } from './routes/free-session'
 import { Route as HealthRiskCalculatorRouteImport } from './routes/health-risk-calculator'
 import { Route as HealthVaultRouteImport } from './routes/health-vault'
 import { Route as LoginRouteImport } from './routes/login'
@@ -74,6 +75,11 @@ const DoctorRoute = DoctorRouteImport.update({
 const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
   id: '/forgot-password',
   path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FreeSessionRoute = FreeSessionRouteImport.update({
+  id: '/free-session',
+  path: '/free-session',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HealthRiskCalculatorRoute = HealthRiskCalculatorRouteImport.update({
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/free-session': typeof FreeSessionRoute
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/free-session': typeof FreeSessionRoute
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
@@ -194,6 +202,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/doctor': typeof DoctorRoute
   '/forgot-password': typeof ForgotPasswordRoute
+  '/free-session': typeof FreeSessionRoute
   '/health-risk-calculator': typeof HealthRiskCalculatorRoute
   '/health-vault': typeof HealthVaultRoute
   '/login': typeof LoginRoute
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/free-session'
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/free-session'
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/doctor'
     | '/forgot-password'
+    | '/free-session'
     | '/health-risk-calculator'
     | '/health-vault'
     | '/login'
@@ -289,6 +301,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   DoctorRoute: typeof DoctorRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
+  FreeSessionRoute: typeof FreeSessionRoute
   HealthRiskCalculatorRoute: typeof HealthRiskCalculatorRoute
   HealthVaultRoute: typeof HealthVaultRoute
   LoginRoute: typeof LoginRoute
@@ -366,6 +379,13 @@ declare module '@tanstack/react-router' {
       path: '/forgot-password'
       fullPath: '/forgot-password'
       preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/free-session': {
+      id: '/free-session'
+      path: '/free-session'
+      fullPath: '/free-session'
+      preLoaderRoute: typeof FreeSessionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/health-risk-calculator': {
@@ -465,6 +485,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   DoctorRoute: DoctorRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
+  FreeSessionRoute: FreeSessionRoute,
   HealthRiskCalculatorRoute: HealthRiskCalculatorRoute,
   HealthVaultRoute: HealthVaultRoute,
   LoginRoute: LoginRoute,
