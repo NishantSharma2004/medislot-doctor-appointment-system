@@ -415,16 +415,37 @@ function LandingPage() {
                 )}
               </div>
 
-              {/* Trust Avatar Stack Badge */}
+              {/* Trust Avatar Stack Badge (Real Customer Avatars) */}
               <div className="pt-2 flex flex-col items-center justify-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="size-8 rounded-full border-2 border-white bg-amber-200 grid place-items-center text-xs font-bold">👨‍💼</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-teal-200 grid place-items-center text-xs font-bold">👩‍⚕️</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-rose-200 grid place-items-center text-xs font-bold">👨‍⚕️</div>
-                  <div className="size-8 rounded-full border-2 border-white bg-purple-200 grid place-items-center text-xs font-bold">👩‍💻</div>
+                <div className="flex -space-x-2.5 overflow-hidden items-center justify-center">
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 1"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 2"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 3"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 4"
+                  />
+                  <img
+                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
+                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
+                    alt="Customer avatar 5"
+                  />
                 </div>
-                <span className="text-xs font-semibold text-slate-500">
-                  Trusted by over <span className="text-slate-900 font-extrabold">1000+ customers</span>
+                <span className="text-xs font-bold text-slate-700 tracking-tight">
+                  Trusted by over 1000+ customers
                 </span>
               </div>
             </div>
@@ -1412,42 +1433,8 @@ function LandingPage() {
             {/* Center Content Column */}
             <div className="mx-auto max-w-2xl text-center space-y-5">
               
-              {/* Avatar Stack + Customer Count */}
-              <div className="flex flex-col items-center justify-center gap-2">
-                <div className="flex -space-x-2.5 overflow-hidden items-center justify-center">
-                  <img
-                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                    src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-                    alt="Customer avatar 1"
-                  />
-                  <img
-                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
-                    alt="Customer avatar 2"
-                  />
-                  <img
-                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
-                    alt="Customer avatar 3"
-                  />
-                  <img
-                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                    src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80"
-                    alt="Customer avatar 4"
-                  />
-                  <img
-                    className="inline-block size-9 rounded-full ring-2 ring-white object-cover shadow-xs"
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=120&q=80"
-                    alt="Customer avatar 5"
-                  />
-                </div>
-                <span className="text-xs sm:text-sm font-bold text-slate-700 tracking-tight">
-                  Trusted by over 1000+ customers
-                </span>
-              </div>
-
               {/* Main Headline */}
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1] pt-1">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
                 Completely free. Totally chill.<br />Massive Clarity.
               </h2>
 
