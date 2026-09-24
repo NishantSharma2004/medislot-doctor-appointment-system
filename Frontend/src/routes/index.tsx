@@ -24,6 +24,10 @@ import {
   Activity,
   Smile,
   Zap,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -1631,10 +1635,65 @@ function LandingPage() {
           {/* Sub-Footer Row with Social Icons */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] font-semibold text-[#5A381B]">
             <p>*Durrmi connects patients with verified specialist doctors for seamless clinic scheduling and health vault privacy.</p>
-            <div className="flex items-center gap-4 text-[#3D250F]">
-              <a href="#" className="hover:opacity-80 transition-opacity">📘 Facebook</a>
-              <a href="#" className="hover:opacity-80 transition-opacity">𝕏 Twitter</a>
-              <a href="#" className="hover:opacity-80 transition-opacity">📸 Instagram</a>
+            <div className="flex flex-wrap items-center gap-3 sm:gap-5 text-[#3D250F]">
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <Facebook className="size-3.5 text-[#1877F2]" />
+                <span>Facebook</span>
+              </a>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="size-3.5 fill-current">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+                <span>Twitter</span>
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <Instagram className="size-3.5 text-[#E4405F]" />
+                <span>Instagram</span>
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <Linkedin className="size-3.5 text-[#0A66C2]" />
+                <span>LinkedIn</span>
+              </a>
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <Youtube className="size-3.5 text-[#CD201F]" />
+                <span>YouTube</span>
+              </a>
+              <a
+                href="https://tiktok.com"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 hover:text-amber-900 transition-colors"
+              >
+                <svg viewBox="0 0 24 24" className="size-3.5 fill-current">
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.17 1.17 2.12 2.34 2.37.95.23 1.98.05 2.79-.47.69-.43 1.16-1.13 1.29-1.93.11-.64.12-1.3.11-1.96V.02z" />
+                </svg>
+                <span>TikTok</span>
+              </a>
             </div>
           </div>
 
