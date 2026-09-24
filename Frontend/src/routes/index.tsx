@@ -208,7 +208,7 @@ const SPECIALIST_CARDS = [
     name: "Dr. Emily Davis",
     role: "Couple specialist",
     category: "Couple Specialists",
-    imageUrl: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
   },
   {
     id: "sp-7",
@@ -979,6 +979,9 @@ function LandingPage() {
                   <img
                     src={therapist.imageUrl}
                     alt={therapist.name}
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80";
+                    }}
                     className="w-full h-full object-cover object-center"
                   />
 

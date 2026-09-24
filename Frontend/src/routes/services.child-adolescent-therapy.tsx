@@ -269,8 +269,11 @@ export function ChildAdolescentTherapyPage() {
             
             <div className="md:col-span-5 flex justify-center">
               <img
-                src="https://images.unsplash.com/photo-1594824813572-87f54cbbdff9?auto=format&fit=crop&w=700&q=80"
+                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=80"
                 alt="Child & Adolescent Specialist at Durrmi"
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=700&q=80";
+                }}
                 className="w-full max-w-sm h-80 sm:h-96 object-cover rounded-[32px] shadow-xl border-2 border-white"
               />
             </div>

@@ -52,7 +52,7 @@ const SPECIALIST_CARDS = [
     name: "Aditi Sharma",
     role: "Anxiety specialist",
     category: "Anxiety Specialists",
-    imageUrl: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=80",
     rating: 4.8,
     experience: "6+ yrs exp",
   },
@@ -99,7 +99,7 @@ const CORE_TEAM_MEMBERS = [
   {
     name: "Aditi Sharma",
     role: "Lead Clinical Psychologist",
-    imageUrl: "https://images.unsplash.com/photo-1594824813566-7885a3964478?auto=format&fit=crop&w=600&q=80",
+    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
   },
   {
     name: "Dr. Ryan Vance",
@@ -292,6 +292,9 @@ export function TherapistsPage() {
                   <img
                     src={therapist.imageUrl}
                     alt={therapist.name}
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80";
+                    }}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                   />
 
@@ -364,6 +367,9 @@ export function TherapistsPage() {
                 <img
                   src={member.imageUrl}
                   alt={member.name}
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80";
+                  }}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Yellow Bottom-Left Label Badge */}
@@ -389,6 +395,9 @@ export function TherapistsPage() {
                 <img
                   src={member.imageUrl}
                   alt={member.name}
+                  onError={(e) => {
+                    e.currentTarget.src = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80";
+                  }}
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                 />
                 {/* Yellow Bottom-Left Label Badge */}
