@@ -762,7 +762,7 @@ export function CareersPage() {
                   </div>
 
                   {/* Submit Button */}
-                  <div className="pt-2">
+                  <div className="pt-2 flex justify-center text-center">
                     <Button
                       type="submit"
                       disabled={isSubmitting}
