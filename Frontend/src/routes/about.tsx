@@ -1,5 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Sparkles, ArrowRight, ChevronDown } from "lucide-react";
+
+const SPECIALISATION_TAGS = [
+  "Relationships",
+  "Trauma",
+  "ADHD",
+  "Lifestyle",
+  "Depression and low mood",
+  "Anxiety",
+  "Sleep",
+  "Work",
+  "Loneliness",
+  "Attention & Focus",
+  "Career",
+  "Stress & Burnout",
+  "Substance & Focus",
+  "Daily Functioning",
+];
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -46,14 +69,63 @@ export function AboutPage() {
             >
               <Link to="/doctors">Book a free session</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="h-11 px-7 rounded-full border-slate-400/80 bg-white/90 text-slate-800 hover:bg-slate-100 text-xs font-bold shadow-xs"
-            >
-              <Link to="/#why-durrmi">Explore Specialisations</Link>
-            </Button>
+            <HoverCard openDelay={80} closeDelay={180}>
+              <HoverCardTrigger asChild>
+                <Button
+                  asChild
+                  size="lg"
+                  variant="outline"
+                  className="group h-11 px-7 rounded-full border-slate-400/80 bg-white/90 text-slate-800 hover:bg-slate-100 text-xs font-bold shadow-xs gap-1.5 cursor-pointer"
+                >
+                  <Link to="/doctors">
+                    <span>Explore Specialisations</span>
+                    <ChevronDown className="size-3.5 text-slate-600 transition-transform duration-200 group-hover:rotate-180" />
+                  </Link>
+                </Button>
+              </HoverCardTrigger>
+              <HoverCardContent
+                align="center"
+                side="bottom"
+                sideOffset={10}
+                className="w-[360px] sm:w-[460px] rounded-2xl border border-amber-300/80 bg-[#FFFDF9]/98 backdrop-blur-md p-4 shadow-2xl z-50 text-left"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between border-b border-amber-200/80 pb-2">
+                    <div className="flex items-center gap-1.5 text-amber-950">
+                      <Sparkles className="size-3.5 text-amber-600" />
+                      <span className="text-[11px] font-black uppercase tracking-wider">
+                        Explore Specialisations
+                      </span>
+                    </div>
+                    <span className="text-[10px] font-bold text-slate-500">
+                      14 clinical areas
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 max-h-[300px] overflow-y-auto pr-1">
+                    {SPECIALISATION_TAGS.map((spec) => (
+                      <Link
+                        key={spec}
+                        to="/doctors"
+                        search={{ specialization: spec }}
+                        className="inline-flex items-center text-[10.5px] font-bold px-3 py-1 rounded-full bg-white border border-amber-300/80 text-amber-950 hover:bg-[#FFBE0B] hover:border-amber-500 hover:text-slate-950 transition-all shadow-2xs hover:scale-[1.02]"
+                      >
+                        <span className="mr-1 text-amber-500 font-black">●</span>
+                        {spec}
+                      </Link>
+                    ))}
+                  </div>
+                  <div className="pt-1.5 flex items-center justify-between text-[10px] text-slate-500 border-t border-amber-100">
+                    <span>Select a concern to find dedicated therapists</span>
+                    <Link
+                      to="/doctors"
+                      className="font-bold text-amber-900 hover:underline inline-flex items-center gap-0.5"
+                    >
+                      View all therapists <ArrowRight className="size-2.5" />
+                    </Link>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           </div>
         </div>
       </section>
