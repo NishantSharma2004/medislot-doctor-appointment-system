@@ -1114,7 +1114,7 @@ function LandingPage() {
                     size="lg"
                     className="h-12 px-8 rounded-full bg-white text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:bg-slate-100 hover:shadow-lg transition-all border border-slate-200"
                   >
-                    <Link to="/doctors">Book a free session</Link>
+                    <Link to="/free-session">Book a free session</Link>
                   </Button>
                 </div>
               </div>

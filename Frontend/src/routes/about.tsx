@@ -67,7 +67,7 @@ export function AboutPage() {
               size="lg"
               className="h-11 px-7 rounded-full bg-[#FFBE0B] hover:bg-[#E5AA09] text-slate-950 font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all border border-amber-500/30"
             >
-              <Link to="/doctors">Book a free session</Link>
+              <Link to="/free-session">Book a free session</Link>
             </Button>
             <HoverCard openDelay={80} closeDelay={180}>
               <HoverCardTrigger asChild>
