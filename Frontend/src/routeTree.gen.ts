@@ -34,10 +34,14 @@ import { Route as UnauthorizedRouteImport } from './routes/unauthorized'
 import { Route as BlogsIndexRouteImport } from './routes/blogs.index'
 import { Route as DoctorAvailabilityRouteImport } from './routes/doctor_.availability'
 import { Route as DoctorsIndexRouteImport } from './routes/doctors.index'
+import { Route as ServicesAddictionSupportRouteImport } from './routes/services.addiction-support'
 import { Route as ServicesChildAdolescentTherapyRouteImport } from './routes/services.child-adolescent-therapy'
+import { Route as ServicesCoachingRouteImport } from './routes/services.coaching'
 import { Route as ServicesCouplesTherapyRouteImport } from './routes/services.couples-therapy'
 import { Route as ServicesGeriatricSupportRouteImport } from './routes/services.geriatric-support'
+import { Route as ServicesGroupTherapyRouteImport } from './routes/services.group-therapy'
 import { Route as ServicesIndividualTherapyRouteImport } from './routes/services.individual-therapy'
+import { Route as ServicesRelationshipConnectionRouteImport } from './routes/services.relationship-connection'
 import { Route as BlogsBlogIdIndexRouteImport } from './routes/blogs.$blogId.index'
 import { Route as DoctorsDoctorIdIndexRouteImport } from './routes/doctors.$doctorId.index'
 
@@ -166,12 +170,23 @@ const DoctorsIndexRoute = DoctorsIndexRouteImport.update({
   path: '/doctors/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesAddictionSupportRoute =
+  ServicesAddictionSupportRouteImport.update({
+    id: '/services/addiction-support',
+    path: '/services/addiction-support',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ServicesChildAdolescentTherapyRoute =
   ServicesChildAdolescentTherapyRouteImport.update({
     id: '/services/child-adolescent-therapy',
     path: '/services/child-adolescent-therapy',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ServicesCoachingRoute = ServicesCoachingRouteImport.update({
+  id: '/services/coaching',
+  path: '/services/coaching',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesCouplesTherapyRoute = ServicesCouplesTherapyRouteImport.update({
   id: '/services/couples-therapy',
   path: '/services/couples-therapy',
@@ -183,10 +198,21 @@ const ServicesGeriatricSupportRoute =
     path: '/services/geriatric-support',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ServicesGroupTherapyRoute = ServicesGroupTherapyRouteImport.update({
+  id: '/services/group-therapy',
+  path: '/services/group-therapy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesIndividualTherapyRoute =
   ServicesIndividualTherapyRouteImport.update({
     id: '/services/individual-therapy',
     path: '/services/individual-therapy',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ServicesRelationshipConnectionRoute =
+  ServicesRelationshipConnectionRouteImport.update({
+    id: '/services/relationship-connection',
+    path: '/services/relationship-connection',
     getParentRoute: () => rootRouteImport,
   } as any)
 const BlogsBlogIdIndexRoute = BlogsBlogIdIndexRouteImport.update({
@@ -224,10 +250,14 @@ export interface FileRoutesByFullPath {
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
+  '/services/addiction-support': typeof ServicesAddictionSupportRoute
   '/services/child-adolescent-therapy': typeof ServicesChildAdolescentTherapyRoute
+  '/services/coaching': typeof ServicesCoachingRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/services/geriatric-support': typeof ServicesGeriatricSupportRoute
+  '/services/group-therapy': typeof ServicesGroupTherapyRoute
   '/services/individual-therapy': typeof ServicesIndividualTherapyRoute
+  '/services/relationship-connection': typeof ServicesRelationshipConnectionRoute
   '/blogs/': typeof BlogsIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/blogs/$blogId/': typeof BlogsBlogIdIndexRoute
@@ -257,10 +287,14 @@ export interface FileRoutesByTo {
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor/availability': typeof DoctorAvailabilityRoute
+  '/services/addiction-support': typeof ServicesAddictionSupportRoute
   '/services/child-adolescent-therapy': typeof ServicesChildAdolescentTherapyRoute
+  '/services/coaching': typeof ServicesCoachingRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/services/geriatric-support': typeof ServicesGeriatricSupportRoute
+  '/services/group-therapy': typeof ServicesGroupTherapyRoute
   '/services/individual-therapy': typeof ServicesIndividualTherapyRoute
+  '/services/relationship-connection': typeof ServicesRelationshipConnectionRoute
   '/blogs': typeof BlogsIndexRoute
   '/doctors': typeof DoctorsIndexRoute
   '/blogs/$blogId': typeof BlogsBlogIdIndexRoute
@@ -291,10 +325,14 @@ export interface FileRoutesById {
   '/therapists': typeof TherapistsRoute
   '/unauthorized': typeof UnauthorizedRoute
   '/doctor_/availability': typeof DoctorAvailabilityRoute
+  '/services/addiction-support': typeof ServicesAddictionSupportRoute
   '/services/child-adolescent-therapy': typeof ServicesChildAdolescentTherapyRoute
+  '/services/coaching': typeof ServicesCoachingRoute
   '/services/couples-therapy': typeof ServicesCouplesTherapyRoute
   '/services/geriatric-support': typeof ServicesGeriatricSupportRoute
+  '/services/group-therapy': typeof ServicesGroupTherapyRoute
   '/services/individual-therapy': typeof ServicesIndividualTherapyRoute
+  '/services/relationship-connection': typeof ServicesRelationshipConnectionRoute
   '/blogs/': typeof BlogsIndexRoute
   '/doctors/': typeof DoctorsIndexRoute
   '/blogs/$blogId/': typeof BlogsBlogIdIndexRoute
@@ -326,10 +364,14 @@ export interface FileRouteTypes {
     | '/therapists'
     | '/unauthorized'
     | '/doctor/availability'
+    | '/services/addiction-support'
     | '/services/child-adolescent-therapy'
+    | '/services/coaching'
     | '/services/couples-therapy'
     | '/services/geriatric-support'
+    | '/services/group-therapy'
     | '/services/individual-therapy'
+    | '/services/relationship-connection'
     | '/blogs/'
     | '/doctors/'
     | '/blogs/$blogId/'
@@ -359,10 +401,14 @@ export interface FileRouteTypes {
     | '/therapists'
     | '/unauthorized'
     | '/doctor/availability'
+    | '/services/addiction-support'
     | '/services/child-adolescent-therapy'
+    | '/services/coaching'
     | '/services/couples-therapy'
     | '/services/geriatric-support'
+    | '/services/group-therapy'
     | '/services/individual-therapy'
+    | '/services/relationship-connection'
     | '/blogs'
     | '/doctors'
     | '/blogs/$blogId'
@@ -392,10 +438,14 @@ export interface FileRouteTypes {
     | '/therapists'
     | '/unauthorized'
     | '/doctor_/availability'
+    | '/services/addiction-support'
     | '/services/child-adolescent-therapy'
+    | '/services/coaching'
     | '/services/couples-therapy'
     | '/services/geriatric-support'
+    | '/services/group-therapy'
     | '/services/individual-therapy'
+    | '/services/relationship-connection'
     | '/blogs/'
     | '/doctors/'
     | '/blogs/$blogId/'
@@ -426,10 +476,14 @@ export interface RootRouteChildren {
   TherapistsRoute: typeof TherapistsRoute
   UnauthorizedRoute: typeof UnauthorizedRoute
   DoctorAvailabilityRoute: typeof DoctorAvailabilityRoute
+  ServicesAddictionSupportRoute: typeof ServicesAddictionSupportRoute
   ServicesChildAdolescentTherapyRoute: typeof ServicesChildAdolescentTherapyRoute
+  ServicesCoachingRoute: typeof ServicesCoachingRoute
   ServicesCouplesTherapyRoute: typeof ServicesCouplesTherapyRoute
   ServicesGeriatricSupportRoute: typeof ServicesGeriatricSupportRoute
+  ServicesGroupTherapyRoute: typeof ServicesGroupTherapyRoute
   ServicesIndividualTherapyRoute: typeof ServicesIndividualTherapyRoute
+  ServicesRelationshipConnectionRoute: typeof ServicesRelationshipConnectionRoute
   BlogsIndexRoute: typeof BlogsIndexRoute
   DoctorsIndexRoute: typeof DoctorsIndexRoute
   BlogsBlogIdIndexRoute: typeof BlogsBlogIdIndexRoute
@@ -613,11 +667,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DoctorsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/addiction-support': {
+      id: '/services/addiction-support'
+      path: '/services/addiction-support'
+      fullPath: '/services/addiction-support'
+      preLoaderRoute: typeof ServicesAddictionSupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/child-adolescent-therapy': {
       id: '/services/child-adolescent-therapy'
       path: '/services/child-adolescent-therapy'
       fullPath: '/services/child-adolescent-therapy'
       preLoaderRoute: typeof ServicesChildAdolescentTherapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/coaching': {
+      id: '/services/coaching'
+      path: '/services/coaching'
+      fullPath: '/services/coaching'
+      preLoaderRoute: typeof ServicesCoachingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services/couples-therapy': {
@@ -634,11 +702,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesGeriatricSupportRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/group-therapy': {
+      id: '/services/group-therapy'
+      path: '/services/group-therapy'
+      fullPath: '/services/group-therapy'
+      preLoaderRoute: typeof ServicesGroupTherapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services/individual-therapy': {
       id: '/services/individual-therapy'
       path: '/services/individual-therapy'
       fullPath: '/services/individual-therapy'
       preLoaderRoute: typeof ServicesIndividualTherapyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/relationship-connection': {
+      id: '/services/relationship-connection'
+      path: '/services/relationship-connection'
+      fullPath: '/services/relationship-connection'
+      preLoaderRoute: typeof ServicesRelationshipConnectionRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blogs/$blogId/': {
@@ -682,10 +764,14 @@ const rootRouteChildren: RootRouteChildren = {
   TherapistsRoute: TherapistsRoute,
   UnauthorizedRoute: UnauthorizedRoute,
   DoctorAvailabilityRoute: DoctorAvailabilityRoute,
+  ServicesAddictionSupportRoute: ServicesAddictionSupportRoute,
   ServicesChildAdolescentTherapyRoute: ServicesChildAdolescentTherapyRoute,
+  ServicesCoachingRoute: ServicesCoachingRoute,
   ServicesCouplesTherapyRoute: ServicesCouplesTherapyRoute,
   ServicesGeriatricSupportRoute: ServicesGeriatricSupportRoute,
+  ServicesGroupTherapyRoute: ServicesGroupTherapyRoute,
   ServicesIndividualTherapyRoute: ServicesIndividualTherapyRoute,
+  ServicesRelationshipConnectionRoute: ServicesRelationshipConnectionRoute,
   BlogsIndexRoute: BlogsIndexRoute,
   DoctorsIndexRoute: DoctorsIndexRoute,
   BlogsBlogIdIndexRoute: BlogsBlogIdIndexRoute,

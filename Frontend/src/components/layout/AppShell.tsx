@@ -229,6 +229,18 @@ export function AppHeader() {
                 <DropdownMenuItem onClick={() => navigate({ to: "/services/geriatric-support" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
                   👵 Geriatric Support
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/relationship-connection" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  💞 Relationship / Connection
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/addiction-support" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🌱 Addiction Support
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/coaching" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🎯 Coaching &amp; Personal Growth
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/group-therapy" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🤝 Group Therapy Circles
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Trauma" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
                   🧘 Trauma &amp; Emotional Healing
                 </DropdownMenuItem>

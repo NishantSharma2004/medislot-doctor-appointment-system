@@ -837,10 +837,16 @@ function LandingPage() {
                 </Link>
 
                 {/* Card 5: Relationship / Connection */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F9F5FF] to-[#E5CEFF] border border-purple-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/relationship-connection"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F9F5FF] to-[#E5CEFF] border border-purple-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#A55EEA] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Relationship / Connection</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-purple-950 transition-colors">Relationship / Connection</h3>
+                      <span className="text-purple-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       Unresolved emotions do not stay silent; it leaks through every conversation. Working together will help.
@@ -849,13 +855,19 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
                     <path fill="#DDD6FE" d="M100 10 C105 70 130 80 190 100 C130 120 105 130 100 190 C95 130 70 120 10 100 C70 80 95 70 100 10 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 6: Addiction Support */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF1F2] to-[#FECDD3] border border-rose-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/addiction-support"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF1F2] to-[#FECDD3] border border-rose-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#E11D48] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Addiction Support</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-rose-950 transition-colors">Addiction Support</h3>
+                      <span className="text-rose-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       Addictions holding you back? <span className="font-extrabold text-rose-950">"We understand this deeply."</span> We do not dismiss these issues; instead, we listen and provide support.
@@ -864,13 +876,19 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
                     <path fill="#FECDD3" d="M100 10 L120 70 L180 80 L130 120 L150 180 L100 140 L50 180 L70 120 L20 80 L80 70 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 7: Coaching */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#DCFCE7] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/coaching"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#DCFCE7] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#22C55E] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Coaching</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-emerald-950 transition-colors">Coaching</h3>
+                      <span className="text-emerald-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       You don’t need therapy but would like to work with a professional collaboratively to unlock your higher potential.
@@ -879,13 +897,19 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-80 pointer-events-none">
                     <polygon fill="#BBF7D0" points="100,10 120,70 185,75 135,120 155,185 100,145 45,185 65,120 15,75 80,70" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 8: Group Therapy */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#EEF2FF] to-[#E0E7FF] border border-indigo-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/group-therapy"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#EEF2FF] to-[#E0E7FF] border border-indigo-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#4338CA] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Group Therapy</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-indigo-950 transition-colors">Group Therapy</h3>
+                      <span className="text-indigo-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       Not alone in this. A support group that meets weekly to lift each other through similar challenges
@@ -897,7 +921,7 @@ function LandingPage() {
                       <rect x="10" y="75" width="180" height="50" rx="25" />
                     </g>
                   </svg>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -1523,10 +1547,13 @@ function LandingPage() {
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
                 <li><Link to="/services/individual-therapy" className="hover:underline">Adult &amp; Individual Therapy ↗</Link></li>
+                <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couple &amp; Family therapy ↗</Link></li>
                 <li><Link to="/services/child-adolescent-therapy" className="hover:underline">Children First Services ↗</Link></li>
-                <li><Link to="/services/child-adolescent-therapy" className="hover:underline">Developmental care ↗</Link></li>
                 <li><Link to="/services/geriatric-support" className="hover:underline">Geriatric Support ↗</Link></li>
-                <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couple therapy ↗</Link></li>
+                <li><Link to="/services/relationship-connection" className="hover:underline">Relationship / Connection ↗</Link></li>
+                <li><Link to="/services/addiction-support" className="hover:underline">Addiction Support ↗</Link></li>
+                <li><Link to="/services/coaching" className="hover:underline">Coaching ↗</Link></li>
+                <li><Link to="/services/group-therapy" className="hover:underline">Group Therapy ↗</Link></li>
                 <li><Link to="/b2b" className="hover:underline">Community &amp; Peer support</Link></li>
               </ul>
             </div>
