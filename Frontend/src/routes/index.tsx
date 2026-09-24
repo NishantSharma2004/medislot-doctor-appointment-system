@@ -753,10 +753,16 @@ function LandingPage() {
                 style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
                 {/* Card 1: Individual Therapy */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF9EA] to-[#FFEEC4] border border-amber-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/individual-therapy"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF9EA] to-[#FFEEC4] border border-amber-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#FFBE0B] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Individual therapy</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-amber-900 transition-colors">Individual therapy</h3>
+                      <span className="text-amber-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       1 on 1 culturally inclusive, trauma-informed support for all the challenges and transitions in life to help you with meaningful personal growth.
@@ -765,7 +771,7 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-10 size-48 opacity-80 pointer-events-none">
                     <path fill="#FDE68A" d="M100 10 L112 68 L170 30 L132 88 L190 100 L132 112 L170 170 L112 132 L100 190 L88 132 L30 170 L68 112 L10 100 L68 88 L30 30 L88 68 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 2: Couple & Family counselling */}
                 <Link
@@ -789,10 +795,16 @@ function LandingPage() {
                 </Link>
 
                 {/* Card 3: Child and adolescent therapy */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF5ED] to-[#FFE2CD] border border-orange-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/child-adolescent-therapy"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#FFF5ED] to-[#FFE2CD] border border-orange-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#FF9F43] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Child & adolescent therapy</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-orange-950 transition-colors">Child & adolescent therapy</h3>
+                      <span className="text-orange-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       Find support for academic challenges, behavioural concerns, and emotional navigation through all your child's developmental stages.
@@ -801,13 +813,19 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-10 -left-6 size-44 opacity-85 pointer-events-none">
                     <path fill="#FED7AA" d="M100 0 C105 70 130 95 200 100 C130 105 105 130 100 200 C95 130 70 105 0 100 C70 95 95 70 100 0 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 4: Geriatric Support */}
-                <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#C7F9D9] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
+                <Link
+                  to="/services/geriatric-support"
+                  className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F0FDF4] to-[#C7F9D9] border border-emerald-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1 block group"
+                >
                   <div className="h-2.5 w-full bg-[#2ECC71] rounded-t-[28px] absolute top-0 left-0 right-0" />
                   <div className="space-y-3 pt-2 z-10">
-                    <h3 className="text-2xl font-black text-slate-900 tracking-tight">Geriatric Support</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-2xl font-black text-slate-900 tracking-tight group-hover:text-emerald-950 transition-colors">Geriatric Support</h3>
+                      <span className="text-emerald-600 text-sm font-black">↗</span>
+                    </div>
                     <div className="h-[1px] w-full bg-slate-300/80" />
                     <p className="text-xs font-semibold text-slate-700 leading-relaxed">
                       A respectful and compassionate space to process ageing, loss, and life transitions without feeling alone.
@@ -816,7 +834,7 @@ function LandingPage() {
                   <svg viewBox="0 0 200 200" className="absolute -bottom-8 -left-8 size-48 opacity-85 pointer-events-none">
                     <path fill="#A7F3D0" d="M100 10 C120 60 160 60 190 100 C160 140 120 140 100 190 C80 140 40 140 10 100 C40 60 80 60 100 10 Z" />
                   </svg>
-                </div>
+                </Link>
 
                 {/* Card 5: Relationship / Connection */}
                 <div className="w-[280px] sm:w-[310px] shrink-0 h-[360px] rounded-[28px] bg-gradient-to-b from-white via-[#F9F5FF] to-[#E5CEFF] border border-purple-200/80 shadow-md p-6 flex flex-col justify-between overflow-hidden relative snap-start transition-all hover:shadow-xl hover:-translate-y-1">
@@ -1504,10 +1522,10 @@ function LandingPage() {
                 <Link to="/doctors" className="hover:underline">Services</Link>
               </h4>
               <ul className="space-y-2 text-[11px] font-medium text-[#6E4924]">
-                <li><Link to="/doctors" search={{ specialization: "Adult Therapy" }} className="hover:underline">Adult Therapy</Link></li>
-                <li><Link to="/doctors" search={{ specialization: "Children First" }} className="hover:underline">Children First Services</Link></li>
-                <li><Link to="/doctors" search={{ specialization: "Developmental care" }} className="hover:underline">Developmental care</Link></li>
-                <li><Link to="/resources" className="hover:underline">Self-care</Link></li>
+                <li><Link to="/services/individual-therapy" className="hover:underline">Adult &amp; Individual Therapy ↗</Link></li>
+                <li><Link to="/services/child-adolescent-therapy" className="hover:underline">Children First Services ↗</Link></li>
+                <li><Link to="/services/child-adolescent-therapy" className="hover:underline">Developmental care ↗</Link></li>
+                <li><Link to="/services/geriatric-support" className="hover:underline">Geriatric Support ↗</Link></li>
                 <li><Link to="/services/couples-therapy" className="hover:underline font-bold text-amber-950">Couple therapy ↗</Link></li>
                 <li><Link to="/b2b" className="hover:underline">Community &amp; Peer support</Link></li>
               </ul>

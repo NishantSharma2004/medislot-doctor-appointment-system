@@ -25,11 +25,17 @@ export function CouplesTherapyPage() {
             
             {/* Left Content */}
             <div className="md:col-span-7 space-y-6 text-left">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider text-blue-950 bg-blue-100 px-3.5 py-1 rounded-full border border-blue-300">
+                Fix the Vibe, Not the Blame
+              </span>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
                 Relationship is cooked? Let's un-cook it!
               </h1>
               <p className="text-xs sm:text-sm md:text-base font-semibold text-slate-600 max-w-lg leading-relaxed">
-                A good relationship isn't about never struggling or always being perfect; it’s about understanding each other. No judgment, no sides, just real support to help your relationships thrive
+                A good relationship isn't about never struggling or always being perfect; it’s about understanding each other. No judgment, no sides, just real support to help your relationships thrive.
+              </p>
+              <p className="text-xs sm:text-sm font-medium text-slate-700 max-w-lg leading-relaxed">
+                Every relationship has its plot twists. The arguments that keep repeating, the things left unsaid, the patterns nobody knows how to break. Couple &amp; family counselling is your space to actually work through it — together. Your people matter — and doing work together is the ultimate glow-up.
               </p>
               <div>
                 <Button

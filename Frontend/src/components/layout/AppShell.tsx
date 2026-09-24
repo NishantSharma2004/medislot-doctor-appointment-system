@@ -217,23 +217,20 @@ export function AppHeader() {
                   Therapy &amp; Wellness Services
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-amber-100" />
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Anxiety & Stress Therapy" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🧠 Anxiety &amp; Panic Therapy
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/individual-therapy" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  👤 Individual Therapy (1-on-1)
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Depression & Mood Care" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🌿 Depression &amp; Mood Care
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/couples-therapy" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  💑 Couple &amp; Family Counselling
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Couples & Relationship Counselling" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  💑 Couples &amp; Relationship Therapy
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Burnout & Career Stress" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  💼 Burnout &amp; Work Stress
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Trauma & Emotional Healing" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
-                  🧘 Trauma &amp; Emotional Healing
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Child & Teen Psychology" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/child-adolescent-therapy" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
                   👦 Child &amp; Adolescent Therapy
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/services/geriatric-support" })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  👵 Geriatric Support
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate({ to: "/doctors", search: { specialization: "Trauma" } })} className="cursor-pointer rounded-xl font-extrabold text-xs py-2 text-slate-800 hover:bg-amber-50">
+                  🧘 Trauma &amp; Emotional Healing
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-amber-100" />
                 <DropdownMenuItem onClick={() => navigate({ to: "/b2b" })} className="cursor-pointer rounded-xl font-black text-xs py-2 text-amber-950 bg-amber-50 hover:bg-amber-100">
