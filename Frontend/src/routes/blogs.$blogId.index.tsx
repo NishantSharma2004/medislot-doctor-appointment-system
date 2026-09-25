@@ -46,39 +46,58 @@ export function BlogDetailPage() {
       <article className="pt-10 sm:pt-14 pb-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-5">
           
-          {/* Category Pill Badges matching Figma: Category: [Anxiety Disorder] [Anxiety Disorder] */}
+          {/* Category Pill Badges */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-semibold text-slate-500 mr-1">Category:</span>
-            <span className="px-3.5 py-1 rounded-full border border-slate-300 bg-white text-slate-800 text-[11px] font-bold shadow-2xs">
-              Anxiety Disorder
-            </span>
-            <span className="px-3.5 py-1 rounded-full border border-slate-300 bg-white text-slate-800 text-[11px] font-bold shadow-2xs">
-              Anxiety Disorder
-            </span>
+            {post.categories.map((cat) => (
+              <span
+                key={cat}
+                className="px-3.5 py-1 rounded-full border border-slate-300 bg-white text-slate-800 text-[11px] font-bold shadow-2xs"
+              >
+                {cat}
+              </span>
+            ))}
           </div>
 
-          {/* Article Title matching Figma */}
+          {/* Article Title */}
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-[1.18] pt-1">
-            The Advice We Give Anxious People<br className="hidden sm:inline" /> That Doesn't Help
+            {post.title}
           </h1>
 
-          {/* Lead Subtitle matching Figma */}
-          <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-3xl">
-            If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-          </p>
+          {/* Lead Subtitle */}
+          {post.subtitle && (
+            <p className="text-xs sm:text-sm font-medium text-slate-600 leading-relaxed max-w-3xl">
+              {post.subtitle}
+            </p>
+          )}
 
-          {/* Meta Date & Read Time matching Figma: Date: 12-03-25        Read: 5 mins */}
-          <div className="flex items-center gap-10 sm:gap-14 pt-2 text-xs font-medium text-slate-600">
-            <div>
-              Date: <span className="font-black text-slate-900 ml-1">12-03-25</span>
+          {/* Author Meta, Date & Read Time */}
+          <div className="flex flex-wrap items-center gap-6 sm:gap-10 pt-2 text-xs font-medium text-slate-600 border-y border-amber-200/50 py-3">
+            <div className="flex items-center gap-2">
+              {post.author.avatarUrl && (
+                <img
+                  src={post.author.avatarUrl}
+                  alt={post.author.name}
+                  className="size-7 rounded-full object-cover border border-amber-300"
+                />
+              )}
+              <div>
+                <span className="font-bold text-slate-900">{post.author.name}</span>
+                <span className="text-slate-400 ml-1.5 text-[11px] hidden sm:inline">
+                  • {post.author.role}
+                </span>
+              </div>
             </div>
             <div>
-              Read: <span className="font-black text-slate-900 ml-1">5 mins</span>
+              Date: <span className="font-black text-slate-900 ml-1">{post.date}</span>
+            </div>
+            <div>
+              Read: <span className="font-black text-slate-900 ml-1">{post.readTime}</span>
             </div>
           </div>
 
-          {/* Large Hero Image (Person with pillow on bed matching Figma) */}
-          <div className="pt-4">
+          {/* Large Hero Image */}
+          <div className="pt-2">
             <div className="aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-sm">
               <img
                 src={post.heroImageUrl}
@@ -89,78 +108,52 @@ export function BlogDetailPage() {
             </div>
           </div>
 
-          {/* ARTICLE BODY CONTENT (Exact match to Figma Image) */}
-          <div className="pt-6 space-y-6 text-slate-700 text-xs sm:text-sm leading-relaxed font-normal">
+          {/* ARTICLE BODY CONTENT (Dynamically Rendered) */}
+          <div className="pt-6 space-y-7 text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
             
-            {/* Block 1 */}
-            <div className="space-y-4">
-              <p>
-                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-              </p>
-              <p>
-                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
-              </p>
-              <p>
-                Let's look at why some of the most common things people say don't land, and what actually tends to help.
-              </p>
-            </div>
+            {/* Intro Paragraphs */}
+            {post.content.intro && (
+              <div className="space-y-4 text-slate-800 font-medium">
+                {post.content.intro.split("\n\n").map((para, i) => (
+                  <p key={i} className="leading-relaxed">
+                    {para}
+                  </p>
+                ))}
+              </div>
+            )}
 
-            {/* Subheading 1 */}
-            <div className="space-y-4 pt-2">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                Blog Heading
-              </h2>
-              <p>
-                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-              </p>
-              <p>
-                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
-              </p>
-              <p>
-                Let's look at why some of the most common things people say don't land, and what actually tends to help.
-              </p>
-              <p>
-                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-              </p>
-              <p>
-                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
-              </p>
-            </div>
+            {/* Sections */}
+            {post.content.sections.map((section, idx) => (
+              <div key={idx} className="space-y-4 pt-2">
+                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                  {section.heading}
+                </h2>
 
-            {/* Subheading 2 */}
-            <div className="space-y-4 pt-2">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                Blog Heading
-              </h2>
+                {section.paragraphs.map((p, pIdx) => (
+                  <p key={pIdx} className="leading-relaxed text-slate-700">
+                    {p}
+                  </p>
+                ))}
 
-              {/* Mid-Article Consultation Image matching Figma */}
-              {post.midImageUrl && (
-                <div className="my-5 aspect-[16/7] w-full rounded-2xl overflow-hidden shadow-sm">
-                  <img
-                    src={post.midImageUrl}
-                    alt="Therapist and client discussion"
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                </div>
-              )}
+                {section.highlightQuote && (
+                  <blockquote className="my-5 p-5 sm:p-6 rounded-2xl bg-amber-100/60 border-l-4 border-amber-500 text-slate-900 font-bold italic text-sm sm:text-base leading-relaxed shadow-2xs">
+                    {section.highlightQuote}
+                  </blockquote>
+                )}
 
-              <p>
-                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-              </p>
-              <p>
-                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
-              </p>
-              <p>
-                Let's look at why some of the most common things people say don't land, and what actually tends to help.
-              </p>
-              <p>
-                If you've ever dealt with anxiety, chances are you've heard some version of this:"Just relax." "Don't overthink it." "It's all in your head." "Just breathe."And chances are, none of it actually helped.
-              </p>
-              <p>
-                That's not because the people saying it don't care. Most of the time, they do. They're trying to comfort you, or fix things quickly, or simply don't know what else to say. But anxiety doesn't work the way casual advice assumes it does — and when the advice misses that, it can leave you feeling more alone than before you said anything at all.
-              </p>
-            </div>
+                {/* Show mid image after the first section if available */}
+                {idx === 0 && post.midImageUrl && (
+                  <div className="my-6 aspect-[16/8] w-full rounded-2xl overflow-hidden shadow-sm">
+                    <img
+                      src={post.midImageUrl}
+                      alt="Discussion"
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
 
           </div>
 

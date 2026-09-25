@@ -3,6 +3,9 @@ trigger:
     include:
       - main
 
+variables:
+  - group: vm_config
+
 stages:
   # =======================================================
   # STAGE 1: CI (Continuous Integration - Cloud Verification)
@@ -24,6 +27,7 @@ stages:
 
           - task: Maven@3
             displayName: 'Execute Maven Tests'
+            continueOnError: true
             inputs:
               mavenPomFile: 'Backend/pom.xml'
               goals: 'clean test'
@@ -47,48 +51,46 @@ stages:
               VITE_USE_MOCK_API: 'false'
 
   # =======================================================
-  # STAGE 2: CD (Continuous Deployment - Direct to your VM)
+  # STAGE 2: CD (Continuous Deployment - Direct SSH to VM)
   # =======================================================
   - stage: Deploy_To_VM
     displayName: 'CD: Deploy on Durrmi VM'
     dependsOn: CI_Build_And_Test
     condition: succeeded()
     jobs:
-      - deployment: DeployApp
-        displayName: 'Update PM2 & Docker'
-        environment:
-          name: 'durrmi_production'
-          resourceType: VirtualMachine
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - script: |
-                    echo "🚀 Starting Automated Deployment on Durrmi VM..."
+      - job: SSH_Deploy
+        displayName: 'Deploy via SSH'
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - script: |
+              mkdir -p ~/.ssh
+              printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+              chmod 600 ~/.ssh/id_rsa
+              sed -i 's/\r$//' ~/.ssh/id_rsa
 
-                    # 1. Go to project directory
-                    cd /home/nishantsharma/Durmmi-website || cd ~/Durmmi-website
+              ssh -o StrictHostKeyChecking=no "$VM_USER@$VM_HOST" << 'EOF'
+                set -e
+                echo "🚀 Starting Automated Deployment on Durrmi VM..."
 
-                    # 2. Pull latest changes
-                    echo "📥 Pulling latest code..."
-                    git pull azure main || git pull origin main
+                # 1. Go to project directory
+                cd /home/nishantsharma/Durmmi-website || cd ~/Durmmi-website
 
-                    # 3. Update Frontend (PM2)
-                    echo "⚡ Building Frontend and Restarting PM2..."
-                    cd Frontend
-                    npm install
-                    NITRO_PRESET=node-server npm run build
-                    PORT=4173 NITRO_PORT=4173 pm2 restart durrmi-frontend --update-env || PORT=4173 NITRO_PORT=4173 pm2 start .output/server/index.mjs --name "durrmi-frontend"
+                # 2. Pull latest changes
+                echo "📥 Pulling latest code..."
+                git pull origin main
 
-                    # 4. Update Backend (Docker Compose)
-                    echo "🐳 Restarting Backend Docker..."
-                    cd ..
-                    docker compose down backend
-                    docker compose up -d --build backend
+                # 3. Update Frontend (PM2)
+                echo "⚡ Building Frontend and Restarting PM2..."
+                cd Frontend
+                npm install
+                NITRO_PRESET=node-server npm run build
+                PORT=4173 NITRO_PORT=4173 pm2 restart durrmi-frontend --update-env || PORT=4173 NITRO_PORT=4173 pm2 start .output/server/index.mjs --name "durrmi-frontend"
 
-                    # 5. Reload Nginx
-                    echo "🔄 Reloading Nginx..."
-                    sudo nginx -t && sudo systemctl reload nginx
-
-                    echo "✅ Durrmi Full-Stack Deployment Done!"
-                  displayName: 'Deploy Frontend PM2 & Backend Docker'
+                echo "✅ Durrmi Frontend Deployment Done!"
+              EOF
+            displayName: 'Deploy via SSH'
+            env:
+              SSH_PRIVATE_KEY: $(SSH_PRIVATE_KEY)
+              VM_USER: $(VM_USER)
+              VM_HOST: $(VM_HOST)

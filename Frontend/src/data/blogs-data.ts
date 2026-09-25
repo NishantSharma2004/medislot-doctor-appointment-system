@@ -27,77 +27,112 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: "1",
-    slug: "your-mind-isnt-a-responsibility-its-you",
-    title: "Your mind isn’t a responsibility. It’s you — let us help you carry it.",
-    subtitle:
-      "Choosing yourself, your mental health, should always be a priority.",
-    categories: ["Emotional Health", "Self-Awareness", "Mindfulness"],
+    slug: "story-of-durrmi",
+    title: "Story of Durrmi",
+    subtitle: "“Your mind isn’t a responsibility. It’s you—let us help you carry it.”",
+    categories: ["Founder Story", "Emotional Health", "Self-Awareness"],
     date: "12-03-25",
     readTime: "5 mins",
     author: {
-      name: "Dr. Ananya Roy",
-      role: "Lead Clinical Psychologist, Durrmi",
-      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+      name: "Girish Kotian",
+      role: "Founder of Durrmi",
+      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     },
     heroImageUrl:
       "https://images.unsplash.com/photo-1541199249251-f713e6145474?auto=format&fit=crop&w=1200&q=80",
     midImageUrl:
       "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
     excerpt:
-      "At Durrmi, we don’t believe in fixing you — because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you.",
+      "\"Durrmi\" means “Power of Connecting Yourself,\" and prioritising your mental health is our priority. At Durrmi, we don’t believe in fixing you—because you’re not broken.",
     content: {
       intro:
-        "Choosing yourself, your mental health, should always be a priority.\n\nAt Durrmi, we don’t believe in fixing you — because you’re not broken. We believe in presence: someone who listens without reason; we match you right; we walk beside you. We help you grow.\n\nWe believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow. Embracing yourself should be your priority. We care, we reconnect, and we heal.\n\nYou don’t have to sit and meditate; our work is to make yourself aware. Seeking inner power is not always about controlling; it’s about stepping into abundance.",
+        "\"Durrmi\" means “Power of Connecting Yourself,\" and prioritising your mental health is our priority. Here, we do more than interact with you; we help you understand yourself. Our goal is to support you without judgment. Our advisors will be available to assist you throughout your journey.\n\nYou- Durrmi—Find your way within. Our motive is to motivate you to go beyond and live an abundant life. The vision is to have clarity, embrace your thoughts, and see your potential.",
       sections: [
         {
-          heading: "A Gentle Journey Back To Yourself",
+          heading: "You Don’t Have to Always Be Around the Specialist",
           paragraphs: [
-            "We spend so much of our lives searching for the answer somewhere out there. But the truth we often forget is quieter than that: everything you've been looking for already lives within you.",
-            "Not a destination, not a quick fix, but a gentle journey back to yourself — one honest step at a time. It's the practice of turning inward, understanding your thoughts, accepting your flaws, and finding stillness even in the middle of chaos. It's about discovering the truth of who you are, beneath the noise, beneath the expectations, beneath everything the world told you to be.",
+            "You don’t have to always be around the specialist, and you can’t be; we are not here to give you mental advice.",
+            "At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.",
           ],
           highlightQuote:
-            "Emotional safety comes first. Durrmi believes in the power of analyzing superpowers because the most important relationship you'll ever nurture is the one you have within.",
+            "“At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.”",
         },
         {
-          heading: "Strengthening Self-Awareness Beyond Limits",
+          heading: "Embracing Yourself Should Be Your Priority",
           paragraphs: [
-            "When you reconnect with that inner voice, you find a steadiness no one can take from you — your mindset, your honesty, your well-being, your capacity to stay kind to yourself.",
-            "We are not a Mental Health platform or a service provider; we are here to strengthen self-awareness.",
-            "Just like the sky has no limits, we believe that as human beings, limitations do not have to define us. False narratives, projecting insecurities, or repeating patterns. We help you to study yourself, so that you become unstoppable.",
+            "We care, we reconnect, and we heal. You don’t have to sit and meditate; our work is to make you aware. Seeking inner power is not always about controlling; it’s about stepping into your inner self.",
+            "Living with the problem is not the solution; that’s why we provide qualified specialists, personalised care, and the right Professionals for each person. Find yourself by choosing Durrmi.",
+            "“Here, you can finally relax.”",
           ],
+          highlightQuote:
+            "“That's why Durrmi exists. Within our care, you will find a counsellor for your mental health.”",
+        },
+        {
+          heading: "Managing Emotions and Breaking Isolation",
+          paragraphs: [
+            "Choosing yourself and your inner self should always be the priority. In this fast-moving world, being active on social media and career pressure are affecting our mental health.",
+            "Managing emotions and isolating yourself will never be the option to avoid the situation. Sometimes self-care isn’t enough on its own—and that’s completely okay. Consider talking to someone.",
+            "At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.",
+          ],
+        },
+        {
+          heading: "A Journey of Finding the You Within You",
+          paragraphs: [
+            "It is a journey of going inward. A journey of finding the you within you.",
+            "It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.",
+          ],
+          highlightQuote:
+            "“It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.”",
         },
       ],
     },
   },
   {
     id: "2",
-    slug: "breaking-the-cycle-of-chronic-overthinking",
-    title: "Blog Heading 1",
+    slug: "true-abundance-is-inner-calm",
+    title: "True abundance is inner calm.",
     subtitle:
-      "How to step back from catastrophic spirals and reconnect with present grounding cues.",
-    categories: ["Anxiety Disorder", "Mindfulness"],
-    date: "June 12, 2026",
-    readTime: "8 Min Read",
+      "We spend so much of our lives with others... we always forget to look for ourselves.",
+    categories: ["Mindfulness", "Emotional Health", "Self-Awareness"],
+    date: "14-03-25",
+    readTime: "4 mins",
     author: {
-      name: "Dr. Vikram Seth",
-      role: "Psychiatrist & Cognitive Behavioral Therapist",
-      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+      name: "Durrmi Team",
+      role: "Holistic Well-being Collective",
+      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
     },
     heroImageUrl:
-      "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
     midImageUrl:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves. Here, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
     content: {
       intro:
-        "Rumination masquerades as problem solving. When we believe that thinking about a distressor will yield safety, our nervous system remains locked in vigilance.",
+        "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves.\n\nHere, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
       sections: [
         {
-          heading: "The Physiology of Thought Spirals",
+          heading: "Limiting Beliefs & Vulnerability",
           paragraphs: [
-            "Cognitive loops occur when anticipation bypasses our sensory grounding. Breaking this cycle requires somatic intervention before verbal reasoning can take effect.",
-            "Practicing 5-4-3-2-1 sensory awareness reliably interrupts amygdala activation, granting you the breathing room to choose your response.",
+            "Pushing feelings, avoiding difficult situations, and not taking care of mental health—none of it brings peace.",
+            "Vulnerability makes noise louder. When we silence what we truly feel, the emotional turbulence only amplifies.",
+          ],
+          highlightQuote:
+            "“Our coach will help you find your inner self and awaken the deep potential in each of us.”",
+        },
+        {
+          heading: "Healing Shouldn't Feel Like a Duty",
+          paragraphs: [
+            "Healing shouldn't feel like a duty that you have to do. Our approach is different—a space designed to help you slow down, reflect, and truly stabilise your emotions.",
+          ],
+          highlightQuote:
+            "“Well-being professionals will coach you to live life abundantly.”",
+        },
+        {
+          heading: "Investing in What Cannot Be Stolen",
+          paragraphs: [
+            "You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.",
+            "That's why Durrmi exists. Within our care, you will have access to a counsellor for your mental health.",
           ],
         },
       ],
@@ -106,10 +141,10 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "3",
     slug: "navigating-burnout-before-it-manifests-physically",
-    title: "Blog Heading 1",
+    title: "Navigating Burnout Before It Manifests Physically",
     subtitle:
       "Recognizing early cognitive fatigue and reclaiming non-negotiable boundaries at work.",
-    categories: ["Anxiety Disorder", "Workplace Stress"],
+    categories: ["Workplace Stress", "Emotional Health"],
     date: "June 12, 2026",
     readTime: "8 Min Read",
     author: {
@@ -120,7 +155,7 @@ export const BLOG_POSTS: BlogPost[] = [
     heroImageUrl:
       "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "Modern professional environments celebrate relentless output, turning exhaustion into a badge of honor. Real sustainability demands understanding that recovery is not an afterthought.",
     content: {
       intro:
         "Modern professional environments celebrate relentless output, turning exhaustion into a badge of honor. Real sustainability demands understanding that recovery is not an afterthought.",
@@ -137,20 +172,20 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "4",
     slug: "somatic-grounding-for-sudden-panic",
-    title: "Blog Heading 1",
+    title: "Somatic Grounding for Sudden Panic",
     subtitle:
       "Rapid body-based techniques designed to restore autonomic balance in minutes.",
-    categories: ["Anxiety Disorder", "Somatic Therapy"],
+    categories: ["Anxiety Disorder", "Mindfulness"],
     date: "June 12, 2026",
-    readTime: "8 Min Read",
+    readTime: "6 Min Read",
     author: {
       name: "Dr. Ananya Roy",
       role: "Lead Clinical Psychologist, Durrmi",
     },
     heroImageUrl:
-      "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "Panic attacks peak rapidly and feel overwhelming. Grounding yourself in physical sensations signals immediate safety to the nervous system.",
     content: {
       intro:
         "Panic attacks peak rapidly and feel overwhelming. Grounding yourself in physical sensations signals immediate safety to the nervous system.",
@@ -167,20 +202,20 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "5",
     slug: "couples-therapy-moving-past-defensiveness",
-    title: "Blog Heading 1",
+    title: "Couples Therapy: Moving Past Defensiveness",
     subtitle:
       "How to communicate your emotional needs without triggering protective defenses.",
-    categories: ["Anxiety Disorder", "Relationships"],
+    categories: ["Relationships", "Emotional Health"],
     date: "June 12, 2026",
-    readTime: "8 Min Read",
+    readTime: "7 Min Read",
     author: {
       name: "Dr. Vikram Seth",
       role: "Couples & Family Specialist",
     },
     heroImageUrl:
-      "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "When conflict arises, defensiveness is often a shield for vulnerability. Learning soft start-ups enables couples to address friction without emotional alienation.",
     content: {
       intro:
         "When conflict arises, defensiveness is often a shield for vulnerability. Learning soft start-ups enables couples to address friction without emotional alienation.",
@@ -197,20 +232,20 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "6",
     slug: "why-sleep-is-the-bedrock-of-emotional-health",
-    title: "Blog Heading 1",
+    title: "Why Sleep Is the Bedrock of Emotional Health",
     subtitle:
       "The neuroscience of REM sleep, emotional regulation, and nocturnal anxiety.",
-    categories: ["Anxiety Disorder", "Sleep & Recovery"],
+    categories: ["Sleep & Recovery", "Mindfulness"],
     date: "June 12, 2026",
-    readTime: "8 Min Read",
+    readTime: "5 Min Read",
     author: {
       name: "Meera Nair",
       role: "Occupational Wellness Specialist",
     },
     heroImageUrl:
-      "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1511295742362-92c96b124e52?auto=format&fit=crop&w=800&q=80",
     excerpt:
-      "Lorem ipsum dolor sit amet consectetur. Turpis dolor duis convallis molestie. Facilisi consequat integer dignissim pharetra viverra. Viverra quis cras lobortis consectetur.",
+      "During REM sleep, your brain recalibrates emotional intensity from the preceding day. Chronic sleep deprivation compromises prefrontal inhibition.",
     content: {
       intro:
         "During REM sleep, your brain recalibrates emotional intensity from the preceding day. Chronic sleep deprivation compromises prefrontal inhibition.",
@@ -232,7 +267,10 @@ export function getAllBlogs(): BlogPost[] {
 
 export function getBlogByIdOrSlug(idOrSlug: string): BlogPost | undefined {
   return BLOG_POSTS.find(
-    (b) => b.id === idOrSlug || b.slug === idOrSlug
+    (b) =>
+      b.id === idOrSlug ||
+      b.slug === idOrSlug ||
+      (idOrSlug === "your-mind-isnt-a-responsibility-its-you" && b.id === "1")
   );
 }
 
