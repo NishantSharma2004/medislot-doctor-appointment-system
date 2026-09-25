@@ -89,9 +89,9 @@ export const BLOG_POSTS: BlogPost[] = [
       avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
     },
     heroImageUrl:
-      "https://images.unsplash.com/photo-1541199249251-f713e6145474?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1200&q=80",
     midImageUrl:
-      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80",
     excerpt:
       "\"Durrmi\" means “Power of Connecting Yourself,\" and prioritising your mental health is our priority. At Durrmi, we don’t believe in fixing you—because you’re not broken.",
     content: {

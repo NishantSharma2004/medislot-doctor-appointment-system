@@ -99,7 +99,7 @@ export function BlogDetailPage({ defaultPostId }: { defaultPostId?: string } = {
 
           {/* Large Hero Image */}
           <div className="pt-2">
-            <div className="aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-sm">
+            <div className="aspect-[16/10] sm:aspect-[16/9] max-h-[380px] w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 shadow-sm">
               <img
                 src={post.heroImageUrl}
                 alt={post.title}
