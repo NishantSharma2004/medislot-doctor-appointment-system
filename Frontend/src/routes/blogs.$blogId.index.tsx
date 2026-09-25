@@ -17,8 +17,9 @@ export const Route = createFileRoute("/blogs/$blogId/")({
   component: BlogDetailPage,
 });
 
-export function BlogDetailPage() {
-  const { blogId } = useParams({ from: "/blogs/$blogId/" });
+export function BlogDetailPage({ defaultPostId }: { defaultPostId?: string } = {}) {
+  const params = useParams({ strict: false }) as { blogId?: string };
+  const blogId = params?.blogId || defaultPostId || "1";
   const post = getBlogByIdOrSlug(blogId) || getBlogByIdOrSlug("1")!;
   const latestBlogs = getLatestBlogs(post.id, 6);
 

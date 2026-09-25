@@ -27,10 +27,60 @@ export interface BlogPost {
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: "1",
+    slug: "true-abundance-is-inner-calm",
+    title: "True abundance is inner calm.",
+    subtitle:
+      "We spend so much of our lives with others... we always forget to look for ourselves.",
+    categories: ["Blog", "Mindfulness", "Emotional Health"],
+    date: "14-03-25",
+    readTime: "4 mins",
+    author: {
+      name: "Durrmi Team",
+      role: "Holistic Well-being Collective",
+      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
+    },
+    heroImageUrl:
+      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
+    midImageUrl:
+      "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80",
+    excerpt:
+      "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves. Here, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
+    content: {
+      intro:
+        "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves.\n\nHere, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
+      sections: [
+        {
+          heading: "Limiting beliefs.",
+          paragraphs: [
+            "Pushing feelings, avoiding difficult situations, and not taking care of mental health—none of it brings peace. Vulnerability makes noise louder.",
+          ],
+          highlightQuote:
+            "“Our coach will help you find your inner self and awaken the deep potential in each of us.”",
+        },
+        {
+          heading: "Healing shouldn't feel like a duty that you have to do.",
+          paragraphs: [
+            "Our approach is different—a space designed to help you slow down, reflect, and truly stabilise your emotions.",
+          ],
+          highlightQuote:
+            "“Well-being professionals will coach you to live life abundantly.”",
+        },
+        {
+          heading: "You become your highest self",
+          paragraphs: [
+            "You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.",
+            "That's why Durrmi exists. Within our care, you will have access to a counsellor for your mental health.",
+          ],
+        },
+      ],
+    },
+  },
+  {
+    id: "2",
     slug: "story-of-durrmi",
     title: "Story of Durrmi",
     subtitle: "“Your mind isn’t a responsibility. It’s you—let us help you carry it.”",
-    categories: ["Founder Story", "Emotional Health", "Self-Awareness"],
+    categories: ["Article", "Founder Story", "Emotional Health"],
     date: "12-03-25",
     readTime: "5 mins",
     author: {
@@ -83,57 +133,6 @@ export const BLOG_POSTS: BlogPost[] = [
           ],
           highlightQuote:
             "“It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.”",
-        },
-      ],
-    },
-  },
-  {
-    id: "2",
-    slug: "true-abundance-is-inner-calm",
-    title: "True abundance is inner calm.",
-    subtitle:
-      "We spend so much of our lives with others... we always forget to look for ourselves.",
-    categories: ["Mindfulness", "Emotional Health", "Self-Awareness"],
-    date: "14-03-25",
-    readTime: "4 mins",
-    author: {
-      name: "Durrmi Team",
-      role: "Holistic Well-being Collective",
-      avatarUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80",
-    },
-    heroImageUrl:
-      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
-    midImageUrl:
-      "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80",
-    excerpt:
-      "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves. Here, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
-    content: {
-      intro:
-        "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves.\n\nHere, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.",
-      sections: [
-        {
-          heading: "Limiting Beliefs & Vulnerability",
-          paragraphs: [
-            "Pushing feelings, avoiding difficult situations, and not taking care of mental health—none of it brings peace.",
-            "Vulnerability makes noise louder. When we silence what we truly feel, the emotional turbulence only amplifies.",
-          ],
-          highlightQuote:
-            "“Our coach will help you find your inner self and awaken the deep potential in each of us.”",
-        },
-        {
-          heading: "Healing Shouldn't Feel Like a Duty",
-          paragraphs: [
-            "Healing shouldn't feel like a duty that you have to do. Our approach is different—a space designed to help you slow down, reflect, and truly stabilise your emotions.",
-          ],
-          highlightQuote:
-            "“Well-being professionals will coach you to live life abundantly.”",
-        },
-        {
-          heading: "Investing in What Cannot Be Stolen",
-          paragraphs: [
-            "You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.",
-            "That's why Durrmi exists. Within our care, you will have access to a counsellor for your mental health.",
-          ],
         },
       ],
     },

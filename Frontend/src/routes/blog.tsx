@@ -4,11 +4,11 @@ import { BlogDetailPage } from "./blogs.$blogId.index";
 export const Route = createFileRoute("/blog")({
   head: () => ({
     meta: [
-      { title: "The Advice We Give Anxious People That Doesn't Help — Durrmi Blog" },
+      { title: "True abundance is inner calm. — Durrmi Blog" },
       {
         name: "description",
         content:
-          "If you've ever dealt with anxiety, chances are you've heard some version of this: Just relax. Don't overthink it. It's all in your head. Just breathe. And chances are, none of it actually helped.",
+          "We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves. True abundance is inner calm.",
       },
     ],
   }),

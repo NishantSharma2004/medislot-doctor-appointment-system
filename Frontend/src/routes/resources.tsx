@@ -43,27 +43,27 @@ const CATEGORIES = [
 const ALL_MEDIA_ARTICLES = [
   {
     id: "m-1",
-    tag: "Founder Story",
+    tag: "Anxiety Disorder",
     type: "Article",
-    readTime: "5 Min Read",
-    title: "Story of Durrmi",
+    readTime: "3 Min Read",
+    title: "Understanding Nervous System Self-Regulation",
     description:
-      "“Your mind isn’t a responsibility. It’s you — let us help you carry it.” Girish Kotian, Founder of Durrmi, on the true meaning of Durrmi and connecting with your inner self.",
+      "How somatic grounding exercises like 4-7-8 breathing and progressive muscle release signal safety to your amygdala.",
     imageUrl:
       "https://images.unsplash.com/photo-1541199249251-f713e6145474?auto=format&fit=crop&w=800&q=80",
-    content: `\"Durrmi\" means “Power of Connecting Yourself,\" and prioritising your mental health is our priority. Here, we do more than interact with you; we help you understand yourself. Our goal is to support you without judgment.\n\nAt Durrmi, we don’t believe in fixing you — because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.\n\nLiving with the problem is not the solution; that’s why we provide qualified specialists, personalised care, and the right Professionals for each person. Find yourself by choosing Durrmi. “Here, you can finally relax.”`,
+    content: `Understanding how anxiety triggers affect your nervous system is the first step toward effective self-regulation. When stressors arise, somatic grounding exercises — such as 4-7-8 rhythmic breathing and progressive muscle release — help signal to the amygdala that you are safe.\n\nOur certified therapists focus on evidence-based cognitive behavioral strategies that allow you to identify catastrophic thinking loops before they manifest physically.`,
   },
   {
     id: "m-2",
-    tag: "Mindfulness",
+    tag: "Anxiety Disorder",
     type: "Article",
-    readTime: "4 Min Read",
-    title: "True Abundance is Inner Calm",
+    readTime: "3 Min Read",
+    title: "Navigating Social Anxiety & The Spotlight Effect",
     description:
-      "We spend so much of our lives with others... we always forget to look for ourselves. Discover how emotional self-connection brings true abundance.",
+      "Why we drastically overestimate how closely others observe our perceived flaws, and how cognitive restructuring helps.",
     imageUrl:
-      "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80",
-    content: `We spend so much of our lives with others, with friends, family, colleagues, and strangers online. Because of all this, we always forget to look for ourselves. Here, we believe that looking for ourselves emotionally empowers us to strengthen the bond and connect more abundantly.\n\nHealing shouldn't feel like a duty that you have to do. Our approach is different — a space designed to help you slow down, reflect, and truly stabilise your emotions. You become your highest self when you invest in what no one can ever steal: your mindset, your honesty, your well-being, and your capacity to stay kind to yourself.`,
+      "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80",
+    content: `Living with social anxiety can feel like walking into a room where everyone is evaluating you. In reality, the spotlight effect leads us to drastically overestimate how closely others observe our perceived flaws.\n\nWorking with a licensed therapist allows you to gradually test social assumptions in low-stakes environments, rebuilding genuine confidence without constant self-censorship.`,
   },
   {
     id: "m-3",
