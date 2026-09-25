@@ -126,9 +126,11 @@ export function BlogDetailPage({ defaultPostId }: { defaultPostId?: string } = {
             {/* Sections */}
             {post.content.sections.map((section, idx) => (
               <div key={idx} className="space-y-4 pt-2">
-                <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                  {section.heading}
-                </h2>
+                {section.heading && (
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                    {section.heading}
+                  </h2>
+                )}
 
                 {section.paragraphs.map((p, pIdx) => (
                   <p key={pIdx} className="leading-relaxed text-slate-700">

@@ -99,40 +99,29 @@ export const BLOG_POSTS: BlogPost[] = [
         "\"Durrmi\" means “Power of Connecting Yourself,\" and prioritising your mental health is our priority. Here, we do more than interact with you; we help you understand yourself. Our goal is to support you without judgment. Our advisors will be available to assist you throughout your journey.\n\nYou- Durrmi—Find your way within. Our motive is to motivate you to go beyond and live an abundant life. The vision is to have clarity, embrace your thoughts, and see your potential.",
       sections: [
         {
-          heading: "You Don’t Have to Always Be Around the Specialist",
+          heading: "",
           paragraphs: [
             "You don’t have to always be around the specialist, and you can’t be; we are not here to give you mental advice.",
             "At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.",
           ],
-          highlightQuote:
-            "“At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.”",
         },
         {
-          heading: "Embracing Yourself Should Be Your Priority",
+          heading: "Embracing yourself should be your priority.",
           paragraphs: [
             "We care, we reconnect, and we heal. You don’t have to sit and meditate; our work is to make you aware. Seeking inner power is not always about controlling; it’s about stepping into your inner self.",
             "Living with the problem is not the solution; that’s why we provide qualified specialists, personalised care, and the right Professionals for each person. Find yourself by choosing Durrmi.",
-            "“Here, you can finally relax.”",
           ],
           highlightQuote:
-            "“That's why Durrmi exists. Within our care, you will find a counsellor for your mental health.”",
+            "“Here, you can finally relax.”\n\n“That's why Durrmi exists. Within our care, you will find a counsellor for your mental health.”",
         },
         {
-          heading: "Managing Emotions and Breaking Isolation",
+          heading: "",
           paragraphs: [
             "Choosing yourself and your inner self should always be the priority. In this fast-moving world, being active on social media and career pressure are affecting our mental health.",
             "Managing emotions and isolating yourself will never be the option to avoid the situation. Sometimes self-care isn’t enough on its own—and that’s completely okay. Consider talking to someone.",
             "At Durrmi, we don’t believe in fixing you—because you’re not broken. We believe in presence: someone who listens without judgment; we match you right; we walk beside you. We help you grow.",
+            "It is a journey of going inward. A journey of finding the you within you. It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.",
           ],
-        },
-        {
-          heading: "A Journey of Finding the You Within You",
-          paragraphs: [
-            "It is a journey of going inward. A journey of finding the you within you.",
-            "It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.",
-          ],
-          highlightQuote:
-            "“It is about understanding your thoughts, accepting your flaws, finding peace within chaos, and slowly discovering the truth of who you are within yourself.”",
         },
       ],
     },
