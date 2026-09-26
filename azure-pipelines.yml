@@ -63,12 +63,14 @@ stages:
         pool:
           vmImage: 'ubuntu-latest'
         steps:
-          - script: |
-              mkdir -p ~/.ssh
-              printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-              chmod 600 ~/.ssh/id_rsa
-              sed -i 's/\r$//' ~/.ssh/id_rsa
+          - task: InstallSSHKey@0
+            inputs:
+              knownHostsEntry: ''
+              sshPublicKey: ''
+              sshKeySecureFile: 'durrmi-instance_key.pem'
+            displayName: 'Install SSH Key'
 
+          - script: |
               ssh -o StrictHostKeyChecking=no "$VM_USER@$VM_HOST" << 'EOF'
                 set -e
                 echo "🚀 Starting Automated Deployment on Durrmi VM..."
@@ -91,6 +93,5 @@ stages:
               EOF
             displayName: 'Deploy via SSH'
             env:
-              SSH_PRIVATE_KEY: $(SSH_PRIVATE_KEY)
               VM_USER: $(VM_USER)
               VM_HOST: $(VM_HOST)
