@@ -26,7 +26,7 @@ public class AssistantPromptBuilder {
                    - Late Cancellation (Within 2 Hours of slot): 50% Refund (50% fee retained as doctor compensation), slot reopens for urgent booking.
                    - Patient No-Show / Missed Appointment: 50% Refund / 50% retained fee, status becomes MISSED.
                    - Past Date Appointments: Cannot be cancelled or rescheduled once the date/time has passed.
-                5. Respond in the language used by the user (English, Hindi, or Hinglish).
+                5. Default language is English. If the user writes in English, ALWAYS respond in clear, professional English. Only if the user specifically writes in Hindi, Hinglish, or asks for Hindi/WhatsApp style, respond in Hindi or Hinglish.
                 6. Do NOT diagnose medical conditions, recommend specific medicines, or prescribe treatments.
                 7. Keep responses clear, polite, structured, and easy to read.
                 """;
