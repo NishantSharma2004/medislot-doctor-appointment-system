@@ -7,21 +7,18 @@ import {
   Move,
   Sparkles,
   ShieldCheck,
-  AlertTriangle,
   RotateCcw,
-  SlidersHorizontal,
   HeartHandshake,
+  Check,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { toDisplayMessage } from "@/lib/api/client";
 import type { ApiError, AssistantReply, PreChatIntakeData } from "@/lib/api/types";
 import { ASSISTANT_DISCLAIMER, assistantService } from "@/services/assistant.service";
-import { PreChatIntakeModal } from "@/components/assistant/PreChatIntakeModal";
 import { SuggestedQuestionChips } from "@/components/assistant/SuggestedQuestionChips";
 import { TherapistRecommendationCard } from "@/components/assistant/TherapistRecommendationCard";
 import { cn } from "@/lib/utils";
@@ -34,6 +31,23 @@ interface AssistantMessage {
   error?: ApiError;
 }
 
+const TOPICS = [
+  { id: "Stress & Burnout", label: "Stress & Burnout", icon: "💼" },
+  { id: "Anxiety", label: "Anxiety & Overthinking", icon: "⚡" },
+  { id: "Relationships", label: "Couple & Relationships", icon: "🌱" },
+  { id: "Sleep", label: "Sleep & Insomnia", icon: "🌙" },
+  { id: "Depression and low mood", label: "Low Mood & Sadness", icon: "🌧️" },
+  { id: "Career", label: "Career & Work Pressure", icon: "🎯" },
+  { id: "ADHD", label: "ADHD & Attention", icon: "🧠" },
+  { id: "Loneliness", label: "Loneliness & Isolation", icon: "🌿" },
+];
+
+const BUDGETS: Array<{ id: "under_1000" | "1000_to_2000" | "any"; label: string }> = [
+  { id: "under_1000", label: "Under ₹1,000" },
+  { id: "1000_to_2000", label: "₹1,000 - ₹2,000" },
+  { id: "any", label: "Any Budget" },
+];
+
 const DEFAULT_SUGGESTIONS = [
   "🌿 How to manage anxiety & overthinking?",
   "💼 I am feeling exhausted & burned out from work",
@@ -45,7 +59,8 @@ export function AssistantPanel() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
-  const [intakeModalOpen, setIntakeModalOpen] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedBudget, setSelectedBudget] = useState<"under_1000" | "1000_to_2000" | "any">("any");
   const [intakeData, setIntakeData] = useState<PreChatIntakeData | null>(null);
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
@@ -57,7 +72,7 @@ export function AssistantPanel() {
   // Drag State for Floating Widget & Chat Panel (Movable on Screen)
   const [btnPos, setBtnPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [panelPos, setPanelPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  
+
   const isDraggingBtn = useRef(false);
   const dragStartBtn = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const hasDraggedBtn = useRef(false);
@@ -145,31 +160,6 @@ export function AssistantPanel() {
       hasDraggedBtn.current = false;
       return;
     }
-
-    if (!intakeData && messages.length === 0) {
-      setIntakeModalOpen(true);
-    } else {
-      setOpen(true);
-    }
-  };
-
-  // Handle Intake Form Submission
-  const handleIntakeSubmit = (data: PreChatIntakeData) => {
-    setIntakeData(data);
-    setIntakeModalOpen(false);
-    setOpen(true);
-
-    if (data.topic) {
-      // Initialize with empathetic greeting tailored to user's picked topic
-      const topicMsg = `I want to discuss ${data.topic}.`;
-      handleSendMessage(topicMsg, data);
-    }
-  };
-
-  // Handle Intake Form Skip
-  const handleIntakeSkip = () => {
-    setIntakeData({ skipped: true });
-    setIntakeModalOpen(false);
     setOpen(true);
   };
 
@@ -178,7 +168,16 @@ export function AssistantPanel() {
     const messageText = (textToSend !== undefined ? textToSend : input).trim();
     if (!messageText || pending) return;
 
-    const currentIntake = overrideIntake || intakeData;
+    const currentIntake = overrideIntake || intakeData || {
+      topic: selectedTopic || undefined,
+      budgetTier: selectedBudget,
+      skipped: false,
+    };
+
+    if (!intakeData) {
+      setIntakeData(currentIntake);
+    }
+
     const userMsg: AssistantMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -228,30 +227,33 @@ export function AssistantPanel() {
     }
   };
 
+  const handleStartWithTopic = (topicId: string) => {
+    setSelectedTopic(topicId);
+    const data: PreChatIntakeData = {
+      topic: topicId,
+      budgetTier: selectedBudget,
+      skipped: false,
+    };
+    setIntakeData(data);
+    handleSendMessage(`I want to discuss ${topicId}.`, data);
+  };
+
   const handleResetChat = () => {
     setMessages([]);
     setIntakeData(null);
-    setIntakeModalOpen(true);
+    setSelectedTopic(null);
   };
 
   return (
     <>
-      {/* 1. Pre-Chat Intake Modal */}
-      <PreChatIntakeModal
-        isOpen={intakeModalOpen}
-        onClose={() => setIntakeModalOpen(false)}
-        onSubmit={handleIntakeSubmit}
-        onSkip={handleIntakeSkip}
-      />
-
-      {/* 2. Floating Movable Launcher Button */}
+      {/* 1. Floating Movable Launcher Button (Always fixed at bottom-right of viewport) */}
       {!open && (
         <div
           style={{
             transform: isDesktop ? `translate(${btnPos.x}px, ${btnPos.y}px)` : undefined,
             touchAction: "none",
           }}
-          className="fixed bottom-6 right-6 z-40"
+          className="fixed bottom-6 right-6 z-50 pointer-events-auto"
         >
           <button
             type="button"
@@ -260,9 +262,9 @@ export function AssistantPanel() {
             onPointerUp={handleBtnPointerUp}
             onClick={handleOpenClick}
             aria-label="Open Durrmi AI Assistant"
-            className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-xl shadow-emerald-700/25 transition-all duration-300 hover:scale-105 active:scale-95 cursor-grab active:cursor-grabbing border border-white/20 select-none"
+            className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-2xl shadow-emerald-900/30 transition-all duration-300 hover:scale-105 active:scale-95 cursor-grab active:cursor-grabbing border border-white/25 select-none"
           >
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/15 backdrop-blur-xs text-white">
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20 backdrop-blur-xs text-white">
               <Sparkles className="w-4 h-4 animate-pulse" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 rounded-full border-2 border-emerald-700" />
             </div>
@@ -276,7 +278,7 @@ export function AssistantPanel() {
         </div>
       )}
 
-      {/* 3. Movable Durrmi AI Assistant Chat Panel */}
+      {/* 2. Side-Docked Movable Durrmi AI Assistant Chat Panel (NO background blur, NO overlay) */}
       {open && (
         <div
           style={{
@@ -284,8 +286,8 @@ export function AssistantPanel() {
             touchAction: "none",
           }}
           className={cn(
-            "fixed z-50 flex flex-col bg-white dark:bg-card border border-emerald-100 dark:border-emerald-950/80 shadow-2xl rounded-3xl overflow-hidden transition-shadow duration-200",
-            // Desktop dimensions
+            "fixed z-50 flex flex-col bg-white dark:bg-card border border-emerald-200/90 dark:border-emerald-900/60 shadow-2xl rounded-3xl overflow-hidden pointer-events-auto",
+            // Desktop dimensions (docked right at bottom-6 right-6)
             "sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[620px]",
             // Mobile full screen
             "inset-0 sm:inset-auto"
@@ -296,7 +298,7 @@ export function AssistantPanel() {
             onPointerDown={handlePanelPointerDown}
             onPointerMove={handlePanelPointerMove}
             onPointerUp={handlePanelPointerUp}
-            className="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white select-none cursor-grab active:cursor-grabbing border-b border-emerald-700/40"
+            className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white select-none cursor-grab active:cursor-grabbing border-b border-emerald-700/40"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white backdrop-blur-xs flex-shrink-0">
@@ -309,24 +311,22 @@ export function AssistantPanel() {
                     Live
                   </span>
                 </div>
-                <p className="text-[11px] text-emerald-100/90 truncate flex items-center gap-1">
-                  <span>Power of connecting yourself</span>
-                </p>
+                <p className="text-[11px] text-emerald-100/90 truncate">Power of connecting yourself</p>
               </div>
             </div>
 
             <div className="flex items-center gap-1">
-              {/* Reset / Change Topic */}
+              {/* Reset Chat */}
               <button
                 type="button"
                 onClick={handleResetChat}
-                className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/10 transition-colors"
-                title="Reset or Change Topic"
+                className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors"
+                title="Reset Conversation"
               >
                 <RotateCcw className="w-4 h-4" />
               </button>
 
-              {/* Drag Handle Indicator */}
+              {/* Drag Handle Indicator on Desktop */}
               <div
                 className="hidden sm:flex p-1.5 text-emerald-200 hover:text-white cursor-grab active:cursor-grabbing"
                 title="Drag to reposition panel"
@@ -338,7 +338,7 @@ export function AssistantPanel() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors"
                 title="Close"
               >
                 <X className="w-4 h-4" />
@@ -346,17 +346,17 @@ export function AssistantPanel() {
             </div>
           </div>
 
-          {/* Active Intake Banner (if topic selected) */}
+          {/* Active Topic Banner (if selected) */}
           {intakeData?.topic && (
             <div className="bg-emerald-50/90 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/40 px-3.5 py-1.5 flex items-center justify-between text-[11px] text-emerald-900 dark:text-emerald-200">
               <span className="font-medium truncate">
-                Focused Topic: <span className="font-semibold">{intakeData.topic}</span>
+                Focused on: <span className="font-semibold">{intakeData.topic}</span>
               </span>
               <button
-                onClick={() => setIntakeModalOpen(true)}
+                onClick={handleResetChat}
                 className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold ml-2 flex-shrink-0"
               >
-                Change
+                Change Topic
               </button>
             </div>
           )}
@@ -366,22 +366,77 @@ export function AssistantPanel() {
             ref={scrollRef}
             className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background via-emerald-50/20 to-background dark:via-emerald-950/10 text-sm"
           >
-            {/* Welcome message if no chat history */}
+            {/* Welcome & Intake Screen inside the Chat Window (NO page blur) */}
             {messages.length === 0 && (
-              <div className="py-4 text-center space-y-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 mx-auto flex items-center justify-center shadow-xs">
-                  <HeartHandshake className="w-6 h-6" />
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-base font-semibold text-foreground">Welcome to Durrmi</h4>
-                  <p className="text-xs text-muted-foreground max-w-[280px] mx-auto leading-relaxed">
+              <div className="space-y-4 animate-in fade-in duration-200">
+                {/* Greeting banner */}
+                <div className="bg-gradient-to-br from-emerald-50/90 to-teal-50/60 dark:from-emerald-950/30 dark:to-teal-950/20 border border-emerald-100 dark:border-emerald-900/40 rounded-2xl p-3.5 space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                    <HeartHandshake className="w-5 h-5 flex-shrink-0" />
+                    <h4 className="text-xs font-semibold uppercase tracking-wider">Welcome to Durrmi</h4>
+                  </div>
+                  <p className="text-xs text-foreground/90 leading-relaxed font-serif italic">
                     "At Durrmi, we don't believe in fixing you — because you're not broken. We believe in presence."
+                  </p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Share how you are feeling or pick a topic below to explore guidance and matching therapists.
                   </p>
                 </div>
 
-                <div className="pt-2 text-left space-y-1.5">
+                {/* In-Chat Topic Selection */}
+                <div className="space-y-2">
                   <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
-                    Try asking:
+                    What's on your mind today?
+                  </p>
+                  <div className="grid grid-cols-2 gap-1.5">
+                    {TOPICS.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => handleStartWithTopic(t.id)}
+                        className="flex items-center gap-2 p-2 rounded-xl border border-border/70 hover:border-emerald-500 bg-white dark:bg-card hover:bg-emerald-50/60 dark:hover:bg-emerald-950/40 text-left text-xs font-medium text-foreground transition-all shadow-2xs group"
+                      >
+                        <span className="text-sm select-none">{t.icon}</span>
+                        <span className="truncate group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
+                          {t.label}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* In-Chat Budget Tier Selector */}
+                <div className="space-y-1.5 pt-1">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+                    Preferred Budget (Optional)
+                  </p>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {BUDGETS.map((b) => {
+                      const isSelected = selectedBudget === b.id;
+                      return (
+                        <button
+                          key={b.id}
+                          type="button"
+                          onClick={() => setSelectedBudget(b.id)}
+                          className={cn(
+                            "flex items-center justify-center gap-1 py-1.5 px-2 rounded-lg border text-[11px] font-medium transition-all",
+                            isSelected
+                              ? "border-emerald-600 bg-emerald-50 text-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-200 font-semibold"
+                              : "border-border/60 hover:border-emerald-300 bg-background/60 text-muted-foreground"
+                          )}
+                        >
+                          {isSelected && <Check className="w-3 h-3 text-emerald-600" />}
+                          <span>{b.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Common quick prompt suggestions */}
+                <div className="space-y-1.5 pt-1">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+                    Or ask directly:
                   </p>
                   <div className="flex flex-col gap-1.5">
                     {DEFAULT_SUGGESTIONS.map((s, idx) => (
@@ -438,9 +493,9 @@ export function AssistantPanel() {
                         doctorMatch={m.reply.doctorMatch}
                         matchedSpecialty={m.reply.matchedSpecialty}
                         maxBudget={
-                          intakeData?.budgetTier === "under_1000"
+                          selectedBudget === "under_1000"
                             ? 1000
-                            : intakeData?.budgetTier === "1000_to_2000"
+                            : selectedBudget === "1000_to_2000"
                             ? 2000
                             : undefined
                         }
