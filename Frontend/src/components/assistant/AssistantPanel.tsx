@@ -1,5 +1,17 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Bot, FileText, Loader2, Send, ShieldAlert, X, Move, LogIn, Sparkles, CalendarClock, Upload, Stethoscope, Paperclip, Trash2, Pencil, AlertTriangle } from "lucide-react";
+import {
+  Bot,
+  Loader2,
+  Send,
+  X,
+  Move,
+  Sparkles,
+  ShieldCheck,
+  AlertTriangle,
+  RotateCcw,
+  SlidersHorizontal,
+  HeartHandshake,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -7,52 +19,51 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { toDisplayMessage } from "@/lib/api/client";
-import type { ApiError, AssistantReply, EvidenceStrength } from "@/lib/api/types";
+import type { ApiError, AssistantReply, PreChatIntakeData } from "@/lib/api/types";
 import { ASSISTANT_DISCLAIMER, assistantService } from "@/services/assistant.service";
-import { LabReportAnalyzerModal } from "@/components/assistant/LabReportAnalyzerModal";
+import { PreChatIntakeModal } from "@/components/assistant/PreChatIntakeModal";
+import { SuggestedQuestionChips } from "@/components/assistant/SuggestedQuestionChips";
+import { TherapistRecommendationCard } from "@/components/assistant/TherapistRecommendationCard";
 import { cn } from "@/lib/utils";
 
 interface AssistantMessage {
   id: string;
   role: "user" | "assistant";
   text: string;
-  attachedFileName?: string;
   reply?: AssistantReply;
   error?: ApiError;
 }
 
-const EVIDENCE_STYLES: Record<EvidenceStrength, string> = {
-  STRONG: "bg-success/15 text-success border-success/40",
-  MODERATE: "bg-info/15 text-info border-info/40",
-  LIMITED: "bg-warning/15 text-warning-foreground border-warning/40",
-  NONE: "bg-muted text-muted-foreground border-border",
-};
-
-const SUGGESTIONS = [
-  "🩺 Check my symptoms (Chest pain & dizziness)",
-  "📄 Analyze & translate blood test report",
-  "How do I book an appointment?",
-  "What are the clinic timings?",
+const DEFAULT_SUGGESTIONS = [
+  "🌿 How to manage anxiety & overthinking?",
+  "💼 I am feeling exhausted & burned out from work",
+  "📋 What is Durrmi's session cancellation & refund policy?",
+  "👩‍⚕️ How much does a therapy consultation cost?",
 ];
 
 export function AssistantPanel() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const [open, setOpen] = useState(false);
-  const [analyzerOpen, setAnalyzerOpen] = useState(false);
+  const [intakeModalOpen, setIntakeModalOpen] = useState(false);
+  const [intakeData, setIntakeData] = useState<PreChatIntakeData | null>(null);
   const [input, setInput] = useState("");
-  const [attachedFile, setAttachedFile] = useState<{ name: string; content?: string } | null>(null);
   const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [isClient, setIsClient] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Drag State for Floating Widget & Panel
+  // Drag State for Floating Widget & Chat Panel (Movable on Screen)
   const [btnPos, setBtnPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [panelPos, setPanelPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  
   const isDraggingBtn = useRef(false);
   const dragStartBtn = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const hasDragged = useRef(false);
+  const hasDraggedBtn = useRef(false);
+
+  const isDraggingPanel = useRef(false);
+  const dragStartPanel = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
     setIsClient(true);
@@ -78,26 +89,26 @@ export function AssistantPanel() {
 
   const isDesktop = isClient && typeof window !== "undefined" && window.innerWidth >= 640;
 
-  // Pointer Event Handlers for Launcher Button & Panel Header
-  const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
+  // Pointer Event Handlers for Launcher Button (Movable)
+  const handleBtnPointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return;
     isDraggingBtn.current = true;
-    hasDragged.current = false;
+    hasDraggedBtn.current = false;
     dragStartBtn.current = { x: e.clientX - btnPos.x, y: e.clientY - btnPos.y };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+  const handleBtnPointerMove = (e: React.PointerEvent<HTMLElement>) => {
     if (!isDraggingBtn.current) return;
     const deltaX = e.clientX - dragStartBtn.current.x;
     const deltaY = e.clientY - dragStartBtn.current.y;
     if (Math.abs(deltaX - btnPos.x) > 3 || Math.abs(deltaY - btnPos.y) > 3) {
-      hasDragged.current = true;
+      hasDraggedBtn.current = true;
     }
     setBtnPos({ x: deltaX, y: deltaY });
   };
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLElement>) => {
+  const handleBtnPointerUp = (e: React.PointerEvent<HTMLElement>) => {
     if (!isDraggingBtn.current) return;
     isDraggingBtn.current = false;
     try {
@@ -105,443 +116,397 @@ export function AssistantPanel() {
     } catch {}
   };
 
-  const handleBtnClick = () => {
-    if (hasDragged.current) {
-      hasDragged.current = false;
-      return; // Ignore click if user was dragging
-    }
-    setOpen((v) => !v);
+  // Pointer Event Handlers for Panel Header (Movable Panel)
+  const handlePanelPointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return;
+    isDraggingPanel.current = true;
+    dragStartPanel.current = { x: e.clientX - panelPos.x, y: e.clientY - panelPos.y };
+    e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  async function send(text: string) {
-    const question = text.trim();
-    const currentFile = attachedFile;
-    if ((!question && !currentFile) || pending) return;
-    if (!isAuthenticated) {
-      setMessages((prev) => [
-        ...prev,
-        { id: `u-${Date.now()}`, role: "user", text: question || `Analyze ${currentFile?.name}`, attachedFileName: currentFile?.name },
-        {
-          id: `a-${Date.now()}`,
-          role: "assistant",
-          text: "Authentication required: Please sign in to chat with Medi AI Assistant.",
-          error: { status: 401, code: "UNAUTHORIZED", message: "Sign in required" },
-        },
-      ]);
+  const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDraggingPanel.current) return;
+    const deltaX = e.clientX - dragStartPanel.current.x;
+    const deltaY = e.clientY - dragStartPanel.current.y;
+    setPanelPos({ x: deltaX, y: deltaY });
+  };
+
+  const handlePanelPointerUp = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDraggingPanel.current) return;
+    isDraggingPanel.current = false;
+    try {
+      e.currentTarget.releasePointerCapture(e.pointerId);
+    } catch {}
+  };
+
+  // Open Chat Launcher Trigger
+  const handleOpenClick = () => {
+    if (hasDraggedBtn.current) {
+      hasDraggedBtn.current = false;
       return;
     }
 
-    setInput("");
-    setAttachedFile(null);
-    setMessages((prev) => [
-      ...prev,
-      { id: `u-${Date.now()}`, role: "user", text: question || `Analyze uploaded lab report: ${currentFile?.name}`, attachedFileName: currentFile?.name },
-    ]);
+    if (!intakeData && messages.length === 0) {
+      setIntakeModalOpen(true);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  // Handle Intake Form Submission
+  const handleIntakeSubmit = (data: PreChatIntakeData) => {
+    setIntakeData(data);
+    setIntakeModalOpen(false);
+    setOpen(true);
+
+    if (data.topic) {
+      // Initialize with empathetic greeting tailored to user's picked topic
+      const topicMsg = `I want to discuss ${data.topic}.`;
+      handleSendMessage(topicMsg, data);
+    }
+  };
+
+  // Handle Intake Form Skip
+  const handleIntakeSkip = () => {
+    setIntakeData({ skipped: true });
+    setIntakeModalOpen(false);
+    setOpen(true);
+  };
+
+  // Send Message Logic
+  const handleSendMessage = async (textToSend?: string, overrideIntake?: PreChatIntakeData) => {
+    const messageText = (textToSend !== undefined ? textToSend : input).trim();
+    if (!messageText || pending) return;
+
+    const currentIntake = overrideIntake || intakeData;
+    const userMsg: AssistantMessage = {
+      id: crypto.randomUUID(),
+      role: "user",
+      text: messageText,
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    if (textToSend === undefined) setInput("");
     setPending(true);
+
     try {
-      const reply = await assistantService.chat(
-        question || `Analyze uploaded lab report: ${currentFile?.name}`,
-        currentFile || undefined,
-      );
-      setMessages((prev) => [
-        ...prev,
-        { id: `a-${Date.now()}`, role: "assistant", text: reply.answer, reply },
-      ]);
-    } catch (caught) {
-      const error = caught as ApiError;
+      const reply = await assistantService.chat(messageText, {
+        topic: currentIntake?.topic,
+        budgetTier: currentIntake?.budgetTier,
+      });
+
       setMessages((prev) => [
         ...prev,
         {
-          id: `e-${Date.now()}`,
+          id: crypto.randomUUID(),
           role: "assistant",
-          text: error.status === 401
-            ? "Authentication required: Please sign in to chat with Medi AI Assistant."
-            : error.message || toDisplayMessage(error),
+          text: reply.answer,
+          reply,
+        },
+      ]);
+    } catch (err: any) {
+      const error: ApiError = err?.status
+        ? err
+        : {
+            status: 500,
+            code: "SERVER",
+            message: toDisplayMessage(err),
+          };
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          role: "assistant",
+          text: error.message || "Failed to reach assistant.",
           error,
         },
       ]);
+      toast.error(error.message || "Could not reach Durrmi Assistant.");
     } finally {
       setPending(false);
-      textareaRef.current?.focus();
     }
-  }
+  };
 
-  function handleEditMessage(msgToEdit: AssistantMessage) {
-    setInput(msgToEdit.text);
-    const idx = messages.findIndex((m) => m.id === msgToEdit.id);
-    if (idx !== -1) {
-      setMessages((prev) => prev.slice(0, idx));
-    }
-    textareaRef.current?.focus();
-    toast.info("Message loaded for editing");
-  }
+  const handleResetChat = () => {
+    setMessages([]);
+    setIntakeData(null);
+    setIntakeModalOpen(true);
+  };
 
   return (
     <>
-      {/* Draggable Circular Robot Launcher Button */}
-      <button
-        onClick={handleBtnClick}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        type="button"
-        style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full bg-primary p-2.5 text-primary-foreground shadow-2xl transition-transform duration-75 select-none touch-none sm:cursor-grab active:sm:cursor-grabbing hover:scale-105 hover:shadow-primary/30 group"
-        aria-expanded={open}
-        aria-controls="assistant-panel"
-        title="Medi AI Assistant (Drag to reposition)"
-      >
-        <div className="relative flex size-12 items-center justify-center rounded-full bg-white/10 border border-white/20 shadow-inner">
-          {open ? (
-            <X className="size-6 transition-transform duration-200 group-hover:rotate-90" aria-hidden="true" />
-          ) : (
-            <div className="relative flex items-center justify-center">
-              <Bot className="size-7 text-white animate-pulse" aria-hidden="true" />
-              <Sparkles className="absolute -top-1 -right-1 size-3.5 text-amber-300 animate-spin" style={{ animationDuration: "4s" }} />
+      {/* 1. Pre-Chat Intake Modal */}
+      <PreChatIntakeModal
+        isOpen={intakeModalOpen}
+        onClose={() => setIntakeModalOpen(false)}
+        onSubmit={handleIntakeSubmit}
+        onSkip={handleIntakeSkip}
+      />
+
+      {/* 2. Floating Movable Launcher Button */}
+      {!open && (
+        <div
+          style={{
+            transform: isDesktop ? `translate(${btnPos.x}px, ${btnPos.y}px)` : undefined,
+            touchAction: "none",
+          }}
+          className="fixed bottom-6 right-6 z-40"
+        >
+          <button
+            type="button"
+            onPointerDown={handleBtnPointerDown}
+            onPointerMove={handleBtnPointerMove}
+            onPointerUp={handleBtnPointerUp}
+            onClick={handleOpenClick}
+            aria-label="Open Durrmi AI Assistant"
+            className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-xl shadow-emerald-700/25 transition-all duration-300 hover:scale-105 active:scale-95 cursor-grab active:cursor-grabbing border border-white/20 select-none"
+          >
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/15 backdrop-blur-xs text-white">
+              <Sparkles className="w-4 h-4 animate-pulse" />
+              <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 rounded-full border-2 border-emerald-700" />
+            </div>
+            <div className="text-left pr-1">
+              <p className="text-xs font-semibold tracking-tight text-white leading-tight">
+                Durrmi AI Assistant
+              </p>
+              <p className="text-[10px] text-emerald-100/90 font-medium">Find your way within</p>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* 3. Movable Durrmi AI Assistant Chat Panel */}
+      {open && (
+        <div
+          style={{
+            transform: isDesktop ? `translate(${panelPos.x}px, ${panelPos.y}px)` : undefined,
+            touchAction: "none",
+          }}
+          className={cn(
+            "fixed z-50 flex flex-col bg-white dark:bg-card border border-emerald-100 dark:border-emerald-950/80 shadow-2xl rounded-3xl overflow-hidden transition-shadow duration-200",
+            // Desktop dimensions
+            "sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[620px]",
+            // Mobile full screen
+            "inset-0 sm:inset-auto"
+          )}
+        >
+          {/* Header - Movable by Dragging */}
+          <div
+            onPointerDown={handlePanelPointerDown}
+            onPointerMove={handlePanelPointerMove}
+            onPointerUp={handlePanelPointerUp}
+            className="flex items-center justify-between px-4 py-3.5 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white select-none cursor-grab active:cursor-grabbing border-b border-emerald-700/40"
+          >
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white backdrop-blur-xs flex-shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="truncate">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="text-sm font-semibold tracking-tight truncate">Durrmi AI Assistant</h3>
+                  <span className="text-[9px] font-semibold uppercase tracking-wider bg-white/20 px-1.5 py-0.5 rounded-full text-emerald-50">
+                    Live
+                  </span>
+                </div>
+                <p className="text-[11px] text-emerald-100/90 truncate flex items-center gap-1">
+                  <span>Power of connecting yourself</span>
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1">
+              {/* Reset / Change Topic */}
+              <button
+                type="button"
+                onClick={handleResetChat}
+                className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/10 transition-colors"
+                title="Reset or Change Topic"
+              >
+                <RotateCcw className="w-4 h-4" />
+              </button>
+
+              {/* Drag Handle Indicator */}
+              <div
+                className="hidden sm:flex p-1.5 text-emerald-200 hover:text-white cursor-grab active:cursor-grabbing"
+                title="Drag to reposition panel"
+              >
+                <Move className="w-4 h-4" />
+              </div>
+
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                title="Close"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Active Intake Banner (if topic selected) */}
+          {intakeData?.topic && (
+            <div className="bg-emerald-50/90 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/40 px-3.5 py-1.5 flex items-center justify-between text-[11px] text-emerald-900 dark:text-emerald-200">
+              <span className="font-medium truncate">
+                Focused Topic: <span className="font-semibold">{intakeData.topic}</span>
+              </span>
+              <button
+                onClick={() => setIntakeModalOpen(true)}
+                className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold ml-2 flex-shrink-0"
+              >
+                Change
+              </button>
             </div>
           )}
-        </div>
-        <span className="hidden sm:inline pr-3 font-semibold text-sm tracking-wide">
-          {open ? "Close" : "Medi AI Assistant"}
-        </span>
-      </button>
 
-      {open ? (
-        <section
-          id="assistant-panel"
-          aria-label="Medi AI Assistant"
-          style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
-          className="surface-panel fixed bottom-24 right-6 z-50 flex h-[34rem] w-[min(25rem,calc(100vw-2rem))] flex-col overflow-hidden p-0 shadow-2xl transition-transform duration-75 rounded-2xl border border-primary/20 bg-background/95 backdrop-blur-md"
-        >
-          {/* Draggable Header */}
-          <header
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            className="flex items-center gap-3 border-b border-border/80 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent px-4 py-3.5 select-none touch-none sm:cursor-grab active:sm:cursor-grabbing"
+          {/* Messages Scroll Area */}
+          <div
+            ref={scrollRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background via-emerald-50/20 to-background dark:via-emerald-950/10 text-sm"
           >
-            {/* Round Circular Robot Badge */}
-            <div className="relative flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/15 border border-primary/30 text-primary shadow-sm">
-              <Bot className="size-5" aria-hidden="true" />
-              <span className="absolute bottom-0 right-0 size-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
-            </div>
+            {/* Welcome message if no chat history */}
+            {messages.length === 0 && (
+              <div className="py-4 text-center space-y-3">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 mx-auto flex items-center justify-center shadow-xs">
+                  <HeartHandshake className="w-6 h-6" />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-base font-semibold text-foreground">Welcome to Durrmi</h4>
+                  <p className="text-xs text-muted-foreground max-w-[280px] mx-auto leading-relaxed">
+                    "At Durrmi, we don't believe in fixing you — because you're not broken. We believe in presence."
+                  </p>
+                </div>
 
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1.5">
-                <h2 className="truncate text-sm font-bold tracking-tight text-foreground">Medi AI Assistant</h2>
-                <Badge variant="secondary" className="px-1.5 py-0 text-[10px] uppercase tracking-wider font-semibold">
-                  AI
-                </Badge>
+                <div className="pt-2 text-left space-y-1.5">
+                  <p className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+                    Try asking:
+                  </p>
+                  <div className="flex flex-col gap-1.5">
+                    {DEFAULT_SUGGESTIONS.map((s, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSendMessage(s)}
+                        className="text-left text-xs bg-white dark:bg-card hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-foreground border border-border/70 hover:border-emerald-300 rounded-xl px-3 py-2 transition-colors shadow-2xs"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <p className="truncate text-xs text-muted-foreground">Smart clinic navigation & policies (Drag me)</p>
-            </div>
+            )}
 
-            <div className="flex items-center gap-1.5">
-              <Button
-                size="sm"
-                variant="outline"
-                className="h-7 text-xs border-purple-500/40 text-purple-400 hover:bg-purple-500/10 font-bold gap-1"
-                onClick={() => setAnalyzerOpen(true)}
-              >
-                <Sparkles className="size-3 text-purple-400" /> 🧪 Analyze Report
-              </Button>
-              {messages.length > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMessages([]);
-                    toast.success("Chat history cleared");
-                  }}
-                  className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                  title="Clear chat history"
+            {/* Message History */}
+            {messages.map((m) => {
+              const isUser = m.role === "user";
+
+              return (
+                <div
+                  key={m.id}
+                  className={cn(
+                    "flex flex-col max-w-[88%] animate-in fade-in slide-in-from-bottom-2 duration-200",
+                    isUser ? "ml-auto items-end" : "mr-auto items-start"
+                  )}
                 >
-                  <Trash2 className="size-4" />
-                </button>
-              ) : null}
-              <Move className="hidden sm:block size-4 text-muted-foreground opacity-60 hover:opacity-100 transition-opacity" aria-hidden="true" />
-            </div>
-          </header>
-
-          <div className="flex items-start gap-2 border-b border-border/60 bg-amber-500/10 px-4 py-2 text-xs text-amber-900 dark:text-amber-300">
-            <ShieldAlert className="mt-0.5 size-4 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden="true" />
-            <p className="leading-tight">{ASSISTANT_DISCLAIMER}</p>
-          </div>
-
-          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4" aria-live="polite">
-            {!isAuthenticated ? (
-              <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-center space-y-2">
-                <p className="text-xs font-semibold text-amber-900 dark:text-amber-300">
-                  Authentication Required
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Please sign in to ask questions to Medi AI Assistant.
-                </p>
-                <Button asChild size="sm" className="w-full gap-1.5 mt-1 font-medium">
-                  <Link to="/login" search={{ redirect: "/doctors" }}>
-                    <LogIn className="size-3.5" /> Sign in to start
-                  </Link>
-                </Button>
-              </div>
-            ) : null}
-
-            {messages.length === 0 && isAuthenticated ? (
-              <div className="space-y-2.5">
-                <p className="text-xs font-medium text-muted-foreground">Suggested questions:</p>
-                {SUGGESTIONS.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    type="button"
-                    onClick={() => send(suggestion)}
-                    className="block w-full rounded-xl border border-border/80 bg-card px-3.5 py-2.5 text-left text-xs font-medium transition-all hover:bg-accent hover:border-primary/30 active:scale-[0.99]"
+                  <div
+                    className={cn(
+                      "px-3.5 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed whitespace-pre-line shadow-2xs",
+                      isUser
+                        ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-br-xs font-normal"
+                        : "bg-white dark:bg-card text-foreground border border-emerald-100/80 dark:border-emerald-900/40 rounded-bl-xs"
+                    )}
                   >
-                    {suggestion}
-                  </button>
-                ))}
+                    {m.text}
+
+                    {/* Sources Badge if RAG grounded */}
+                    {!isUser && m.reply?.sources && m.reply.sources.length > 0 && !m.reply.isSecurityBlocked && (
+                      <div className="mt-2 pt-2 border-t border-border/40 text-[10px] text-muted-foreground flex items-center gap-1.5">
+                        <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                        <span className="font-medium">
+                          Grounded in {m.reply.sources[0].title}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Therapist Recommendation Card if matched */}
+                  {!isUser && m.reply?.doctorMatch && (
+                    <div className="w-full">
+                      <TherapistRecommendationCard
+                        doctorMatch={m.reply.doctorMatch}
+                        matchedSpecialty={m.reply.matchedSpecialty}
+                        maxBudget={
+                          intakeData?.budgetTier === "under_1000"
+                            ? 1000
+                            : intakeData?.budgetTier === "1000_to_2000"
+                            ? 2000
+                            : undefined
+                        }
+                      />
+                    </div>
+                  )}
+
+                  {/* 3 Clickable Suggested Question Chips */}
+                  {!isUser && m.reply?.suggestedQuestions && (
+                    <SuggestedQuestionChips
+                      questions={m.reply.suggestedQuestions}
+                      onSelect={(q) => handleSendMessage(q)}
+                      disabled={pending}
+                    />
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Pending typing indicator */}
+            {pending && (
+              <div className="mr-auto flex items-center gap-2 bg-white dark:bg-card border border-emerald-100 dark:border-emerald-900/40 px-3.5 py-2 rounded-2xl rounded-bl-xs text-xs text-muted-foreground shadow-2xs">
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-600" />
+                <span>Durrmi Assistant is thinking...</span>
               </div>
-            ) : null}
-
-            {messages.map((message) => (
-              <div
-                key={message.id}
-                className={cn(
-                  "max-w-[90%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed shadow-sm",
-                  message.role === "user"
-                    ? "ml-auto bg-primary text-primary-foreground rounded-br-xs"
-                    : "bg-muted/80 text-foreground rounded-bl-xs border border-border/40",
-                  message.error && "border border-destructive/40 bg-destructive/5 text-destructive",
-                )}
-              >
-                {message.role === "user" ? (
-                  <div className="flex items-center justify-between gap-2 mb-1 border-b border-primary-foreground/20 pb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider opacity-80">You</span>
-                    <button
-                      type="button"
-                      onClick={() => handleEditMessage(message)}
-                      className="flex items-center gap-1 text-[10px] opacity-75 hover:opacity-100 transition-opacity bg-black/20 hover:bg-black/30 px-1.5 py-0.5 rounded font-medium cursor-pointer"
-                      title="Edit message (Fix typing mistake)"
-                    >
-                      <Pencil className="size-2.5" /> Edit
-                    </button>
-                  </div>
-                ) : null}
-
-                {message.attachedFileName ? (
-                  <div className="mb-1 text-[10px] font-semibold text-emerald-300 dark:text-emerald-400 flex items-center gap-1">
-                    <FileText className="size-3" /> Attached: {message.attachedFileName}
-                  </div>
-                ) : null}
-
-                <p className="whitespace-pre-wrap">{message.text}</p>
-
-                {/* Structured AI Report Analysis Card */}
-                {message.reply?.reportAnalysis ? (
-                  <div className="mt-3 p-3 rounded-xl bg-background text-foreground border border-primary/20 space-y-3 shadow-xs">
-                    <div className="flex items-center justify-between border-b pb-2">
-                      <span className="text-xs font-bold text-primary flex items-center gap-1.5">
-                        <FileText className="size-3.5" /> {message.reply.reportAnalysis.fileName || "Lab Report Analysis"}
-                      </span>
-                      <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
-                        AI Analyzed ✓
-                      </Badge>
-                    </div>
-
-                    {/* Parameters Table */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-[11px] text-left border-collapse">
-                        <thead>
-                          <tr className="border-b bg-muted/50 text-muted-foreground">
-                            <th className="p-1 font-semibold">Test / Parameter</th>
-                            <th className="p-1 font-semibold">Observed</th>
-                            <th className="p-1 font-semibold">Normal</th>
-                            <th className="p-1 font-semibold text-right">Status</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border/40">
-                          {message.reply.reportAnalysis.parameters.map((param) => (
-                            <tr key={param.name}>
-                              <td className="p-1 font-medium text-foreground">{param.name}</td>
-                              <td className="p-1 font-bold">{param.value}</td>
-                              <td className="p-1 text-muted-foreground text-[10px]">{param.normalRange}</td>
-                              <td className="p-1 text-right">
-                                <Badge
-                                  variant="outline"
-                                  className={cn(
-                                    "text-[9px] px-1.5 py-0 font-bold",
-                                    param.status === "HIGH" && "bg-destructive/15 text-destructive border-destructive/30",
-                                    param.status === "LOW" && "bg-amber-500/15 text-amber-600 border-amber-500/30",
-                                    param.status === "NORMAL" && "bg-emerald-500/15 text-emerald-600 border-emerald-500/30",
-                                  )}
-                                >
-                                  {param.status}
-                                </Badge>
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Hindi & English Summary */}
-                    <div className="space-y-1 bg-muted/40 p-2 rounded-lg text-[11px]">
-                      <p className="font-semibold text-foreground">💡 Summary (Hindi & English):</p>
-                      <p className="text-muted-foreground leading-snug">{message.reply.reportAnalysis.summaryHindi}</p>
-                    </div>
-                  </div>
-                ) : null}
-
-                {/* Auto Doctor Match Card */}
-                {message.reply?.doctorMatch ? (
-                  <div className="mt-3 p-3 rounded-xl bg-primary/10 border border-primary/30 text-foreground space-y-2 animate-in fade-in">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-primary flex items-center gap-1">
-                        <Sparkles className="size-3" /> Recommended Specialist
-                      </span>
-                      <Badge variant="outline" className="text-[10px] bg-background font-semibold">
-                        {message.reply.doctorMatch.triageLevel}
-                      </Badge>
-                    </div>
-                    <div>
-                      <p className="font-bold text-sm text-foreground">{message.reply.doctorMatch.doctorName}</p>
-                      <p className="text-[11px] text-muted-foreground">{message.reply.doctorMatch.specialization} · {message.reply.doctorMatch.qualifications}</p>
-                      <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold pt-0.5">Consultation Fee: ₹{message.reply.doctorMatch.consultationFee}</p>
-                      
-                      {/* Slot Availability Notice Badge */}
-                      {message.reply.doctorMatch.reason?.includes("Currently no open slots available") ? (
-                        <div className="mt-1.5 p-1.5 rounded-lg bg-amber-500/15 border border-amber-500/30 text-[10px] font-semibold text-amber-700 dark:text-amber-300 flex items-center gap-1">
-                          <AlertTriangle className="size-3 text-amber-500 shrink-0" /> Currently no open slots available for online booking.
-                        </div>
-                      ) : (
-                        <div className="mt-1.5 p-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-semibold text-emerald-700 dark:text-emerald-300 flex items-center gap-1">
-                          <CheckCircle2 className="size-3 text-emerald-500 shrink-0" /> Open consultation slots available today.
-                        </div>
-                      )}
-                    </div>
-                    <Button
-                      size="sm"
-                      className={cn(
-                        "w-full text-xs font-bold gap-1.5 h-8 text-white cursor-pointer shadow-sm",
-                        message.reply.doctorMatch.reason?.includes("Currently no open slots available")
-                          ? "bg-amber-600 hover:bg-amber-500"
-                          : "bg-emerald-600 hover:bg-emerald-500"
-                      )}
-                      onClick={() => {
-                        setOpen(false);
-                        navigate({ to: "/doctors/$doctorId", params: { doctorId: message.reply!.doctorMatch!.doctorId } });
-                      }}
-                    >
-                      <CalendarClock className="size-3.5" />
-                      {message.reply.doctorMatch.reason?.includes("Currently no open slots available")
-                        ? `View ${message.reply.doctorMatch.doctorName}'s Profile`
-                        : `Book Slot with ${message.reply.doctorMatch.doctorName}`}
-                    </Button>
-                  </div>
-                ) : null}
-
-                {message.error?.status === 401 ? (
-                  <div className="mt-2 pt-2 border-t border-destructive/20">
-                    <Button asChild size="sm" variant="outline" className="w-full h-7 text-xs gap-1">
-                      <Link to="/login">
-                        <LogIn className="size-3" /> Sign in now
-                      </Link>
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-            ))}
-
-            {pending ? (
-              <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
-                <Loader2 className="size-3.5 animate-spin text-primary" aria-hidden="true" />
-                Medi AI Assistant is analyzing clinic guidelines & reports…
-              </div>
-            ) : null}
+            )}
           </div>
 
-          <form
-            className="border-t border-border/80 bg-card/50 p-3 space-y-2"
-            onSubmit={(event) => {
-              event.preventDefault();
-              void send(input);
-            }}
-          >
-            {/* Attached File Chip Preview */}
-            {attachedFile ? (
-              <div className="flex items-center justify-between bg-primary/10 border border-primary/30 rounded-lg px-2.5 py-1 text-xs text-primary font-medium">
-                <span className="truncate flex items-center gap-1.5">
-                  <FileText className="size-3.5" /> Attached: {attachedFile.name}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setAttachedFile(null)}
-                  className="text-muted-foreground hover:text-foreground p-0.5"
-                >
-                  <X className="size-3.5" />
-                </button>
-              </div>
-            ) : null}
-
-            <label htmlFor="assistant-input" className="sr-only">
-              Ask Medi AI Assistant
-            </label>
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="chat-file-upload"
-                className={`p-2.5 rounded-xl border border-border/80 hover:bg-accent text-muted-foreground hover:text-foreground cursor-pointer transition-colors shrink-0 ${
-                  !isAuthenticated ? "opacity-50 pointer-events-none" : ""
-                }`}
-                title="Attach Medical Report / Prescription File (PDF, JPG, PNG, TXT)"
-              >
-                <Paperclip className="size-4 text-primary" />
-                <input
-                  id="chat-file-upload"
-                  type="file"
-                  accept=".pdf,.jpg,.jpeg,.png,.txt"
-                  className="hidden"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setAttachedFile({ name: file.name });
-                      if (!input) setInput(`Analyze my uploaded lab report: ${file.name}`);
-                    }
-                  }}
-                />
-              </label>
-
+          {/* Footer Disclaimer & Input Bar */}
+          <div className="p-3 bg-white dark:bg-card border-t border-border/60 space-y-2">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
+              }}
+              className="flex items-end gap-2"
+            >
               <Textarea
-                id="assistant-input"
                 ref={textareaRef}
-                rows={1}
                 value={input}
-                onChange={(event) => setInput(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    void send(input);
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
                   }
                 }}
-                placeholder={isAuthenticated ? "Ask symptoms or attach lab report file..." : "Sign in to chat"}
-                disabled={!isAuthenticated || pending}
-                className="max-h-24 min-h-10 resize-none py-2.5 text-xs rounded-xl border-border/80 focus-visible:ring-primary/40"
+                placeholder="Share what's on your mind or ask about therapy..."
+                rows={1}
+                className="min-h-[42px] max-h-[90px] resize-none text-xs sm:text-sm rounded-xl border-border/70 focus-visible:ring-emerald-500 bg-background/50"
               />
               <Button
                 type="submit"
-                size="icon"
-                disabled={pending || (!input.trim() && !attachedFile) || !isAuthenticated}
-                aria-label="Send message"
-                className="shrink-0 rounded-xl"
+                disabled={!input.trim() || pending}
+                className="h-[42px] px-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-xs disabled:opacity-40 transition-all"
               >
-                <Send className="size-4" aria-hidden="true" />
+                <Send className="w-4 h-4" />
               </Button>
-            </div>
-          </form>
-        </section>
-      ) : null}
+            </form>
 
-      {/* AI Lab Report Reader Modal */}
-      <LabReportAnalyzerModal
-        isOpen={analyzerOpen}
-        onClose={() => setAnalyzerOpen(false)}
-      />
+            <p className="text-[10px] text-center text-muted-foreground/80 leading-tight">
+              Durrmi Companion provides emotional support and therapy guidance. Not for emergency medical advice.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }

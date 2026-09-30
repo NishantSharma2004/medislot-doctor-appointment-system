@@ -214,6 +214,12 @@ export interface ReportAnalysisData {
   dietAdvice: string[];
 }
 
+export interface PreChatIntakeData {
+  topic?: string;
+  budgetTier?: "under_1000" | "1000_to_2000" | "above_2000" | "any";
+  skipped: boolean;
+}
+
 export interface AssistantReply {
   answer: string;
   sources: AssistantSource[];
@@ -222,6 +228,10 @@ export interface AssistantReply {
   doctorMatch?: DoctorMatchInfo;
   isReportSummary?: boolean;
   reportAnalysis?: ReportAnalysisData;
+  suggestedQuestions?: string[];
+  matchedSpecialty?: string;
+  isOutOfScope?: boolean;
+  isSecurityBlocked?: boolean;
 }
 
 /** Normalized error shape produced by the Axios client for the whole UI. */
