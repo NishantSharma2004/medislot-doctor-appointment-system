@@ -68,7 +68,7 @@ public class MedicalSafetyEvaluator {
     private static final List<String> TECH_CONFIDENTIALITY_KEYWORDS = List.of(
             "what api", "which api", "konsi api", "koun si api", "what model", "which llm",
             "are you chatgpt", "are you grok", "are you gemini", "tech stack", "backend tech",
-            "system prompt", "internal prompt", "source code"
+            "internal prompt", "source code"
     );
 
     private static final List<String> OUT_OF_SCOPE_KEYWORDS = List.of(
@@ -85,7 +85,17 @@ public class MedicalSafetyEvaluator {
 
         String lower = userMessage.toLowerCase(Locale.ROOT);
 
-        // 1. Tech stack and API confidentiality probe check
+        // 1. Prompt injection / private data request check
+        for (String kw : INJECTION_KEYWORDS) {
+            if (lower.contains(kw)) {
+                return SafetyResult.blocked(
+                        SafetyCategory.PROMPT_INJECTION_OR_PRIVATE_DATA,
+                        "I can only help with approved Durrmi mental health services, therapist scheduling, and platform policies."
+                );
+            }
+        }
+
+        // 2. Tech stack and API confidentiality probe check
         for (String kw : TECH_CONFIDENTIALITY_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
@@ -95,7 +105,7 @@ public class MedicalSafetyEvaluator {
             }
         }
 
-        // 2. Out-of-scope non-mental health query check (Saves 100% LLM tokens)
+        // 3. Out-of-scope non-mental health query check (Saves 100% LLM tokens)
         for (String kw : OUT_OF_SCOPE_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
@@ -105,7 +115,7 @@ public class MedicalSafetyEvaluator {
             }
         }
 
-        // 3. Emergency symptoms check
+        // 4. Emergency symptoms check
         for (String kw : EMERGENCY_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
@@ -115,32 +125,22 @@ public class MedicalSafetyEvaluator {
             }
         }
 
-        // 4. Self-harm / crisis check
+        // 5. Self-harm / crisis check
         for (String kw : SELF_HARM_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
                         SafetyCategory.SELF_HARM,
-                        "If you or someone you know is in distress or feeling hopeless, free and confidential support is available 24/7. Tele-MANAS (Govt of India): Dial 14416 or 1800-891-4416. KIRAN Helpline: 1800-599-0019. Vandrevala Foundation: +91 9999 666 555. You do not have to carry this alone."
+                        "If you or someone you know is struggling or in crisis, help is available. Please reach out to local emergency services or a crisis helpline immediately. Tele-MANAS (Govt of India): Dial 14416 or 1800-891-4416. KIRAN Helpline: 1800-599-0019. Vandrevala Foundation: +91 9999 666 555. You do not have to carry this alone."
                 );
             }
         }
 
-        // 5. Prescription / dosage check
+        // 6. Prescription / dosage check
         for (String kw : DOSAGE_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
                         SafetyCategory.DOSAGE_PRESCRIPTION,
                         "I can help with Durrmi emotional wellbeing, clinic policies, and therapist booking. I cannot recommend medication or prescribe dosages. Please consult a qualified psychiatrist or doctor."
-                );
-            }
-        }
-
-        // 6. Prompt injection / private data request check
-        for (String kw : INJECTION_KEYWORDS) {
-            if (lower.contains(kw)) {
-                return SafetyResult.blocked(
-                        SafetyCategory.PROMPT_INJECTION_OR_PRIVATE_DATA,
-                        "I can only help with approved Durrmi mental health services, therapist scheduling, and platform policies."
                 );
             }
         }
