@@ -69,16 +69,12 @@ export function AssistantPanel() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Drag State for Floating Widget & Chat Panel (Movable on Screen)
+  // Drag State for Floating Widget & Chat Panel (Shared Movement)
   const [btnPos, setBtnPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [panelPos, setPanelPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-
-  const isDraggingBtn = useRef(false);
-  const dragStartBtn = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-  const hasDraggedBtn = useRef(false);
-
-  const isDraggingPanel = useRef(false);
-  const dragStartPanel = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const isDragging = useRef(false);
+  const dragStartPoint = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const dragStartOffset = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const hasDragged = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -104,63 +100,45 @@ export function AssistantPanel() {
 
   const isDesktop = isClient && typeof window !== "undefined" && window.innerWidth >= 640;
 
-  // Pointer Event Handlers for Launcher Button (Movable)
-  const handleBtnPointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    if (typeof window !== "undefined" && window.innerWidth < 640) return;
-    isDraggingBtn.current = true;
-    hasDraggedBtn.current = false;
-    dragStartBtn.current = { x: e.clientX - btnPos.x, y: e.clientY - btnPos.y };
+  // Unified Pointer Drag Handlers (Both Button & Panel Header)
+  const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
+    isDragging.current = true;
+    hasDragged.current = false;
+    dragStartPoint.current = { x: e.clientX, y: e.clientY };
+    dragStartOffset.current = { x: e.clientX - btnPos.x, y: e.clientY - btnPos.y };
     e.currentTarget.setPointerCapture(e.pointerId);
   };
 
-  const handleBtnPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    if (!isDraggingBtn.current) return;
-    const deltaX = e.clientX - dragStartBtn.current.x;
-    const deltaY = e.clientY - dragStartBtn.current.y;
-    if (Math.abs(deltaX - btnPos.x) > 3 || Math.abs(deltaY - btnPos.y) > 3) {
-      hasDraggedBtn.current = true;
+  const handlePointerMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDragging.current) return;
+    const distanceMoved = Math.hypot(
+      e.clientX - dragStartPoint.current.x,
+      e.clientY - dragStartPoint.current.y
+    );
+    if (distanceMoved > 6) {
+      hasDragged.current = true;
     }
-    setBtnPos({ x: deltaX, y: deltaY });
+    const nextX = e.clientX - dragStartOffset.current.x;
+    const nextY = e.clientY - dragStartOffset.current.y;
+    setBtnPos({ x: nextX, y: nextY });
   };
 
-  const handleBtnPointerUp = (e: React.PointerEvent<HTMLElement>) => {
-    if (!isDraggingBtn.current) return;
-    isDraggingBtn.current = false;
+  const handlePointerUp = (e: React.PointerEvent<HTMLElement>) => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {}
   };
 
-  // Pointer Event Handlers for Panel Header (Movable Panel)
-  const handlePanelPointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    if (typeof window !== "undefined" && window.innerWidth < 640) return;
-    isDraggingPanel.current = true;
-    dragStartPanel.current = { x: e.clientX - panelPos.x, y: e.clientY - panelPos.y };
-    e.currentTarget.setPointerCapture(e.pointerId);
-  };
-
-  const handlePanelPointerMove = (e: React.PointerEvent<HTMLElement>) => {
-    if (!isDraggingPanel.current) return;
-    const deltaX = e.clientX - dragStartPanel.current.x;
-    const deltaY = e.clientY - dragStartPanel.current.y;
-    setPanelPos({ x: deltaX, y: deltaY });
-  };
-
-  const handlePanelPointerUp = (e: React.PointerEvent<HTMLElement>) => {
-    if (!isDraggingPanel.current) return;
-    isDraggingPanel.current = false;
-    try {
-      e.currentTarget.releasePointerCapture(e.pointerId);
-    } catch {}
-  };
-
-  // Open Chat Launcher Trigger
-  const handleOpenClick = () => {
-    if (hasDraggedBtn.current) {
-      hasDraggedBtn.current = false;
-      return;
+  // Toggle Chat Open/Close on Click
+  const handleBtnClick = () => {
+    if (hasDragged.current) {
+      hasDragged.current = false;
+      return; // Ignore click if user was dragging
     }
-    setOpen(true);
+    setOpen((prev) => !prev);
   };
 
   // Send Message Logic
@@ -246,59 +224,51 @@ export function AssistantPanel() {
 
   return (
     <>
-      {/* 1. Floating Movable Launcher Button (Always fixed at bottom-right of viewport) */}
-      {!open && (
-        <div
-          style={{
-            transform: isDesktop ? `translate(${btnPos.x}px, ${btnPos.y}px)` : undefined,
-            touchAction: "none",
-          }}
-          className="fixed bottom-6 right-6 z-50 pointer-events-auto"
-        >
-          <button
-            type="button"
-            onPointerDown={handleBtnPointerDown}
-            onPointerMove={handleBtnPointerMove}
-            onPointerUp={handleBtnPointerUp}
-            onClick={handleOpenClick}
-            aria-label="Open Durrmi AI Assistant"
-            className="group relative flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-2xl shadow-emerald-900/30 transition-all duration-300 hover:scale-105 active:scale-95 cursor-grab active:cursor-grabbing border border-white/25 select-none"
-          >
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20 backdrop-blur-xs text-white">
+      {/* 1. Floating Movable Launcher Button (Always visible at bottom-right of viewport) */}
+      <button
+        type="button"
+        onClick={handleBtnClick}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
+        aria-label={open ? "Close Durrmi AI Assistant" : "Open Durrmi AI Assistant"}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-700 text-white rounded-full shadow-2xl shadow-emerald-950/30 transition-transform duration-75 select-none touch-none sm:cursor-grab active:sm:cursor-grabbing hover:scale-105 active:scale-95 border border-white/25 pointer-events-auto"
+      >
+        <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/20 backdrop-blur-xs text-white">
+          {open ? (
+            <X className="w-5 h-5 transition-transform duration-200" />
+          ) : (
+            <>
               <Sparkles className="w-4 h-4 animate-pulse" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 rounded-full border-2 border-emerald-700" />
-            </div>
-            <div className="text-left pr-1">
-              <p className="text-xs font-semibold tracking-tight text-white leading-tight">
-                Durrmi AI Assistant
-              </p>
-              <p className="text-[10px] text-emerald-100/90 font-medium">Find your way within</p>
-            </div>
-          </button>
-        </div>
-      )}
-
-      {/* 2. Side-Docked Movable Durrmi AI Assistant Chat Panel (NO background blur, NO overlay) */}
-      {open && (
-        <div
-          style={{
-            transform: isDesktop ? `translate(${panelPos.x}px, ${panelPos.y}px)` : undefined,
-            touchAction: "none",
-          }}
-          className={cn(
-            "fixed z-50 flex flex-col bg-white dark:bg-card border border-emerald-200/90 dark:border-emerald-900/60 shadow-2xl rounded-3xl overflow-hidden pointer-events-auto",
-            // Desktop dimensions (docked right at bottom-6 right-6)
-            "sm:bottom-6 sm:right-6 sm:w-[420px] sm:h-[620px]",
-            // Mobile full screen
-            "inset-0 sm:inset-auto"
+            </>
           )}
+        </div>
+        <div className="text-left pr-1">
+          <p className="text-xs font-semibold tracking-tight text-white leading-tight">
+            Durrmi AI Assistant
+          </p>
+          <p className="text-[10px] text-emerald-100/90 font-medium">
+            {open ? "Click to minimize" : "Find your way within"}
+          </p>
+        </div>
+      </button>
+
+      {/* 2. Side-Docked Movable Durrmi AI Assistant Chat Panel (Directly above the button, NO page blur) */}
+      {open && (
+        <aside
+          id="durrmi-assistant-panel"
+          aria-label="Durrmi AI Assistant"
+          style={isDesktop ? { transform: `translate3d(${btnPos.x}px, ${btnPos.y}px, 0)` } : undefined}
+          className="fixed bottom-24 right-6 z-50 flex h-[35rem] w-[min(26rem,calc(100vw-2rem))] flex-col rounded-3xl border border-emerald-200/90 dark:border-emerald-800/60 bg-white dark:bg-card shadow-2xl overflow-hidden pointer-events-auto transition-transform duration-75"
         >
           {/* Header - Movable by Dragging */}
-          <div
-            onPointerDown={handlePanelPointerDown}
-            onPointerMove={handlePanelPointerMove}
-            onPointerUp={handlePanelPointerUp}
-            className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white select-none cursor-grab active:cursor-grabbing border-b border-emerald-700/40"
+          <header
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white select-none touch-none sm:cursor-grab active:sm:cursor-grabbing border-b border-emerald-700/40"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white backdrop-blur-xs flex-shrink-0">
@@ -328,7 +298,7 @@ export function AssistantPanel() {
 
               {/* Drag Handle Indicator on Desktop */}
               <div
-                className="hidden sm:flex p-1.5 text-emerald-200 hover:text-white cursor-grab active:cursor-grabbing"
+                className="hidden sm:flex p-1.5 text-emerald-200 hover:text-white sm:cursor-grab active:sm:cursor-grabbing"
                 title="Drag to reposition panel"
               >
                 <Move className="w-4 h-4" />
@@ -344,7 +314,7 @@ export function AssistantPanel() {
                 <X className="w-4 h-4" />
               </button>
             </div>
-          </div>
+          </header>
 
           {/* Active Topic Banner (if selected) */}
           {intakeData?.topic && (
@@ -525,7 +495,7 @@ export function AssistantPanel() {
           </div>
 
           {/* Footer Disclaimer & Input Bar */}
-          <div className="p-3 bg-white dark:bg-card border-t border-border/60 space-y-2">
+          <footer className="p-3 bg-white dark:bg-card border-t border-border/60 space-y-2">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -559,8 +529,8 @@ export function AssistantPanel() {
             <p className="text-[10px] text-center text-muted-foreground/80 leading-tight">
               Durrmi Companion provides emotional support and therapy guidance. Not for emergency medical advice.
             </p>
-          </div>
-        </div>
+          </footer>
+        </aside>
       )}
     </>
   );
