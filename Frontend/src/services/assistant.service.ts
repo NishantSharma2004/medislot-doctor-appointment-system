@@ -577,6 +577,407 @@ const SPECIALTY_REGISTRY: Record<string, SpecialtyMapping> = {
   },
 };
 
+// ============================================================================
+// 3.5. CLINICAL Q&A KNOWLEDGE BASE (Specific Clinical Questions)
+// ============================================================================
+
+interface ClinicalQA {
+  keywords: string[];
+  specialty: string;
+  en: {
+    answer: string;
+    suggestedQuestions: string[];
+  };
+  hi: {
+    answer: string;
+    suggestedQuestions: string[];
+  };
+}
+
+const CLINICAL_QA_REGISTRY: ClinicalQA[] = [
+  // 1. CBT-I
+  {
+    keywords: ["cbt-i", "cbt i", "insomnia therapy", "cognitive behavioral therapy for insomnia", "how does cognitive behavioral therapy"],
+    specialty: "Sleep",
+    en: {
+      answer:
+        "🧠 **Cognitive Behavioral Therapy for Insomnia (CBT-I)**\n\n" +
+        "CBT-I is the gold-standard, evidence-based first-line clinical treatment for chronic sleep problems — without medication dependence.\n\n" +
+        "It restores natural sleep architecture through 5 clinical pillars:\n\n" +
+        "1. **Stimulus Control**: Re-associating your bed strictly with deep sleep. If you don't fall asleep within 20 minutes, leave the bed to avoid training your brain into anticipatory anxiety.\n" +
+        "2. **Sleep Restriction**: Temporarily anchoring time in bed to actual sleep duration to rebuild biological sleep pressure (adenosine accumulation).\n" +
+        "3. **Cognitive Restructuring**: Deconstructing catastrophic sleep anxiety (*\"If I don't sleep 8 hours tonight, my day will be ruined\"*).\n" +
+        "4. **Circadian Optimization**: Aligning room temperature (18°C–20°C), darkness, and morning sunlight exposure.\n" +
+        "5. **Autogenic Relaxation**: Downregulating sympathetic nervous system hyperarousal through somatic breathing.\n\n" +
+        "Clinical trials show CBT-I produces sustained recovery in 70–80% of individuals within 4 to 8 sessions.",
+      suggestedQuestions: [
+        "What are the core sleep hygiene rules for falling asleep faster?",
+        "Is evening screen time disrupting my sleep cycle?",
+        "How do I consult a CBT-I sleep specialist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🧠 **Cognitive Behavioral Therapy for Insomnia (CBT-I)**\n\n" +
+        "CBT-I bina kisi neend ki goli ke chronic insomnia ko theek karne ka sabse certified clinical tarika hai:\n\n" +
+        "1. **Stimulus Control**: Bed ko sirf neend ke sath link karna. 20 minute tak neend na aane par bed se uth jana taaki dimaag me bed = tension na bane.\n" +
+        "2. **Sleep Restriction**: Bed par bitae jane wale time ko actual sleep time se match karna taaki natural sleep pressure bane.\n" +
+        "3. **Cognitive Restructuring**: Dimaag ke neend se jude dar aur negative thoughts ko reframe karna.\n" +
+        "4. **Relaxation Protocols**: Autonomic nervous system ko shaant karne ke somatic techniques.\n\n" +
+        "Clinical research ke mutabiq CBT-I 4 se 8 sessions me 80% logon ki neend ko naturally restore kar deta hai.",
+      suggestedQuestions: [
+        "Raat ko jaldi sojane ke sleep hygiene rules kya hain?",
+        "Kya screen time meri neend rok raha hai?",
+        "Sleep specialist se session kaise book karein?",
+      ],
+    },
+  },
+
+  // 2. Sleep Hygiene
+  {
+    keywords: ["sleep hygiene", "rules for falling asleep", "rules kya hain", "fall asleep faster", "jaldi sojane ke sleep hygiene"],
+    specialty: "Sleep",
+    en: {
+      answer:
+        "🌙 **Core Evidence-Based Sleep Hygiene Rules**\n\n" +
+        "To synchronize your circadian pacemaker and trigger natural melatonin synthesis, practice these 5 core rules:\n\n" +
+        "1. **Anchor Wake-Up Time**: Wake up at the exact same time every morning (including weekends). This anchors your circadian clock.\n" +
+        "2. **Morning Sunlight Exposure**: Get 10–15 minutes of outdoor sunlight within 30 minutes of waking. This sets an internal timer for melatonin release 14–16 hours later.\n" +
+        "3. **Digital Sunset (60 Min Before Bed)**: Artificial blue wavelengths suppress melatonin production by up to 50%. Keep screens outside the bedroom.\n" +
+        "4. **10-Hour Caffeine Curfew**: Because caffeine's chemical half-life is 5 to 7 hours, avoid coffee, tea, and caffeinated sodas after 12:00 PM–1:00 PM.\n" +
+        "5. **Cool Bedroom Temperature**: The human body must drop its core temperature by ~1°C to initiate sleep. Keep the bedroom around 18°C–20°C (65°F–68°F).",
+      suggestedQuestions: [
+        "How does Cognitive Behavioral Therapy for Insomnia (CBT-I) work?",
+        "Is evening screen time disrupting my sleep cycle?",
+        "How do I consult a sleep wellness coach?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌙 **Sleep Hygiene Ke 5 Zaroori Niyam**\n\n" +
+        "1. **Fixed Uthne Ka Time**: Roz subah ek hi time par uthein (weekends par bhi), taaki body clock reset ho sake.\n" +
+        "2. **Subah Ki Dhoop**: Uthne ke 30 minute ke andar 10-15 minute sunlight lein. Yeh raat ko melatonin release ko trigger karta hai.\n" +
+        "3. **Sone se 1 Ghante Pehle No Screen**: Mobile/Laptop ki blue light melatonin ko 50% tak daba deti hai.\n" +
+        "4. **Caffeine Curfew**: Dopahar 1 baje ke baad chai, coffee ya energy drinks na lein.\n" +
+        "5. **Room Ka Temperature Thanda Rakhein**: Sone ke liye body temperature halka drop hona zaroori hota hai (around 19-21°C).",
+      suggestedQuestions: [
+        "CBT-I (Insomnia therapy) kaise kaam karti hai?",
+        "Kya screen time meri neend rok raha hai?",
+        "Under ₹1,000 ke sleep therapists dikhao",
+      ],
+    },
+  },
+
+  // 3. Screen Time
+  {
+    keywords: ["screen time", "blue light", "screen meri neend", "disrupting my sleep cycle"],
+    specialty: "Sleep",
+    en: {
+      answer:
+        "📱 **How Evening Screen Time Disrupts Your Sleep Cycle**\n\n" +
+        "Screens sabotage sleep through two distinct neurological mechanisms:\n\n" +
+        "• **Circadian Suppression**: Short-wavelength blue light stimulates retinal ganglion cells, signaling the suprachiasmatic nucleus that it is daylight. This delays your melatonin surge by 1.5 to 2 hours.\n" +
+        "• **Dopaminergic Hyperarousal**: Infinite feeds, alerts, and video reels flood the prefrontal cortex with dopamine and cortisol, locking your brain into high-frequency beta waves when it needs to transition into theta/delta waves.\n" +
+        "• **Sleep Fragmentation**: Late screen exposure reduces restorative REM sleep and deep slow-wave physical recovery sleep.\n\n" +
+        "*Clinical protocol*: Institute a 45–60 minute wind-down routine with dim warm lighting, physical reading, or guided audio.",
+      suggestedQuestions: [
+        "What are the core sleep hygiene rules for falling asleep faster?",
+        "How does Cognitive Behavioral Therapy for Insomnia (CBT-I) work?",
+        "How do I consult a sleep specialist?",
+      ],
+    },
+    hi: {
+      answer:
+        "📱 **Screen Time Kaise Neend Ko Kharab Karta Hai?**\n\n" +
+        "• **Melatonin Hormones Ka Rukna**: Mobile ki blue light dimaag ko signal deti hai ki abhi din hai, jisse neend ka hormone (melatonin) 2 ghante tak delay ho jata hai.\n" +
+        "• **Dopamine & Brain Alertness**: Reels aur notifications dimaag ko active rakhte hain, jisse nervous system rest mode me nahi ja pata.\n" +
+        "• **Deep Sleep Ki Kami**: Screen dekhkar sone se neend baar-baar khulti hai aur subah thakan rehti hai.",
+      suggestedQuestions: [
+        "Raat ko jaldi sojane ke sleep hygiene rules kya hain?",
+        "CBT-I (Insomnia therapy) kaise kaam karti hai?",
+        "Sleep specialist se session kaise book karein?",
+      ],
+    },
+  },
+
+  // 4. 5-4-3-2-1 Technique
+  {
+    keywords: ["5-4-3-2-1", "54321", "grounding technique", "panic feeling"],
+    specialty: "Anxiety",
+    en: {
+      answer:
+        "⚡ **The 5-4-3-2-1 Somatic Grounding Technique for Panic & Acute Anxiety**\n\n" +
+        "When panic activates the amygdala, this protocol re-engages your prefrontal cortex with physical sensory reality:\n\n" +
+        "• **5 Things You Can SEE**: Look around and name 5 specific visual details (e.g., wall texture, pen color, shoe lace, door frame, cloud shape).\n" +
+        "• **4 Things You Can TOUCH**: Feel 4 distinct tactile surfaces (e.g., fabric of your clothes, cold edge of a table, smooth phone back, soles of your feet).\n" +
+        "• **3 Things You Can HEAR**: Tune into 3 subtle ambient sounds (e.g., fan hum, distant vehicles, your own breathing).\n" +
+        "• **2 Things You Can SMELL**: Notice 2 scents (e.g., soap fragrance, coffee aroma, fresh breeze).\n" +
+        "• **1 Thing You Can TASTE**: Focus on 1 taste in your mouth (e.g., mint, water, or the inside of your cheek).\n\n" +
+        "Pair each step with slow diaphragmatic breaths (4s inhale, 6s exhale) to activate your vagal brake.",
+      suggestedQuestions: [
+        "How can I stop overthinking in the moment?",
+        "Can anxiety be treated effectively without medication?",
+        "How do I connect with an anxiety therapist?",
+      ],
+    },
+    hi: {
+      answer:
+        "⚡ **Panic & Anxiety Ke Liye 5-4-3-2-1 Grounding Technique**\n\n" +
+        "Jab ghabrahat ya panic badh jaye, toh apne dimaag ko reality me wapas laane ke liye yeh follow karein:\n\n" +
+        "• **5 cheezein dekhein**: Aas-paas 5 specific cheezein notice karein.\n" +
+        "• **4 cheezein touch karein**: Apne kapde, table ka kona, ya cold glass ko mehsoos karein.\n" +
+        "• **3 aawazein sunein**: Fan ki aawaz, bahar ki gaadiyan, ya apni saans.\n" +
+        "• **2 cheezein smell karein**: Coffee, soap ya taazi hawa.\n" +
+        "• **1 cheez taste karein**: Paani ka ghoont ya mint.\n\n" +
+        "Iske sath lambi saans (4 sec andar, 6 sec bahar) lein taaki dil ki dhadkan turant normal ho sake.",
+      suggestedQuestions: [
+        "Overthinking ko turant control kaise karein?",
+        "Kya anxiety ko bina dawa ke therapy se theek kiya ja sakta hai?",
+        "Anxiety specialist se baat kaise karein?",
+      ],
+    },
+  },
+
+  // 5. Stop Overthinking
+  {
+    keywords: ["stop overthinking", "overthinking in the moment", "control overthinking", "overthinking ko turant"],
+    specialty: "Anxiety",
+    en: {
+      answer:
+        "🌀 **3 Clinical Protocols to Halt Overthinking in the Moment**\n\n" +
+        "Overthinking is a cognitive rumination loop. Here is how to interrupt the spiral:\n\n" +
+        "1. **The Worry Postponement Window**: Tell your brain: *\"I acknowledge this thought, but I will only process it during my designated 15-minute Worry Window (e.g., 5:30 PM to 5:45 PM today).\"* Over 70% of worries lose their urgency when postponed.\n" +
+        "2. **Cognitive Defusion (ACT Framework)**: Instead of adopting the thought *\"Everything is going to fall apart\"*, reframe it to: *\"I am noticing that my brain is generating the thought that everything will fall apart.\"* This creates cognitive distance.\n" +
+        "3. **Mammalian Dive Reflex Reset**: Splash ice-cold water onto your eyes and cheekbones for 20 seconds. This physically slows heart rate and breaks mental rumination loops instantly.",
+      suggestedQuestions: [
+        "What is the 5-4-3-2-1 grounding technique for panic?",
+        "Can anxiety be treated effectively without medication?",
+        "How does a clinical psychologist help stop overthinking?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌀 **Overthinking Ko Turant Rokne Ke 3 Clinical Tarike**\n\n" +
+        "1. **Worry Postponement Window**: Dimaag ko bolein: *\"Main is sawal par sirf shaam 5:30 baje 15 minute sochunga.\"* 70% tension tab tak apne aap khatam ho jati hai.\n" +
+        "2. **Cognitive Defusion**: *\"Sab kharab hone wala hai\"* sochne ke bajaye kahein *\"Mera dimaag abhi ek negative thought generate kar raha hai, yeh reality nahi hai.\"*\n" +
+        "3. **Thande Paani Ka Splash**: Chehre par thanda paani splash karein. Yeh dive reflex trigger karta hai jisse heartbeat aur overthinking dono control hote hain.",
+      suggestedQuestions: [
+        "Panic feeling aane par 5-4-3-2-1 technique kya hai?",
+        "Kya anxiety ko bina dawa ke therapy se theek kiya ja sakta hai?",
+        "Under ₹1,000 ke anxiety therapists dikhao",
+      ],
+    },
+  },
+
+  // 6. Medication vs Therapy
+  {
+    keywords: ["without medication", "bina dawa", "therapy se theek", "treated effectively without medication"],
+    specialty: "Anxiety",
+    en: {
+      answer:
+        "🌿 **Can Anxiety Be Treated Effectively Without Medication?**\n\n" +
+        "**Yes, absolutely.** For mild to moderate anxiety (and even many presentations of severe anxiety), psychotherapy is the first-line, gold-standard clinical recommendation worldwide.\n\n" +
+        "• **Cognitive Behavioral Therapy (CBT)**: Identifies cognitive distortions (catastrophizing, mind-reading) and retrains how you interpret ambiguous situations.\n" +
+        "• **Exposure & Response Prevention (ERP)**: Gradually desensitizes your nervous system so fear triggers permanently lose their panic potency.\n" +
+        "• **Somatic & Vagal Regulation**: Retrains your autonomic nervous system to release chronic tension without chemical dependence.\n\n" +
+        "*When is medication used?* In severe cases where acute panic impairs daily survival, medication can temporarily stabilize brain chemistry while therapy teaches lifelong coping tools. A licensed clinical psychologist at Durrmi provides ethical, non-pharmacological care.",
+      suggestedQuestions: [
+        "What is the 5-4-3-2-1 grounding technique for panic?",
+        "How can I stop overthinking in the moment?",
+        "How do I book a private consultation with an anxiety specialist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌿 **Kya Anxiety Bina Dawa Ke Therapy Se Theek Ho Sakti Hai?**\n\n" +
+        "**Haan, bilkul.** Worldwide clinical research prove karta hai ki anxiety ka sabse permanent ilaj Psychotherapy hai:\n\n" +
+        "• **CBT (Cognitive Behavioral Therapy)**: Yeh aapko darr aur negative thoughts ko identify aur badalna sikhata hai.\n" +
+        "• **Exposure Therapy**: Dimaag ke darr ko step-by-step normal banata hai taaki panic na aaye.\n" +
+        "• **Vagus Nerve Relaxation**: Sharir ki bechaini ko naturally calm down karta hai.\n\n" +
+        "Dawa aksar temporary relief deti hai, jabki therapy aapko life-long tools deti hai taaki anxiety dobara na laute.",
+      suggestedQuestions: [
+        "Overthinking ko turant control kaise karein?",
+        "Panic feeling aane par 5-4-3-2-1 technique kya hai?",
+        "Anxiety doctor se consultation kaise book karein?",
+      ],
+    },
+  },
+
+  // 7. Work Stress 3 Tips
+  {
+    keywords: ["quick techniques to decompress", "decompress from work stress", "3 quick tips", "work stress ko manage"],
+    specialty: "Stress & Burnout",
+    en: {
+      answer:
+        "💼 **3 Rapid Protocols to Decompress from Work Stress**\n\n" +
+        "1. **The Physiological Sigh (Stanford Huberman Lab)**: Take two consecutive deep inhales through your nose (one deep, followed immediately by a quick sharp top-off), then a long, slow exhale through your mouth. Doing this 3 times rapidly drops heart rate and dumps acute cortisol.\n" +
+        "2. **The 20-20-20 Micro-Reset**: Every 20 minutes of intense screen concentration, focus your eyes on an object 20 feet away for 20 seconds. This releases optic nerve strain that triggers mental exhaustion.\n" +
+        "3. **End-of-Day Transition Ritual**: At the end of the day, write down open work tasks on a physical pad, close your laptop completely, and change out of work clothes to signal to your nervous system that the demand cycle is closed.",
+      suggestedQuestions: [
+        "How do I know if I'm experiencing burnout or depression?",
+        "When should I consider consulting a stress coach?",
+        "How does a consultation with a stress & burnout specialist work?",
+      ],
+    },
+    hi: {
+      answer:
+        "💼 **Workplace Stress Se Turant Rahat Paane Ke 3 Tarike**\n\n" +
+        "1. **Physiological Sigh**: Naak se 2 baar saans andar lein (ek lambi, turant ek choti), aur muh se dheere-dheere bahar nikalein. 3 baar karne se stress hormone turant drop hota hai.\n" +
+        "2. **20-20-20 Rule**: Har 20 minute me 20 second ke liye 20 feet door dekhein taaki dimaag aur aankhon ki thakan door ho.\n" +
+        "3. **Work-to-Home Boundary**: Kaam khatam hone par laptop band karein aur kapde change karein taaki dimaag ko pata chale ki kaam ka pressure khatam ho gaya.",
+      suggestedQuestions: [
+        "Kya burnout se meri physical health par asar pad raha hai?",
+        "Mujhe kab ek stress coach se baat karni chahiye?",
+        "Under ₹1,000 ke stress coaches dikhao",
+      ],
+    },
+  },
+
+  // 8. Burnout vs Depression
+  {
+    keywords: ["burnout or depression", "burnout se meri physical health", "burnout se physical", "burnout symptoms"],
+    specialty: "Stress & Burnout",
+    en: {
+      answer:
+        "⚖️ **Differentiating Workplace Burnout vs. Clinical Depression**\n\n" +
+        "While burnout and depression share fatigue and brain fog, clinicians distinguish them by domain:\n\n" +
+        "• **Burnout is Domain-Specific**: It is driven by chronic workplace workload or interpersonal exhaustion. When you disconnect completely from work (during vacations or restful weekends), your joy and engagement begin to recover.\n" +
+        "• **Depression is Pervasive**: It colors every area of existence — personal relationships, passions, food, and sleep. You experience *anhedonia* (inability to feel pleasure) regardless of context.\n" +
+        "• **Physical Health Impact**: Unmanaged burnout causes chronic cortisol elevation, leading to gut dysbiosis (IBS), tension headaches, frequent colds, and morning exhaustion.",
+      suggestedQuestions: [
+        "What are 3 quick techniques to decompress from work stress?",
+        "When should I consider consulting a stress coach?",
+        "Can therapy help me recover without leaving my job?",
+      ],
+    },
+    hi: {
+      answer:
+        "⚖️ **Burnout Aur Depression Mein Farq**\n\n" +
+        "• **Burnout Sirf Kaam Se Juda Hota Hai**: Kaam aur office pressure ki wajah se thakan hoti hai, lekin chutti ya weekend par mood halka improve hota hai.\n" +
+        "• **Depression Har Jagah Rehta Hai**: Chahe aap chutti par ho ya doston ke sath, andar se empty aur udaas mehsoos hota hai.\n" +
+        "• **Sharirik Asar**: Lagataar burnout se acidity, sar dard, BP aur neend ki kami jaisi bimariyan ho sakti hain.",
+      suggestedQuestions: [
+        "Work stress ko manage karne ke 3 quick tips kya hain?",
+        "Mujhe kab ek stress coach se baat karni chahiye?",
+        "Stress management therapist se kaise connect karein?",
+      ],
+    },
+  },
+
+  // 9. When to Consult Stress Coach
+  {
+    keywords: ["stress coach", "kab ek stress coach", "when should i consider consulting a stress coach"],
+    specialty: "Stress & Burnout",
+    en: {
+      answer:
+        "🎯 **When Should You Consider Consulting a Stress Coach or Therapist?**\n\n" +
+        "Consider booking a 1-on-1 consultation if you experience any of these 4 clinical indicators:\n\n" +
+        "1. **Persistent Morning Dread**: You wake up feeling intense anxiety or exhaustion before your workday has even begun.\n" +
+        "2. **Emotional Cynicism**: You find yourself unusually irritable with loved ones or detached from work that once mattered to you.\n" +
+        "3. **Cognitive Paralysis**: Simple decisions feel overwhelming, causing severe procrastination or executive fatigue.\n" +
+        "4. **Physical Symptoms**: Stress is causing gastrointestinal issues, chronic muscle tightness, or insomnia for more than 2 weeks.\n\n" +
+        "Early professional support prevents acute burnout from transitioning into chronic depressive illness.",
+      suggestedQuestions: [
+        "Show verified stress specialists under my budget",
+        "How does a 1-on-1 consultation work?",
+        "What are 3 quick techniques to decompress from work stress?",
+      ],
+    },
+    hi: {
+      answer:
+        "🎯 **Aapko Stress Coach Se Kab Baat Karni Chahiye?**\n\n" +
+        "1. Agar roz subah uthte hi office/work ke darr se bechaini hoti hai.\n" +
+        "2. Agar choti-choti baaton par gussa ya chidchidapan aa raha hai.\n" +
+        "3. Agar 2 hafte se zyada se lagataar thakan aur neend ki kami hai.\n" +
+        "4. Agar kaam me focus aur decision lene me mushkil aa rahi hai.\n\n" +
+        "Durrmi ke verified stress coaches ke sath 1-on-1 baat karke aap burnout ko rok sakte hain.",
+      suggestedQuestions: [
+        "Under ₹1,000 ke stress coaches dikhao",
+        "Work stress ko manage karne ke 3 quick tips kya hain?",
+        "Kya pehla session confidential hota hai?",
+      ],
+    },
+  },
+
+  // 10. Boundaries in Relationships
+  {
+    keywords: ["boundary", "boundaries", "boundary kaise set karein", "healthy emotional boundaries"],
+    specialty: "Relationships",
+    en: {
+      answer:
+        "🌱 **How to Set Healthy Emotional Boundaries with a Partner**\n\n" +
+        "Setting boundaries is not about building walls — it is about clarifying where you end and another person begins so love can flourish safely:\n\n" +
+        "1. **Use 'I' Statements Rather than Blame**: Instead of *\"You are suffocating me\"*, communicate: *\"I need 30 minutes of quiet solitude after work so I can be energized and present with you later.\"*\n" +
+        "2. **Agree During Peace, Not Conflict**: Establish boundary agreements when both partners are regulated and calm, rather than mid-argument.\n" +
+        "3. **Tie Boundaries to Clear Action**: A boundary is about what *you* will do to protect your peace (e.g., *\"If yelling starts, I will take a 15-minute walking break, and we will resume talking respectfully\"*).",
+      suggestedQuestions: [
+        "How to heal emotionally after a painful breakup?",
+        "What happens during a couples counseling session?",
+        "How do I consult a relationship therapist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌱 **Partner Ke Sath Healthy Boundaries Kaise Set Karein?**\n\n" +
+        "1. **'Main' Statement Use Karein**: *\"Tum hamesha irritate karte ho\"* ke bajaye bolein *\"Mujhe office ke baad 20 minute shanti chahiye taaki main tumhare sath achhe se baat kar sakun.\"*\n" +
+        "2. **Shaant Mahol Mein Baat Karein**: Boundary ladayi ke waqt nahi, balki jab dono calm hon tab decide karein.\n" +
+        "3. **Clear Rules Banayein**: Agar dono me se koi gusse me aawaz unchi kare, toh 15 minute ka break lein aur phir baat karein.",
+      suggestedQuestions: [
+        "Breakup ke baad emotional recovery kaise karein?",
+        "Couple counseling session kaise conduct hota hai?",
+        "Couples therapist se session kaise book karein?",
+      ],
+    },
+  },
+
+  // 11. Breakup Recovery
+  {
+    keywords: ["breakup", "emotional recovery", "after a breakup", "breakup ke baad"],
+    specialty: "Relationships",
+    en: {
+      answer:
+        "💔 **Clinical Roadmap for Emotional Healing After a Breakup**\n\n" +
+        "Neurological research shows heartbreak activates the exact same pain matrix as severe physical injury:\n\n" +
+        "1. **Strict No-Contact Rule**: Checking social profiles or texting triggers acute dopamine withdrawal, repeatedly resetting your emotional healing clock.\n" +
+        "2. **Permit the Grieving Stages**: Allow yourself to feel the natural phases of grief (denial, anger, bargaining, depression) without self-judgment.\n" +
+        "3. **Identity Reclamation**: Invest deliberate energy into passions, friendships, and routines that existed before the relationship.\n" +
+        "4. **Reframe the Narrative**: Therapy helps you see the end not as personal inadequacy, but as two mismatched emotional trajectories.",
+      suggestedQuestions: [
+        "How do I set healthy emotional boundaries with a partner?",
+        "What happens during a couples counseling session?",
+        "How do I consult an emotional recovery therapist?",
+      ],
+    },
+    hi: {
+      answer:
+        "💔 **Breakup Ke Baad Emotional Recovery Ke 3 Steps**\n\n" +
+        "1. **No-Contact Rule**: Ex ke social media check karna band karein. Yeh dimaag ke dopamine cycle ko todta hai.\n" +
+        "2. **Feelings Ko Dabayein Mat**: Rona ya dukh hona normal hai. Dukh ko accept karein aur khud ko blame na karein.\n" +
+        "3. **Apni Zindagi Wapas Rebuild Karein**: Apne doston se milein, hobbies shuru karein aur daily routine set karein.",
+      suggestedQuestions: [
+        "Partner ke sath boundary kaise set karein?",
+        "Therapist se baat karne se heartbroken recovery kaise hoti hai?",
+        "Under ₹1,000 ke counselors dikhao",
+      ],
+    },
+  },
+];
+
+function findClinicalQAReply(text: string, isHindi: boolean): { answer: string; suggestedQuestions: string[]; specialty: string } | null {
+  const lower = text.toLowerCase();
+  for (const item of CLINICAL_QA_REGISTRY) {
+    if (item.keywords.some((kw) => lower.includes(kw))) {
+      const content = isHindi ? item.hi : item.en;
+      return {
+        answer: content.answer,
+        suggestedQuestions: content.suggestedQuestions,
+        specialty: item.specialty,
+      };
+    }
+  }
+  return null;
+}
+
 function detectSpecialty(text: string, optionsTopic?: string): SpecialtyMapping | null {
   const lower = text.toLowerCase();
   
@@ -646,8 +1047,12 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
   const policy = checkDurrmiPolicyRAG(text, isHindi);
   if (policy) return policy;
 
-  // 5. Mental Health Conversational Triage
-  const mapping = detectSpecialty(text, options?.topic);
+  // 5. Specific Clinical Q&A Lookup (e.g. CBT-I, 5-4-3-2-1, sleep hygiene, etc.)
+  const clinicalQA = findClinicalQAReply(text, isHindi);
+
+  // 6. Specialty Mapping
+  const targetSpecialtyName = clinicalQA?.specialty || options?.topic;
+  const mapping = detectSpecialty(text, targetSpecialtyName);
 
   if (!mapping) {
     const answer = isHindi
@@ -680,39 +1085,8 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
     };
   }
 
-  const content = isHindi ? mapping.hi : mapping.en;
-  const lower = text.toLowerCase();
-
-  // Check if user specifically requested consultation or therapist
-  const userWantsTherapist =
-    lower.includes("therapist") ||
-    lower.includes("counselor") ||
-    lower.includes("consult") ||
-    lower.includes("doctor") ||
-    lower.includes("book") ||
-    lower.includes("appointment") ||
-    lower.includes("fees") ||
-    lower.includes("price") ||
-    lower.includes("talk to someone");
-
-  let answerText = `${content.empatheticReflection}\n\n`;
-
-  if (userWantsTherapist) {
-    answerText += isHindi
-      ? `Aapke **${mapping.specialty}** concern ke liye Durrmi par hamare certified counselors available hain. ` +
-        `Aap bina kisi delay ke unke sath private 1-on-1 session schedule kar sakte hain:`
-      : `For your concerns with **${mapping.specialty}**, we have verified clinical specialists available at Durrmi. ` +
-        `You can schedule a private 1-on-1 consultation directly below:`;
-  } else {
-    answerText += isHindi
-      ? `Kya aap is baare mein thoda aur share karna chahenge, ya aap kisi certified therapist se 1-on-1 consultation ke options explore karna chahte hain?`
-      : `Would you like to share a little more about what you're experiencing, or would you like to explore 1-on-1 consultation options with a certified therapist?`;
-  }
-
-  // Doctor Matching
+  // Resolve Doctor for this specialty & budget
   let matchedDoctor = mapping.defaultDoctorMatch;
-
-  // Attempt real doctor lookup from backend/mock store
   try {
     const realDocs = await doctorService.searchDoctors({
       specialization: mapping.specialty,
@@ -735,14 +1109,60 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
     // Fallback to registry doctor
   }
 
+  const content = isHindi ? mapping.hi : mapping.en;
+  const lower = text.toLowerCase();
+  const isTopicIntakeStart = lower.startsWith("i want to discuss") || lower.startsWith("let's discuss");
+
+  let answerText = "";
+  let suggestedQuestions = content.suggestedQuestions;
+
+  if (clinicalQA) {
+    // User asked a specific question from the question chips or clinical domain
+    answerText = `${clinicalQA.answer}\n\n`;
+    suggestedQuestions = clinicalQA.suggestedQuestions;
+    if (isHindi) {
+      answerText += `Agar aap **${mapping.specialty}** par aur gehraai se kaam karna chahte hain, toh hamare certified specialist ke sath 1-on-1 private consultation book kar sakte hain:`;
+    } else {
+      answerText += `If you would like personalized guidance for **${mapping.specialty}**, you can schedule a private 1-on-1 consultation with our verified specialist below:`;
+    }
+  } else if (isTopicIntakeStart) {
+    // User just entered conversation with selected topic
+    answerText = `${content.empatheticReflection}\n\n`;
+    if (isHindi) {
+      answerText += `Aapke **${mapping.specialty}** concern ke mutabiq certified specialist ka profile card niche diya gaya hai. Aap direct private session schedule kar sakte hain ya niche diye gaye sawalon par click karke explore kar sakte hain:`;
+    } else {
+      answerText += `For your concerns with **${mapping.specialty}** within your preferred budget, here is our recommended verified specialist. You can book a private 1-on-1 session directly below or explore the related questions:`;
+    }
+  } else {
+    // General conversational query in this specialty
+    answerText = `${content.empatheticReflection}\n\n`;
+    const userWantsTherapist =
+      lower.includes("therapist") ||
+      lower.includes("counselor") ||
+      lower.includes("consult") ||
+      lower.includes("doctor") ||
+      lower.includes("book") ||
+      lower.includes("fees");
+
+    if (userWantsTherapist) {
+      answerText += isHindi
+        ? `Aapke **${mapping.specialty}** concern ke liye Durrmi par hamare certified counselors available hain. Aap bina kisi delay ke unke sath private 1-on-1 session schedule kar sakte hain:`
+        : `For your concerns with **${mapping.specialty}**, we have verified clinical specialists available at Durrmi. You can schedule a private 1-on-1 consultation directly below:`;
+    } else {
+      answerText += isHindi
+        ? `Kya aap is baare mein thoda aur share karna chahenge, ya aap kisi certified therapist se 1-on-1 consultation ke options explore karna chahte hain?`
+        : `Would you like to share a little more about what you're experiencing, or would you like to explore 1-on-1 consultation options with a certified therapist?`;
+    }
+  }
+
   return {
     answer: answerText,
     sources: [{ title: "Durrmi Clinical Framework", section: mapping.specialty, evidenceStrength: "STRONG" }],
     sufficientEvidence: true,
     disclaimer: ASSISTANT_DISCLAIMER,
-    suggestedQuestions: content.suggestedQuestions,
+    suggestedQuestions,
     matchedSpecialty: mapping.specialty,
-    doctorMatch: userWantsTherapist ? matchedDoctor : undefined,
+    doctorMatch: matchedDoctor, // Always include matched doctor card for the filtered topic & budget!
   };
 }
 
