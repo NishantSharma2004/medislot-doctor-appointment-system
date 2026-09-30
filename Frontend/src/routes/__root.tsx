@@ -160,8 +160,8 @@ function RootComponent() {
           </main>
           <AppFooter />
         </div>
-        {/* Medi AI Assistant widget - temporarily disabled, can be re-enabled anytime */}
-        {/* <AssistantPanel /> */}
+        {/* Durrmi AI Assistant Widget */}
+        <AssistantPanel />
         <Toaster position="top-right" richColors closeButton />
       </AuthProvider>
     </QueryClientProvider>
