@@ -1116,42 +1116,64 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
   let answerText = "";
   let suggestedQuestions = content.suggestedQuestions;
 
-  if (clinicalQA) {
-    // User asked a specific question from the question chips or clinical domain
+  // Check if user specifically requested a therapist, doctor, consultation, or pricing
+  const userWantsTherapist =
+    lower.includes("therapist") ||
+    lower.includes("counselor") ||
+    lower.includes("consult") ||
+    lower.includes("doctor") ||
+    lower.includes("book") ||
+    lower.includes("appointment") ||
+    lower.includes("fees") ||
+    lower.includes("pricing") ||
+    lower.includes("session book") ||
+    lower.includes("talk to someone");
+
+  if (userWantsTherapist) {
+    // User specifically asked to talk to or book a therapist / consultant
+    if (clinicalQA) {
+      answerText = `${clinicalQA.answer}\n\n`;
+      suggestedQuestions = clinicalQA.suggestedQuestions;
+    } else {
+      answerText = `${content.empatheticReflection}\n\n`;
+    }
+
+    if (isHindi) {
+      answerText +=
+        `Aapke **${mapping.specialty}** concern ke mutabiq certified specialist ka profile card niche diya gaya hai. ` +
+        `Aap bina kisi delay ke unke sath private 1-on-1 session schedule kar sakte hain:`;
+    } else {
+      answerText +=
+        `For your concerns with **${mapping.specialty}**, here is our recommended licensed clinical specialist. ` +
+        `You can review their profile and schedule a private 1-on-1 consultation directly below:`;
+    }
+  } else if (clinicalQA) {
+    // User asked a specific question from the question chips or clinical domain (pure conversational answer)
     answerText = `${clinicalQA.answer}\n\n`;
     suggestedQuestions = clinicalQA.suggestedQuestions;
+
     if (isHindi) {
-      answerText += `Agar aap **${mapping.specialty}** par aur gehraai se kaam karna chahte hain, toh hamare certified specialist ke sath 1-on-1 private consultation book kar sakte hain:`;
+      answerText += `Kya aap is baare mein thoda aur share karna chahenge, ya niche diye gaye suggestion sawalon me se kisi par baat karna chahte hain?`;
     } else {
-      answerText += `If you would like personalized guidance for **${mapping.specialty}**, you can schedule a private 1-on-1 consultation with our verified specialist below:`;
+      answerText += `Would you like to explore this further, or tap any of the related questions below?`;
     }
   } else if (isTopicIntakeStart) {
-    // User just entered conversation with selected topic
+    // User just entered conversation with selected topic (greeting & suggestion chips, NO pushy card)
     answerText = `${content.empatheticReflection}\n\n`;
+
     if (isHindi) {
-      answerText += `Aapke **${mapping.specialty}** concern ke mutabiq certified specialist ka profile card niche diya gaya hai. Aap direct private session schedule kar sakte hain ya niche diye gaye sawalon par click karke explore kar sakte hain:`;
+      answerText += `Aap bina kisi jhijhak ke apni baat share kar sakte hain, ya niche diye gaye suggestion sawalon par click karke shuru kar sakte hain:`;
     } else {
-      answerText += `For your concerns with **${mapping.specialty}** within your preferred budget, here is our recommended verified specialist. You can book a private 1-on-1 session directly below or explore the related questions:`;
+      answerText += `Feel free to share what is on your mind, or tap any of the suggested questions below to explore:`;
     }
   } else {
     // General conversational query in this specialty
     answerText = `${content.empatheticReflection}\n\n`;
-    const userWantsTherapist =
-      lower.includes("therapist") ||
-      lower.includes("counselor") ||
-      lower.includes("consult") ||
-      lower.includes("doctor") ||
-      lower.includes("book") ||
-      lower.includes("fees");
 
-    if (userWantsTherapist) {
-      answerText += isHindi
-        ? `Aapke **${mapping.specialty}** concern ke liye Durrmi par hamare certified counselors available hain. Aap bina kisi delay ke unke sath private 1-on-1 session schedule kar sakte hain:`
-        : `For your concerns with **${mapping.specialty}**, we have verified clinical specialists available at Durrmi. You can schedule a private 1-on-1 consultation directly below:`;
+    if (isHindi) {
+      answerText += `Kya aap is baare mein thoda aur share karna chahenge? Hum bina kisi judgment ke aapko sunne ke liye yahan hain.`;
     } else {
-      answerText += isHindi
-        ? `Kya aap is baare mein thoda aur share karna chahenge, ya aap kisi certified therapist se 1-on-1 consultation ke options explore karna chahte hain?`
-        : `Would you like to share a little more about what you're experiencing, or would you like to explore 1-on-1 consultation options with a certified therapist?`;
+      answerText += `Would you like to share a little more about what you're experiencing? This is a safe, non-judgmental space.`;
     }
   }
 
@@ -1162,7 +1184,7 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
     disclaimer: ASSISTANT_DISCLAIMER,
     suggestedQuestions,
     matchedSpecialty: mapping.specialty,
-    doctorMatch: matchedDoctor, // Always include matched doctor card for the filtered topic & budget!
+    doctorMatch: userWantsTherapist ? matchedDoctor : undefined, // ONLY show card when user asks for consultant/therapist!
   };
 }
 
