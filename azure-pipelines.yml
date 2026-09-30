@@ -68,6 +68,7 @@ stages:
               knownHostsEntry: ''
               sshPublicKey: ''
               sshKeySecureFile: 'durrmi-instance_key.pem'
+              hostName: $(VM_HOST)
             displayName: 'Install SSH Key'
 
           - script: |

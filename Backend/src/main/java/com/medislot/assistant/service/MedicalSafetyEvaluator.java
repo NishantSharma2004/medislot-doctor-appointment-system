@@ -72,9 +72,10 @@ public class MedicalSafetyEvaluator {
     );
 
     private static final List<String> OUT_OF_SCOPE_KEYWORDS = List.of(
-            "write code", "python code", "javascript code", "write a program", "recipe for",
-            "how to cook", "cricket score", "who won match", "election result", "stock market",
-            "bitcoin price", "math homework", "solve equation"
+            "coding", "code", "c++", "cpp", "python", "javascript", "program", "programming",
+            "programmer", "write code", "recipe", "cook", "cooking", "cricket", "match score",
+            "who won", "football", "ipl", "stock market", "crypto", "bitcoin", "politics",
+            "election", "math homework", "solve equation", "hello world"
     );
 
     public SafetyResult evaluate(String userMessage) {

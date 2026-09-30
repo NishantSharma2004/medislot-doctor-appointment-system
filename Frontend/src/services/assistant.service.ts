@@ -91,25 +91,48 @@ function checkSecurityAndTechLeak(messageText: string): AssistantReply | null {
 /** Check 3: Out-of-Scope (Zero-Token Saver) */
 function checkOutOfScope(messageText: string): AssistantReply | null {
   const text = messageText.toLowerCase();
-  const outOfScopeKeywords = [
-    "write code", "python code", "javascript code", "write a program", "recipe for",
-    "how to cook", "cricket score", "who won match", "election result", "stock market",
-    "bitcoin price", "math homework", "solve equation", "physics problem"
+
+  // 1. Technical, Programming & Coding Keywords
+  const techKeywords = [
+    "code", "coding", "program", "programming", "programmer", "c++", "cpp", "java",
+    "python", "javascript", "typescript", "html", "css", "react", "angular", "vue",
+    "sql", "database", "git", "github", "compiler", "terminal", "algorithm", "hello world",
+    "function", "loop", "variable", "class", "syntax", "debug", "api key", "frontend", "backend"
   ];
 
-  if (outOfScopeKeywords.some((w) => text.includes(w))) {
+  // 2. Non-Mental Health General Trivia (Sports, Cooking, Finance, Politics)
+  const triviaKeywords = [
+    "recipe", "how to cook", "cook", "cooking", "biryani", "khana banana", "dish",
+    "cricket", "football", "ipl", "match score", "who won", "world cup", "sports",
+    "stock market", "share market", "trading", "crypto", "bitcoin", "nifty", "sensex",
+    "politics", "election", "bjp", "congress", "modi", "minister", "prime minister",
+    "math homework", "solve equation", "physics problem", "chemistry formula", "algebra",
+    "weather in", "temperature in", "movie review", "song lyrics"
+  ];
+
+  const allOutOfScope = [...techKeywords, ...triviaKeywords];
+
+  const matched = allOutOfScope.some((kw) => {
+    if (kw.length <= 4) {
+      const regex = new RegExp(`(^|\\s|[^a-zA-Z0-9])${kw.replace("+", "\\+")}($|\\s|[^a-zA-Z0-9])`, "i");
+      return regex.test(text);
+    }
+    return text.includes(kw);
+  });
+
+  if (matched) {
     return {
       answer:
         "🌿 **Durrmi Mental Health Focus**\n\n" +
-        "Main Durrmi ka emotional wellbeing aur therapy companion hoon. Main general coding, recipes, sports ya non-health queries solve nahi kar sakta.\n\n" +
+        "Main Durrmi ka emotional wellbeing aur mental health companion hoon. Main coding, technical questions, recipes, sports ya non-health queries solve nahi kar sakta.\n\n" +
         "Agar aap **stress, anxiety, burnout, relationships, neend**, ya **licensed therapist consultation** ke baare mein baat karna chahte hain, toh main aapki poori help karunga.",
       sources: [{ title: "Durrmi Scope Guidelines", section: "Clinical Scope", evidenceStrength: "LIMITED" }],
       sufficientEvidence: true,
       disclaimer: ASSISTANT_DISCLAIMER,
       suggestedQuestions: [
-        "Mujhe stress manage karne ke tips chahiye",
-        "Durrmi par session kaise book karein?",
-        "Therapist consultation ki pricing kya hai?",
+        "🌿 How to manage anxiety & overthinking?",
+        "💼 Work stress ko manage karne ke quick tips",
+        "👩‍⚕️ How much does a therapy consultation cost?",
       ],
       isOutOfScope: true,
     };
@@ -316,31 +339,43 @@ const SPECIALTY_REGISTRY: Record<string, SpecialtyMapping> = {
   },
 };
 
-function detectSpecialty(text: string, optionsTopic?: string): SpecialtyMapping {
+function detectSpecialty(text: string, optionsTopic?: string): SpecialtyMapping | null {
   const lower = text.toLowerCase();
   
   if (optionsTopic && SPECIALTY_REGISTRY[optionsTopic]) {
     return SPECIALTY_REGISTRY[optionsTopic];
   }
 
-  if (lower.includes("sleep") || lower.includes("insomnia") || lower.includes("neend") || lower.includes("awake")) {
+  if (lower.includes("sleep") || lower.includes("insomnia") || lower.includes("neend") || lower.includes("awake") || lower.includes("so nahi")) {
     return SPECIALTY_REGISTRY["Sleep"];
   }
-  if (lower.includes("relationship") || lower.includes("breakup") || lower.includes("partner") || lower.includes("divorce") || lower.includes("couple")) {
+  if (lower.includes("relationship") || lower.includes("breakup") || lower.includes("partner") || lower.includes("divorce") || lower.includes("couple") || lower.includes("shaadi") || lower.includes("pyaar")) {
     return SPECIALTY_REGISTRY["Relationships"];
   }
-  if (lower.includes("depress") || lower.includes("sad") || lower.includes("empty") || lower.includes("hopeless") || lower.includes("udaas")) {
+  if (lower.includes("depress") || lower.includes("sad") || lower.includes("empty") || lower.includes("hopeless") || lower.includes("udaas") || lower.includes("cry") || lower.includes("rona") || lower.includes("alone") || lower.includes("lonel") || lower.includes("akela")) {
     return SPECIALTY_REGISTRY["Depression and low mood"];
   }
-  if (lower.includes("career") || lower.includes("job") || lower.includes("future") || lower.includes("college") || lower.includes("interview")) {
+  if (lower.includes("career") || lower.includes("job") || lower.includes("future") || lower.includes("college") || lower.includes("interview") || lower.includes("workplace") || lower.includes("office")) {
     return SPECIALTY_REGISTRY["Career"];
   }
-  if (lower.includes("anxious") || lower.includes("anxiety") || lower.includes("panic") || lower.includes("overthink") || lower.includes("ghabrahat")) {
+  if (lower.includes("anxious") || lower.includes("anxiety") || lower.includes("panic") || lower.includes("overthink") || lower.includes("ghabrahat") || lower.includes("darr") || lower.includes("nervous")) {
     return SPECIALTY_REGISTRY["Anxiety"];
   }
-  
-  // Default to Stress & Burnout
-  return SPECIALTY_REGISTRY["Stress & Burnout"];
+  if (lower.includes("stress") || lower.includes("burnout") || lower.includes("exhaust") || lower.includes("tired") || lower.includes("thaka") || lower.includes("pressure") || lower.includes("burden") || lower.includes("tension")) {
+    return SPECIALTY_REGISTRY["Stress & Burnout"];
+  }
+
+  // General emotional greeting or therapy intent
+  const isMentalHealthOrGreeting = [
+    "feel", "feeling", "mental", "health", "mind", "mood", "help", "hello", "hi", "hey",
+    "namaste", "durrmi", "therapist", "counselor", "doctor", "consult", "talk", "session", "wellness"
+  ].some((kw) => lower.includes(kw));
+
+  if (isMentalHealthOrGreeting) {
+    return SPECIALTY_REGISTRY["Stress & Burnout"];
+  }
+
+  return null;
 }
 
 // ============================================================================
@@ -368,6 +403,25 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
 
   // 5. Mental Health Conversational Triage
   const mapping = detectSpecialty(text, options?.topic);
+
+  if (!mapping) {
+    return {
+      answer:
+        "🌿 **Durrmi Mental Health Focus**\n\n" +
+        "Main Durrmi ka emotional wellbeing aur mental health companion hoon. Main general non-health topics ya unrelated queries solve nahi kar sakta.\n\n" +
+        "Aap mujhse **stress, anxiety, relationships, sleep, burnout, low mood**, ya **licensed therapist consultation** ke baare mein baat kar sakte hain.",
+      sources: [{ title: "Durrmi Scope Guidelines", section: "Clinical Scope", evidenceStrength: "LIMITED" }],
+      sufficientEvidence: true,
+      disclaimer: ASSISTANT_DISCLAIMER,
+      suggestedQuestions: [
+        "🌿 How to manage anxiety & overthinking?",
+        "💼 Work stress ko manage karne ke quick tips",
+        "👩‍⚕️ How much does a therapy consultation cost?",
+      ],
+      isOutOfScope: true,
+    };
+  }
+
   const lower = text.toLowerCase();
 
   // Check if user specifically requested consultation or therapist
