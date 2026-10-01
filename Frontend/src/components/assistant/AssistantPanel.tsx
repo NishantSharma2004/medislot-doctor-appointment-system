@@ -316,14 +316,17 @@ export function AssistantPanel() {
   };
 
   // 1. User Clicks "Start Conversation" from Intake Screen
-  const handleStartConversation = (topicOverride?: string) => {
-    let finalTopic = topicOverride || selectedTopic;
+  const handleStartConversation = (topicOverride?: unknown) => {
+    const explicitTopic = typeof topicOverride === "string" ? topicOverride : undefined;
+    let finalTopic = explicitTopic || (typeof selectedTopic === "string" ? selectedTopic : undefined);
     if (finalTopic === "Other") {
       finalTopic = customTopic.trim() ? customTopic.trim() : "Personal Well-being";
     }
 
+    const safeTopic = typeof finalTopic === "string" && finalTopic.trim() ? finalTopic.trim() : undefined;
+
     const data: PreChatIntakeData = {
-      topic: finalTopic || undefined,
+      topic: safeTopic,
       budgetTier: selectedBudget,
       skipped: false,
     };
@@ -334,8 +337,8 @@ export function AssistantPanel() {
     setIntakeData(data);
     setView("chat");
 
-    if (finalTopic) {
-      handleSendMessage(`I want to discuss ${finalTopic}.`, data);
+    if (safeTopic) {
+      handleSendMessage(`I want to discuss ${safeTopic}.`, data);
     }
   };
 
@@ -352,12 +355,17 @@ export function AssistantPanel() {
   };
 
   // Send Message Logic
-  const handleSendMessage = async (textToSend?: string, overrideIntake?: PreChatIntakeData) => {
-    const messageText = (textToSend !== undefined ? textToSend : input).trim();
+  const handleSendMessage = async (textToSend?: unknown, overrideIntake?: PreChatIntakeData) => {
+    const explicitText = typeof textToSend === "string" ? textToSend : undefined;
+    const messageText = (explicitText !== undefined ? explicitText : input).trim();
     if (!messageText || pending) return;
 
-    const currentIntake = overrideIntake || intakeData || {
-      topic: selectedTopic || undefined,
+    const safeOverrideTopic =
+      overrideIntake && typeof overrideIntake.topic === "string" ? overrideIntake.topic : undefined;
+    const safeSelectedTopic = typeof selectedTopic === "string" ? selectedTopic : undefined;
+
+    const currentIntake: PreChatIntakeData = overrideIntake || intakeData || {
+      topic: safeOverrideTopic || safeSelectedTopic,
       budgetTier: selectedBudget,
       skipped: false,
     };
@@ -615,7 +623,7 @@ export function AssistantPanel() {
                 <div className="pt-1 flex flex-col gap-2">
                   <Button
                     type="button"
-                    onClick={handleStartConversation}
+                    onClick={() => handleStartConversation()}
                     className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl py-2.5 text-xs font-medium shadow-md shadow-emerald-700/20 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Start Conversation</span>
@@ -624,7 +632,7 @@ export function AssistantPanel() {
 
                   <button
                     type="button"
-                    onClick={handleSkipIntake}
+                    onClick={() => handleSkipIntake()}
                     className="w-full text-center text-xs text-muted-foreground hover:text-foreground py-1 font-medium transition-colors cursor-pointer"
                   >
                     Skip and start chatting directly →
@@ -719,7 +727,7 @@ export function AssistantPanel() {
               </header>
 
               {/* Active Topic Banner */}
-              {intakeData?.topic && (
+              {intakeData?.topic && typeof intakeData.topic === "string" && (
                 <div className="bg-emerald-50/90 dark:bg-emerald-950/40 border-b border-emerald-100 dark:border-emerald-900/40 px-3.5 py-1.5 flex items-center justify-between text-[11px] text-emerald-900 dark:text-emerald-200">
                   <span className="font-medium truncate">
                     Focused on: <span className="font-semibold">{intakeData.topic}</span>
@@ -733,7 +741,7 @@ export function AssistantPanel() {
                     </button>
                     <span className="text-emerald-300 dark:text-emerald-700">•</span>
                     <button
-                      onClick={handleResetChat}
+                      onClick={() => handleResetChat()}
                       className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold cursor-pointer"
                     >
                       New Chat
@@ -782,6 +790,7 @@ export function AssistantPanel() {
                 {/* Message History */}
                 {messages.map((m) => {
                   const isUser = m.role === "user";
+                  const messageText = typeof m.text === "string" ? m.text : String(m.text || "");
 
                   return (
                     <div
@@ -799,7 +808,7 @@ export function AssistantPanel() {
                             : "bg-white dark:bg-card text-foreground border border-emerald-100/80 dark:border-emerald-900/40 rounded-bl-xs"
                         )}
                       >
-                        {renderCleanMessage(m.text)}
+                        {renderCleanMessage(messageText)}
 
                         {/* RAG Source Citation Badge */}
                         {!isUser && m.reply?.sources && m.reply.sources.length > 0 && !m.reply.isSecurityBlocked && (
@@ -835,8 +844,8 @@ export function AssistantPanel() {
                           questions={
                             m.reply?.suggestedQuestions && m.reply.suggestedQuestions.length > 0
                               ? m.reply.suggestedQuestions
-                              : intakeData?.topic && SPECIALTY_REGISTRY[intakeData.topic]
-                              ? (isHindiOrHinglish(m.text)
+                              : intakeData?.topic && typeof intakeData.topic === "string" && SPECIALTY_REGISTRY[intakeData.topic]
+                              ? (isHindiOrHinglish(messageText)
                                   ? SPECIALTY_REGISTRY[intakeData.topic].hi.suggestedQuestions
                                   : SPECIALTY_REGISTRY[intakeData.topic].en.suggestedQuestions)
                               : DEFAULT_SUGGESTIONS
