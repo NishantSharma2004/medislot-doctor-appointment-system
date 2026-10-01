@@ -20,11 +20,11 @@ public class MediSlotWorkflowKnowledgeService {
         String lower = userMessage.toLowerCase(Locale.ROOT);
 
         if (lower.contains("how to book") || lower.contains("book an appointment") || lower.contains("book appointment")) {
-            return Optional.of("To book an appointment on MediSlot: 1. Register or log in as a Patient. 2. Browse specializations or doctors. 3. Select an available doctor time slot. 4. Confirm your booking details.");
+            return Optional.of("To book an appointment on Durrmi (MediSlot): 1. Register or log in as a Patient. 2. Browse specializations or verified therapists. 3. Select an available time slot. 4. Confirm your booking details.");
         }
 
         if (lower.contains("how to cancel") || lower.contains("cancel appointment") || lower.contains("cancel my appointment")) {
-            return Optional.of("To cancel an appointment: Go to 'My Appointments' in your dashboard, select the active appointment, and click 'Cancel Appointment'. Slots can be cancelled up to 2 hours before the start time.");
+            return Optional.of("To cancel an appointment: Go to 'My Appointments' in your dashboard, select the active appointment, and click 'Cancel Appointment'. Slots can be cancelled up to 2 hours before the start time for a full refund.");
         }
 
         if (lower.contains("how to reschedule") || lower.contains("reschedule appointment")) {
@@ -32,7 +32,7 @@ public class MediSlotWorkflowKnowledgeService {
         }
 
         if (lower.contains("how to register") || lower.contains("create account") || lower.contains("sign up")) {
-            return Optional.of("To register on MediSlot: Click 'Register' on the homepage, enter your full name, email address, phone number, choose your role (Patient or Doctor), and set a secure password.");
+            return Optional.of("To register on Durrmi (MediSlot): Click 'Register' on the homepage, enter your full name, email address, phone number, choose your role (Patient or Doctor), and set a secure password.");
         }
 
         if (lower.contains("how to login") || lower.contains("log in") || lower.contains("sign in")) {
