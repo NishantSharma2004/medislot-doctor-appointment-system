@@ -218,7 +218,7 @@ export function AssistantPanel() {
   };
 
   // Voice Recognition (Speech-to-Text) Toggle
-  const toggleVoiceRecognition = () => {
+  const toggleVoiceRecognition = async () => {
     if (isListening) {
       if (recognitionRef.current) {
         try {
@@ -235,6 +235,26 @@ export function AssistantPanel() {
     if (!SpeechRecognition) {
       toast.error("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
       return;
+    }
+
+    // Actively prompt the browser for Microphone permission so user gets the native Allow/Block dialog
+    if (navigator?.mediaDevices?.getUserMedia) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop());
+      } catch (mediaErr: any) {
+        setIsListening(false);
+        if (mediaErr?.name === "NotAllowedError" || mediaErr?.name === "PermissionDeniedError") {
+          toast.error(
+            "Microphone permission is blocked. Click the lock/site settings icon in your browser address bar to Allow microphone access."
+          );
+        } else if (mediaErr?.name === "NotFoundError" || mediaErr?.name === "DevicesNotFoundError") {
+          toast.error("No microphone hardware was detected on your device.");
+        } else {
+          toast.error("Microphone error: " + (mediaErr?.message || "Could not access device"));
+        }
+        return;
+      }
     }
 
     try {
@@ -261,7 +281,9 @@ export function AssistantPanel() {
       recognition.onerror = (event: any) => {
         setIsListening(false);
         if (event.error === "not-allowed") {
-          toast.error("Microphone permission denied. Please allow microphone access.");
+          toast.error("Microphone permission denied. Click the lock/tune icon near your URL bar to enable it.");
+        } else if (event.error === "no-speech") {
+          // Silent timeout if user didn't speak
         } else {
           toast.error("Voice input error: " + event.error);
         }
