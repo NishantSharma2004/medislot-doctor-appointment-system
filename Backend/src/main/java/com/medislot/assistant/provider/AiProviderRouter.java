@@ -84,7 +84,7 @@ public class AiProviderRouter {
         } else if (userMsg.contains("career") || userMsg.contains("job") || userMsg.contains("interview") || userMsg.contains("future")) {
             contextualResponse = "Career choices, future uncertainty, and expectations put enormous pressure on our mental wellbeing. Lacking clarity is completely normal, and finding direction happens one manageable step at a time. Would you like to connect with a career mindset coach?";
         } else {
-            contextualResponse = "Thank you for reaching out to Durrmi. Taking care of your mental and emotional wellbeing is an essential step. Feel free to share what's on your mind, or explore 1-on-1 consultations with our verified specialists across Anxiety, Stress, Relationships, Sleep, and Mood care.";
+            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. Thank you for reaching out to Durrmi. Taking care of your mental and emotional wellbeing is an essential step. Feel free to share what's on your mind, or explore 1-on-1 consultations with our verified specialists across Anxiety, Stress, Relationships, Sleep, and Mood care.";
         }
 
         AiGenerationResult fallbackResult = AiGenerationResult.success(
