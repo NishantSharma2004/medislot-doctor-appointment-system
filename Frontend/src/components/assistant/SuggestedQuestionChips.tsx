@@ -1,4 +1,4 @@
-import { Sparkles } from "lucide-react";
+import { DurrmiLogoIcon } from "@/components/common/DurrmiLogo";
 
 interface SuggestedQuestionChipsProps {
   questions?: string[];
@@ -12,7 +12,7 @@ export function SuggestedQuestionChips({ questions, onSelect, disabled }: Sugges
   return (
     <div className="mt-2.5 space-y-1.5 animate-in fade-in slide-in-from-bottom-1 duration-200">
       <div className="flex items-center gap-1.5 text-[11px] font-medium text-emerald-800 dark:text-emerald-300">
-        <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+        <DurrmiLogoIcon className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
         <span>Related Questions you can ask:</span>
       </div>
       <div className="flex flex-wrap gap-1.5">

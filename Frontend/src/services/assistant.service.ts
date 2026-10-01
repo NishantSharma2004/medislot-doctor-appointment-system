@@ -334,7 +334,7 @@ interface SpecialtyMapping {
   defaultDoctorMatch: DoctorMatchInfo;
 }
 
-const SPECIALTY_REGISTRY: Record<string, SpecialtyMapping> = {
+export const SPECIALTY_REGISTRY: Record<string, SpecialtyMapping> = {
   "Stress & Burnout": {
     specialty: "Stress & Burnout",
     en: {
@@ -1585,6 +1585,46 @@ const httpAssistantService: AssistantService = {
         topic: options?.topic,
         budgetTier: options?.budgetTier,
       });
+
+      // Enrich with contextual suggested questions if backend did not supply them
+      if (!data.suggestedQuestions || data.suggestedQuestions.length === 0) {
+        const clinicalQA = findClinicalQAReply(message, isHindi);
+        if (clinicalQA?.suggestedQuestions && clinicalQA.suggestedQuestions.length > 0) {
+          data.suggestedQuestions = clinicalQA.suggestedQuestions;
+          data.matchedSpecialty = clinicalQA.specialty;
+        } else {
+          const specialty = detectSpecialty(message, options?.topic);
+          if (specialty) {
+            data.suggestedQuestions = isHindi ? specialty.hi.suggestedQuestions : specialty.en.suggestedQuestions;
+            if (!data.matchedSpecialty) {
+              data.matchedSpecialty = specialty.specialty;
+            }
+          }
+        }
+      }
+
+      // If user specifically requested to talk to or book a therapist, attach matched doctor card
+      const lower = message.toLowerCase();
+      const userWantsTherapist =
+        lower.includes("therapist") ||
+        lower.includes("counselor") ||
+        lower.includes("consult") ||
+        lower.includes("doctor") ||
+        lower.includes("book") ||
+        lower.includes("appointment") ||
+        lower.includes("fees") ||
+        lower.includes("pricing") ||
+        lower.includes("session book") ||
+        lower.includes("talk to someone");
+
+      if (userWantsTherapist && !data.doctorMatch) {
+        const specialty = detectSpecialty(message, options?.topic);
+        if (specialty) {
+          data.doctorMatch = specialty.defaultDoctorMatch;
+          data.matchedSpecialty = specialty.specialty;
+        }
+      }
+
       return data;
     } catch {
       // Seamless resilient fallback to client grounding engine

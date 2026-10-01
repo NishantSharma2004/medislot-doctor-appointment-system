@@ -20,9 +20,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { toDisplayMessage } from "@/lib/api/client";
 import type { ApiError, AssistantReply, PreChatIntakeData } from "@/lib/api/types";
-import { ASSISTANT_DISCLAIMER, assistantService } from "@/services/assistant.service";
+import { ASSISTANT_DISCLAIMER, assistantService, SPECIALTY_REGISTRY, isHindiOrHinglish } from "@/services/assistant.service";
 import { SuggestedQuestionChips } from "@/components/assistant/SuggestedQuestionChips";
 import { TherapistRecommendationCard } from "@/components/assistant/TherapistRecommendationCard";
+import { DurrmiLogoIcon } from "@/components/common/DurrmiLogo";
 import { cn } from "@/lib/utils";
 
 interface AssistantMessage {
@@ -107,14 +108,28 @@ export function AssistantPanel() {
 
   const isDesktop = isClient && typeof window !== "undefined" && window.innerWidth >= 640;
 
-  // Unified Pointer Drag Handlers (Both Button & Panel Header)
+  // Unified Pointer Drag Handlers (Both Launcher Button & Chat Panel Header/Handle)
   const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
-    // If the pointer event started on an interactive control (button, link, input), do not initiate drag
+    if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
+
     const target = e.target as HTMLElement;
-    if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest("textarea")) {
+    // Don't drag if interacting with inputs, textareas, or links
+    if (target.closest("input") || target.closest("textarea") || target.closest("a")) {
       return;
     }
-    if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
+
+    const clickedButton = target.closest("button");
+    // If a button was clicked:
+    // Allow drag if it is the floating launcher button or an explicit drag handle button.
+    // Prevent drag if it is an action button (close X, reset, back, submit, topic select).
+    if (clickedButton) {
+      const isLauncher = clickedButton.id === "durrmi-launcher-btn" || e.currentTarget.id === "durrmi-launcher-btn";
+      const isDragHandle = clickedButton.dataset.dragHandle === "true";
+      if (!isLauncher && !isDragHandle) {
+        return;
+      }
+    }
+
     isDragging.current = true;
     hasDragged.current = false;
     dragStartPoint.current = { x: e.clientX, y: e.clientY };
@@ -254,6 +269,7 @@ export function AssistantPanel() {
     <>
       {/* 1. Floating Movable Launcher Button (Always visible at bottom-right of viewport) */}
       <button
+        id="durrmi-launcher-btn"
         type="button"
         onClick={handleBtnClick}
         onPointerDown={handlePointerDown}
@@ -268,7 +284,7 @@ export function AssistantPanel() {
             <X className="w-5 h-5 transition-transform duration-200" />
           ) : (
             <>
-              <Sparkles className="w-4 h-4 animate-pulse" />
+              <DurrmiLogoIcon className="w-4 h-4 text-white" />
               <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-300 rounded-full border-2 border-emerald-700" />
             </>
           )}
@@ -313,7 +329,7 @@ export function AssistantPanel() {
                   <X className="w-5 h-5" />
                 </button>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-medium text-emerald-50 mb-2">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <DurrmiLogoIcon className="w-3.5 h-3.5 text-white" />
                   <span>Durrmi AI Companion</span>
                 </div>
                 <h3 className="text-lg font-semibold tracking-tight leading-snug">
@@ -432,7 +448,7 @@ export function AssistantPanel() {
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white backdrop-blur-xs flex-shrink-0">
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <DurrmiLogoIcon className="w-4 h-4 text-white" />
                   </div>
                   <div className="truncate">
                     <div className="flex items-center gap-1.5">
@@ -457,13 +473,15 @@ export function AssistantPanel() {
                     <RotateCcw className="w-3.5 h-3.5" />
                   </button>
 
-                  {/* Drag Handle on Desktop */}
-                  <div
-                    className="hidden sm:flex p-1.5 text-emerald-200 hover:text-white sm:cursor-grab active:sm:cursor-grabbing"
+                  {/* Drag Handle on Desktop - Draggable via Button and via Header */}
+                  <button
+                    type="button"
+                    data-drag-handle="true"
+                    className="hidden sm:flex p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 cursor-grab active:cursor-grabbing transition-colors"
                     title="Drag to reposition panel"
                   >
-                    <Move className="w-3.5 h-3.5" />
-                  </div>
+                    <Move className="w-3.5 h-3.5 pointer-events-none" />
+                  </button>
 
                   {/* Close Button */}
                   <button
@@ -581,9 +599,17 @@ export function AssistantPanel() {
                       )}
 
                       {/* 3 Clickable Suggested Question Chips */}
-                      {!isUser && m.reply?.suggestedQuestions && (
+                      {!isUser && (
                         <SuggestedQuestionChips
-                          questions={m.reply.suggestedQuestions}
+                          questions={
+                            m.reply?.suggestedQuestions && m.reply.suggestedQuestions.length > 0
+                              ? m.reply.suggestedQuestions
+                              : intakeData?.topic && SPECIALTY_REGISTRY[intakeData.topic]
+                              ? (isHindiOrHinglish(m.text)
+                                  ? SPECIALTY_REGISTRY[intakeData.topic].hi.suggestedQuestions
+                                  : SPECIALTY_REGISTRY[intakeData.topic].en.suggestedQuestions)
+                              : DEFAULT_SUGGESTIONS
+                          }
                           onSelect={(q) => handleSendMessage(q)}
                           disabled={pending}
                         />
