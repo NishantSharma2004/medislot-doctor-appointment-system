@@ -29,8 +29,15 @@ public class GroqAiProvider implements AiProviderService {
     @Value("${groq.base-url:https://api.groq.com/openai/v1}")
     private String baseUrl;
 
-    @Value("${groq.model:llama-3.3-70b-versatile}")
+    @Value("${groq.model:llama-3.1-8b-instant}")
     private String model;
+
+    private static final List<String> CANDIDATE_MODELS = List.of(
+            "llama-3.1-8b-instant",
+            "llama3-70b-8192",
+            "llama3-8b-8192",
+            "mixtral-8x7b-32768"
+    );
 
     public GroqAiProvider(ObjectMapper objectMapper, RestClient.Builder restClientBuilder) {
         this.objectMapper = objectMapper;
@@ -62,9 +69,35 @@ public class GroqAiProvider implements AiProviderService {
             );
         }
 
+        // 1. Try currently configured model
+        AiGenerationResult result = executeModelCall(this.model, request, startTime);
+        if (result.success()) {
+            return result;
+        }
+
+        // 2. If failure was 404 / model_not_found, try candidate models
+        String err = result.errorMessage() != null ? result.errorMessage().toLowerCase() : "";
+        if (result.statusCode() == 404 || err.contains("model_not_found") || err.contains("404")) {
+            log.warn("Groq model [{}] returned 404 (model_not_found). Trying candidate models...", this.model);
+            for (String candidate : CANDIDATE_MODELS) {
+                if (candidate.equalsIgnoreCase(this.model)) continue;
+                log.info("Trying Groq candidate model [{}]...", candidate);
+                AiGenerationResult candidateResult = executeModelCall(candidate, request, startTime);
+                if (candidateResult.success()) {
+                    log.info("Groq candidate model [{}] succeeded! Switching default model to [{}].", candidate, candidate);
+                    this.model = candidate;
+                    return candidateResult;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private AiGenerationResult executeModelCall(String targetModel, AiGenerationRequest request, long startTime) {
         try {
             Map<String, Object> payload = Map.of(
-                    "model", model,
+                    "model", targetModel,
                     "messages", List.of(
                             Map.of("role", "system", "content", request.systemPrompt()),
                             Map.of("role", "user", "content", request.userPrompt())
@@ -85,7 +118,7 @@ public class GroqAiProvider implements AiProviderService {
 
             if (responseBody == null || responseBody.isBlank()) {
                 return AiGenerationResult.failure(
-                        AiProvider.GROQ, model, 500, latency, "EMPTY_RESPONSE", "Received empty response from Groq"
+                        AiProvider.GROQ, targetModel, 500, latency, "EMPTY_RESPONSE", "Received empty response from Groq"
                 );
             }
 
@@ -93,7 +126,7 @@ public class GroqAiProvider implements AiProviderService {
             JsonNode choices = root.path("choices");
             if (!choices.isArray() || choices.isEmpty()) {
                 return AiGenerationResult.failure(
-                        AiProvider.GROQ, model, 500, latency, "MALFORMED_RESPONSE", "Groq response missing choices"
+                        AiProvider.GROQ, targetModel, 500, latency, "MALFORMED_RESPONSE", "Groq response missing choices"
                 );
             }
 
@@ -102,15 +135,25 @@ public class GroqAiProvider implements AiProviderService {
             Integer outputTokens = root.path("usage").path("completion_tokens").isNumber() ? root.path("usage").path("completion_tokens").asInt() : null;
 
             return AiGenerationResult.success(
-                    AiProvider.GROQ, model, content, 200, latency, inputTokens, outputTokens
+                    AiProvider.GROQ, targetModel, content, 200, latency, inputTokens, outputTokens
             );
 
+        } catch (org.springframework.web.client.RestClientResponseException rex) {
+            long latency = System.currentTimeMillis() - startTime;
+            String errorMsg = rex.getResponseBodyAsString() != null && !rex.getResponseBodyAsString().isBlank()
+                    ? rex.getResponseBodyAsString()
+                    : rex.getMessage();
+            int statusCode = rex.getStatusCode().value();
+            log.warn("Groq call to [{}] failed with HTTP {}: {}", targetModel, statusCode, errorMsg.replaceAll("gsk_[A-Za-z0-9_-]+", "[REDACTED]"));
+            return AiGenerationResult.failure(
+                    AiProvider.GROQ, targetModel, statusCode, latency, "PROVIDER_ERROR", errorMsg
+            );
         } catch (Exception ex) {
             long latency = System.currentTimeMillis() - startTime;
             String errorMsg = ex.getMessage() != null ? ex.getMessage() : "Unknown Groq error";
-            log.warn("Groq provider call failed after {} ms: {}", latency, errorMsg.replaceAll("gsk_[A-Za-z0-9_-]+", "[REDACTED]"));
+            log.warn("Groq provider call to [{}] failed after {} ms: {}", targetModel, latency, errorMsg.replaceAll("gsk_[A-Za-z0-9_-]+", "[REDACTED]"));
             return AiGenerationResult.failure(
-                    AiProvider.GROQ, model, 500, latency, "PROVIDER_ERROR", errorMsg
+                    AiProvider.GROQ, targetModel, 500, latency, "PROVIDER_ERROR", errorMsg
             );
         }
     }

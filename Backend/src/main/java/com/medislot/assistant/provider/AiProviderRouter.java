@@ -67,18 +67,24 @@ public class AiProviderRouter {
         String userMsg = request.userPrompt() != null ? request.userPrompt().toLowerCase() : "";
         String contextualResponse;
 
-        if (userMsg.contains("skin") || userMsg.contains("allergy") || userMsg.contains("redness") || userMsg.contains("rash") || userMsg.contains("dermatol")) {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For skin care concerns such as allergies, rashes, or redness, consulting a **Dermatology & Skin Specialist** is recommended. Avoid scratching or applying unverified creams. You can book an appointment with our specialist below.";
-        } else if (userMsg.contains("heart") || userMsg.contains("chest") || userMsg.contains("bp") || userMsg.contains("cardio")) {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For cardiac symptoms or blood pressure concerns, a **Cardiology Specialist** is recommended. If experiencing severe chest tightness, please seek emergency care immediately.";
-        } else if (userMsg.contains("eye") || userMsg.contains("vision") || userMsg.contains("sight")) {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For eye care, redness, or vision changes, an **Ophthalmology Specialist** is recommended.";
-        } else if (userMsg.contains("headache") || userMsg.contains("nerve") || userMsg.contains("neuro") || userMsg.contains("brain")) {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For persistent headaches, numbness, or nerve concerns, a **Neurology & Stress Specialist** is recommended.";
-        } else if (userMsg.contains("bone") || userMsg.contains("joint") || userMsg.contains("fracture") || userMsg.contains("ortho")) {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. For joint pain, bone injuries, or evaluation, an **Orthopedics Specialist** is recommended.";
+        if (userMsg.contains("stress") || userMsg.contains("burnout") || userMsg.contains("exhaust") || userMsg.contains("tired") || userMsg.contains("work")) {
+            contextualResponse = "Carrying the continuous weight of work and life responsibilities drains both energy and mental peace. At Durrmi, we believe you don't have to carry this load alone. Feeling exhausted or overwhelmed is completely valid. Would you like to share a little more about what you're experiencing, or explore private 1-on-1 consultation options with our stress & wellness specialists?";
+        } else if (userMsg.contains("anxiety") || userMsg.contains("panic") || userMsg.contains("overthink") || userMsg.contains("worry") || userMsg.contains("bechaini")) {
+            contextualResponse = "Experiencing persistent worry, racing thoughts, or a constant feeling of apprehension can be exhausting. Feeling as though something might go wrong is a natural autonomic nervous system response to stress. At Durrmi, we walk beside you with empathy and zero judgment. Would you like to explore 1-on-1 consultation options with our verified therapists?";
+        } else if (userMsg.contains("sleep") || userMsg.contains("insomnia") || userMsg.contains("neend") || userMsg.contains("awake") || userMsg.contains("night")) {
+            contextualResponse = "When the mind is active and tense, falling asleep can feel impossible, leaving you drained the next day. Sleep difficulties and insomnia are frequently tied to underlying stress, overthinking, or nervous system hyperarousal. Would you like some evidence-based sleep hygiene tips, or to connect with our sleep & circadian wellness coach?";
+        } else if (userMsg.contains("depress") || userMsg.contains("sad") || userMsg.contains("hopeless") || userMsg.contains("empty") || userMsg.contains("low mood")) {
+            contextualResponse = "Feeling persistent sadness, emptiness, or a loss of interest in things you once enjoyed can feel immensely heavy. At Durrmi, we don't believe in 'fixing' you — because you are not broken. We believe in presence and gentle, non-judgmental support. Would you like to connect with a compassionate therapist?";
+        } else if (userMsg.contains("adhd") || userMsg.contains("focus") || userMsg.contains("distract") || userMsg.contains("attention")) {
+            contextualResponse = "Struggling with attention, feeling easily distracted, or dealing with executive dysfunction can feel frustrating when the world expects linear focus. Your brain simply processes stimuli differently, and with the right strategies, you can thrive. Feel free to share what is on your mind or explore sessions with an ADHD specialist.";
+        } else if (userMsg.contains("relation") || userMsg.contains("partner") || userMsg.contains("breakup") || userMsg.contains("couple") || userMsg.contains("marriage")) {
+            contextualResponse = "Relationships are central to our emotional wellbeing. Navigating misunderstandings, emotional distance, or heartbreak can feel deeply painful and isolating. This is a safe space to unpack what you are feeling without fear of judgment. Would you like to explore couples or individual relationship counseling?";
+        } else if (userMsg.contains("lone") || userMsg.contains("isolat") || userMsg.contains("alone") || userMsg.contains("akelapan")) {
+            contextualResponse = "Feeling lonely even when surrounded by people is a deeply human and painful experience. It is not a sign of weakness — it is a signal of a fundamental human need for meaningful emotional connection. We are here to support you whenever you are ready.";
+        } else if (userMsg.contains("career") || userMsg.contains("job") || userMsg.contains("interview") || userMsg.contains("future")) {
+            contextualResponse = "Career choices, future uncertainty, and expectations put enormous pressure on our mental wellbeing. Lacking clarity is completely normal, and finding direction happens one manageable step at a time. Would you like to connect with a career mindset coach?";
         } else {
-            contextualResponse = "Durrmi is currently operating in offline clinical assistant mode. Top specialists & therapists are available across Anxiety, Depression, CBT, Couples Therapy, and General Medicine. Please specify your symptoms to assist with booking.";
+            contextualResponse = "Thank you for reaching out to Durrmi. Taking care of your mental and emotional wellbeing is an essential step. Feel free to share what's on your mind, or explore 1-on-1 consultations with our verified specialists across Anxiety, Stress, Relationships, Sleep, and Mood care.";
         }
 
         AiGenerationResult fallbackResult = AiGenerationResult.success(
@@ -95,7 +101,7 @@ public class AiProviderRouter {
 
     private boolean isFallbackEligible(AiGenerationResult result) {
         int code = result.statusCode();
-        // Fallback permitted for timeouts (code 0), 429 rate limit, 5xx server errors, or empty/malformed responses
-        return code == 0 || code == 429 || code >= 500 || "EMPTY_RESPONSE".equals(result.errorCategory()) || "MALFORMED_RESPONSE".equals(result.errorCategory());
+        // Fallback permitted for timeouts (code 0), 404 not found, 429 rate limit, 5xx server errors, or empty/malformed responses
+        return code == 0 || code == 404 || code == 429 || code >= 500 || "EMPTY_RESPONSE".equals(result.errorCategory()) || "MALFORMED_RESPONSE".equals(result.errorCategory());
     }
 }
