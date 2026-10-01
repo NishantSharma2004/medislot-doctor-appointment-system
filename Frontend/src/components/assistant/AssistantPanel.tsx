@@ -246,7 +246,7 @@ export function AssistantPanel() {
         setIsListening(false);
         if (mediaErr?.name === "NotAllowedError" || mediaErr?.name === "PermissionDeniedError") {
           toast.error(
-            "Microphone permission is blocked. Click the lock/site settings icon in your browser address bar to Allow microphone access."
+            "Microphone permission updated? Please refresh the page (Ctrl + R / F5) so the browser applies the allowed microphone to this tab."
           );
         } else if (mediaErr?.name === "NotFoundError" || mediaErr?.name === "DevicesNotFoundError") {
           toast.error("No microphone hardware was detected on your device.");
