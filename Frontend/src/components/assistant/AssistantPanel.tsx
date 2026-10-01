@@ -218,7 +218,7 @@ export function AssistantPanel() {
   };
 
   // Voice Recognition (Speech-to-Text) Toggle
-  const toggleVoiceRecognition = async () => {
+  const toggleVoiceRecognition = () => {
     if (isListening) {
       if (recognitionRef.current) {
         try {
@@ -233,31 +233,17 @@ export function AssistantPanel() {
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      toast.error("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+      toast.error("Speech recognition is not supported in this browser. Please use Google Chrome, Edge, or Safari.");
       return;
     }
 
-    // Actively prompt the browser for Microphone permission so user gets the native Allow/Block dialog
-    if (navigator?.mediaDevices?.getUserMedia) {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach((track) => track.stop());
-      } catch (mediaErr: any) {
-        setIsListening(false);
-        if (mediaErr?.name === "NotAllowedError" || mediaErr?.name === "PermissionDeniedError") {
-          toast.error(
-            "Microphone permission updated? Please refresh the page (Ctrl + R / F5) so the browser applies the allowed microphone to this tab."
-          );
-        } else if (mediaErr?.name === "NotFoundError" || mediaErr?.name === "DevicesNotFoundError") {
-          toast.error("No microphone hardware was detected on your device.");
-        } else {
-          toast.error("Microphone error: " + (mediaErr?.message || "Could not access device"));
-        }
-        return;
-      }
-    }
-
     try {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.abort();
+        } catch {}
+      }
+
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = true;
@@ -280,15 +266,17 @@ export function AssistantPanel() {
 
       recognition.onerror = (event: any) => {
         setIsListening(false);
-        if (event.error === "not-allowed") {
+        if (event.error === "not-allowed" || event.error === "service-not-allowed") {
           toast.error(
-            "Microphone access is blocked by Windows Privacy settings or needs a tab reload. Please refresh the page (Ctrl+R) or check Windows Settings > Privacy > Microphone."
+            "Microphone permission not applied to this tab. Please refresh the page (Ctrl + R / F5) to activate the microphone."
           );
         } else if (event.error === "no-speech") {
-          // Silent timeout if user didn't speak
+          // User stayed silent, no error toast needed
         } else if (event.error === "audio-capture") {
-          toast.error("No microphone hardware detected or mic is muted in Windows.");
-        } else {
+          toast.error("No microphone hardware detected or your mic is muted in Windows.");
+        } else if (event.error === "network") {
+          toast.error("Network issue connecting to browser speech recognition.");
+        } else if (event.error !== "aborted") {
           toast.error("Voice input error: " + event.error);
         }
       };
@@ -299,9 +287,9 @@ export function AssistantPanel() {
 
       recognitionRef.current = recognition;
       recognition.start();
-    } catch (err) {
+    } catch (err: any) {
       setIsListening(false);
-      toast.error("Could not activate voice input.");
+      toast.error("Could not activate voice input. Please refresh the page (Ctrl+R).");
     }
   };
 
