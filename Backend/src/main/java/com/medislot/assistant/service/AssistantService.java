@@ -99,7 +99,7 @@ public class AssistantService {
         String userPrompt = promptBuilder.buildUserPrompt(redactedMessage, retrievedDocs);
 
         AiGenerationRequest generationRequest = new AiGenerationRequest(
-                systemPrompt, userPrompt, 0.2, 800
+                systemPrompt, userPrompt, 0.2, 320
         );
 
         // Step 6: Route and Execute via Groq / Gemini Fallback

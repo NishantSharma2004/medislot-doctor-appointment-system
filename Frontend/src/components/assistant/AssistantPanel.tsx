@@ -58,6 +58,46 @@ const DEFAULT_SUGGESTIONS = [
   "👩‍⚕️ How much does a therapy consultation cost?",
 ];
 
+function renderCleanMessage(rawText: string) {
+  if (!rawText) return null;
+
+  // 1. Strip raw markdown tables, question self-check matrices, and horizontal rules
+  const cleaned = rawText
+    .split("\n")
+    .filter((line) => {
+      const trimmed = line.trim();
+      // Remove table rows like | Question | Response | or |---|
+      if (trimmed.startsWith("|") && trimmed.endsWith("|")) return false;
+      // Remove horizontal dividers like --- or ***
+      if (/^[-*_]{3,}$/.test(trimmed)) return false;
+      return true;
+    })
+    .join("\n")
+    // Clean markdown header hashes: "### Heading" -> "Heading"
+    .replace(/^#{1,6}\s+/gm, "")
+    // Compress consecutive blank lines
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+
+  // 2. Parse inline **bold text** into <strong> elements safely
+  const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
+          return (
+            <strong key={index} className="font-semibold">
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+}
+
 export function AssistantPanel() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -568,7 +608,7 @@ export function AssistantPanel() {
                             : "bg-white dark:bg-card text-foreground border border-emerald-100/80 dark:border-emerald-900/40 rounded-bl-xs"
                         )}
                       >
-                        {m.text}
+                        {renderCleanMessage(m.text)}
 
                         {/* RAG Source Citation Badge */}
                         {!isUser && m.reply?.sources && m.reply.sources.length > 0 && !m.reply.isSecurityBlocked && (
