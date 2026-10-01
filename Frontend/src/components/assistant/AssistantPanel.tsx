@@ -13,6 +13,7 @@ import {
   ArrowRight,
   ChevronLeft,
   Plus,
+  Minus,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -375,15 +376,42 @@ export function AssistantPanel() {
                 onPointerUp={handlePointerUp}
                 className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 px-5 pt-5 pb-4 text-white relative select-none touch-none sm:cursor-grab active:sm:cursor-grabbing border-b border-emerald-700/40"
               >
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  onPointerDown={(e) => e.stopPropagation()}
-                  className="absolute top-4 right-4 p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
-                  title="Close"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="absolute top-4 right-4 flex items-center gap-1">
+                  {/* Drag Handle to Move Panel */}
+                  <button
+                    type="button"
+                    data-drag-handle="true"
+                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 cursor-grab active:cursor-grabbing transition-colors"
+                    title="Drag to move panel"
+                    aria-label="Drag to move panel"
+                  >
+                    <Move className="w-4 h-4 pointer-events-none" />
+                  </button>
+
+                  {/* Minimize Button (-) */}
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                    title="Minimize"
+                    aria-label="Minimize"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+
+                  {/* Close / Exit Button (X) */}
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                    title="Close"
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-[11px] font-medium text-emerald-50 mb-2">
                   <DurrmiLogoIcon className="w-3.5 h-3.5 text-white" />
                   <span>Durrmi AI Companion</span>
@@ -556,8 +584,21 @@ export function AssistantPanel() {
                     data-drag-handle="true"
                     className="hidden sm:flex p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 cursor-grab active:cursor-grabbing transition-colors"
                     title="Drag to reposition panel"
+                    aria-label="Drag to reposition"
                   >
                     <Move className="w-3.5 h-3.5 pointer-events-none" />
+                  </button>
+
+                  {/* Minimize Button (-) */}
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                    title="Minimize"
+                    aria-label="Minimize"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
                   </button>
 
                   {/* Close Button */}
@@ -567,6 +608,7 @@ export function AssistantPanel() {
                     onPointerDown={(e) => e.stopPropagation()}
                     className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
                     title="Close"
+                    aria-label="Close"
                   >
                     <X className="w-4 h-4" />
                   </button>
