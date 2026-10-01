@@ -32,6 +32,15 @@ public class GeminiAiProvider implements AiProviderService {
     @Value("${gemini.model:gemini-1.5-flash}")
     private String model;
 
+    private static final List<String> CANDIDATE_MODELS = List.of(
+            "gemini-1.5-flash",
+            "gemini-3.5-flash-lite",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash-8b",
+            "gemini-3.7-flash",
+            "gemini-3.8-flash"
+    );
+
     public GeminiAiProvider(ObjectMapper objectMapper, RestClient.Builder restClientBuilder) {
         this.objectMapper = objectMapper;
         this.restClient = restClientBuilder.build();
@@ -62,6 +71,31 @@ public class GeminiAiProvider implements AiProviderService {
             );
         }
 
+        AiGenerationResult result = executeModelCall(this.model, request, startTime);
+        if (result.success()) {
+            return result;
+        }
+
+        String err = result.errorMessage() != null ? result.errorMessage().toLowerCase() : "";
+        boolean isModelIssue = result.statusCode() == 404 || err.contains("not found") || err.contains("404") || err.contains("decommissioned") || err.contains("deprecated");
+        if (isModelIssue) {
+            for (String candidate : CANDIDATE_MODELS) {
+                if (candidate.equalsIgnoreCase(this.model)) continue;
+                log.info("Trying Gemini candidate model [{}]...", candidate);
+                AiGenerationResult candidateResult = executeModelCall(candidate, request, startTime);
+                if (candidateResult.success()) {
+                    log.info("Gemini candidate model [{}] succeeded! Switching active Gemini model to [{}].", candidate, candidate);
+                    this.model = candidate;
+                    return candidateResult;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private AiGenerationResult executeModelCall(String targetModel, AiGenerationRequest request, long startTime) {
+
         try {
             Map<String, Object> payload = Map.of(
                     "systemInstruction", Map.of(
@@ -76,7 +110,7 @@ public class GeminiAiProvider implements AiProviderService {
                     )
             );
 
-            String url = baseUrl + "/models/" + model + ":generateContent?key=" + apiKey;
+            String url = baseUrl + "/models/" + targetModel + ":generateContent?key=" + apiKey;
 
             String responseBody = restClient.post()
                     .uri(url)
@@ -89,7 +123,7 @@ public class GeminiAiProvider implements AiProviderService {
 
             if (responseBody == null || responseBody.isBlank()) {
                 return AiGenerationResult.failure(
-                        AiProvider.GEMINI, model, 500, latency, "EMPTY_RESPONSE", "Received empty response from Gemini"
+                        AiProvider.GEMINI, targetModel, 500, latency, "EMPTY_RESPONSE", "Received empty response from Gemini"
                 );
             }
 
@@ -97,14 +131,14 @@ public class GeminiAiProvider implements AiProviderService {
             JsonNode candidates = root.path("candidates");
             if (!candidates.isArray() || candidates.isEmpty()) {
                 return AiGenerationResult.failure(
-                        AiProvider.GEMINI, model, 500, latency, "MALFORMED_RESPONSE", "Gemini response missing candidates"
+                        AiProvider.GEMINI, targetModel, 500, latency, "MALFORMED_RESPONSE", "Gemini response missing candidates"
                 );
             }
 
             JsonNode parts = candidates.get(0).path("content").path("parts");
             if (!parts.isArray() || parts.isEmpty()) {
                 return AiGenerationResult.failure(
-                        AiProvider.GEMINI, model, 500, latency, "MALFORMED_RESPONSE", "Gemini response missing content parts"
+                        AiProvider.GEMINI, targetModel, 500, latency, "MALFORMED_RESPONSE", "Gemini response missing content parts"
                 );
             }
 
@@ -113,7 +147,7 @@ public class GeminiAiProvider implements AiProviderService {
             Integer outputTokens = root.path("usageMetadata").path("candidatesTokenCount").isNumber() ? root.path("usageMetadata").path("candidatesTokenCount").asInt() : null;
 
             return AiGenerationResult.success(
-                    AiProvider.GEMINI, model, content, 200, latency, inputTokens, outputTokens
+                    AiProvider.GEMINI, targetModel, content, 200, latency, inputTokens, outputTokens
             );
 
         } catch (Exception ex) {
@@ -121,7 +155,7 @@ public class GeminiAiProvider implements AiProviderService {
             String safeMsg = ex.getMessage() != null ? ex.getMessage().replaceAll("key=[A-Za-z0-9_-]+", "key=[REDACTED]") : "Unknown Gemini error";
             log.warn("Gemini provider call failed after {} ms: {}", latency, safeMsg);
             return AiGenerationResult.failure(
-                    AiProvider.GEMINI, model, 500, latency, "PROVIDER_ERROR", safeMsg
+                    AiProvider.GEMINI, targetModel, 500, latency, "PROVIDER_ERROR", safeMsg
             );
         }
     }

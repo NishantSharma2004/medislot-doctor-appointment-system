@@ -154,15 +154,18 @@ public class GroqAiProvider implements AiProviderService {
 
     private AiGenerationResult executeModelCall(String targetModel, AiGenerationRequest request, long startTime) {
         try {
-            Map<String, Object> payload = Map.of(
-                    "model", targetModel,
-                    "messages", List.of(
-                            Map.of("role", "system", "content", request.systemPrompt()),
-                            Map.of("role", "user", "content", request.userPrompt())
-                    ),
-                    "temperature", request.temperature(),
-                    "max_tokens", request.maxTokens()
-            );
+            Map<String, Object> payload = new java.util.HashMap<>();
+            payload.put("model", targetModel);
+            payload.put("messages", List.of(
+                    Map.of("role", "system", "content", request.systemPrompt()),
+                    Map.of("role", "user", "content", request.userPrompt())
+            ));
+            payload.put("temperature", request.temperature());
+            if (targetModel.startsWith("openai/")) {
+                payload.put("max_completion_tokens", request.maxTokens());
+            } else {
+                payload.put("max_tokens", request.maxTokens());
+            }
 
             String responseBody = restClient.post()
                     .uri(baseUrl + "/chat/completions")
