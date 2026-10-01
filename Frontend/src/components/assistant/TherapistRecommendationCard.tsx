@@ -66,23 +66,34 @@ export function TherapistRecommendationCard({
             specialization: targetSpecialty,
             maxFee: maxBudget,
           }}
-          className="text-xs font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 inline-flex items-center gap-1"
+          className="text-xs font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-300 dark:hover:text-emerald-200 inline-flex items-center gap-1 cursor-pointer"
         >
           <span>View all {targetSpecialty} doctors</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
 
-        <Link
-          to="/doctors"
-          search={{
-            specialization: targetSpecialty,
-            maxFee: maxBudget,
-          }}
-          className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-medium shadow-xs inline-flex items-center gap-1.5 transition-all"
-        >
-          <Calendar className="w-3.5 h-3.5" />
-          <span>Book 1-on-1 Session</span>
-        </Link>
+        {doctorMatch.doctorId ? (
+          <Link
+            to="/doctors/$doctorId"
+            params={{ doctorId: doctorMatch.doctorId }}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-medium shadow-xs inline-flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Book 1-on-1 Session</span>
+          </Link>
+        ) : (
+          <Link
+            to="/doctors"
+            search={{
+              specialization: targetSpecialty,
+              maxFee: maxBudget,
+            }}
+            className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-medium shadow-xs inline-flex items-center gap-1.5 transition-all cursor-pointer"
+          >
+            <Calendar className="w-3.5 h-3.5" />
+            <span>Book 1-on-1 Session</span>
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -31,13 +31,63 @@ function addMinutes(time: string, minutes: number): string {
   return `${String(Math.floor(total / 60) % 24).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
 }
 
+export function matchesSpecialization(docSpec: string, requestedSpec: string): boolean {
+  if (!requestedSpec || requestedSpec === "ANY") return true;
+  const req = requestedSpec.toLowerCase().trim();
+  const doc = docSpec.toLowerCase().trim();
+  
+  if (doc === req || doc.includes(req) || req.includes(doc)) return true;
+  
+  if ((req.includes("stress") || req.includes("burnout")) && (doc.includes("stress") || doc.includes("burnout") || doc.includes("cbt"))) return true;
+  if ((req.includes("anxiety") || req.includes("panic")) && (doc.includes("anxiety") || doc.includes("panic"))) return true;
+  if ((req.includes("relation") || req.includes("couple")) && (doc.includes("relation") || doc.includes("couple"))) return true;
+  if ((req.includes("depress") || req.includes("mood") || req.includes("sad")) && (doc.includes("depress") || doc.includes("mood"))) return true;
+  if ((req.includes("sleep") || req.includes("insomnia")) && (doc.includes("sleep") || doc.includes("mindful") || doc.includes("circadian"))) return true;
+  if ((req.includes("career") || req.includes("work")) && (doc.includes("career") || doc.includes("burnout") || doc.includes("stress"))) return true;
+  if ((req.includes("adhd") || req.includes("attention")) && (doc.includes("adhd") || doc.includes("attention") || doc.includes("child"))) return true;
+  if ((req.includes("lone") || req.includes("isolat")) && (doc.includes("lone") || doc.includes("counsel") || doc.includes("emotion"))) return true;
+  
+  return false;
+}
+
+export function generateFallbackSlots(doctorId: string): AvailabilitySlotDto[] {
+  const slots: AvailabilitySlotDto[] = [];
+  const times = [
+    { start: "10:00", end: "10:45" },
+    { start: "11:30", end: "12:15" },
+    { start: "14:00", end: "14:45" },
+    { start: "16:00", end: "16:45" },
+    { start: "18:00", end: "18:45" },
+  ];
+
+  for (let dayOffset = 0; dayOffset <= 6; dayOffset++) {
+    const d = new Date();
+    d.setDate(d.getDate() + dayOffset);
+    const dateStr = d.toISOString().split("T")[0];
+
+    times.forEach((t, idx) => {
+      slots.push({
+        id: `dyn-slot-${doctorId}-${dateStr}-${idx}`,
+        doctorId,
+        date: dateStr,
+        startTime: t.start,
+        endTime: t.end,
+        booked: false,
+        consultationFee: 700,
+      });
+    });
+  }
+
+  return slots;
+}
+
 const mockDoctorService: DoctorService = {
   async searchDoctors({ query, specialization, city, maxFee, page = 0, size = 6 }) {
     const q = query?.trim().toLowerCase();
     const filtered = mockDoctors.filter((doctor) => {
       if (q && !`${doctor.fullName} ${doctor.specialization} ${doctor.clinicName}`.toLowerCase().includes(q))
         return false;
-      if (specialization && doctor.specialization !== specialization) return false;
+      if (specialization && !matchesSpecialization(doctor.specialization, specialization)) return false;
       if (city && doctor.city !== city) return false;
       if (maxFee !== undefined && doctor.consultationFee > maxFee) return false;
       return true;
@@ -60,11 +110,11 @@ const mockDoctorService: DoctorService = {
   },
 
   async getAvailability(doctorId) {
-    return delay(
-      mockSlotStore
-        .filter((slot) => slot.doctorId === doctorId)
-        .sort((a, b) => `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`)),
-    );
+    const slots = mockSlotStore.filter((slot) => slot.doctorId === doctorId);
+    if (slots.length > 0) {
+      return delay(slots.sort((a, b) => `${a.date}${a.startTime}`.localeCompare(`${b.date}${b.startTime}`)));
+    }
+    return delay(generateFallbackSlots(doctorId));
   },
 
   async createAvailability(payload) {
@@ -164,17 +214,35 @@ export function transformDoctorToTherapist(doc: DoctorDto): DoctorDto {
 }
 
 const REVERSE_SPEC_MAP: Record<string, string> = {
+  "Anxiety": "Cardiology",
   "Anxiety & Panic Therapy": "Cardiology",
   "Anxiety & Stress Therapy": "Cardiology",
+  "Anxiety & Panic Specialist": "Cardiology",
+  "Depression and low mood": "Dermatology",
   "Depression & Mood Care": "Dermatology",
   "Mindfulness & Personal Growth": "ENT",
+  "Sleep": "ENT",
+  "Sleep & Insomnia": "ENT",
+  "Sleep & Insomnia Specialist": "ENT",
+  "Sleep & Circadian Wellness Coach": "ENT",
   "Cognitive Behavioral Therapy (CBT)": "General Medicine",
+  "Stress & Burnout": "General Medicine",
+  "Stress & Burnout Specialist": "General Medicine",
+  "Relationships": "Gynecology",
   "Couples & Relationship Therapy": "Gynecology",
+  "Couples & Relationship Therapist": "Gynecology",
   "Burnout & Work Stress": "Neurology",
-  "Burnout & Career Stress": "Neurology",
+  "Career": "Neurology",
+  "Career & Work Pressure": "Neurology",
+  "Career & Mindset Coach": "Neurology",
   "Child & Adolescent Therapy": "Pediatrics",
-  "Child & Teen Psychology": "Pediatrics",
+  "ADHD": "Pediatrics",
+  "ADHD & Attention": "Pediatrics",
+  "ADHD & Neurodevelopmental Specialist": "Pediatrics",
   "Trauma & Emotional Healing": "Orthopaedics",
+  "Loneliness": "General Medicine",
+  "Loneliness & Isolation": "General Medicine",
+  "Counseling Psychologist": "General Medicine",
 };
 
 const httpDoctorService: DoctorService = {
@@ -203,7 +271,7 @@ const httpDoctorService: DoctorService = {
       const allTransformed = (allData.content || []).map(transformDoctorToTherapist);
       
       const filtered = allTransformed.filter((doc) => {
-        if (params.specialization && doc.specialization !== params.specialization && !doc.specialization.includes(params.specialization)) {
+        if (params.specialization && !matchesSpecialization(doc.specialization, params.specialization)) {
           return false;
         }
         if (params.city && doc.city !== params.city) return false;
@@ -233,15 +301,18 @@ const httpDoctorService: DoctorService = {
       return transformDoctorToTherapist(data);
     } catch {
       const fallback = mockDoctors.find((d) => d.id === doctorId) || mockDoctors[0];
-      return transformDoctorToTherapist(fallback);
+      return fallback;
     }
   },
   async getAvailability(doctorId) {
     try {
       const { data } = await apiClient.get<AvailabilitySlotDto[]>(`/doctors/${doctorId}/availability`);
-      return data;
+      if (Array.isArray(data) && data.length > 0) {
+        return data;
+      }
+      return generateFallbackSlots(doctorId);
     } catch {
-      return mockSlotStore.filter((s) => s.doctorId === doctorId);
+      return generateFallbackSlots(doctorId);
     }
   },
   async createAvailability(payload) {

@@ -109,6 +109,11 @@ export function AssistantPanel() {
 
   // Unified Pointer Drag Handlers (Both Button & Panel Header)
   const handlePointerDown = (e: React.PointerEvent<HTMLElement>) => {
+    // If the pointer event started on an interactive control (button, link, input), do not initiate drag
+    const target = e.target as HTMLElement;
+    if (target.closest("button") || target.closest("a") || target.closest("input") || target.closest("textarea")) {
+      return;
+    }
     if (typeof window !== "undefined" && window.innerWidth < 640) return; // Mobile stays docked
     isDragging.current = true;
     hasDragged.current = false;
@@ -242,6 +247,7 @@ export function AssistantPanel() {
     setIntakeData(null);
     setSelectedTopic(null);
     setView("intake");
+    toast.success("Chat reset successfully.");
   };
 
   return (
@@ -300,7 +306,8 @@ export function AssistantPanel() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="absolute top-4 right-4 p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors"
+                  onPointerDown={(e) => e.stopPropagation()}
+                  className="absolute top-4 right-4 p-1.5 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
                   title="Close"
                 >
                   <X className="w-5 h-5" />
@@ -418,7 +425,8 @@ export function AssistantPanel() {
                   <button
                     type="button"
                     onClick={() => setView("intake")}
-                    className="p-1 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
                     title="Back to Topics"
                   >
                     <ChevronLeft className="w-4 h-4" />
@@ -442,7 +450,8 @@ export function AssistantPanel() {
                   <button
                     type="button"
                     onClick={handleResetChat}
-                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
                     title="Reset Conversation"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -460,7 +469,8 @@ export function AssistantPanel() {
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="p-1.5 rounded-lg text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
                     title="Close"
                   >
                     <X className="w-4 h-4" />
