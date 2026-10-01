@@ -281,9 +281,13 @@ export function AssistantPanel() {
       recognition.onerror = (event: any) => {
         setIsListening(false);
         if (event.error === "not-allowed") {
-          toast.error("Microphone permission denied. Click the lock/tune icon near your URL bar to enable it.");
+          toast.error(
+            "Microphone access is blocked by Windows Privacy settings or needs a tab reload. Please refresh the page (Ctrl+R) or check Windows Settings > Privacy > Microphone."
+          );
         } else if (event.error === "no-speech") {
           // Silent timeout if user didn't speak
+        } else if (event.error === "audio-capture") {
+          toast.error("No microphone hardware detected or mic is muted in Windows.");
         } else {
           toast.error("Voice input error: " + event.error);
         }
