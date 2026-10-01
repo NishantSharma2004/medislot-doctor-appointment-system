@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +30,17 @@ public class GroqAiProvider implements AiProviderService {
     @Value("${groq.base-url:https://api.groq.com/openai/v1}")
     private String baseUrl;
 
-    @Value("${groq.model:llama-3.1-8b-instant}")
+    @Value("${groq.model:openai/gpt-oss-20b}")
     private String model;
 
     private static final List<String> CANDIDATE_MODELS = List.of(
-            "llama-3.1-8b-instant",
-            "llama3-70b-8192",
-            "llama3-8b-8192",
-            "mixtral-8x7b-32768"
+            "openai/gpt-oss-20b",
+            "openai/gpt-oss-120b",
+            "qwen/qwen3.8-27b",
+            "gemma2-9b-it",
+            "deepseek-r1-distill-llama-70b",
+            "llama-3.3-70b-versatile",
+            "llama-3.1-8b-instant"
     );
 
     public GroqAiProvider(ObjectMapper objectMapper, RestClient.Builder restClientBuilder) {
@@ -75,16 +79,34 @@ public class GroqAiProvider implements AiProviderService {
             return result;
         }
 
-        // 2. If failure was 404 / model_not_found, try candidate models
+        // 2. If failure was due to model decommissioned (400) or not found (404), discover live models & try candidates
         String err = result.errorMessage() != null ? result.errorMessage().toLowerCase() : "";
-        if (result.statusCode() == 404 || err.contains("model_not_found") || err.contains("404")) {
-            log.warn("Groq model [{}] returned 404 (model_not_found). Trying candidate models...", this.model);
+        boolean isModelIssue = result.statusCode() == 404
+                || err.contains("model_not_found")
+                || err.contains("model_decommissioned")
+                || err.contains("decommissioned")
+                || err.contains("deprecated")
+                || (result.statusCode() == 400 && err.contains("model"));
+
+        if (isModelIssue) {
+            log.warn("Groq model [{}] failed with model error (status {}, message: {}). Discovering live active models...",
+                    this.model, result.statusCode(), result.errorMessage());
+
+            List<String> liveModels = discoverLiveModels();
+            List<String> modelsToTry = new ArrayList<>(liveModels);
             for (String candidate : CANDIDATE_MODELS) {
+                if (!modelsToTry.contains(candidate)) {
+                    modelsToTry.add(candidate);
+                }
+            }
+
+            for (String candidate : modelsToTry) {
                 if (candidate.equalsIgnoreCase(this.model)) continue;
-                log.info("Trying Groq candidate model [{}]...", candidate);
+                log.info("Trying Groq alternative candidate model [{}]...", candidate);
                 AiGenerationResult candidateResult = executeModelCall(candidate, request, startTime);
                 if (candidateResult.success()) {
-                    log.info("Groq candidate model [{}] succeeded! Switching default model to [{}].", candidate, candidate);
+                    log.info("Groq candidate model [{}] succeeded! Switching active model from [{}] to [{}].",
+                            candidate, this.model, candidate);
                     this.model = candidate;
                     return candidateResult;
                 }
@@ -92,6 +114,42 @@ public class GroqAiProvider implements AiProviderService {
         }
 
         return result;
+    }
+
+    private synchronized List<String> discoverLiveModels() {
+        if (!isAvailable()) return List.of();
+        try {
+            String modelsUrl = baseUrl.endsWith("/") ? baseUrl + "models" : baseUrl + "/models";
+            String responseBody = restClient.get()
+                    .uri(modelsUrl)
+                    .header("Authorization", "Bearer " + apiKey)
+                    .retrieve()
+                    .body(String.class);
+
+            if (responseBody == null || responseBody.isBlank()) return List.of();
+
+            JsonNode root = objectMapper.readTree(responseBody);
+            JsonNode dataArray = root.path("data");
+            if (!dataArray.isArray()) return List.of();
+
+            List<String> discovered = new ArrayList<>();
+            for (JsonNode item : dataArray) {
+                String id = item.path("id").asText();
+                if (id != null && !id.isBlank()) {
+                    String lower = id.toLowerCase();
+                    // Exclude non-text/chat models
+                    if (!lower.contains("whisper") && !lower.contains("guard") && !lower.contains("embed")
+                            && !lower.contains("orpheus") && !lower.contains("tts") && !lower.contains("audio")) {
+                        discovered.add(id);
+                    }
+                }
+            }
+            log.info("Discovered {} live Groq chat models: {}", discovered.size(), discovered);
+            return discovered;
+        } catch (Exception e) {
+            log.warn("Could not query Groq /models endpoint: {}", e.getMessage());
+            return List.of();
+        }
     }
 
     private AiGenerationResult executeModelCall(String targetModel, AiGenerationRequest request, long startTime) {

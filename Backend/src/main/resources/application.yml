@@ -176,7 +176,7 @@ rate-limit:
 groq:
   api-key: ${GROQ_API_KEY:}
   base-url: ${GROQ_BASE_URL:https://api.groq.com/openai/v1}
-  model: ${GROQ_MODEL:llama-3.1-8b-instant}
+  model: ${GROQ_MODEL:openai/gpt-oss-20b}
   timeout-ms: ${GROQ_TIMEOUT_MS:8000}
   max-retries: ${GROQ_MAX_RETRIES:1}
 
