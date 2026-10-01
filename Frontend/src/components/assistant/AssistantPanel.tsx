@@ -14,6 +14,9 @@ import {
   ChevronLeft,
   Plus,
   Minus,
+  Paperclip,
+  Mic,
+  MicOff,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -25,6 +28,7 @@ import type { ApiError, AssistantReply, PreChatIntakeData } from "@/lib/api/type
 import { ASSISTANT_DISCLAIMER, assistantService, SPECIALTY_REGISTRY, isHindiOrHinglish } from "@/services/assistant.service";
 import { SuggestedQuestionChips } from "@/components/assistant/SuggestedQuestionChips";
 import { TherapistRecommendationCard } from "@/components/assistant/TherapistRecommendationCard";
+import { LabReportAnalyzerModal } from "@/components/assistant/LabReportAnalyzerModal";
 import { DurrmiLogoIcon } from "@/components/common/DurrmiLogo";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +121,16 @@ export function AssistantPanel() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Voice Input (Speech Recognition) State
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+
+  // File Upload & Lab Report Analyzer Modal State
+  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [attachedFileName, setAttachedFileName] = useState<string | undefined>(undefined);
+  const [attachedReportText, setAttachedReportText] = useState<string | undefined>(undefined);
+
   // Drag State for Floating Widget & Chat Panel (Shared Movement)
   const [btnPos, setBtnPos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const isDragging = useRef(false);
@@ -201,6 +215,95 @@ export function AssistantPanel() {
     try {
       e.currentTarget.releasePointerCapture(e.pointerId);
     } catch {}
+  };
+
+  // Voice Recognition (Speech-to-Text) Toggle
+  const toggleVoiceRecognition = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch {}
+      }
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      toast.error("Speech recognition is not supported in this browser. Please use Chrome, Edge, or Safari.");
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = "en-IN";
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        toast.info("Listening... Speak your message");
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setInput((prev) => (prev ? prev + " " + transcript : transcript));
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        setIsListening(false);
+        if (event.error === "not-allowed") {
+          toast.error("Microphone permission denied. Please allow microphone access.");
+        } else {
+          toast.error("Voice input error: " + event.error);
+        }
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      setIsListening(false);
+      toast.error("Could not activate voice input.");
+    }
+  };
+
+  // File Upload Handler (Lab Report / Prescription / Health Document)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAttachedFileName(file.name);
+
+    if (file.type.includes("text") || file.name.endsWith(".txt")) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target?.result as string;
+        setAttachedReportText(text || "");
+        setReportModalOpen(true);
+      };
+      reader.readAsText(file);
+    } else {
+      setAttachedReportText(
+        `Report File: ${file.name} (${Math.round(file.size / 1024)} KB). Ready for Medical AI analysis.`
+      );
+      setReportModalOpen(true);
+    }
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   // Toggle Chat Open/Close on Click
@@ -762,8 +865,48 @@ export function AssistantPanel() {
                     e.preventDefault();
                     handleSendMessage();
                   }}
-                  className="flex items-end gap-2"
+                  className="flex items-end gap-1.5"
                 >
+                  {/* File Upload Button (Paperclip) */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept=".pdf,image/*,.txt,.doc,.docx"
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (fileInputRef.current) {
+                        fileInputRef.current.click();
+                      } else {
+                        setReportModalOpen(true);
+                      }
+                    }}
+                    className="p-2 rounded-xl text-muted-foreground hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors flex-shrink-0 cursor-pointer"
+                    title="Upload & Analyze Lab/Medical Report"
+                    aria-label="Upload Report"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+
+                  {/* Mic Voice Input Button */}
+                  <button
+                    type="button"
+                    onClick={toggleVoiceRecognition}
+                    className={cn(
+                      "p-2 rounded-xl transition-all flex-shrink-0 cursor-pointer",
+                      isListening
+                        ? "bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 animate-pulse ring-2 ring-rose-400"
+                        : "text-muted-foreground hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/40"
+                    )}
+                    title={isListening ? "Listening... Click to stop" : "Voice input (Speak to AI)"}
+                    aria-label="Voice input"
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+
                   <Textarea
                     ref={textareaRef}
                     value={input}
@@ -774,14 +917,21 @@ export function AssistantPanel() {
                         handleSendMessage();
                       }
                     }}
-                    placeholder="Share what's on your mind or ask about therapy..."
+                    placeholder={
+                      isListening
+                        ? "Listening... Speak your message"
+                        : "Share what's on your mind or ask about therapy..."
+                    }
                     rows={1}
-                    className="min-h-[40px] max-h-[85px] resize-none text-xs rounded-xl border-border/70 focus-visible:ring-emerald-500 bg-background/50"
+                    className={cn(
+                      "min-h-[40px] max-h-[85px] resize-none text-xs rounded-xl border-border/70 focus-visible:ring-emerald-500 bg-background/50",
+                      isListening && "border-rose-400 ring-1 ring-rose-400 placeholder:text-rose-500"
+                    )}
                   />
                   <Button
                     type="submit"
                     disabled={!input.trim() || pending}
-                    className="h-[40px] px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-xs disabled:opacity-40 transition-all cursor-pointer"
+                    className="h-[40px] px-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl shadow-xs disabled:opacity-40 transition-all cursor-pointer flex-shrink-0"
                   >
                     <Send className="w-4 h-4" />
                   </Button>
@@ -795,6 +945,14 @@ export function AssistantPanel() {
           )}
         </aside>
       )}
+
+      {/* Lab Report & Medical Document Analyzer Modal */}
+      <LabReportAnalyzerModal
+        isOpen={reportModalOpen}
+        onClose={() => setReportModalOpen(false)}
+        initialFileName={attachedFileName}
+        initialReportText={attachedReportText}
+      />
     </>
   );
 }
