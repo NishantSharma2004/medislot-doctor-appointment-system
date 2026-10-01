@@ -30,8 +30,8 @@ public class AiProviderUsageLog {
     @Column(name = "request_id")
     private UUID requestId;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = true)
     private User user;
 
     @Enumerated(EnumType.STRING)

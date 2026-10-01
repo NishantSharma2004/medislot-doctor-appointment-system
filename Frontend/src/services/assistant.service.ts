@@ -961,6 +961,382 @@ const CLINICAL_QA_REGISTRY: ClinicalQA[] = [
       ],
     },
   },
+  // 12. ADHD vs Stress
+  {
+    keywords: ["adhd or just high stress", "adhd or high stress", "adhd or stress", "adhd aur stress-induced"],
+    specialty: "ADHD",
+    en: {
+      answer:
+        "🧠 **Differentiating Adult ADHD vs. High Stress / Burnout**\n\n" +
+        "While both conditions present with forgetfulness, distraction, and mental fatigue, clinicians distinguish them by 3 diagnostic criteria:\n\n" +
+        "1. **Lifelong Presence**: ADHD is a neurodevelopmental trait present since early childhood (often seen in school reports or persistent childhood daydreaming/impulsivity). Stress-induced brain fog is situational and began with adult responsibilities.\n" +
+        "2. **Pervasiveness Across Environments**: ADHD impacts work, home organization, personal hobbies, and social interactions regardless of stress levels. Stress-induced distraction lifts when workload and pressure subside.\n" +
+        "3. **Dopamine Modulation (Hyperfocus)**: People with ADHD struggle with non-stimulating routine tasks, but can hyperfocus for hours on things that spark genuine fascination. In pure stress or burnout, focus is depleted across all tasks indiscriminately.",
+      suggestedQuestions: [
+        "What are effective coping strategies for adult ADHD?",
+        "How can an ADHD specialist help me build routines?",
+        "How do I consult an ADHD specialist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🧠 **ADHD vs High Stress / Brain Fog Mein Kya Farq Hai?**\n\n" +
+        "1. **Bachpan Se Presence**: ADHD ek neurodevelopmental pattern hai jo bachpan se chala aa raha hota hai. Jabki stress-induced distraction hal hi me kaam ya life ke pressure se shuru hota hai.\n" +
+        "2. **Har Situation Mein Asar**: ADHD har jagah dikhta hai — ghar, office, hobbies. Stress wala focus issue tab theek ho jata hai jab chutti ya rest mile.\n" +
+        "3. **Hyperfocus**: ADHD me boring kaam me bilkul dhyan nahi lagta, lekin interesting cheezon me ghanto bina thake dhyan lag sakta hai.",
+      suggestedQuestions: [
+        "Focus improve karne ke daily hacks kya hain?",
+        "ADHD assessment test kaise conduct hota hai?",
+        "Under ₹1,000 ke ADHD doctors dikhao",
+      ],
+    },
+  },
+
+  // 13. ADHD Coping Strategies
+  {
+    keywords: ["effective coping strategies for adult adhd", "coping strategies for adult adhd", "adhd coping", "focus improve karne ke daily hacks"],
+    specialty: "ADHD",
+    en: {
+      answer:
+        "⚡ **Evidence-Based Coping Protocols for Adult ADHD**\n\n" +
+        "The ADHD brain possesses an 'interest-based' nervous system rather than an importance-based one. Use these executive-function prosthetics:\n\n" +
+        "1. **Externalize Working Memory (Visual Cues)**: If an item or task is not visually visible, it ceases to exist in the ADHD brain. Use physical whiteboards, Kanban sticky-notes, and open desktop bins rather than deep closed drawers.\n" +
+        "2. **Body Doubling**: Working in the physical or virtual presence of another focused person drastically reduces task initiation paralysis by up to 60%.\n" +
+        "3. **Micro Time-Boxing (15-Minute Sprints)**: Committing to a 3-hour task triggers panic and avoidance. Commit only to 15 minutes of work with a visible analog timer.\n" +
+        "4. **Dopamine Stacking**: Pair tedious low-stimulation tasks (e.g., filing reports, laundry) with high-dopamine audio (upbeat instrumental synthwave, fascinating audiobooks).",
+      suggestedQuestions: [
+        "How do I know if I have ADHD or just high stress?",
+        "How can an ADHD specialist help me build routines?",
+        "How does a clinical psychologist evaluate ADHD?",
+      ],
+    },
+    hi: {
+      answer:
+        "⚡ **Adult ADHD & Focus Badhane Ke 4 Daily Hacks**\n\n" +
+        "1. **Visible Reminders (Out of sight = Out of mind)**: Saare zaroori kaam sticky notes ya whiteboard par samne likh kar rakhein.\n" +
+        "2. **Body Doubling**: Kisi dost ya colleague ke sath baithkar kaam karein. Dusre ko kaam karte dekhne se brain naturally focused rehta hai.\n" +
+        "3. **15-Minute Sprints**: Ek sath 2-3 ghante ka plan na banayein; sirf 15 minute ka timer lagayein aur bina phone dekhe shuru karein.\n" +
+        "4. **Dopamine Pairing**: Boring kaam karte waqt apna favorite instrumental music ya podcast sunein.",
+      suggestedQuestions: [
+        "ADHD aur stress-induced distraction mein kya farq hai?",
+        "ADHD assessment test kaise conduct hota hai?",
+        "ADHD specialist se guidance kaise lein?",
+      ],
+    },
+  },
+
+  // 14. ADHD Build Routines
+  {
+    keywords: ["specialist help me build routines", "build routines", "adhd assessment test", "adhd specialist help me"],
+    specialty: "ADHD",
+    en: {
+      answer:
+        "🛠️ **How an ADHD Specialist Helps You Build Sustainable Routines**\n\n" +
+        "Traditional neurotypical productivity advice (*\"Just use a calendar and be disciplined\"*) often induces shame and burnout in ADHD brains. An ADHD specialist works through neuro-affirming scaffolding:\n\n" +
+        "• **Friction-Free Habit Stacking**: Linking new tasks directly onto already automated physical habits (e.g., taking vitamins right beside the morning kettle).\n" +
+        "• **De-shaming Executive Dysfunction**: Understanding that task paralysis is neurological dopamine deficiency, not moral laziness or lack of willpower.\n" +
+        "• **Personalized Dopamine Mapping**: Structuring work hours around your personal peak focus windows rather than rigid 9-to-5 expectations.\n" +
+        "• **Accountability Without Rejection Sensitivity**: A supportive clinical mirror to troubleshoot points of resistance safely.",
+      suggestedQuestions: [
+        "What are effective coping strategies for adult ADHD?",
+        "How do I know if I have ADHD or just high stress?",
+        "Show verified ADHD specialists under my budget",
+      ],
+    },
+    hi: {
+      answer:
+        "🛠️ **ADHD Specialist Routine Banane Me Kaise Madad Karta Hai?**\n\n" +
+        "• **Zero Guilt & Shame**: Specialist aapko yeh samajhne me help karta hai ki focus na banna laziness nahi, balki brain dopamine difference hai.\n" +
+        "• **Friction-Free Habit Stacking**: Naye habits ko purane routine ke sath jodna taaki dimaag par bojh na pade.\n" +
+        "• **Peak Energy Windows**: Aapka dimaag din ke kis waqt sabse active hota hai, uske hisab se timetable set karna.\n" +
+        "• **Compassionate Accountability**: Regular check-ins bina kisi judge kiye.",
+      suggestedQuestions: [
+        "Focus improve karne ke daily hacks kya hain?",
+        "ADHD aur stress-induced distraction mein kya farq hai?",
+        "Under ₹1,000 ke ADHD doctors dikhao",
+      ],
+    },
+  },
+
+  // 15. Depression Small Steps
+  {
+    keywords: ["small steps when i have zero motivation", "zero motivation", "choti shuruat kaise karein"],
+    specialty: "Depression and low mood",
+    en: {
+      answer:
+        "🌱 **How to Take Small Steps When You Have Zero Motivation**\n\n" +
+        "In clinical psychology, we teach the **Behavioral Activation Rule**: *Action precedes motivation, not the other way around.*\n\n" +
+        "When dealing with low mood or depression, waiting to 'feel like doing it' ensures nothing happens because depression shuts down dopamine signaling:\n\n" +
+        "1. **Shrink the Task to Ridiculous Proportions**: If cleaning your room feels like climbing Everest, your task is just to pick up one sock. If taking a shower feels impossible, your task is just splashing warm water on your hands.\n" +
+        "2. **The 5-Minute Permission Rule**: Tell yourself: *\"I will do this for exactly 300 seconds. After 5 minutes, I have full permission to crawl back under the blanket with zero guilt.\"* Most of the time, overcoming the initiation barrier is the hardest part.\n" +
+        "3. **Acknowledge Survival Wins**: In deep low mood, staying alive, drinking a glass of water, and brushing your teeth are major biological victories. Honor them.",
+      suggestedQuestions: [
+        "What is the difference between sadness and clinical depression?",
+        "How does talking to a therapist help with low mood?",
+        "How do I connect with a depression care specialist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌱 **Jab Kuch Karne Ka Mann Na Ho Toh Choti Shuruat Kaise Karein?**\n\n" +
+        "1. **Task Ko Ekdum Chota Kar Dein**: Agar poora kamra saaf karna mushkil lage, toh sirf ek kapda uthayein. Bada target dimaag ko freeze kar deta hai.\n" +
+        "2. **5-Minute Rule**: Khud se bolein: *\"Main sirf 5 minute yeh kaam karunga. Agar tab bhi mann nahi kiya, toh main aaram se band kar dunga.\"*\n" +
+        "3. **Choti Jeet Ko Acknowledge Karein**: Low mood me bistar se uthna ya paani peena bhi ek badi victory hai. Apne aap par gussa na karein.",
+      suggestedQuestions: [
+        "Sadness aur clinical depression mein kya farq hai?",
+        "Therapist se 1-on-1 baat karne se kaise help milti hai?",
+        "Depression counselor se consultation kaise book karein?",
+      ],
+    },
+  },
+
+  // 16. Sadness vs Clinical Depression
+  {
+    keywords: ["difference between sadness and clinical depression", "sadness aur clinical depression", "sadness and clinical depression"],
+    specialty: "Depression and low mood",
+    en: {
+      answer:
+        "🌧️ **The Difference Between Everyday Sadness and Clinical Depression**\n\n" +
+        "While everyone experiences sadness, clinical depression is a systemic neurobiological state:\n\n" +
+        "• **Everyday Sadness**: It is a transient, healthy human reaction to disappointment, grief, or hurt. Crucially, your capacity to experience joy, laugh at a joke, or feel comforted by loved ones remains intact.\n" +
+        "• **Clinical Depression (Major Depressive Episode)**: Characterized by *anhedonia* — a total loss of interest or pleasure in all activities. It carries profound physical lethargy, changes in sleep and appetite, feelings of worthlessness, and cognitive sluggishness lasting more than 2 consecutive weeks.\n" +
+        "• **Recovery**: Sadness usually clears as circumstances evolve or feelings are processed; depression often requires psychotherapeutic intervention (CBT/ACT) to rewire negative neural pathways.",
+      suggestedQuestions: [
+        "How can I take small steps when I have zero motivation?",
+        "How does talking to a therapist help with low mood?",
+        "How do I schedule a session with a clinical psychologist?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌧️ **Sadness Aur Clinical Depression Mein Farq**\n\n" +
+        "• **Sadness (Udaasi)**: Yeh kisi specific wajah (heartbreak, loss, failure) se hoti hai, aur kuch dinon me doston se baat karke ya waqt ke sath theek ho jati hai.\n" +
+        "• **Clinical Depression**: Yeh 2 hafte se zyada lagataar rehti hai. Kisi bhi cheez me khushi nahi milti (anhedonia), sharir me bilkul taakat nahi lagti aur khud ko hopeless feel hota hai.\n" +
+        "• **Therapy Ka Role**: Sadness natural hai, lekin clinical depression me therapy lene se dimaag ke negative loop break hote hain.",
+      suggestedQuestions: [
+        "Jab kuch karne ka mann na ho toh choti shuruat kaise karein?",
+        "Therapist se 1-on-1 baat karne se kaise help milti hai?",
+        "Under ₹1,000 ke psychologists dikhao",
+      ],
+    },
+  },
+
+  // 17. Therapist Help for Low Mood
+  {
+    keywords: ["therapist help with low mood", "therapist se 1-on-1 baat karne se kaise help", "help with low mood", "talking to a therapist help"],
+    specialty: "Depression and low mood",
+    en: {
+      answer:
+        "🤝 **How Talking to a Licensed Psychologist Helps Overcome Low Mood**\n\n" +
+        "A therapist is not just a sympathetic listener; they provide structured, evidence-based cognitive intervention:\n\n" +
+        "1. **Deconstructing Negative Automatic Thoughts (NATs)**: Depression distorts perception through mental filters (*\"I am a failure\"*, *\"Nothing will ever improve\"*). Therapy gently tests the evidence for these thoughts.\n" +
+        "2. **A Safe, Non-Judgmental Container**: Friends and family often try to 'fix' you with toxic positivity (*\"Just smile and be grateful!\"*). A therapist holds space for your pain without rushing you.\n" +
+        "3. **Structured Behavioral Activation**: Breaking the inertia cycle with personalized, achievable daily momentum builders.",
+      suggestedQuestions: [
+        "How can I take small steps when I have zero motivation?",
+        "What is the difference between sadness and clinical depression?",
+        "Show verified psychologists under my budget",
+      ],
+    },
+    hi: {
+      answer:
+        "🤝 **Therapist Se Baat Karne Se Low Mood Kaise Theek Hota Hai?**\n\n" +
+        "• **Bina Judgment Ki Safe Space**: Dost ya parivar aksar gyaan dene lagte hain, lekin therapist bina judge kiye aapki baat sunta hai.\n" +
+        "• **Negative Thoughts Ko Break Karna**: Depression dimaag me jhute thoughts daalta hai (*\"Mere sath sab galat hota hai\"*). Therapy inko challenge karna sikhati hai.\n" +
+        "• **Behavioral Plan**: Dheere-dheere aapki energy aur routine ko rebuild karne ke practical steps.",
+      suggestedQuestions: [
+        "Jab kuch karne ka mann na ho toh choti shuruat kaise karein?",
+        "Sadness aur clinical depression mein kya farq hai?",
+        "Under ₹1,000 ke therapists dikhao",
+      ],
+    },
+  },
+
+  // 18. Career Confusion Decision
+  {
+    keywords: ["clear decisions when feeling career confusion", "career confusion", "right decision kaise lein"],
+    specialty: "Career",
+    en: {
+      answer:
+        "🎯 **How to Make Clear Decisions When Facing Career Confusion**\n\n" +
+        "Career paralysis usually occurs when you try to optimize for too many conflicting variables (status, money, passion, security, parents' expectations) all at once:\n\n" +
+        "1. **Identify Your Non-Negotiable Core Value**: Rank what matters most *for the next 18 months*: Rapid learning? Financial stability? Autonomy? Mental peace? You cannot optimize all four simultaneously.\n" +
+        "2. **Two-Way Door Decisions (Jeff Bezos Framework)**: Most career pivots are reversible 'two-way doors'. If an experiment fails, you can walk back out with richer experience. Treating every choice as a permanent one-way door causes paralysis.\n" +
+        "3. **Conduct 3 Low-Stakes Informational Interviews**: Instead of ruminating in your head, talk to three people currently doing the roles you're considering. Reality clears cognitive fog.",
+      suggestedQuestions: [
+        "How do I overcome imposter syndrome and workplace anxiety?",
+        "How does a consultation with a career mindset coach work?",
+        "How do I consult a career mindset coach?",
+      ],
+    },
+    hi: {
+      answer:
+        "🎯 **Career Confusion Mein Sahi Decision Kaise Lein?**\n\n" +
+        "1. **Agla 1 Saal Ka Target Decide Karein**: Kya aapko financial stability chahiye ya naya skill seekhna hai? Har cheez ek sath solve nahi hoti.\n" +
+        "2. **Har Decision Permanent Nahi Hota**: Dimaag sochta hai ki ek galat kadam se career barbaad ho jayega. Mostly decisions reversible hote hain.\n" +
+        "3. **Field Ke Logon Se Baat Karein**: Sirf dimaag me sochne ke bajaye us field me kaam kar rahe 2 logon se baat karein.",
+      suggestedQuestions: [
+        "Imposter syndrome se kaise deal karein?",
+        "Career mindset coach se kaise connect karein?",
+        "Under ₹1,000 ke career coaches dikhao",
+      ],
+    },
+  },
+
+  // 19. Imposter Syndrome
+  {
+    keywords: ["imposter syndrome", "workplace anxiety", "imposter syndrome se kaise deal"],
+    specialty: "Career",
+    en: {
+      answer:
+        "💼 **Overcoming Imposter Syndrome and Workplace Anxiety**\n\n" +
+        "Imposter syndrome (*\"I got here by luck; they will soon discover I'm a fraud\"*) ironically strikes high-performers and conscientious individuals the most:\n\n" +
+        "1. **Separate Feeling from Fact**: Just because you *feel* incompetent when facing a complex challenge does not mean you *are* incompetent. Discomfort is the physiological signature of neuroplastic growth.\n" +
+        "2. **Maintain an Evidence Dossier**: Keep a dedicated folder of positive feedback, client praise, successfully shipped projects, and quantitative milestones. Review it when self-doubt flares up.\n" +
+        "3. **Reframe from 'Expert' to 'Curious Learner'**: You don't have to know every answer; your real value is your ability to learn, adapt, and solve problems collaboratively.",
+      suggestedQuestions: [
+        "How can I make clear decisions when feeling career confusion?",
+        "How does a consultation with a career mindset coach work?",
+        "How do I connect with a career performance coach?",
+      ],
+    },
+    hi: {
+      answer:
+        "💼 **Imposter Syndrome & Workplace Darr Se Kaise Deal Karein?**\n\n" +
+        "1. **Feelings vs Reality**: Aisa lagna ki aap deserve nahi karte, ek natural feeling hai — yeh sach nahi hai. Naye kaam me thoda darr aana normal hai.\n" +
+        "2. **Accomplishments Ki List Banayein**: Apne purane successful projects aur boss/clients ki tareef ko likh kar rakhein taaki darr ke waqt dekh sakein.\n" +
+        "3. **Seekhne Par Focus Karein**: Har sawal ka jawab aana zaroori nahi hai; naya seekhne ki willingness sabse badi strength hoti hai.",
+      suggestedQuestions: [
+        "Career confusion mein right decision kaise lein?",
+        "Career mindset coach se kaise connect karein?",
+        "Under ₹1,000 ke career coaches dikhao",
+      ],
+    },
+  },
+
+  // 20. Career Mindset Coach
+  {
+    keywords: ["career mindset coach", "consultation with a career mindset coach", "mindset coach se kaise connect"],
+    specialty: "Career",
+    en: {
+      answer:
+        "🚀 **How a Consultation with a Career Mindset Coach Works**\n\n" +
+        "A career mindset coach blends executive psychology with practical workplace strategy:\n\n" +
+        "• **Unblocking Limiting Beliefs**: Identifying unconscious patterns of self-sabotage, chronic people-pleasing, or fear of failure.\n" +
+        "• **Burnout-Free Performance**: Building high-impact output habits without sacrificing health or evening peace.\n" +
+        "• **Executive Presence & Negotiation**: Building confidence for salary negotiations, promotion conversations, and high-stakes interviews.",
+      suggestedQuestions: [
+        "How can I make clear decisions when feeling career confusion?",
+        "How do I overcome imposter syndrome and workplace anxiety?",
+        "Show verified career coaches under my budget",
+      ],
+    },
+    hi: {
+      answer:
+        "🚀 **Career Mindset Coach Ke Sath Session Me Kya Hota Hai?**\n\n" +
+        "• **Self-Doubt Ko Khatam Karna**: Promotion ya nayi job ke darr ko door karna.\n" +
+        "• **Work-Life Balance**: Kaam me high performance ke sath-sath apni health aur peace ko protect karna.\n" +
+        "• **Salary & Career Growth Strategy**: Confidence se interview dena aur growth plan banana.",
+      suggestedQuestions: [
+        "Career confusion mein right decision kaise lein?",
+        "Imposter syndrome se kaise deal karein?",
+        "Career coach se consultation kaise book karein?",
+      ],
+    },
+  },
+
+  // 21. Deep Loneliness Coping
+  {
+    keywords: ["feelings of isolation", "deep feelings of isolation", "akelapan kam karne ke healthy"],
+    specialty: "Loneliness",
+    en: {
+      answer:
+        "🌿 **Navigating Deep Feelings of Loneliness and Isolation**\n\n" +
+        "Loneliness is not a character flaw — it is an evolutionary alarm system (like physical hunger or thirst) signaling that your social connection receptors are running on empty:\n\n" +
+        "1. **Distinguish Solitude from Loneliness**: Solitude is the peaceful enjoyment of your own company. Loneliness is the painful longing for connection. You can enjoy solitude while actively addressing loneliness.\n" +
+        "2. **Practice 'Micro-Connections'**: You don't need a 10-person friend group overnight. Having a warm, genuine 30-second interaction with a local barista, a neighbor, or in a hobby group releases oxytocin and calms the nervous system.\n" +
+        "3. **Engage in Shared-Context Spaces**: Join a weekly run club, pottery workshop, reading circle, or volunteer cause where bonding happens organically around a shared activity rather than forced small talk.",
+      suggestedQuestions: [
+        "Why do I feel lonely even around friends and family?",
+        "How does therapy help in building meaningful connections?",
+        "How do I consult a counseling psychologist for loneliness?",
+      ],
+    },
+    hi: {
+      answer:
+        "🌿 **Gehre Akelapan Se Kaise Deal Karein?**\n\n" +
+        "1. **Akelapan Koi Kamzori Nahi Hai**: Jaise bhookh lagne par sharir khana mangta hai, waise hi akelapan ek signal hai ki humein emotional connection chahiye.\n" +
+        "2. **Choti-Choti Baatein Shuru Karein (Micro-Connections)**: Ek hi din me 10 dost banane ki zaroorat nahi hai. Padosi, dukandar ya kisi se 1 minute ki warm baat bhi mood lift karti hai.\n" +
+        "3. **Hobby Groups Join Karein**: Kitabon ka club, walking group ya volunteer work jahan log kisi common interest ke liye milte hain.",
+      suggestedQuestions: [
+        "Bheed mein bhi lonely feel kyu hota hai?",
+        "Therapist se baat karne se akelapan kaise door hota hai?",
+        "Under ₹1,000 ke counselors dikhao",
+      ],
+    },
+  },
+
+  // 22. Lonely in Crowds
+  {
+    keywords: ["lonely even around friends", "lonely around friends and family", "bheed mein bhi lonely"],
+    specialty: "Loneliness",
+    en: {
+      answer:
+        "👥 **Why You Feel Lonely Even When Surrounded by Friends or Family**\n\n" +
+        "Feeling lonely in a crowd or within your existing social circle points to the **'Intimacy Gap'**:\n\n" +
+        "• **Physical Presence vs. Emotional Attunement**: You can sit in a room with 10 people, but if you have to perform, mask your true struggles, or engage only in superficial pleasantries, your emotional core remains untouched and profoundly lonely.\n" +
+        "• **Fear of Vulnerability**: Many people keep up a strong, funny, or competent facade because they fear that revealing their true fears will lead to judgment or burdening others.\n" +
+        "• **Emotional Mismatch**: Sometimes relationships were built for a previous version of you. As you grow, those connections no longer resonate with what you value today.",
+      suggestedQuestions: [
+        "How can I cope with deep feelings of isolation?",
+        "How does therapy help in building meaningful connections?",
+        "How do I talk to a therapist about feeling isolated?",
+      ],
+    },
+    hi: {
+      answer:
+        "👥 **Doston Aur Parivar Ke Beech Rehkar Bhi Akelapan Kyu Lagta Hai?**\n\n" +
+        "• **Fake Mask Pehanna**: Jab hum doston ke samne hamesha khush ya strong hone ka dikhawa karte hain aur apna asali dard share nahi kar pate, toh bheed me bhi akelapan lagta hai.\n" +
+        "• **Superficial Baatein**: Jab baatein sirf gossip ya kaam tak simit hon aur koi dil ki baat na samjhe.\n" +
+        "• **Emotional Safety Ki Kami**: Aisa darr lagna ki agar sach bataya toh log mazaak udayenge ya judge karenge.",
+      suggestedQuestions: [
+        "Akelapan kam karne ke healthy tarike kya hain?",
+        "Therapist se baat karne se akelapan kaise door hota hai?",
+        "Under ₹1,000 ke counselors dikhao",
+      ],
+    },
+  },
+
+  // 23. Therapy for Meaningful Connections
+  {
+    keywords: ["therapy help in building meaningful", "building meaningful connections", "akelapan kaise door hota hai"],
+    specialty: "Loneliness",
+    en: {
+      answer:
+        "🌱 **How Therapy Helps You Build Deep, Meaningful Connections**\n\n" +
+        "Therapy provides a clinical mirror to examine how you relate to others:\n\n" +
+        "• **Unpacking Attachment Styles**: Exploring whether you have an anxious, avoidant, or secure attachment pattern that unconsciously pushes people away or clings too tightly.\n" +
+        "• **Safe Vulnerability Practice**: The therapeutic relationship itself is a training ground for being completely authentic and vulnerable without being rejected.\n" +
+        "• **Boundaries and Mutual Reciprocity**: Learning to filter out one-sided relationships and invest in people who offer genuine reciprocity and warmth.",
+      suggestedQuestions: [
+        "How can I cope with deep feelings of isolation?",
+        "Why do I feel lonely even around friends and family?",
+        "Show verified counseling psychologists under my budget",
+      ],
+    },
+    hi: {
+      answer:
+        "🌱 **Therapy Se Meaningful Rishte Kaise Bante Hain?**\n\n" +
+        "• **Attachment Pattern Samajhna**: Samajhna ki kyu hum logon se door bhagte hain ya rejection se darte hain.\n" +
+        "• **Khulkar Baat Karne Ki Practice**: Therapist ke sath bina kisi jhijhak ke sach bolne ki aadat padti hai jo aage relationships me kaam aati hai.\n" +
+        "• **Sahi Logon Ko Pehchanna**: Ek-tarfa rishton se nikal kar aise doston se judna jo sach me aapki care karein.",
+      suggestedQuestions: [
+        "Akelapan kam karne ke healthy tarike kya hain?",
+        "Bheed mein bhi lonely feel kyu hota hai?",
+        "Counseling psychologist se session kaise book karein?",
+      ],
+    },
+  },
 ];
 
 function findClinicalQAReply(text: string, isHindi: boolean): { answer: string; suggestedQuestions: string[]; specialty: string } | null {

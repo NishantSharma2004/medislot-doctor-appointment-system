@@ -51,7 +51,7 @@ public class AiProviderUsageLogService {
                 usageLog.setOutcome(AiProviderOutcome.FAILURE);
             }
 
-            usageLogRepository.save(usageLog);
+            usageLogRepository.saveAndFlush(usageLog);
         } catch (Exception ex) {
             log.error("Failed to persist AI provider usage log for request {}: {}", requestId, ex.getMessage());
         }
