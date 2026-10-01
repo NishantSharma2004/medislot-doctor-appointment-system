@@ -12,6 +12,7 @@ import {
   Check,
   ArrowRight,
   ChevronLeft,
+  Plus,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -43,6 +44,7 @@ const TOPICS = [
   { id: "Career", label: "Career & Work Pressure", icon: "🎯" },
   { id: "ADHD", label: "ADHD & Attention", icon: "🧠" },
   { id: "Loneliness", label: "Loneliness & Isolation", icon: "🌿" },
+  { id: "Other", label: "Other / Not Listed", icon: "✨" },
 ];
 
 const BUDGETS: Array<{ id: "under_1000" | "1000_to_2000" | "any"; label: string; desc: string }> = [
@@ -106,6 +108,7 @@ export function AssistantPanel() {
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedBudget, setSelectedBudget] = useState<"under_1000" | "1000_to_2000" | "any">("any");
   const [intakeData, setIntakeData] = useState<PreChatIntakeData | null>(null);
+  const [customTopic, setCustomTopic] = useState("");
   const [input, setInput] = useState("");
   const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
@@ -209,17 +212,26 @@ export function AssistantPanel() {
   };
 
   // 1. User Clicks "Start Conversation" from Intake Screen
-  const handleStartConversation = () => {
+  const handleStartConversation = (topicOverride?: string) => {
+    let finalTopic = topicOverride || selectedTopic;
+    if (finalTopic === "Other") {
+      finalTopic = customTopic.trim() ? customTopic.trim() : "Personal Well-being";
+    }
+
     const data: PreChatIntakeData = {
-      topic: selectedTopic || undefined,
+      topic: finalTopic || undefined,
       budgetTier: selectedBudget,
       skipped: false,
     };
+
+    // ALWAYS reset messages when starting/changing topic so fresh chat starts
+    setMessages([]);
+    setInput("");
     setIntakeData(data);
     setView("chat");
 
-    if (selectedTopic) {
-      handleSendMessage(`I want to discuss ${selectedTopic}.`, data);
+    if (finalTopic) {
+      handleSendMessage(`I want to discuss ${finalTopic}.`, data);
     }
   };
 
@@ -229,6 +241,8 @@ export function AssistantPanel() {
       skipped: true,
       budgetTier: selectedBudget,
     };
+    setMessages([]);
+    setInput("");
     setIntakeData(data);
     setView("chat");
   };
@@ -301,8 +315,10 @@ export function AssistantPanel() {
     setMessages([]);
     setIntakeData(null);
     setSelectedTopic(null);
+    setCustomTopic("");
+    setInput("");
     setView("intake");
-    toast.success("Chat reset successfully.");
+    toast.success("Ready for a fresh conversation.");
   };
 
   return (
@@ -408,6 +424,26 @@ export function AssistantPanel() {
                       );
                     })}
                   </div>
+
+                  {/* If Other is selected, show optional custom topic text input */}
+                  {selectedTopic === "Other" && (
+                    <div className="mt-2.5 p-3 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 animate-in fade-in slide-in-from-top-1 duration-150">
+                      <label className="text-[11px] font-semibold text-emerald-950 dark:text-emerald-200 block mb-1">
+                        Tell us what you'd like to discuss (Optional):
+                      </label>
+                      <input
+                        type="text"
+                        value={customTopic}
+                        onChange={(e) => setCustomTopic(e.target.value)}
+                        placeholder="e.g., Grief, Trauma, Family stress, Confidence, General health..."
+                        className="w-full px-3 py-2 text-xs rounded-xl border border-emerald-300 dark:border-emerald-700 bg-white dark:bg-card focus:outline-hidden focus:ring-2 focus:ring-emerald-500 text-foreground"
+                        autoFocus
+                      />
+                      <p className="text-[10px] text-muted-foreground mt-1">
+                        Feel free to type your concern or click Start Conversation to chat openly.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 {/* 2. Preferred Budget */}
@@ -501,16 +537,17 @@ export function AssistantPanel() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1">
-                  {/* Reset Chat */}
+                <div className="flex items-center gap-1.5">
+                  {/* Explicit New Chat Button */}
                   <button
                     type="button"
                     onClick={handleResetChat}
                     onPointerDown={(e) => e.stopPropagation()}
-                    className="p-1.5 rounded-lg text-emerald-100 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
-                    title="Reset Conversation"
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/20 hover:bg-white/30 text-white text-[11px] font-medium transition-all shadow-xs cursor-pointer active:scale-95"
+                    title="Start a Fresh Chat"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>New Chat</span>
                   </button>
 
                   {/* Drag Handle on Desktop - Draggable via Button and via Header */}
@@ -542,12 +579,21 @@ export function AssistantPanel() {
                   <span className="font-medium truncate">
                     Focused on: <span className="font-semibold">{intakeData.topic}</span>
                   </span>
-                  <button
-                    onClick={() => setView("intake")}
-                    className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold ml-2 flex-shrink-0 cursor-pointer"
-                  >
-                    Change Topic
-                  </button>
+                  <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                    <button
+                      onClick={() => setView("intake")}
+                      className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold cursor-pointer"
+                    >
+                      Change Topic
+                    </button>
+                    <span className="text-emerald-300 dark:text-emerald-700">•</span>
+                    <button
+                      onClick={handleResetChat}
+                      className="text-[10px] text-emerald-700 dark:text-emerald-400 hover:underline font-semibold cursor-pointer"
+                    >
+                      New Chat
+                    </button>
+                  </div>
                 </div>
               )}
 
