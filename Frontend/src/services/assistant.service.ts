@@ -14,8 +14,10 @@ export const ASSISTANT_DISCLAIMER =
   "Durrmi Companion provides emotional support, therapy navigation, and platform information. It does not provide medical diagnosis or crisis treatment.";
 
 export interface AssistantChatOptions {
+  conversationId?: string;
   topic?: string;
   budgetTier?: "under_1000" | "1000_to_2000" | "above_2000" | "any";
+  previousMessages?: Array<{ role: "user" | "assistant"; text: string }>;
 }
 
 export interface AssistantService {
@@ -1357,37 +1359,39 @@ function findClinicalQAReply(text: string, isHindi: boolean): { answer: string; 
 
 function detectSpecialty(text: string, optionsTopic?: string): SpecialtyMapping | null {
   const lower = text.toLowerCase();
-  
+
+  // 1. FIRST check if the user's latest query explicitly matches a clinical domain!
+  if (lower.includes("adhd") || lower.includes("attention") || lower.includes("focus") || lower.includes("hyperactiv") || lower.includes("distract") || lower.includes("procrastinat")) {
+    return SPECIALTY_REGISTRY["ADHD"];
+  }
+  if (lower.includes("lonel") || lower.includes("alone") || lower.includes("akela") || lower.includes("isolat") || lower.includes("social disconnect")) {
+    return SPECIALTY_REGISTRY["Loneliness"];
+  }
+  if (lower.includes("sleep") || lower.includes("insomnia") || lower.includes("neend") || lower.includes("awake") || lower.includes("so nahi") || lower.includes("sone") || lower.includes("nightmare")) {
+    return SPECIALTY_REGISTRY["Sleep"];
+  }
+  if (lower.includes("relationship") || lower.includes("breakup") || lower.includes("partner") || lower.includes("divorce") || lower.includes("couple") || lower.includes("shaadi") || lower.includes("pyaar") || lower.includes("rishte") || lower.includes("husband") || lower.includes("wife") || lower.includes("boyfriend") || lower.includes("girlfriend")) {
+    return SPECIALTY_REGISTRY["Relationships"];
+  }
+  if (lower.includes("depress") || lower.includes("sad") || lower.includes("empty") || lower.includes("hopeless") || lower.includes("udaas") || lower.includes("cry") || lower.includes("rona") || lower.includes("depression")) {
+    return SPECIALTY_REGISTRY["Depression and low mood"];
+  }
+  if (lower.includes("career") || lower.includes("job") || lower.includes("future") || lower.includes("college") || lower.includes("interview") || lower.includes("workplace") || lower.includes("office") || lower.includes("naukri") || lower.includes("boss") || lower.includes("promotion") || lower.includes("imposter")) {
+    return SPECIALTY_REGISTRY["Career"];
+  }
+  if (lower.includes("anxious") || lower.includes("anxiety") || lower.includes("panic") || lower.includes("overthink") || lower.includes("ghabrahat") || lower.includes("darr") || lower.includes("nervous") || lower.includes("bechain")) {
+    return SPECIALTY_REGISTRY["Anxiety"];
+  }
+  if (lower.includes("stress") || lower.includes("burnout") || lower.includes("exhaust") || lower.includes("tired") || lower.includes("thaka") || lower.includes("pressure") || lower.includes("burden") || lower.includes("tension") || lower.includes("overwhelm")) {
+    return SPECIALTY_REGISTRY["Stress & Burnout"];
+  }
+
+  // 2. Only if the query didn't match a new specific domain, fallback to initial optionsTopic!
   if (optionsTopic && SPECIALTY_REGISTRY[optionsTopic]) {
     return SPECIALTY_REGISTRY[optionsTopic];
   }
 
-  if (lower.includes("adhd") || lower.includes("attention") || lower.includes("focus") || lower.includes("hyperactiv") || lower.includes("distract")) {
-    return SPECIALTY_REGISTRY["ADHD"];
-  }
-  if (lower.includes("lonel") || lower.includes("alone") || lower.includes("akela") || lower.includes("isolat")) {
-    return SPECIALTY_REGISTRY["Loneliness"];
-  }
-  if (lower.includes("sleep") || lower.includes("insomnia") || lower.includes("neend") || lower.includes("awake") || lower.includes("so nahi")) {
-    return SPECIALTY_REGISTRY["Sleep"];
-  }
-  if (lower.includes("relationship") || lower.includes("breakup") || lower.includes("partner") || lower.includes("divorce") || lower.includes("couple") || lower.includes("shaadi") || lower.includes("pyaar")) {
-    return SPECIALTY_REGISTRY["Relationships"];
-  }
-  if (lower.includes("depress") || lower.includes("sad") || lower.includes("empty") || lower.includes("hopeless") || lower.includes("udaas") || lower.includes("cry") || lower.includes("rona")) {
-    return SPECIALTY_REGISTRY["Depression and low mood"];
-  }
-  if (lower.includes("career") || lower.includes("job") || lower.includes("future") || lower.includes("college") || lower.includes("interview") || lower.includes("workplace") || lower.includes("office")) {
-    return SPECIALTY_REGISTRY["Career"];
-  }
-  if (lower.includes("anxious") || lower.includes("anxiety") || lower.includes("panic") || lower.includes("overthink") || lower.includes("ghabrahat") || lower.includes("darr") || lower.includes("nervous")) {
-    return SPECIALTY_REGISTRY["Anxiety"];
-  }
-  if (lower.includes("stress") || lower.includes("burnout") || lower.includes("exhaust") || lower.includes("tired") || lower.includes("thaka") || lower.includes("pressure") || lower.includes("burden") || lower.includes("tension")) {
-    return SPECIALTY_REGISTRY["Stress & Burnout"];
-  }
-
-  // General emotional greeting or therapy intent
+  // 3. General emotional greeting or therapy intent
   const isMentalHealthOrGreeting = [
     "feel", "feeling", "mental", "health", "mind", "mood", "help", "hello", "hi", "hey",
     "namaste", "durrmi", "therapist", "counselor", "doctor", "consult", "talk", "session", "wellness"
@@ -1398,6 +1402,206 @@ function detectSpecialty(text: string, optionsTopic?: string): SpecialtyMapping 
   }
 
   return null;
+}
+
+/**
+ * Dynamic Context-Aware Suggested Question Generator:
+ * Generates relevant, non-repeating follow-up questions tailored to the user's latest query,
+ * filtering out questions already asked or discussed in conversation history.
+ */
+function getDynamicSuggestedQuestions(
+  userQuery: string,
+  specialtyName: string,
+  isHindi: boolean,
+  previousMessages?: Array<{ role: "user" | "assistant"; text: string }>,
+  preferredList?: string[]
+): string[] {
+  const queryLower = userQuery.toLowerCase();
+
+  // 1. Gather all past user queries and messages to avoid repeating
+  const pastTexts = (previousMessages || []).map((m) => m.text.toLowerCase());
+  pastTexts.push(queryLower);
+
+  const isAlreadyAsked = (q: string): boolean => {
+    const qLower = q.toLowerCase();
+    return pastTexts.some((past) => {
+      if (past.includes(qLower) || qLower.includes(past)) return true;
+      const qWords = qLower.split(/[^a-zA-Z0-9]+/).filter((w) => w.length > 3);
+      if (qWords.length === 0) return false;
+      const matchCount = qWords.filter((w) => past.includes(w)).length;
+      return matchCount / qWords.length > 0.65;
+    });
+  };
+
+  // 2. Pool candidate questions for this specialty
+  const candidatePool: string[] = [];
+
+  if (preferredList && preferredList.length > 0) {
+    candidatePool.push(...preferredList);
+  }
+
+  // Add questions from all QAs belonging to this specialty
+  const specialtyQAs = CLINICAL_QA_REGISTRY.filter((qa) => qa.specialty === specialtyName);
+  for (const qa of specialtyQAs) {
+    const list = isHindi ? qa.hi.suggestedQuestions : qa.en.suggestedQuestions;
+    candidatePool.push(...list);
+  }
+
+  // Add questions from the specialty registry
+  const mapping = SPECIALTY_REGISTRY[specialtyName];
+  if (mapping) {
+    const defaultList = isHindi ? mapping.hi.suggestedQuestions : mapping.en.suggestedQuestions;
+    candidatePool.push(...defaultList);
+  }
+
+  // Specialty specific progressive questions
+  const additionalActionQuestions: Record<string, { en: string[]; hi: string[] }> = {
+    "Stress & Burnout": {
+      en: [
+        "What are early signs of nervous system exhaustion?",
+        "How can I set work boundaries without feeling guilty?",
+        "Show verified stress and burnout coaches",
+      ],
+      hi: [
+        "Nervous system thakne ke shuruati lakshan kya hain?",
+        "Guilt ke bina work boundary kaise banayein?",
+        "Under ₹1,000 ke stress specialists dikhao",
+      ],
+    },
+    Anxiety: {
+      en: [
+        "What is the difference between panic attacks and anxiety?",
+        "How do box breathing exercises calm racing thoughts?",
+        "Show licensed anxiety & panic specialists",
+      ],
+      hi: [
+        "Panic attack aur normal anxiety mein kya farq hota hai?",
+        "Box breathing se darr aur bechaini kaise kam hoti hai?",
+        "Under ₹1,000 ke anxiety therapists dikhao",
+      ],
+    },
+    Relationships: {
+      en: [
+        "How to stop overthinking in a relationship?",
+        "How do I know if a relationship is emotionally healthy?",
+        "Show certified couples & relationship counselors",
+      ],
+      hi: [
+        "Relationship mein overthinking kaise rokein?",
+        "Healthy relationship ke kya signs hote hain?",
+        "Under ₹1,000 ke relationship counselors dikhao",
+      ],
+    },
+    Sleep: {
+      en: [
+        "How does chronic lack of sleep impact emotional health?",
+        "What relaxation routine is best 30 mins before sleeping?",
+        "Show verified sleep wellness specialists",
+      ],
+      hi: [
+        "Neend na aane se mental health par kya asar padta hai?",
+        "Sone se 30 min pehle ka best relaxation routine kya hai?",
+        "Under ₹1,000 ke sleep therapists dikhao",
+      ],
+    },
+    "Depression and low mood": {
+      en: [
+        "How can therapy help when feeling constantly exhausted?",
+        "What are simple mood-lifting habits for low-energy days?",
+        "Show compassionate therapists for low mood",
+      ],
+      hi: [
+        "Lagataar udasi mein therapist se baat kaise karein?",
+        "Low-energy dinon mein choti self-care habits kya hain?",
+        "Under ₹1,000 ke clinical psychologists dikhao",
+      ],
+    },
+    Career: {
+      en: [
+        "How can I deal with burnout from corporate work?",
+        "How do I know what career path truly fits my strengths?",
+        "Show certified career & mindset coaches",
+      ],
+      hi: [
+        "Corporate work ke burnout se kaise bachein?",
+        "Meri strengths ke hisaab se sahi career kaise chunein?",
+        "Under ₹1,000 ke career coaches dikhao",
+      ],
+    },
+    ADHD: {
+      en: [
+        "How do time-blocking techniques help with ADHD?",
+        "Why do simple tasks feel overwhelmingly hard with ADHD?",
+        "Show verified ADHD and neurodivergence specialists",
+      ],
+      hi: [
+        "ADHD mein time management kaise karein?",
+        "Chote kaam karne mein itni distraction kyu hoti hai?",
+        "Under ₹1,000 ke ADHD specialists dikhao",
+      ],
+    },
+    Loneliness: {
+      en: [
+        "How can I rebuild my social confidence?",
+        "What are safe ways to find supportive community groups?",
+        "Show counseling psychologists for isolation",
+      ],
+      hi: [
+        "Social confidence wapas kaise banayein?",
+        "Acche doston aur communities se kaise judein?",
+        "Under ₹1,000 ke counselors dikhao",
+      ],
+    },
+  };
+
+  const actionItems = additionalActionQuestions[specialtyName];
+  if (actionItems) {
+    candidatePool.push(...(isHindi ? actionItems.hi : actionItems.en));
+  }
+
+  // 3. Deduplicate and filter out already-asked questions
+  const uniqueFiltered: string[] = [];
+  const seenNormalized = new Set<string>();
+
+  for (const q of candidatePool) {
+    const norm = q.trim().toLowerCase();
+    if (!seenNormalized.has(norm) && !isAlreadyAsked(q)) {
+      seenNormalized.add(norm);
+      uniqueFiltered.push(q.trim());
+    }
+  }
+
+  // 4. Score relevance to the current user query words
+  const queryWords = queryLower.split(/[^a-zA-Z0-9]+/).filter((w) => w.length > 3);
+  uniqueFiltered.sort((a, b) => {
+    const aLower = a.toLowerCase();
+    const bLower = b.toLowerCase();
+    const aMatches = queryWords.filter((w) => aLower.includes(w)).length;
+    const bMatches = queryWords.filter((w) => bLower.includes(w)).length;
+    return bMatches - aMatches;
+  });
+
+  if (uniqueFiltered.length >= 3) {
+    return uniqueFiltered.slice(0, 3);
+  }
+
+  // Fallback: supplement with default specialty questions
+  const fallbackList = mapping
+    ? isHindi
+      ? mapping.hi.suggestedQuestions
+      : mapping.en.suggestedQuestions
+    : [];
+
+  for (const q of fallbackList) {
+    const norm = q.trim().toLowerCase();
+    if (!seenNormalized.has(norm)) {
+      seenNormalized.add(norm);
+      uniqueFiltered.push(q.trim());
+    }
+    if (uniqueFiltered.length >= 3) break;
+  }
+
+  return uniqueFiltered.slice(0, 3);
 }
 
 // ============================================================================
@@ -1491,7 +1695,14 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
   const isTopicIntakeStart = lower.startsWith("i want to discuss") || lower.startsWith("let's discuss");
 
   let answerText = "";
-  let suggestedQuestions = content.suggestedQuestions;
+  const baseSuggestedList = clinicalQA?.suggestedQuestions || content.suggestedQuestions;
+  const suggestedQuestions = getDynamicSuggestedQuestions(
+    text,
+    mapping.specialty,
+    isHindi,
+    options?.previousMessages,
+    baseSuggestedList
+  );
 
   // Check if user specifically requested a therapist, doctor, consultation, or pricing
   const userWantsTherapist =
@@ -1510,7 +1721,6 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
     // User specifically asked to talk to or book a therapist / consultant
     if (clinicalQA) {
       answerText = `${clinicalQA.answer}\n\n`;
-      suggestedQuestions = clinicalQA.suggestedQuestions;
     } else {
       answerText = `${content.empatheticReflection}\n\n`;
     }
@@ -1527,7 +1737,6 @@ async function generateDurrmiAssistantReply(message: string, options?: Assistant
   } else if (clinicalQA) {
     // User asked a specific question from the question chips or clinical domain (pure conversational answer)
     answerText = `${clinicalQA.answer}\n\n`;
-    suggestedQuestions = clinicalQA.suggestedQuestions;
 
     if (isHindi) {
       answerText += `Kya aap is baare mein thoda aur share karna chahenge, ya niche diye gaye suggestion sawalon me se kisi par baat karna chahte hain?`;
@@ -1767,26 +1976,26 @@ const httpAssistantService: AssistantService = {
     try {
       const { data } = await apiClient.post<AssistantReply>("/assistant/chat", {
         message,
+        conversationId: options?.conversationId,
         topic: options?.topic,
         budgetTier: options?.budgetTier,
       });
 
-      // Enrich with contextual suggested questions if backend did not supply them
-      if (!data.suggestedQuestions || data.suggestedQuestions.length === 0) {
-        const clinicalQA = findClinicalQAReply(message, isHindi);
-        if (clinicalQA?.suggestedQuestions && clinicalQA.suggestedQuestions.length > 0) {
-          data.suggestedQuestions = clinicalQA.suggestedQuestions;
-          data.matchedSpecialty = clinicalQA.specialty;
-        } else {
-          const specialty = detectSpecialty(message, options?.topic);
-          if (specialty) {
-            data.suggestedQuestions = isHindi ? specialty.hi.suggestedQuestions : specialty.en.suggestedQuestions;
-            if (!data.matchedSpecialty) {
-              data.matchedSpecialty = specialty.specialty;
-            }
-          }
-        }
-      }
+      // Dynamically detect current active specialty from message & options
+      const clinicalQA = findClinicalQAReply(message, isHindi);
+      const matchedSpec = detectSpecialty(message, options?.topic);
+      const activeSpecialty = clinicalQA?.specialty || matchedSpec?.specialty || "Stress & Burnout";
+
+      const baseList = clinicalQA?.suggestedQuestions || (data.suggestedQuestions && data.suggestedQuestions.length > 0 ? data.suggestedQuestions : undefined);
+
+      data.suggestedQuestions = getDynamicSuggestedQuestions(
+        message,
+        activeSpecialty,
+        isHindi,
+        options?.previousMessages,
+        baseList
+      );
+      data.matchedSpecialty = activeSpecialty;
 
       // If user specifically requested to talk to or book a therapist, attach matched doctor card
       const lower = message.toLowerCase();
@@ -1803,10 +2012,8 @@ const httpAssistantService: AssistantService = {
         lower.includes("talk to someone");
 
       if (userWantsTherapist && !data.doctorMatch) {
-        const specialty = detectSpecialty(message, options?.topic);
-        if (specialty) {
-          data.doctorMatch = specialty.defaultDoctorMatch;
-          data.matchedSpecialty = specialty.specialty;
+        if (matchedSpec) {
+          data.doctorMatch = matchedSpec.defaultDoctorMatch;
         }
       }
 

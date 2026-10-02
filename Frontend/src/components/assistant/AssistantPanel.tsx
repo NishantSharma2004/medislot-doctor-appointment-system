@@ -124,6 +124,7 @@ export function AssistantPanel() {
   // Voice Input (Speech Recognition) State
   const [isListening, setIsListening] = useState(false);
   const recognitionRef = useRef<any>(null);
+  const conversationIdRef = useRef<string>(crypto.randomUUID());
 
   // File Upload & Lab Report Analyzer Modal State
   const [reportModalOpen, setReportModalOpen] = useState(false);
@@ -345,6 +346,7 @@ export function AssistantPanel() {
       skipped: false,
     };
 
+    conversationIdRef.current = crypto.randomUUID();
     // ALWAYS reset messages when starting/changing topic so fresh chat starts
     setMessages([]);
     setInput("");
@@ -362,6 +364,7 @@ export function AssistantPanel() {
       skipped: true,
       budgetTier: selectedBudget,
     };
+    conversationIdRef.current = crypto.randomUUID();
     setMessages([]);
     setInput("");
     setIntakeData(data);
@@ -400,9 +403,20 @@ export function AssistantPanel() {
 
     try {
       const reply = await assistantService.chat(messageText, {
+        conversationId: conversationIdRef.current,
         topic: currentIntake?.topic,
         budgetTier: currentIntake?.budgetTier,
+        previousMessages: messages.map((m) => ({ role: m.role, text: m.text })),
       });
+
+      // Keep active topic in sync if user switched clinical domain dynamically
+      if (reply.matchedSpecialty && reply.matchedSpecialty !== currentIntake?.topic) {
+        setIntakeData((prev) =>
+          prev
+            ? { ...prev, topic: reply.matchedSpecialty }
+            : { topic: reply.matchedSpecialty, budgetTier: selectedBudget, skipped: false }
+        );
+      }
 
       setMessages((prev) => [
         ...prev,
@@ -438,6 +452,7 @@ export function AssistantPanel() {
   };
 
   const handleResetChat = () => {
+    conversationIdRef.current = crypto.randomUUID();
     setMessages([]);
     setIntakeData(null);
     setSelectedTopic(null);
