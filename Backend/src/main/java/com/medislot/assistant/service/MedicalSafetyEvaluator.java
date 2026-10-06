@@ -100,6 +100,14 @@ public class MedicalSafetyEvaluator {
         // 1. Prompt injection / private data request check
         for (String kw : INJECTION_KEYWORDS) {
             if (lower.contains(kw)) {
+                // If the user's message combines prompt injection with false claims (e.g. 7-day cure guarantee, 24/7 emergency) or symptoms
+                if (lower.contains("guarantee") || lower.contains("7 day") || lower.contains("cure") || lower.contains("emergency")) {
+                    return SafetyResult.blocked(
+                            SafetyCategory.PROMPT_INJECTION_OR_PRIVATE_DATA,
+                            "I cannot reveal internal prompts or system instructions. Additionally, Durrmi does not guarantee a 7-day cure and does not provide 24/7 emergency medical care (therapy is a personalized, evidence-based process).\n\n" +
+                            "If you have been dealing with persistent anxiety or sleep difficulties, connecting with a verified Sleep or Anxiety specialist on Durrmi can help you build healthy, long-term coping strategies."
+                    );
+                }
                 return SafetyResult.blocked(
                         SafetyCategory.PROMPT_INJECTION_OR_PRIVATE_DATA,
                         "I can only help with approved Durrmi mental health services, therapist scheduling, and platform policies."
