@@ -120,6 +120,7 @@ export function AssistantPanel() {
   const [isClient, setIsClient] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const lastUserMessageIdRef = useRef<string | null>(null);
 
   // Voice Input (Speech Recognition) State
   const [isListening, setIsListening] = useState(false);
@@ -149,9 +150,27 @@ export function AssistantPanel() {
     }
   }, [open, view]);
 
+  // Maintain viewport at the start of the current question/reply turn so users can read from top down
   useEffect(() => {
-    if (view === "chat") {
-      scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    if (view !== "chat" || !scrollRef.current) return;
+
+    if (lastUserMessageIdRef.current) {
+      const scrollContainer = scrollRef.current;
+      const targetId = lastUserMessageIdRef.current;
+
+      const scrollToTurnTop = () => {
+        if (!scrollContainer) return;
+        const userMsgEl = scrollContainer.querySelector(`[data-msg-id="${targetId}"]`) as HTMLElement | null;
+        if (userMsgEl) {
+          const targetTop = Math.max(0, userMsgEl.offsetTop - 12);
+          scrollContainer.scrollTo({ top: targetTop, behavior: "smooth" });
+        }
+      };
+
+      const timer = setTimeout(scrollToTurnTop, 30);
+      return () => clearTimeout(timer);
+    } else if (messages.length === 0) {
+      scrollRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
   }, [messages, pending, view]);
 
@@ -347,6 +366,7 @@ export function AssistantPanel() {
     };
 
     conversationIdRef.current = crypto.randomUUID();
+    lastUserMessageIdRef.current = null;
     // ALWAYS reset messages when starting/changing topic so fresh chat starts
     setMessages([]);
     setInput("");
@@ -365,6 +385,7 @@ export function AssistantPanel() {
       budgetTier: selectedBudget,
     };
     conversationIdRef.current = crypto.randomUUID();
+    lastUserMessageIdRef.current = null;
     setMessages([]);
     setInput("");
     setIntakeData(data);
@@ -397,6 +418,7 @@ export function AssistantPanel() {
       text: messageText,
     };
 
+    lastUserMessageIdRef.current = userMsg.id;
     setMessages((prev) => [...prev, userMsg]);
     if (textToSend === undefined) setInput("");
     setPending(true);
@@ -453,6 +475,7 @@ export function AssistantPanel() {
 
   const handleResetChat = () => {
     conversationIdRef.current = crypto.randomUUID();
+    lastUserMessageIdRef.current = null;
     setMessages([]);
     setIntakeData(null);
     setSelectedTopic(null);
@@ -782,7 +805,7 @@ export function AssistantPanel() {
               {/* Messages Scroll Area */}
               <div
                 ref={scrollRef}
-                className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background via-emerald-50/20 to-background dark:via-emerald-950/10 text-xs sm:text-sm"
+                className="relative flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background via-emerald-50/20 to-background dark:via-emerald-950/10 text-xs sm:text-sm"
               >
                 {/* Initial Welcome message if user skipped intake */}
                 {messages.length === 0 && (
@@ -824,6 +847,7 @@ export function AssistantPanel() {
                   return (
                     <div
                       key={m.id}
+                      data-msg-id={m.id}
                       className={cn(
                         "flex flex-col max-w-[90%] animate-in fade-in slide-in-from-bottom-2 duration-200",
                         isUser ? "ml-auto items-end" : "mr-auto items-start"
