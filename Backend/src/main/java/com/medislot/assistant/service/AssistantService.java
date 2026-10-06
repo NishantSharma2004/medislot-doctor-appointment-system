@@ -99,7 +99,7 @@ public class AssistantService {
         String userPrompt = promptBuilder.buildUserPrompt(redactedMessage, retrievedDocs);
 
         AiGenerationRequest generationRequest = new AiGenerationRequest(
-                systemPrompt, userPrompt, 0.2, 320
+                systemPrompt, userPrompt, 0.2, 850
         );
 
         // Step 6: Route and Execute via Groq / Gemini Fallback
@@ -145,6 +145,8 @@ public class AssistantService {
         }
         // Protect against system prompt or credential leakage in output
         String sanitized = rawText.replaceAll("(?i)(gsk_[A-Za-z0-9_-]{20,}|AIzaSy[A-Za-z0-9_-]{33})", "[REDACTED]");
+        // Strip accidental stray prompt leaks like ".also suggest therapist" or "also suggest therapist" (TC-16)
+        sanitized = sanitized.replaceAll("(?i)\\.?\\s*also\\s+suggest\\s+therapist\\.?$", "");
         return sanitized.trim();
     }
 }

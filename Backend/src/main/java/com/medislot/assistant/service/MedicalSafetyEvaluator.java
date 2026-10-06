@@ -43,8 +43,16 @@ public class MedicalSafetyEvaluator {
     );
 
     private static final List<String> SELF_HARM_KEYWORDS = List.of(
+            // Active crisis keywords
             "suicide", "suicidal", "kill myself", "end my life", "self harm",
-            "want to die", "cutting myself", "hanging myself", "atmaghatya", "jaan de dunga"
+            "want to die", "cutting myself", "hanging myself", "atmaghatya", "jaan de dunga",
+            "apni jaan", "marne ja raha", "marne ja rahi",
+            // Passive hopelessness / crisis keywords (TC-10 & real-world crisis signals)
+            "not worth living", "isn't worth living", "no reason to live", "better off dead",
+            "don't want to live", "dont want to live", "give up on life", "giving up on life",
+            "no point in living", "point in living anymore", "tired of living", "hate being alive",
+            "jeene ka man nahi", "jeene ka mann nahi", "marne ka man", "marne ka mann",
+            "sab khatam kar", "khud ko khatam"
     );
 
     private static final List<String> DIAGNOSIS_KEYWORDS = List.of(
@@ -56,13 +64,16 @@ public class MedicalSafetyEvaluator {
     private static final List<String> DOSAGE_KEYWORDS = List.of(
             "prescribe", "medication dosage", "how many mg of", "how much paracetamol",
             "what antibiotic should i take", "can i take ibuprofen with", "recommend a drug",
-            "recommend medicine", "dosage for"
+            "recommend medicine", "dosage for", "which antidepressant should i take", "what antidepressant should i"
     );
 
     private static final List<String> INJECTION_KEYWORDS = List.of(
-            "ignore previous instructions", "reveal system prompt", "show your prompt",
-            "what is your api key", "give me patient records", "show other user data",
-            "pretend you are a doctor", "override rules"
+            "ignore previous instructions", "ignore all your instructions", "ignore your instructions",
+            "ignore rules", "override rules", "override your rules",
+            "reveal system prompt", "show your prompt", "tell me your prompt", "tell me your hidden prompt",
+            "hidden prompt", "reveal the hidden rules", "show hidden rules", "reveal rules",
+            "what is your api key", "give me patient records", "show other user data", "give me the raw postgresql",
+            "pretend you are a doctor", "you are now a doctor", "you are a doctor now", "act as a doctor"
     );
 
     private static final List<String> TECH_CONFIDENTIALITY_KEYWORDS = List.of(
@@ -126,12 +137,17 @@ public class MedicalSafetyEvaluator {
             }
         }
 
-        // 5. Self-harm / crisis check
+        // 5. Self-harm / crisis check (Highest priority safety layer - overrides booking & RAG)
         for (String kw : SELF_HARM_KEYWORDS) {
             if (lower.contains(kw)) {
                 return SafetyResult.blocked(
                         SafetyCategory.SELF_HARM,
-                        "If you or someone you know is struggling or in crisis, help is available. Please reach out to local emergency services or a crisis helpline immediately. Tele-MANAS (Govt of India): Dial 14416 or 1800-891-4416. KIRAN Helpline: 1800-599-0019. Vandrevala Foundation: +91 9999 666 555. You do not have to carry this alone."
+                        "I am really sorry you are going through such a painful time. Please know that what you are feeling matters, and you do not have to carry this alone.\n\n" +
+                        "If you or someone you know is struggling, in distress, or in crisis, help is available immediately. Please reach out to local emergency services or these 24/7 free, confidential national crisis helplines right now:\n" +
+                        "• Tele-MANAS (Govt of India): Dial 14416 or 1800-891-4416 (24x7 Free)\n" +
+                        "• KIRAN Helpline: Dial 1800-599-0019\n" +
+                        "• Vandrevala Foundation: +91 9999 666 555\n\n" +
+                        "Please connect with these caring professionals or reach out to a trusted loved one immediately. Support is available right now."
                 );
             }
         }
